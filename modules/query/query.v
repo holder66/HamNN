@@ -57,9 +57,9 @@ pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 	// giving the lowest Hamming distance.
 	classify_result = classify.classify_instance(cl, byte_values, opts)
 	if classify_result.weighting_flag {
-		println("For the classes $classify_result.classes the prevalence-weighted nearest neighbor counts are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.class'")
+		println("For the classes $classify_result.classes the prevalence-weighted nearest neighbor counts are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.inferred_class'")
 	} else {
-		println("For the classes $classify_result.classes the numbers of nearest neighbors are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.class'")
+		println("For the classes $classify_result.classes the numbers of nearest neighbors are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.inferred_class'")
 	}
 	return classify_result
 }
