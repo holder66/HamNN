@@ -6,9 +6,9 @@ import time
 pub struct Class {
 pub mut:
 	// class_index  int
-	class_name   string
-	class_values []string
-	class_counts map[string]int
+	class_name       string
+	class_values     []string
+	class_counts     map[string]int
 	lcm_class_counts i64
 }
 
@@ -59,7 +59,7 @@ pub mut:
 
 pub struct Classifier {
 	Options
-	Class 
+	Class
 pub mut:
 	// TrainedAttribute
 	// datafile_path      string
@@ -80,7 +80,7 @@ pub mut:
 	command              string
 	bins                 []int = [2, 16]
 	uniform_bins         bool
-	concurrency_flag 	 bool = true
+	concurrency_flag     bool = true
 	exclude_flag         bool = true
 	verbose_flag         bool
 	number_of_attributes []int = [0]
@@ -92,8 +92,8 @@ pub mut:
 	weighting_flag       bool
 	folds                int
 	// current_fold         int // 1-based counting
-	repetitions          int
-	random_pick          bool
+	repetitions int
+	random_pick bool
 }
 
 pub struct ClassifyResult {
@@ -105,22 +105,22 @@ pub mut:
 	weighting_flag             bool
 }
 
-pub struct ResultForClass{
+pub struct ResultForClass {
 pub mut:
-	labeled_instances	int
-	correct_inferences 	int
-	missed_inferences 	int
-	wrong_inferences 	int 
+	labeled_instances  int
+	correct_inferences int
+	missed_inferences  int
+	wrong_inferences   int
 }
 
 pub struct VerifyResult {
 pub mut:
 	// inferred_classes []string
-	labeled_classes  []string
+	labeled_classes []string
 	// matches          []int
 	// counts           map[int]int
-	class_table      map[string]ResultForClass
-	correct_count    int
+	class_table   map[string]ResultForClass
+	correct_count int
 }
 
 pub struct ValidateResult {

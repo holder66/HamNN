@@ -15,7 +15,7 @@ import explore
 // import classify
 import os.cmdline as oscmdline
 import time
-import math 
+import math
 
 // main is the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 /*
@@ -72,7 +72,8 @@ pub fn main() {
 	}
 	mut duration := sw.elapsed()
 	println('duration: $duration')
-	println('${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(), 60))} min ${math.fmod(duration.seconds(), 60):6.3f} sec')
+	println('${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(), 60))} min ${math.fmod(duration.seconds(),
+		60):6.3f} sec')
 }
 
 // get_options fills an Options struct with values from the command line
@@ -225,4 +226,3 @@ fn rank(opts tools.Options) []tools.RankedAttribute {
 fn make(opts tools.Options) tools.Classifier {
 	return make.make_classifier(tools.load_file(opts.datafile_path), opts)
 }
-

@@ -26,7 +26,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		Class: ds.Class
 		Options: opts
 	}
-	// calculate the least common multiple for class_counts, for use 
+	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	if opts.weighting_flag {
 		cl.lcm_class_counts = i64(tools.lcm(tools.get_map_values(ds.class_counts)))

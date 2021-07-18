@@ -8,7 +8,7 @@ import tools
 import classify
 
 // validate classifies each instance of a validation datafile against
-// a trained Classifier; returns the predicted classes for each instance 
+// a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
 // Type: `v run hamnn.v validate --help`
 pub fn validate(cl tools.Classifier, opts tools.Options) tools.ValidateResult {

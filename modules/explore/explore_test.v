@@ -7,8 +7,8 @@ import tools
 fn test_explore() {
 	mut opts := tools.Options{
 		verbose_flag: false
-		number_of_attributes: [1,4]
-		bins: [2,12]
+		number_of_attributes: [1, 4]
+		bins: [2, 12]
 		show_flag: false
 		datafile_path: 'datasets/iris.tab'
 	}

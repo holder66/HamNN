@@ -6,7 +6,7 @@ import tools
 // test_make_classifier
 fn test_make_classifier() {
 	mut opts := tools.Options{
-		bins: [2,12]
+		bins: [2, 12]
 		exclude_flag: false
 		verbose_flag: false
 		command: 'make'
@@ -15,8 +15,12 @@ fn test_make_classifier() {
 		weighting_flag: true
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
-	mut cl := make.make_classifier(ds, opts)
-	assert cl.class_counts == {'m': 8, 'f': 3, 'X': 2}
+	mut cl := make_classifier(ds, opts)
+	assert cl.class_counts == map{
+		'm': 8
+		'f': 3
+		'X': 2
+	}
 	assert cl.lcm_class_counts == 24
 	assert cl.attribute_ordering == ['negative', 'height', 'number', 'weight', 'age', 'lastname']
 }

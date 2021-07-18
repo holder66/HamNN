@@ -161,7 +161,7 @@ Options:
 	by class prevalences.
 	'
 
-  validate_help = '
+	validate_help = '
 "validate" takes a classifier created by make, and another datafile
 to be used as a validation dataset. The parameters for which attributes to 
 use, the list of permissible attribute values for discrete attributes, and the 

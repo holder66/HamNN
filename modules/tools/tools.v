@@ -4,7 +4,6 @@ module tools
 import arrays
 import math
 
-
 // transpose a 2d array
 pub fn transpose<T>(matrix [][]T) [][]T {
 	mut matrix_t := [][]T{len: matrix[0].len, init: []T{len: matrix.len}}
@@ -48,8 +47,6 @@ pub fn print_array(array []string) {
 		println(line)
 	}
 }
-
-
 
 // parse_range takes a string like '3,6,8' and returns [3, 6, 8]
 pub fn parse_range(arg string) []int {
@@ -214,5 +211,3 @@ pub fn lcm(arr []int) i64 {
 	// println('res in tools.lcm: $res')
 	return res
 }
-
-
