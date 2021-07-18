@@ -32,20 +32,20 @@ fn test_verify() {
 
 	
 
-	opts.datafile_path = 'datasets/mnist_test.tab'
-	opts.testfile_path = 'datasets/mnist_test.tab'
-	opts.number_of_attributes = [50]
-	opts.bins = [2,2]
-	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts)
-	assert verify(cl, opts).correct_count == 9982
+	// opts.datafile_path = 'datasets/mnist_test.tab'
+	// opts.testfile_path = 'datasets/mnist_test.tab'
+	// opts.number_of_attributes = [50]
+	// opts.bins = [2,2]
+	// ds = tools.load_file(opts.datafile_path)
+	// cl = make.make_classifier(ds, opts)
+	// assert verify(cl, opts).correct_count == 9982
 
-	opts.datafile_path = '/Users/henryolders/mnist_train.tab'
-	opts.testfile_path = 'datasets/mnist_test.tab'
-	opts.number_of_attributes = [313]
-	opts.bins = [2,2]
-	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts)
-	assert verify(cl, opts).correct_count == 9566
+	// opts.datafile_path = '/Users/henryolders/mnist_train.tab'
+	// opts.testfile_path = 'datasets/mnist_test.tab'
+	// opts.number_of_attributes = [313]
+	// opts.bins = [2,2]
+	// ds = tools.load_file(opts.datafile_path)
+	// cl = make.make_classifier(ds, opts)
+	// assert verify(cl, opts).correct_count == 9566
 
 }

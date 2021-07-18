@@ -25,6 +25,18 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 			labeled_instances: value
 		}
 	}
+	test_instances := generate_test_instances_array(cl, test_ds)
+	// for each instance in the test data, perform a classification and compile the results
+	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
+	if opts.show_flag && opts.command == 'verify' {
+		percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
+		println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
+	}
+	return verify_result
+}
+
+// generate_test_instances_array 
+fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][]byte {
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
 	mut test_attr_binned_values := [][]byte{}
@@ -45,14 +57,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 		}
 		test_attr_binned_values << test_binned_values.map(byte(it))
 	}
-	test_instances := tools.transpose(test_attr_binned_values)
-	// for each instance in the test data, perform a classification and compile the results
-	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	if opts.show_flag && opts.command == 'verify' {
-		percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
-		println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
-	}
-	return verify_result
+	return tools.transpose(test_attr_binned_values)
 }
 
 // option_worker
