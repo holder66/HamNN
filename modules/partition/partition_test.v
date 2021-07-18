@@ -8,34 +8,34 @@ fn test_get_partition_indices() {
 	arr := [11, 22, 33, 44, 55, 66]
 	len := arr.len
 	// leave-one-out, first fold
-	mut s, mut e := get_partition_indices(len, 0, 1)
+	mut s, mut e := get_partition_indices(len, 0, 0)
 	assert s == 0
 	assert e == 1
-	s, e = get_partition_indices(len, 0, 2)
+	s, e = get_partition_indices(len, 0, 1)
 	assert s == 1
 	assert e == 2
-	s, e = get_partition_indices(len, 0, 6)
+	s, e = get_partition_indices(len, 0, 5)
 	assert s == 5
 	assert e == 6
-	s, e = get_partition_indices(len, 0, 7)
+	s, e = get_partition_indices(len, 0, 6)
 	assert s == 6
 	assert e == 6
-	s, e = get_partition_indices(len, 3, 1)
+	s, e = get_partition_indices(len, 3, 0)
 	assert s == 0
 	assert e == 2
-	s, e = get_partition_indices(len, 3, 2)
+	s, e = get_partition_indices(len, 3, 1)
 	assert s == 2
 	assert e == 4
-	s, e = get_partition_indices(len, 3, 3)
+	s, e = get_partition_indices(len, 3, 2)
 	assert s == 4
 	assert e == 6
-	s, e = get_partition_indices(len, 2, 1)
+	s, e = get_partition_indices(len, 2, 0)
 	assert s == 0
 	assert e == 3
-	s, e = get_partition_indices(len, 2, 2)
+	s, e = get_partition_indices(len, 2, 1)
 	assert s == 3
 	assert e == 6
-	s, e = get_partition_indices(len, 2, 3)
+	s, e = get_partition_indices(len, 2, 2)
 	assert s == 6
 	assert e == 6
 }
@@ -75,9 +75,7 @@ fn test_get_rest_of_array() {
 // test_partition
 fn test_partition() {
 	mut opts := tools.Options{}
-	opts.current_fold = 1 // ie the first fold or partition
-	opts.folds = 2
-	mut part_ds, fold := partition(tools.load_file('datasets/developer.tab'), opts)
+	mut part_ds, fold := partition(0, 2, tools.load_file('datasets/developer.tab'), opts)
 	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm']
 	assert part_ds.Class.class_counts == map{
 		'X': 2
@@ -89,14 +87,12 @@ fn test_partition() {
 // test_classify_fold
 fn test_classify_fold() {
 	mut opts := tools.Options{
-		current_fold: 1 // ie the first fold or partition
-		folds: 0
 		bins: [2, 2]
 		exclude_flag: false
 		verbose_flag: false
 		number_of_attributes: [2]
 	}
 
-	mut part_ds, fold := partition(tools.load_file('datasets/developer.tab'), opts)
+	mut part_ds, fold := partition(0, 0, tools.load_file('datasets/developer.tab'), opts)
 	// println(classify_fold(part_ds, fold, opts))
 }
