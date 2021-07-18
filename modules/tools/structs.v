@@ -99,6 +99,7 @@ pub mut:
 pub struct ClassifyResult {
 pub mut:
 	inferred_class             string
+	index 						int
 	labeled_class              string
 	nearest_neighbors_by_class []int
 	classes                    []string

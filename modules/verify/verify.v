@@ -29,11 +29,16 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	// attribute parameters in the classifier
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for each instance in the test data, perform a classification
-	mut classify_result_array := do_classification(cl, test_instances, opts)
+	mut classify_result_array := []tools.ClassifyResult{}
+	if opts.concurrency_flag {
+		classify_result_array = do_parallel_classification(cl, test_instances, opts)
+		} else {
+		classify_result_array = do_classification(cl, test_instances, opts)
+		}
 	// in order to compare inferred classes to expected classes, 
 	// add labeled_class values to classify_result_array
-	for i, mut value in classify_result_array {
-		value.labeled_class = test_ds.class_values[i]
+	for mut value in classify_result_array {
+		value.labeled_class = test_ds.class_values[value.index]
 	}
 	verify_result = verify_classify_results(classify_result_array, mut verify_result)
 	if opts.show_flag && opts.command == 'verify' {
@@ -63,11 +68,29 @@ fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut res
 	return result
 }
 
+// do_parallel_classification 
+fn do_parallel_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
+	mut classify_result_array := []tools.ClassifyResult{cap: test_instances.len}
+	mut work_channel := chan int{cap: test_instances.len}
+	mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
+		for i, _ in test_instances {
+			work_channel <- i
+			go option_worker(work_channel, result_channel, cl, test_instances,
+				opts)
+		}for _ in test_instances {
+			classify_result_array << <-result_channel
+		}
+	return classify_result_array
+}
+
 // do_classification
 fn do_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
-	mut classify_result_array := []tools.ClassifyResult{}
+	mut classify_result_array := []tools.ClassifyResult{cap: test_instances.len}
 	for test_instance in test_instances {
 		classify_result_array << classify.classify_instance(cl, test_instance, opts)
+	}
+	for i, mut value in classify_result_array {
+		value.index = i
 	}
 	return classify_result_array
 }
@@ -98,55 +121,11 @@ fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][
 }
 
 // option_worker
-fn option_worker(work_channel chan int, result_channel chan tools.ClassifyResult, cl tools.Classifier, test_instances [][]byte, labeled_classes []string, opts tools.Options) {
+fn option_worker(work_channel chan int, result_channel chan tools.ClassifyResult, cl tools.Classifier, test_instances [][]byte, opts tools.Options) {
 	mut index := <-work_channel
 	mut classify_result := classify.classify_instance(cl, test_instances[index], opts)
-	classify_result.labeled_class = labeled_classes[index]
+	classify_result.index = index
 	result_channel <- classify_result
-	// dump(result_channel)
 	return
 }
 
-// classify_to_verify
-pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
-	// for each instance in the test data, perform a classification
-	mut inferred_class := ''
-	mut classify_result := tools.ClassifyResult{}
-
-	if opts.concurrency_flag {
-		mut work_channel := chan int{cap: test_instances.len}
-		mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
-		for i, _ in test_instances {
-			work_channel <- i
-			go option_worker(work_channel, result_channel, cl, test_instances, result.labeled_classes,
-				opts)
-		}
-		for _ in test_instances {
-			classify_result = <-result_channel
-			if classify_result.inferred_class == classify_result.labeled_class {
-				result.class_table[classify_result.inferred_class].correct_inferences += 1
-			} else {
-				result.class_table[classify_result.inferred_class].wrong_inferences += 1
-			}
-		}
-	} else {
-		for i, test_instance in test_instances {
-			inferred_class = classify.classify_instance(cl, test_instance, opts).inferred_class
-			if inferred_class == result.labeled_classes[i] {
-				result.class_table[result.labeled_classes[i]].correct_inferences += 1
-			} else {
-				result.class_table[inferred_class].wrong_inferences += 1
-			}
-		}
-	}
-	mut correct_count := 0
-	for _, mut value in result.class_table {
-		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		correct_count += value.correct_inferences
-	}
-	result.correct_count = correct_count
-	if opts.verbose_flag && opts.command == 'verify' {
-		println('result.class_table in verify: $result.class_table')
-	}
-	return result
-}
