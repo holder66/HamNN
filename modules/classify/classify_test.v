@@ -16,10 +16,11 @@ fn test_classify_instance() {
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
 	mut cl := make.make_classifier(ds, opts)
-// assert classify_instance(cl, cl.instances[0], opts).inferred_class == 'm'
+assert classify_instance(cl, cl.instances[0], opts).inferred_class == 'm'
 assert classify_instance(cl, cl.instances[0], opts).nearest_neighbors_by_class == [1, 0, 0]
 opts.weighting_flag = true
-// assert classify_instance(cl, cl.instances[3], opts).inferred_class == 'f'
+cl = make.make_classifier(ds, opts)
+assert classify_instance(cl, cl.instances[3], opts).inferred_class == 'f'
 assert classify_instance(cl, cl.instances[3], opts).nearest_neighbors_by_class == [0, 8, 0]
 }
 
