@@ -84,15 +84,3 @@ fn test_partition() {
 	}
 }
 
-// test_classify_fold
-fn test_classify_fold() {
-	mut opts := tools.Options{
-		bins: [2, 2]
-		exclude_flag: false
-		verbose_flag: false
-		number_of_attributes: [2]
-	}
-
-	mut part_ds, fold := partition(0, 0, tools.load_file('datasets/developer.tab'), opts)
-	// println(classify_fold(part_ds, fold, opts))
-}
