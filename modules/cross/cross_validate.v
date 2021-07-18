@@ -16,12 +16,10 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	mut cross_result := tools.VerifyResult{
 		labeled_classes: ds.Class.class_values
 	}
-	// mut size := 1
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
 		folds = ds.class_values.len
 	}
-	// println('folds: $folds')
 	// instantiate an entry for each class in the cross_result class_table
 	for key, value in ds.Class.class_counts {
 		cross_result.class_table[key] = tools.ResultForClass{
@@ -66,6 +64,10 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 		labeled_classes: fold.class_values
 	}
 	part_cl := make.make_classifier(part_ds, cross_opts)
+
+	// massage the fold data according to the attribute parameters in the partition classifier
+	fold_instances := verify.generate_test_instances_array(part_cl, fold)
+	println(fold_instances)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
@@ -73,15 +75,25 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
-	fold_instances := tools.transpose(byte_values_array)
+	fold_instances = tools.transpose(byte_values_array)
 	// for each class, instantiate an entry in the class table for the result
 	for key, value in part_cl.Class.class_counts {
 		fold_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
 		}
 	}
-	fold_result = verify.classify_to_verify(part_cl, fold_instances, mut fold_result,
+	mut classify_result_array := []tools.ClassifyResult{}
+	if cross_opts.concurrency_flag {
+		classify_result_array = verify.do_parallel_classification(part_cl, fold_instances,
 		cross_opts)
+		} else {
+		classify_result_array = verify.do_classification(part_cl, fold_instances,
+		cross_opts)
+		}
+	for mut value in classify_result_array {
+		value.labeled_class = ds.class_values[value.index]
+	}
+	fold_result = verify.verify_classify_results(classify_result_array, mut fold_result)
 	return fold_result
 }
 
