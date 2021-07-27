@@ -5,80 +5,91 @@ import tools
 
 // test_get_partition_indices
 fn test_get_partition_indices() {
-	arr := [11, 22, 33, 44, 55, 66]
-	len := arr.len
+	mut arr := [11, 22, 33, 44, 55, 66]
+	mut len := arr.len
 	// leave-one-out, first fold
 	mut s, mut e := get_partition_indices(len, 0, 0)
-	assert s == 0
-	assert e == 1
+	assert s == 0 && e == 1
+	assert arr[s..e] == [11]
+	assert get_rest_of_array(arr, s, e) == [22, 33, 44, 55, 66]
 	s, e = get_partition_indices(len, 0, 1)
-	assert s == 1
-	assert e == 2
+	assert s == 1 && e == 2
+	assert arr[s..e] == [22]
+	assert get_rest_of_array(arr, s, e) == [11, 33, 44, 55, 66]
 	s, e = get_partition_indices(len, 0, 5)
-	assert s == 5
-	assert e == 6
-	s, e = get_partition_indices(len, 0, 6)
-	assert s == 6
-	assert e == 6
-	s, e = get_partition_indices(len, 3, 0)
-	assert s == 0
-	assert e == 2
-	s, e = get_partition_indices(len, 3, 1)
-	assert s == 2
-	assert e == 4
+	assert s == 5 && e == 6
+	assert arr[s..e] == [66]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55]
 	s, e = get_partition_indices(len, 3, 2)
-	assert s == 4
-	assert e == 6
+	assert s == 4 && e == 6
+	assert arr[s..e] == [55, 66]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44]
+	
+	arr = [11, 22, 33, 44, 55, 66, 77, 88, 99, 100, 111, 122, 133]
+	len = arr.len 
 	s, e = get_partition_indices(len, 2, 0)
 	assert s == 0
-	assert e == 3
+	assert e == 7
+	assert arr[s..e] == [11, 22, 33, 44, 55, 66, 77]
+	assert get_rest_of_array(arr, s, e) == [88, 99, 100, 111, 122, 133]
+
 	s, e = get_partition_indices(len, 2, 1)
-	assert s == 3
-	assert e == 6
-	s, e = get_partition_indices(len, 2, 2)
+	assert s == 7
+	assert e == 13
+	assert arr[s..e] == [88, 99, 100, 111, 122, 133]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77]
+
+	s, e = get_partition_indices(len, 3, 1)
+	assert s == 4
+	assert e == 8
+	assert arr[s..e] == [55, 66, 77, 88]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 99, 100, 111, 122, 133]
+
+	s, e = get_partition_indices(len, 3, 2)
+	assert s == 8
+	assert e == 13
+	assert arr[s..e] == [99, 100, 111, 122, 133]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77, 88]
+
+	s, e = get_partition_indices(len, 4, 2)
 	assert s == 6
-	assert e == 6
+	assert e == 9
+	assert arr[s..e] == [77, 88, 99]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 100, 111, 122, 133]
+
+	s, e = get_partition_indices(len, 4, 3)
+	assert s == 9
+	assert e == 13
+	assert arr[s..e] == [100, 111, 122, 133]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77, 88, 99]
+
+	s, e = get_partition_indices(len, 5, 2)
+	assert s == 6
+	assert e == 9
+	assert arr[s..e] == [77, 88, 99]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 100, 111, 122, 133]
+
+	s, e = get_partition_indices(len, 5, 4)
+	assert s == 12
+	assert e == 13
+	assert arr[s..e] == [133]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77, 88, 99, 100, 111, 122]
+
+	s, e = get_partition_indices(len, 6, 5)
+	assert s == 10
+	assert e == 13
+	assert arr[s..e] == [111, 122, 133]
+	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77, 88, 99, 100]
 }
 
-// test_get_fold
-fn test_get_fold() {
-	arr := [11, 22, 33, 44, 55, 66]
-	assert get_fold(arr, 0, 1) == [11]
-	assert get_fold(arr, 1, 2) == [22]
-	assert get_fold(arr, 5, 6) == [66]
-	assert get_fold(arr, 0, 2) == [11, 22]
-	assert get_fold(arr, 2, 4) == [33, 44]
-	assert get_fold(arr, 4, 6) == [55, 66]
-	assert get_fold(arr, 0, 3) == [11, 22, 33]
-	assert get_fold(arr, 3, 6) == [44, 55, 66]
-	assert get_fold(arr, 6, 6) == []
-	assert get_fold(arr, 0, 0) == []
-	assert get_fold(arr, 2, 2) == []
-}
-
-// test_get_rest_of_array
-fn test_get_rest_of_array() {
-	arr := [11, 22, 33, 44, 55, 66]
-	assert get_rest_of_array(arr, 0, 1) == [22, 33, 44, 55, 66]
-	assert get_rest_of_array(arr, 1, 2) == [11, 33, 44, 55, 66]
-	assert get_rest_of_array(arr, 5, 6) == [11, 22, 33, 44, 55]
-	assert get_rest_of_array(arr, 0, 2) == [33, 44, 55, 66]
-	assert get_rest_of_array(arr, 2, 4) == [11, 22, 55, 66]
-	assert get_rest_of_array(arr, 4, 6) == [11, 22, 33, 44]
-	assert get_rest_of_array(arr, 0, 3) == [44, 55, 66]
-	assert get_rest_of_array(arr, 3, 6) == [11, 22, 33]
-	assert get_rest_of_array(arr, 6, 6) == [11, 22, 33, 44, 55, 66]
-	assert get_rest_of_array(arr, 0, 0) == [11, 22, 33, 44, 55, 66]
-	assert get_rest_of_array(arr, 2, 2) == [11, 22, 33, 44, 55, 66]
-}
 
 // test_partition
 fn test_partition() {
 	mut opts := tools.Options{}
 	mut part_ds, fold := partition(0, 2, tools.load_file('datasets/developer.tab'), opts)
-	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm']
+	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm', 'X']
 	assert part_ds.Class.class_counts == map{
-		'X': 2
+		'X': 1
 		'f': 1
 		'm': 4
 	}

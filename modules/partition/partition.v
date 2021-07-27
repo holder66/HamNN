@@ -30,8 +30,10 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 	part_ds.useful_continuous_attributes = tools.get_useful_continuous_attributes(part_ds)
 	part_ds.useful_discrete_attributes = tools.get_useful_discrete_attributes(part_ds)
 
-	fold_class_values := get_fold(ds.Class.class_values, s, e)
-	fold_data := tools.transpose(get_fold(tools.transpose(ds.data), s, e))
+	// fold_class_values := get_fold(ds.Class.class_values, s, e)
+	fold_class_values := ds.Class.class_values[s..e]
+	// fold_data := tools.transpose(get_fold(tools.transpose(ds.data), s, e))
+	fold_data := tools.transpose(tools.transpose(ds.data[s..e]))
 	mut fold := tools.Fold{
 		fold_number: current_fold
 		attribute_names: ds.attribute_names
@@ -50,25 +52,33 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 // given the total number of indices total, the number of folds n, and the fold number
 // curr of current fold (using 1-based counting, ie the first fold is curr = 1)
 // changing this to zero-based counting 2021-7-13
+// fn get_partition_indices(total int, n int, curr int) (int, int) {
+// 	mut n1 := n
+// 	if n == 0 {
+// 		n1 = total
+// 	}
+// 	round := int(math.round(total / n1))
+// 	// s := (curr - 1) * round
+// 	s := curr * round
+// 	mut e := s + round
+// 	// if e > total {
+// 	// 	e = total
+// 	// }
+// 	return s, e
 fn get_partition_indices(total int, n int, curr int) (int, int) {
-	mut n1 := n
-	if n == 0 {
+	mut n1 := f64(n)
+	if n == 0 { // ie each fold will be length 1, thus the total number of folds
+		// will be the same as the array length
 		n1 = total
 	}
 	round := int(math.round(total / n1))
-	// s := (curr - 1) * round
 	s := curr * round
 	mut e := s + round
-	if e > total {
+	if e > total || total - e == 1 {
 		e = total
-	}
-	return s, e
-}
+	} 
 
-// get_fold given start and end indices s & e, returns an array slice
-fn get_fold<T>(arr []T, s int, e int) []T {
-	// println('$arr $s $e')
-	return arr[s..e]
+	return s, e
 }
 
 // get_rest_of_array given the start s and the end e of the slice to be removed,
