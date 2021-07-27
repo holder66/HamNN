@@ -49,7 +49,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 }
 
 // verify_classify_results
-pub fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut result tools.VerifyResult) tools.VerifyResult {
+fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut result tools.VerifyResult) tools.VerifyResult {
 	// println(result)
 
 	for classify_result in classify_result_array {
@@ -69,7 +69,7 @@ pub fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut
 }
 
 // do_parallel_classification 
-pub fn do_parallel_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
+fn do_parallel_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
 	mut classify_result_array := []tools.ClassifyResult{cap: test_instances.len}
 	mut work_channel := chan int{cap: test_instances.len}
 	mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
@@ -84,7 +84,7 @@ pub fn do_parallel_classification(cl tools.Classifier, test_instances [][]byte, 
 }
 
 // do_classification
-pub fn do_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
+fn do_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
 	mut classify_result_array := []tools.ClassifyResult{cap: test_instances.len}
 	for test_instance in test_instances {
 		classify_result_array << classify.classify_instance(cl, test_instance, opts)
@@ -96,12 +96,10 @@ pub fn do_classification(cl tools.Classifier, test_instances [][]byte, opts tool
 }
 
 // generate_test_instances_array
-pub fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][]byte {
+fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][]byte {
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
 	mut test_attr_binned_values := [][]byte{}
-	// note that specifying the size of the array does not speed things up!
-	// mut test_attr_binned_values := [][]byte{cap: cl.attribute_ordering.len, init: []byte{len: test_ds.data[0].len}}
 	mut test_index := 0
 	for attr in cl.attribute_ordering {
 		// get an index into this attribute in test_ds
