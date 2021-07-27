@@ -22,6 +22,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		folds = ds.class_values.len
 	}
 	// println('folds: $folds')
+
 	// instantiate an entry for each class in the cross_result class_table
 	for key, value in ds.Class.class_counts {
 		cross_result.class_table[key] = tools.ResultForClass{
@@ -59,9 +60,12 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 
 // do_one_fold
 fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.Options) tools.VerifyResult {
-	mut byte_values_array := [][]byte{cap: cross_opts.number_of_attributes[0], init: []byte{}}
+	// mut byte_values_array := [][]byte{cap: cross_opts.number_of_attributes[0], init: []byte{}}
+	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition.partition(current_fold, folds, ds, cross_opts)
+	// println('part_ds: $part_ds')
+	// println('fold: $fold')
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
@@ -117,7 +121,7 @@ fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.Ve
 fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
 	// mut processed := 0
 	// mut result := tools.VerifyResult{}
-	mut current_fold := <-work_channel
+	mut current_fold := <- work_channel
 	// println('current_fold in option_worker: $current_fold')
 	result_channel <- do_one_fold(current_fold, folds, ds, opts)
 	// dump(result_channel)

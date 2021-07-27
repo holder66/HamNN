@@ -80,7 +80,7 @@ pub mut:
 	command              string
 	bins                 []int = [2, 16]
 	uniform_bins         bool
-	concurrency_flag     bool = true
+	concurrency_flag     bool = false
 	exclude_flag         bool = true
 	verbose_flag         bool
 	number_of_attributes []int = [0]
