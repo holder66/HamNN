@@ -29,6 +29,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			labeled_instances: value
 		}
 	}
+	println('cross_result: $cross_result.class_table')
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: folds}
@@ -41,7 +42,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		}
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
-			// println('fold_result in cross_validate: $fold_result')
+			println('fold_result in cross_validate: $fold_result')
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	} else {

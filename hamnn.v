@@ -31,6 +31,7 @@ Flags and options:
    value to be used for all attributes; two integers for a range of bin
    values; a third integer specifies an interval for the range (note that
    the binning range is from the upper to the lower value);
+-c --concurrent, permit parallel processing to use multiple cores;
 -e --expanded, expanded results on the console;
 -f --folds, default is leave-one-out;
 -h --help,
@@ -92,6 +93,7 @@ fn get_options(args []string) tools.Options {
 	if option(args, ['-b', '--bins']) != '' {
 		opts.bins = tools.parse_range(option(args, ['-b', '--bins']))
 	}
+	opts.concurrency_flag = flag(args, ['-c', '--concurrent'])
 	opts.exclude_flag = flag(args, ['-x', '--exclude'])
 	opts.verbose_flag = flag(args, ['-v', '--verbose'])
 	opts.weighting_flag = flag(args, ['-w', '--weight'])
