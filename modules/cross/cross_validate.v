@@ -29,7 +29,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			labeled_instances: value
 		}
 	}
-	println('cross_result: $cross_result.class_table')
+	// println('cross_result: $cross_result.class_table')
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: folds}
@@ -40,18 +40,28 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			// dump(work_channel)
 			go option_worker(work_channel, result_channel, folds, ds, opts)
 		}
-		for _ in 0 .. folds {
+		for i in 0 .. folds {
 			fold_result = <-result_channel
-			println('fold_result in cross_validate: $fold_result')
+			// println('fold_result in cross_validate: $fold_result')
+			// println('fold_result.class_table: $fold_result')
+			if fold_result.labeled_classes.len > 1 {
+				println('fold $i fold_result: $fold_result')
+			}
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
+			// println('fold_result.class_table: $fold_result')
+			if fold_result.labeled_classes.len > 1 {
+				println('fold $current_fold fold_result: $fold_result')
+			}
 			cross_result = update_cross_result(fold_result, mut cross_result)
+			// println('cross_result.class_table: $cross_result.class_table')
 		}
 	}
+	cross_result = finalize_cross_result(mut cross_result)
 
 	if opts.show_flag && opts.command == 'cross' {
 		show_crossvalidation_result(cross_result, opts)
@@ -70,6 +80,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
+	// println('fold_result: $fold_result')
 	part_cl := make.make_classifier(part_ds, cross_opts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
@@ -80,13 +91,17 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	}
 	fold_instances := tools.transpose(byte_values_array)
 	// for each class, instantiate an entry in the class table for the result
-	for key, value in part_cl.Class.class_counts {
+	// for key, value in part_cl.Class.class_counts {
+	for key, value in fold.Class.class_counts {
 		fold_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
 		}
 	}
+	// println('fold_result 2: $fold_result')
 	fold_result = verify.classify_to_verify(part_cl, fold_instances, mut fold_result,
 		cross_opts)
+	// println('fold_result 3: $fold_result')
+
 	return fold_result
 }
 
@@ -106,11 +121,22 @@ fn process_fold_data(part_attr tools.TrainedAttribute, fold_data []string) []byt
 
 // update_cross_result
 fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.VerifyResult) tools.VerifyResult {
-	mut correct_count := 0
+	// mut correct_count := 0
 	// for each class, add the fold counts to the cross_result counts
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
 		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
+		// value.missed_inferences = value.labeled_instances - value.correct_inferences
+		// correct_count += value.correct_inferences
+	}
+	// cross_result.correct_count = correct_count
+	return cross_result
+}
+
+// finalize_cross_result
+fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult {
+	mut correct_count := 0
+	for _, mut value in cross_result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		correct_count += value.correct_inferences
 	}
