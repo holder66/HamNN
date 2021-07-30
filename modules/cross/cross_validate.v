@@ -16,12 +16,10 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	mut cross_result := tools.VerifyResult{
 		labeled_classes: ds.Class.class_values
 	}
-	// mut size := 1
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
 		folds = ds.class_values.len
 	}
-	// println('folds: $folds')
 
 	// instantiate an entry for each class in the cross_result class_table
 	for key, value in ds.Class.class_counts {
@@ -29,36 +27,23 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			labeled_instances: value
 		}
 	}
-	// println('cross_result: $cross_result.class_table')
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: folds}
 		mut result_channel := chan tools.VerifyResult{cap: folds}
 		for i in 0 .. folds {
-			// println('i in cross_validate: $i')
 			work_channel <- i
-			// dump(work_channel)
 			go option_worker(work_channel, result_channel, folds, ds, opts)
 		}
-		for i in 0 .. folds {
+		for _ in 0 .. folds {
 			fold_result = <-result_channel
-			// println('fold_result in cross_validate: $fold_result')
-			// println('fold_result.class_table: $fold_result')
-			if fold_result.labeled_classes.len > 1 {
-				println('fold $i fold_result: $fold_result')
-			}
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
-			// println('fold_result.class_table: $fold_result')
-			if fold_result.labeled_classes.len > 1 {
-				println('fold $current_fold fold_result: $fold_result')
-			}
 			cross_result = update_cross_result(fold_result, mut cross_result)
-			// println('cross_result.class_table: $cross_result.class_table')
 		}
 	}
 	cross_result = finalize_cross_result(mut cross_result)
@@ -75,8 +60,6 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition.partition(current_fold, folds, ds, cross_opts)
-	// println('part_ds: $part_ds')
-	// println('fold: $fold')
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
@@ -97,10 +80,8 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 			labeled_instances: value
 		}
 	}
-	// println('fold_result 2: $fold_result')
 	fold_result = verify.classify_to_verify(part_cl, fold_instances, mut fold_result,
 		cross_opts)
-	// println('fold_result 3: $fold_result')
 
 	return fold_result
 }
@@ -126,10 +107,7 @@ fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.Ve
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
 		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
-		// value.missed_inferences = value.labeled_instances - value.correct_inferences
-		// correct_count += value.correct_inferences
 	}
-	// cross_result.correct_count = correct_count
 	return cross_result
 }
 
@@ -146,12 +124,8 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
-	// mut processed := 0
-	// mut result := tools.VerifyResult{}
 	mut current_fold := <- work_channel
-	// println('current_fold in option_worker: $current_fold')
 	result_channel <- do_one_fold(current_fold, folds, ds, opts)
-	// dump(result_channel)
 	return
 }
 

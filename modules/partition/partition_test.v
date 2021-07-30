@@ -96,6 +96,6 @@ fn test_partition() {
 		'm': 4
 	}
 
-	part_ds, fold = partition(0, 149, tools.load_file('datasets/iris.tab'), opts)
-	println(fold)
+	// part_ds, fold = partition(0, 149, tools.load_file('datasets/iris.tab'), opts)
+	// println(fold)
 }
