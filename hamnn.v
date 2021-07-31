@@ -72,8 +72,8 @@ pub fn main() {
 		}
 	}
 	mut duration := sw.elapsed()
-	println('duration: $duration')
-	println('${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(), 60))} min ${math.fmod(duration.seconds(),
+	// println('duration: $duration')
+	println('processing time: ${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(), 60))} min ${math.fmod(duration.seconds(),
 		60):6.3f} sec')
 }
 

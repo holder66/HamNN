@@ -40,6 +40,22 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 		percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
 		println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
 	}
+	if opts.expanded_flag && opts.command == 'verify' {
+		mut show_expanded_verify_result := ['', 'Class                          Cases in         Correctly        Incorrectly  Wrongly classified', '                               test set          inferred           inferred     into this class']
+		mut total_cases := 0 
+		mut total_correct := 0 
+		mut total_incorrect := 0 
+		mut total_wrong := 0
+		for class, value in verify_result.class_table {
+			show_expanded_verify_result << '${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
+			total_cases += value.labeled_instances
+			total_correct += value.correct_inferences
+			total_incorrect += value.missed_inferences
+			total_wrong += value.wrong_inferences
+		}
+		show_expanded_verify_result << '\nTotals                            ${total_cases:5}   ${total_correct:5} (${f32(total_correct) * 100 / total_cases:6.2f}%)    ${total_incorrect:5} (${f32(total_incorrect) * 100 / total_cases:6.2f}%)     ${total_wrong:5} (${f32(total_wrong) * 100 / total_cases:6.2f}%)'
+		tools.print_array(show_expanded_verify_result)
+	}
 	return verify_result
 }
 
@@ -148,5 +164,6 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result.class_table in verify: $result.class_table')
 	}
+
 	return result
 }
