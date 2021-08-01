@@ -60,14 +60,7 @@ fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut res
 			result.class_table[classify_result.inferred_class].wrong_inferences += 1
 		}
 	}
-	for _, mut value in result.class_table {
-		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		result.correct_count += value.correct_inferences
-		result.total_count += value.labeled_instances
-		result.misses_count += value.missed_inferences
-		result.wrong_count += value.wrong_inferences
-	}
-	return result
+	return summarize_results(mut result)
 }
 
 // do_classification
@@ -146,6 +139,15 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 			}
 		}
 	}
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('result.class_table in verify: $result.class_table')
+	}
+
+	return summarize_results(mut result)
+}
+
+// summarize_results 
+fn summarize_results(mut result tools.VerifyResult) tools.VerifyResult {
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		result.correct_count += value.correct_inferences
@@ -153,9 +155,5 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 		result.misses_count += value.missed_inferences
 		result.wrong_count += value.wrong_inferences
 	}
-	if opts.verbose_flag && opts.command == 'verify' {
-		println('result.class_table in verify: $result.class_table')
-	}
-
 	return result
 }
