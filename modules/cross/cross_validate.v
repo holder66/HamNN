@@ -51,6 +51,9 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	if opts.show_flag && opts.command == 'cross' {
 		show_crossvalidation_result(cross_result, opts)
 	}
+	if opts.expanded_flag && opts.command == 'cross' {
+		tools.show_expanded_result(cross_result)
+	}
 	return cross_result
 }
 
@@ -74,8 +77,10 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	}
 	fold_instances := tools.transpose(byte_values_array)
 	// for each class, instantiate an entry in the class table for the result
-	// for key, value in part_cl.Class.class_counts {
-	for key, value in fold.Class.class_counts {
+	// note that this needs to use the classes in the partition portion, not  
+	// the fold, so that wrong inferences get recorded properly.
+	for key, value in part_cl.Class.class_counts {
+	// for key, value in fold.Class.class_counts {
 		fold_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
 		}
@@ -83,6 +88,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	fold_result = verify.classify_to_verify(part_cl, fold_instances, mut fold_result,
 		cross_opts)
 
+	// println('fold_result: $fold_result')
 	return fold_result
 }
 
@@ -108,6 +114,7 @@ fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.Ve
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
 		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
 	}
+	// println(cross_result)
 	return cross_result
 }
 
