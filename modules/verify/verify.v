@@ -142,12 +142,13 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 			}
 		}
 	}
-	mut correct_count := 0
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		correct_count += value.correct_inferences
+		result.correct_count += value.correct_inferences
+		result.total_count += value.labeled_instances
+		result.misses_count += value.missed_inferences
+		result.wrong_count += value.wrong_inferences
 	}
-	result.correct_count = correct_count
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result.class_table in verify: $result.class_table')
 	}
