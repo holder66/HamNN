@@ -27,8 +27,9 @@ fn test_verify() {
 	opts.bins = [2, 4]
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
-
-	assert verify(cl, opts).correct_count == 171
+	mut result := verify(cl, opts)
+	assert result.correct_count == 171
+	assert result.wrong_count == 3
 
 	// opts.datafile_path = 'datasets/mnist_test.tab'
 	// opts.testfile_path = 'datasets/mnist_test.tab'
@@ -43,12 +44,14 @@ fn test_verify() {
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true 
-	opts.expanded_flag = true
+	opts.expanded_flag = false
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
-	println(verify(cl, opts))
+	result = verify(cl, opts)
+	
 
-	// assert verify(cl, opts).correct_count == 171
+	assert result.correct_count == 335
+	assert result.wrong_count == 41
 
 	// opts.datafile_path = '/Users/henryolders/mnist_train.tab'
 	// opts.testfile_path = 'datasets/mnist_test.tab'

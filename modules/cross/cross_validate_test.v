@@ -15,29 +15,40 @@ fn test_cross_validate() {
 		concurrency_flag: true
 	}
 	mut ds := tools.load_file(opts.datafile_path)
-	assert cross_validate(ds, opts).correct_count == 881
+	mut result := cross_validate(ds, opts)
+	assert result.correct_count == 881
+	assert result.wrong_count == 0
 
 	opts.weighting_flag = true
-	assert cross_validate(ds, opts).correct_count == 876
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 876
+	assert result.wrong_count == 0
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3,3]
 	opts.folds = 0
 	ds = tools.load_file(opts.datafile_path)
-	assert cross_validate(ds, opts).correct_count == 10
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 10
+	assert result.wrong_count == 0
+
 
 	opts.datafile_path = 'datasets/iris.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]
 	opts.folds = 0
 	ds = tools.load_file(opts.datafile_path)
-	assert cross_validate(ds, opts).correct_count == 147
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 147
+	assert result.wrong_count == 0
 
 	opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
 	opts.number_of_attributes = [9]
 	ds = tools.load_file(opts.datafile_path)
-	assert cross_validate(ds, opts).correct_count == 672
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 672
+	assert result.wrong_count == 0
 
 	opts.datafile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [310]
@@ -45,5 +56,8 @@ fn test_cross_validate() {
 	opts.folds = 200
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
-	// assert cross_validate(ds, opts).correct_count == 9420
+	// result = cross_validate(ds, opts)
+	// assert result.correct_count == 9420
+	// assert result.wrong_count == 0
+
 }

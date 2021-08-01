@@ -43,6 +43,9 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	if opts.expanded_flag && opts.command == 'verify' {
 		tools.show_expanded_result(verify_result)
 	}
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('verify_result.class_table in verify: $verify_result.class_table')
+	}
 	return verify_result
 }
 
@@ -57,12 +60,13 @@ fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut res
 			result.class_table[classify_result.inferred_class].wrong_inferences += 1
 		}
 	}
-	mut correct_count := 0
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		correct_count += value.correct_inferences
+		result.correct_count += value.correct_inferences
+		result.total_count += value.labeled_instances
+		result.misses_count += value.missed_inferences
+		result.wrong_count += value.wrong_inferences
 	}
-	result.correct_count = correct_count
 	return result
 }
 
