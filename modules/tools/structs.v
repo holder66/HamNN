@@ -121,9 +121,9 @@ pub mut:
 	// counts           map[int]int
 	class_table   map[string]ResultForClass
 	correct_count int
-	misses_count int 
-	wrong_count int 
-	total_count int 
+	misses_count  int
+	wrong_count   int
+	total_count   int
 }
 
 pub struct ValidateResult {

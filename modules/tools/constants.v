@@ -16,6 +16,7 @@ For help with any of the commands below, enter the command followed by
 Usage:
 Specify the file's path as the last command line argument, 
   eg, v run hamnn.v analyze datasets/iris.tab
+
 Commands:
 analyze:   print information about the dataset to the console;
 cross:     performs a cross-validation on a dataset;
@@ -34,6 +35,37 @@ validate:  as for verify, but using an unlabeled second dataset. Outputs
 verify:    use a classifier and a second labeled dataset to verify how well
            the classifier performs in classifying the second dataset's 
            instances;
+
+Flags:
+-a --attributes: can be one, two, or 3 integers; a single integer will
+                 be used by make_classifier to produce a classifier with that 
+                 number of attributes. More than one integer will be used by
+                 explore to provide a range and an interval;
+-b --bins:       can be one, two, or 3 integers; a single integer for one bin
+                 value to be used for all attributes; two integers for a range 
+                 of bin values; a third integer specifies an interval for the 
+                 range (note that the binning range is from the upper to the 
+                 lower value);
+-c --concurrent: enable parallel processing to use multiple cores;
+-e --expanded:   show expanded results on the console;
+-f --folds:      default is leave-one-out;
+-h --help:        
+-j --json:       followed by the path to a file in which a classifier is to 
+                 be stored as json;
+-p --part:       followed by an integer indicating partition number (note that
+                 partition number might be called fold number in other
+                 settings);
+-r --reps:       number of repetitions; if > 1, a random selection of
+                 instances to be included in each fold will be applied;
+-s --show:       output results to the console;
+-t --test:       followed by the path to the datafile to be verified or
+                 validated;
+-u --uniform:    use a single bin value for all attributes for ranking;
+-v --verbose:
+-w --weight:     when classifying, weight the nearest neighbour counts by class 
+                 prevalences;
+-x --exclude:    do not take into account missing values when ranking 
+                 attributes;
 			"
 
 	analyze_help = '
