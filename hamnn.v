@@ -49,7 +49,7 @@ Flags and options:
 -x --exclude, do not take into account missing values when ranking attributes;*/
 pub fn main() {
 	// get the command line string and use it to create an Options struct
-	sw := time.new_stopwatch({})
+	sw := time.new_stopwatch()
 	mut opts := get_options(os.args[1..])
 
 	if opts.help_flag {

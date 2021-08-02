@@ -20,7 +20,7 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 	// update the Class struct for the rest of the dataset
 	part_ds_class_values := get_rest_of_array(ds.Class.class_values, s, e)
 	// println('part_ds.Class: $part_ds.Class')
-	part_ds.Class = {
+	part_ds.Class = tools.Class{
 		class_name: ds.Class.class_name // for some reason, this gets emptied
 		class_values: part_ds_class_values
 		class_counts: tools.string_element_counts(part_ds_class_values)
@@ -37,7 +37,7 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 		attribute_names: ds.attribute_names
 		data: fold_data
 	}
-	fold.Class = {
+	fold.Class = tools.Class{
 		class_name: ds.Class.class_name
 		class_values: fold_class_values
 		class_counts: tools.string_element_counts(fold_class_values)

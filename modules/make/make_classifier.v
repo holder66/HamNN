@@ -9,7 +9,7 @@ import rank
 import arrays
 import math
 import time
-import v.util
+// import v.util
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
 // tools.load_file). Type: `v run hamnn.v make --help`
@@ -21,7 +21,7 @@ the classifier (chosen from the list of ranked attributes); exclude_flag
 pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	mut cl := tools.Classifier{
 		utc_date_time: time.utc()
-		vlang_version: util.full_v_version(true)
+		// vlang_version: util.full_v_version(true)
 		hamnn_version: '0.1.0'
 		Class: ds.Class
 		Options: opts
@@ -56,7 +56,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 			min = arrays.min(attr_values.filter(it != -math.max_f32))
 			max = arrays.max(attr_values)
 			binned_values = tools.discretize_attribute(attr_values, min, max, ra.bins)
-			cl.trained_attributes[ra.attribute_name] = {
+			cl.trained_attributes[ra.attribute_name] = tools.TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type
 				minimum: min
 				maximum: max
@@ -67,7 +67,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 			translation_table = make_translation_table(attr_string_values)
 			// use the translation table to generate an array of translated values
 			binned_values = attr_string_values.map(translation_table[it])
-			cl.trained_attributes[ra.attribute_name] = {
+			cl.trained_attributes[ra.attribute_name] = tools.TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type
 				translation_table: translation_table
 			}

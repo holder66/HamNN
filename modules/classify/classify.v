@@ -71,7 +71,7 @@ pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, 
 		// look for a single maximum; if found, return its class
 		index, max_count := idx_count_max(results[i])
 		if max_count == 1 {
-			classify_result = {
+			classify_result = tools.ClassifyResult{
 				inferred_class: classes[index]
 				nearest_neighbors_by_class: results[i]
 				classes: cl.class_counts.keys()
