@@ -20,4 +20,7 @@ pub fn show_expanded_result(result VerifyResult) {
 	}
 	show_result << '\nTotals                            ${total_cases:5}   ${total_correct:5} (${f32(total_correct) * 100 / total_cases:6.2f}%)    ${total_incorrect:5} (${f32(total_incorrect) * 100 / total_cases:6.2f}%)     ${total_wrong:5} (${f32(total_wrong) * 100 / total_cases:6.2f}%)'
 	print_array(show_result)
+	if result.class_table.len == 2 {
+		println('stats for 2 classes')
+	}
 }

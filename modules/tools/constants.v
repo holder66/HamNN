@@ -185,6 +185,8 @@ classes to provide accuracy and other statistics.
 Options:
 	In addition to the options below, the options for "make" apply to 
 	both the classification and the verification datafile.
+  -c --concurrent, permit parallel processing to use multiple cores;
+  -e --expanded, expanded results on the console;
 	-t --test, followed by the file path for the datafile to be used 
 	for verification
 	-v --verbose, output debugging information to the console 
@@ -251,6 +253,8 @@ Options:
       ranked attributes) to be used in training the classifier
   -b --bins, eg, "3,6" specifies the lower and upper limits for the 
       number of slices or bins for continuous attributes;
+  -c --concurrent, permit parallel processing to use multiple cores;
+  -e --expanded, expanded results on the console;
   -f --folds, number of cross-validation folds (default is leave-one-out)
   -r --reps, number of repetitions; if > 1, a random selection of 
       instances to be included in each fold will be applied (TODO);
@@ -276,6 +280,7 @@ Options:
   -a --attributes, a range for the number of attributes (picked from the list
       of ranked attributes) to be used in training the classifier;
   -b --bins, a range for the number of bins for continuous attributes;
+  -c --concurrent, permit parallel processing to use multiple cores;
   -f --folds, number of cross-validation folds (default is leave-one-out)
   -r --reps, number of repetitions; if > 1, a random selection of 
       instances to be included in each fold will be applied (TODO);
