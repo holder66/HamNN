@@ -29,13 +29,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	// attribute parameters in the classifier
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for each instance in the test data, perform a classification
-	mut classify_result_array := do_classification(cl, test_instances, opts)
-	// in order to compare inferred classes to expected classes, 
-	// add labeled_class values to classify_result_array
-	for i, mut value in classify_result_array {
-		value.labeled_class = test_ds.class_values[i]
-	}
-	verify_result = verify_classify_results(classify_result_array, mut verify_result)
+	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
 	if opts.show_flag && opts.command == 'verify' {
 		percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
 		println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
@@ -51,8 +45,6 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 
 // verify_classify_results
 fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut result tools.VerifyResult) tools.VerifyResult {
-	// println(result)
-
 	for classify_result in classify_result_array {
 		if classify_result.inferred_class == classify_result.labeled_class {
 			result.class_table[classify_result.inferred_class].correct_inferences += 1
@@ -107,7 +99,7 @@ fn option_worker(work_channel chan int, result_channel chan tools.ClassifyResult
 	return
 }
 
-// classify_to_verify
+// classify_to_verify is used by cross_validate
 pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
