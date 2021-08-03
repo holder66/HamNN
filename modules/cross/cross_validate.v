@@ -15,6 +15,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	mut fold_result := tools.VerifyResult{}
 	mut cross_result := tools.VerifyResult{
 		labeled_classes: ds.Class.class_values
+		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
 	}
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
@@ -47,13 +48,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		}
 	}
 	cross_result = finalize_cross_result(mut cross_result)
-
-	if opts.show_flag && opts.command == 'cross' {
-		show_crossvalidation_result(cross_result, opts)
-	}
-	if opts.expanded_flag && opts.command == 'cross' {
-		tools.show_expanded_result(cross_result)
-	}
+	tools.show_results(cross_result, cross_opts)
 	return cross_result
 }
 
@@ -136,21 +131,3 @@ fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, 
 	return
 }
 
-// show_crossvalidation_result
-fn show_crossvalidation_result(cross_result tools.VerifyResult, opts tools.Options) {
-	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
-	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
-	exclude_string := if opts.exclude_flag {
-		'excluding missing values'
-	} else {
-		'including missing values'
-	}
-	attr_string := if opts.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		opts.number_of_attributes[0].str()
-	}
-	weight_string := if opts.weighting_flag { '' } else { 'not' }
-
-	println('Cross-validation of "$opts.datafile_path" using $folding_string partitioning,\n$attr_string attributes, $exclude_string,\nbin range for continuous attributes from ${opts.bins[0]} to ${opts.bins[1]},\nand $weight_string weighting the number of nearest neighbor counts by class prevalences.\ncorrect inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len  ${percent:5.2f}%')
-}

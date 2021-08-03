@@ -91,7 +91,6 @@ pub mut:
 	help_flag            bool
 	weighting_flag       bool
 	folds                int
-	// current_fold         int // 1-based counting
 	repetitions int
 	random_pick bool
 }
@@ -120,6 +119,7 @@ pub mut:
 	// matches          []int
 	// counts           map[int]int
 	class_table   map[string]ResultForClass
+	pos_neg_classes []string
 	correct_count int
 	misses_count  int
 	wrong_count   int

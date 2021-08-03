@@ -18,6 +18,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	// instantiate a struct for the result
 	mut verify_result := tools.VerifyResult{
 		labeled_classes: test_ds.Class.class_values
+		pos_neg_classes: tools.get_pos_neg_classes(test_ds.class_counts)
 	}
 	// for each class, instantiate an entry in the class table
 	for key, value in test_ds.Class.class_counts {
@@ -30,13 +31,15 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for each instance in the test data, perform a classification
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	if opts.show_flag && opts.command == 'verify' {
-		percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
-		println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
-	}
-	if opts.expanded_flag && opts.command == 'verify' {
-		tools.show_expanded_result(verify_result)
-	}
+	tools.show_results(verify_result, opts)
+	// if opts.show_flag && opts.command == 'verify' {
+
+	// 	percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
+	// 	println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
+	// }
+	// if opts.expanded_flag && opts.command == 'verify' {
+	// 	tools.show_expanded_result(verify_result, opts)
+	// }
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result.class_table in verify: $verify_result.class_table')
 	}
