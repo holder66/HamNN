@@ -38,31 +38,15 @@ pub fn show_results(result VerifyResult, opts Options) {
 }
 // show_expanded_result
 pub fn show_expanded_result(result VerifyResult, opts Options) {
-	mut show_result := [
-		'Class                          Cases in         Correctly        Incorrectly  Wrongly classified',
-		'                               test set          inferred           inferred     into this class',
-	]
-	mut total_cases := 0
-	mut total_correct := 0
-	mut total_incorrect := 0
-	mut total_wrong := 0
-	for class, value in result.class_table {
-		show_result << '${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
-		total_cases += value.labeled_instances
-		total_correct += value.correct_inferences
-		total_incorrect += value.missed_inferences
-		total_wrong += value.wrong_inferences
-	}
-	show_result << '\nTotals                            ${total_cases:5}   ${total_correct:5} (${f32(total_correct) * 100 / total_cases:6.2f}%)    ${total_incorrect:5} (${f32(total_incorrect) * 100 / total_cases:6.2f}%)     ${total_wrong:5} (${f32(total_wrong) * 100 / total_cases:6.2f}%)'
-	print_array(show_result)
-
+	println('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class')
+	
+	show_multiple_classes_stats(result, 0)
 	if result.class_table.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('   TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 		println('${get_binary_stats(result)}')
 	}	
 }
-
 
 // get_binary_stats 
 fn get_binary_stats(result VerifyResult) string {
@@ -85,8 +69,29 @@ fn show_expanded_explore_result(result VerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${opts.bins[0]:5}  ${get_binary_stats(result)}')
 		} else {
-			println('multiple classes')
+			println('${opts.number_of_attributes[0]:10} ${opts.bins[0]:5}')
+			show_multiple_classes_stats(result, 18)
 		}
+}
+
+// show_multiple_classes_stats 
+fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
+	mut spacer := ''
+	for _ in 0..spacer_size { spacer += ' '}
+	mut show_result := []string{}
+	mut total_cases := 0
+	mut total_correct := 0
+	mut total_incorrect := 0
+	mut total_wrong := 0
+	for class, value in result.class_table {
+		show_result << '$spacer${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
+		total_cases += value.labeled_instances
+		total_correct += value.correct_inferences
+		total_incorrect += value.missed_inferences
+		total_wrong += value.wrong_inferences
+	}
+	show_result << '$spacer   Totals                         ${total_cases:5}   ${total_correct:5} (${f32(total_correct) * 100 / total_cases:6.2f}%)    ${total_incorrect:5} (${f32(total_incorrect) * 100 / total_cases:6.2f}%)     ${total_wrong:5} (${f32(total_wrong) * 100 / total_cases:6.2f}%)'
+	print_array(show_result)
 }
 
 // show_crossvalidation_result
@@ -123,9 +128,10 @@ pub fn expanded_explore_header(result VerifyResult, opts Options) {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 	println('Attributes  Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 	} else {
-		println('for multiple classes')
+		println('Attributes  Bins  Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
+		println('                                                 test set          inferred           inferred     into this class')
 	}
-}
+} 
 
 // get_pos_neg_classes 
 pub fn get_pos_neg_classes(class_counts map[string]int) []string {
