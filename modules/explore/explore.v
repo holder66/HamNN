@@ -2,11 +2,15 @@
 module explore
 
 import tools
+import make 
 import cross
+import verify
 
 // explore runs a series of cross-validations, over a range of
-// attributes and a range of binning values. Type: `v run hamnn.v explore --help`
-pub fn explore(ds tools.Dataset, opts tools.Options) {
+// attributes and a range of binning values.
+// If a second file is given (after the -t option), then explore
+// runs a series of verifies. Type: `v run hamnn.v explore --help`
+pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 	println(ds.class_counts)
 	mut ex_opts := opts
 	mut result := tools.VerifyResult{
@@ -65,17 +69,26 @@ pub fn explore(ds tools.Dataset, opts tools.Options) {
 	}
 	mut atts := start_attr
 	mut bin := start_bin
+	mut cl := tools.Classifier{}
+	mut results := []tools.VerifyResult{}
 
 	for atts <= end_attr {
 		ex_opts.number_of_attributes = [atts]
 		bin = start_bin
 		for bin <= end_bin {
 			ex_opts.bins = [bin]
-			result = cross.cross_validate(ds, ex_opts)
+			if ex_opts.testfile_path == '' {
+				result = cross.cross_validate(ds, ex_opts)
+			} else {
+				cl = make.make_classifier(ds, ex_opts)
+				result = verify.verify(cl, ex_opts)
+			}
 			// if ex_opts.expanded_flag {tools.show_expanded_result(result, ex_opts)}
 			// tools.show_results(result, ex_opts)
+			results << result 
 			bin += interval_bin
 		}
 		atts += interval_attr
 	}
+	return results
 }

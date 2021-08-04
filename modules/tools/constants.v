@@ -267,7 +267,8 @@ Options:
 '
 
 	explore_help = '
-"explore" runs a series of cross-validations over a range of parameter 
+"explore" runs a series of cross-validations (or of verifies, if a
+second file is given) over a range of parameter 
 settings, used when seeking optimal values for parameters. A parameter 
 range can be specified with up to 3 integers, with the first two for 
 lower and upper ends of the range, and the 3rd integer (optional) for
@@ -285,6 +286,7 @@ Options:
   -r --reps, number of repetitions; if > 1, a random selection of 
       instances to be included in each fold will be applied (TODO);
   -s --show, output to the console the results of the cross-validation;
+  -t --test, followed by the path to a second file, used for verifications;
   -v --verbose, output debugging information to the console;
   -w --weight, weight the number of nearest neighbor counts by 
       class prevalences;
