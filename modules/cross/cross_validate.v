@@ -47,7 +47,9 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
+	// println(cross_result)
 	cross_result = finalize_cross_result(mut cross_result)
+	// println(cross_result)
 	tools.show_results(cross_result, cross_opts)
 	return cross_result
 }
@@ -115,12 +117,13 @@ fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.Ve
 
 // finalize_cross_result
 fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult {
-	mut correct_count := 0
 	for _, mut value in cross_result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		correct_count += value.correct_inferences
+		cross_result.correct_count += value.correct_inferences
+		cross_result.misses_count += value.missed_inferences
+		cross_result.wrong_count += value.wrong_inferences
+		cross_result.total_count += value.labeled_instances
 	}
-	cross_result.correct_count = correct_count
 	return cross_result
 }
 

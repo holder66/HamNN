@@ -11,12 +11,12 @@ fn test_transpose() {
 }
 
 fn test_element_counts() {
-	assert string_element_counts(['i']) == map{
+	assert string_element_counts(['i']) ==  {
 		'i': 1
 	}
 	assert string_element_counts([]) == map[string]int{}
 	mut elements := ['i', '', 'w', 'cD', 'C', 'm', '', 'T', 'S', '']
-	assert string_element_counts(elements) == map{
+	assert string_element_counts(elements) == {
 		'i':  1
 		'':   3
 		'w':  1

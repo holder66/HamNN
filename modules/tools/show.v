@@ -79,18 +79,10 @@ fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
 	mut spacer := ''
 	for _ in 0..spacer_size { spacer += ' '}
 	mut show_result := []string{}
-	mut total_cases := 0
-	mut total_correct := 0
-	mut total_incorrect := 0
-	mut total_wrong := 0
 	for class, value in result.class_table {
 		show_result << '$spacer${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
-		total_cases += value.labeled_instances
-		total_correct += value.correct_inferences
-		total_incorrect += value.missed_inferences
-		total_wrong += value.wrong_inferences
 	}
-	show_result << '$spacer   Totals                         ${total_cases:5}   ${total_correct:5} (${f32(total_correct) * 100 / total_cases:6.2f}%)    ${total_incorrect:5} (${f32(total_incorrect) * 100 / total_cases:6.2f}%)     ${total_wrong:5} (${f32(total_wrong) * 100 / total_cases:6.2f}%)'
+	show_result << '$spacer   Totals                         ${result.total_count:5}   ${result.correct_count:5} (${f32(result.correct_count) * 100 / result.total_count:6.2f}%)    ${result.misses_count:5} (${f32(result.misses_count) * 100 / result.total_count:6.2f}%)     ${result.wrong_count:5} (${f32(result.wrong_count) * 100 / result.total_count:6.2f}%)'
 	print_array(show_result)
 }
 

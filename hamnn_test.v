@@ -9,7 +9,7 @@ fn test_load_file_older() {
 	ds := tools.load_file('datasets/bcw174test')
 	assert ds.inferred_attribute_types == ['i', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'c']
 	assert ds.Class.class_name == 'Class'
-	assert ds.Class.class_counts == map{
+	assert ds.Class.class_counts == {
 		'benign':    136
 		'malignant': 38
 	}

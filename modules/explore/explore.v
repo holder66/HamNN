@@ -11,7 +11,7 @@ import verify
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
 pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
-	println(ds.class_counts)
+	// println(ds.class_counts)
 	mut ex_opts := opts
 	mut result := tools.VerifyResult{
 		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
