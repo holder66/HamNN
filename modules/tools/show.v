@@ -14,7 +14,7 @@ pub fn show_results(result VerifyResult, opts Options) {
 			}
 			'explore' {
 				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('${opts.number_of_attributes[0]:10}  ${opts.bins[0]:4}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
+			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
 			}
 			else { println('Nothing to show!')}
 		}
@@ -36,6 +36,15 @@ pub fn show_results(result VerifyResult, opts Options) {
 		}
 	}
 }
+
+// get_show_bins 
+fn get_show_bins(bins []int) string {
+	mut show_bins := ''
+	if bins.len == 1 { show_bins = '${bins[0]:7}' }
+	else { show_bins = '${bins[0]:2} - ${bins[1]:-2}' }
+	return show_bins
+}
+
 // show_expanded_result
 pub fn show_expanded_result(result VerifyResult, opts Options) {
 	println('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class')
@@ -67,10 +76,10 @@ fn get_binary_stats(result VerifyResult) string {
 // show_expanded_explore_result 
 fn show_expanded_explore_result(result VerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
-		println('${opts.number_of_attributes[0]:10} ${opts.bins[0]:5}  ${get_binary_stats(result)}')
+		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 		} else {
-			println('${opts.number_of_attributes[0]:10} ${opts.bins[0]:5}')
-			show_multiple_classes_stats(result, 18)
+			println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
+			show_multiple_classes_stats(result, 21)
 		}
 }
 
@@ -109,8 +118,8 @@ pub fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 pub fn show_explore_header(opts Options) {
 	println('\nExplore "$opts.datafile_path"')
 	println('Exclude: $opts.exclude_flag; Weighting: $opts.weighting_flag')
-	println('Attributes  Bins  Matches  Nonmatches  Percent')
-	println('__________  ____  _______  __________  _______')
+	println('Attributes     Bins  Matches  Nonmatches  Percent')
+	println('__________  _______  _______  __________  _______')
 }
 
 // expanded_explore_header 
@@ -118,10 +127,10 @@ pub fn expanded_explore_header(result VerifyResult, opts Options) {
 	println('Options: $opts')
 	if result.pos_neg_classes[0] != '' {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-	println('Attributes  Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
+	println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 	} else {
-		println('Attributes  Bins  Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
-		println('                                                 test set          inferred           inferred     into this class')
+		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
+		println('                                                    test set          inferred           inferred     into this class')
 	}
 } 
 

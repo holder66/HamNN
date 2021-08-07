@@ -60,8 +60,7 @@ Flags:
 -s --show:       output results to the console;
 -t --test:       followed by the path to the datafile to be verified or
                  validated;
--u --uniform:    use a single bin value for all attributes for ranking;
--v --verbose:
+-v --verbose:    display additional information for debugging
 -w --weight:     when classifying, weight the nearest neighbour counts by class 
                  prevalences;
 -x --exclude:    do not take into account missing values when ranking 

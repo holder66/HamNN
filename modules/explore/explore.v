@@ -24,7 +24,7 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 	}
 	// if there are no useful continuous attributes, skip the binning
 	if ds.useful_continuous_attributes.len == 0 {
-		ex_opts.bins = [1]
+		ex_opts.bins = [0]
 	}
 	mut start_attr := 1
 	mut end_attr := 2
@@ -41,14 +41,15 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 			interval_attr = ex_opts.number_of_attributes[2]
 		}
 	}
-
+	// for uniform binning (ie, the same number of bins
+	// for all continuous attributes)
 	mut start_bin := 2
 	mut end_bin := start_bin
 	mut interval_bin := 1
 	if ex_opts.bins.len == 1 || (ex_opts.bins.len == 2 && ex_opts.bins[0] == ex_opts.bins[1]) {
 		start_bin = ex_opts.bins[0]
 		end_bin = start_bin
-		ex_opts.uniform_bins = true
+		// ex_opts.uniform_bins = true
 	} else if ex_opts.bins.len >= 2 {
 		start_bin = ex_opts.bins[0]
 		end_bin = ex_opts.bins[1]
@@ -56,9 +57,9 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 			interval_bin = ex_opts.bins[2]
 		}
 	}
-	if ex_opts.bins == [1] {
-		start_bin = 1
-		end_bin = 1
+	if ex_opts.bins == [0] {
+		start_bin = 0
+		end_bin = 0
 	}
 	if opts.show_flag { tools.show_explore_header(opts) }
 	if opts.expanded_flag { tools.expanded_explore_header(result, opts) }
@@ -76,7 +77,12 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		ex_opts.number_of_attributes = [atts]
 		bin = start_bin
 		for bin <= end_bin {
+			if ex_opts.uniform_bins {
 			ex_opts.bins = [bin]
+			} else {
+				ex_opts.bins = [start_bin, bin]
+			}
+			// println('ex_opts.bins: $ex_opts.bins')
 			if ex_opts.testfile_path == '' {
 				result = cross.cross_validate(ds, ex_opts)
 			} else {
