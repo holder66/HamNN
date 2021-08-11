@@ -49,6 +49,7 @@ Flags:
 -c --concurrent: enable parallel processing to use multiple cores;
 -e --expanded:   show expanded results on the console;
 -f --folds:      default is leave-one-out;
+-g --graph:      displays a plot;
 -h --help:        
 -j --json:       followed by the path to a file in which a classifier is to 
                  be stored as json;

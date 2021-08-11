@@ -16,6 +16,7 @@ import explore
 import os.cmdline as oscmdline
 import time
 import math
+import runtime
 
 // main is the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 /*
@@ -42,6 +43,7 @@ Flags and options:
 -c --concurrent, permit parallel processing to use multiple cores;
 -e --expanded, expanded results on the console;
 -f --folds, default is leave-one-out;
+-g --graph, displays a plot;
 -h --help,
 -j --json, followed by the path to a file in which a classifier stored
 	as json;
@@ -59,7 +61,9 @@ Flags and options:
 pub fn main() {
 	// get the command line string and use it to create an Options struct
 	sw := time.new_stopwatch()
+	println('nr_cpus: ${runtime.nr_cpus()} nr_jobs: ${runtime.nr_jobs()}')
 	mut opts := get_options(os.args[1..])
+
 
 	if opts.help_flag {
 		println(show_help(opts))
@@ -104,6 +108,7 @@ fn get_options(args []string) tools.Options {
 	}
 	opts.concurrency_flag = flag(args, ['-c', '--concurrent'])
 	opts.exclude_flag = flag(args, ['-x', '--exclude'])
+	opts.graph_flag = flag(args, ['-g', '--graph'])
 	opts.verbose_flag = flag(args, ['-v', '--verbose'])
 	opts.weighting_flag = flag(args, ['-w', '--weight'])
 	opts.uniform_bins = flag(args, ['-u', '--uniform'])
@@ -216,21 +221,6 @@ fn partition(opts tools.Options) {
 // according to their capacity to separate the classes
 fn rank(opts tools.Options) []tools.RankedAttribute {
 	return rank.rank_attributes(tools.load_file(opts.datafile_path), opts)
-	// if opts.show_flag {
-	// 	mut exclude_phrase := 'including missing values'
-	// 	if opts.exclude_flag {
-	// 		exclude_phrase = 'excluding missing values'
-	// 	}
-	// 	mut show_ranked_attributes := ['', 'Attributes Sorted by Rank Value, $exclude_phrase',
-	// 		'For datafile: $opts.datafile_path, binning range $opts.bins',
-	// 		' Index  Name                  Type   Rank Value   Bins',
-	// 		' _____  ____                  ____   __________   ____',
-	// 	]
-	// 	for attr in ranked_attributes {
-	// 		show_ranked_attributes << '${attr.attribute_index:6}  ${attr.attribute_name:-18} ${attr.inferred_attribute_type:7} ${attr.rank_value:12.2f} ${attr.bins:6}'
-	// 	}
-	// 	tools.print_array(show_ranked_attributes)
-	// }
 }
 
 // make returns a Classifier struct

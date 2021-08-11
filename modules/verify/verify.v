@@ -7,6 +7,7 @@ module verify
 
 import tools
 import classify
+import runtime
 
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
@@ -109,7 +110,7 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	mut classify_result := tools.ClassifyResult{}
 
 	if opts.concurrency_flag {
-		mut work_channel := chan int{cap: test_instances.len}
+		mut work_channel := chan int{cap: runtime.nr_jobs()}
 		mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
 		for i, _ in test_instances {
 			work_channel <- i

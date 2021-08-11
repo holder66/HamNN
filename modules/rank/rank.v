@@ -42,6 +42,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	mut count := 0
 	// mut diff := 0
 	mut rank_value := i64(0)
+	mut rank_value_array := []f32{}
 	mut maximum_rank_value := i64(0)
 	mut attr_index_for_maximum_rank_value := 0
 	mut bin_number_for_maximum_rank_value := 0
@@ -50,6 +51,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	mut binned_values := []int{}
 	// loop through usable continuous attributes
 	for attr_index, attr_values in ds.useful_continuous_attributes {
+		rank_value_array = []
 		maximum_rank_value = 0
 		attr_index_for_maximum_rank_value = 0
 		bin_number_for_maximum_rank_value = 0
@@ -92,6 +94,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 				}
 				rank_value += sum_along_row(row, tools.get_map_values(ds.class_counts))
 			}
+			
 			// for each attribute, find the maximum for the rank_values and
 			// the corresponding number of bins
 			// println('$attr_index ${ds.attribute_names[attr_index]} $rank_value  bins: $bin_number')
@@ -100,13 +103,17 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 				attr_index_for_maximum_rank_value = attr_index
 				bin_number_for_maximum_rank_value = bin_number
 			}
+			rank_value_array << f32(rank_value)
 			bin_number -= interval
 		}
+		rank_value_array = rank_value_array.map(100. * f32(it) / perfect_rank_value)
+		println(rank_value_array)
 		ranked_atts << tools.RankedAttribute{
 			attribute_index: attr_index_for_maximum_rank_value
 			attribute_name: ds.attribute_names[attr_index_for_maximum_rank_value]
 			inferred_attribute_type: ds.inferred_attribute_types[attr_index_for_maximum_rank_value]
 			rank_value: 100. * f32(maximum_rank_value) / perfect_rank_value
+			rank_value_array: rank_value_array
 			bins: bin_number_for_maximum_rank_value
 		}
 	}
@@ -137,6 +144,9 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 			show_ranked_attributes << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
 		}
 		tools.print_array(show_ranked_attributes)
+	}
+	if opts.graph_flag && opts.command == 'rank' {
+		tools.plot_rank(ranked_atts, opts)
 	}
 
 	return ranked_atts

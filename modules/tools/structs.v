@@ -44,7 +44,8 @@ pub mut:
 	attribute_index         int
 	attribute_name          string
 	inferred_attribute_type string
-	rank_value              f64
+	rank_value              f32
+	rank_value_array        []f32
 	bins                    int
 }
 
@@ -82,6 +83,7 @@ pub mut:
 	uniform_bins         bool
 	concurrency_flag     bool = true
 	exclude_flag         bool = true
+	graph_flag           bool
 	verbose_flag         bool
 	number_of_attributes []int = [0]
 	show_flag            bool
