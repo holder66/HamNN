@@ -1,13 +1,14 @@
 // show_test.v
 module tools
 
-import os 
+import os
 // test_setup 
+
 fn test_setup() {
 	os.execute_or_panic('v -gc boehm hamnn.v')
 }
 
-// test_show_verify 
+// test_show_verify
 fn test_show_verify() {
 	mut s := './hamnn verify -c -s -t datasets/bcw174test datasets/bcw350train'
 	println(s)
@@ -23,7 +24,7 @@ fn test_show_verify() {
 	println(os.execute_or_panic(s))
 }
 
-// test_show_cross 
+// test_show_cross
 fn test_show_cross() {
 	mut s := './hamnn cross -c -s -a 2 -b 3,3 datasets/iris.tab'
 	println(s)

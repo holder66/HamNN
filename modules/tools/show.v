@@ -1,22 +1,28 @@
 // show.v
+
 module tools
 
-// show_results 
+// show_results
+// note that in the case of `explore` and the expanded_flag, explore.v
+// initiates the printing of headers to the console, while the printing
+// of each line of the result is initiated in either cross.v or verify.v
 pub fn show_results(result VerifyResult, opts Options) {
 	if opts.show_flag {
 		match opts.command {
 			'verify' {
 				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+				println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
 			}
 			'cross' {
 				show_crossvalidation_result(result, opts)
 			}
 			'explore' {
 				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
+				println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
 			}
-			else { println('Nothing to show!')}
+			else {
+				println('Nothing to show!')
+			}
 		}
 	}
 	if opts.expanded_flag {
@@ -32,32 +38,37 @@ pub fn show_results(result VerifyResult, opts Options) {
 			'explore' {
 				show_expanded_explore_result(result, opts)
 			}
-			else { println('Nothing to expand on!')}
+			else {
+				println('Nothing to expand on!')
+			}
 		}
 	}
 }
 
-// get_show_bins 
+// get_show_bins
 fn get_show_bins(bins []int) string {
 	mut show_bins := ''
-	if bins.len == 1 { show_bins = '${bins[0]:7}' }
-	else { show_bins = '${bins[0]:2} - ${bins[1]:-2}' }
+	if bins.len == 1 {
+		show_bins = '${bins[0]:7}'
+	} else {
+		show_bins = '${bins[0]:2} - ${bins[1]:-2}'
+	}
 	return show_bins
 }
 
 // show_expanded_result
 pub fn show_expanded_result(result VerifyResult, opts Options) {
 	println('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class')
-	
+
 	show_multiple_classes_stats(result, 0)
 	if result.class_table.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('   TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 		println('${get_binary_stats(result)}')
-	}	
+	}
 }
 
-// get_binary_stats 
+// get_binary_stats
 fn get_binary_stats(result VerifyResult) string {
 	pos_class := result.pos_neg_classes[0]
 	neg_class := result.pos_neg_classes[1]
@@ -73,20 +84,22 @@ fn get_binary_stats(result VerifyResult) string {
 	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:5.3f} ${npv:5.3f} ${ba:18.3f}'
 }
 
-// show_expanded_explore_result 
+// show_expanded_explore_result
 fn show_expanded_explore_result(result VerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
-		} else {
-			println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-			show_multiple_classes_stats(result, 21)
-		}
+	} else {
+		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
+		show_multiple_classes_stats(result, 21)
+	}
 }
 
-// show_multiple_classes_stats 
+// show_multiple_classes_stats
 fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
 	mut spacer := ''
-	for _ in 0..spacer_size { spacer += ' '}
+	for _ in 0 .. spacer_size {
+		spacer += ' '
+	}
 	mut show_result := []string{}
 	for class, value in result.class_table {
 		show_result << '$spacer${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
@@ -122,19 +135,19 @@ pub fn show_explore_header(opts Options) {
 	println('__________  _______  _______  __________  _______')
 }
 
-// expanded_explore_header 
+// expanded_explore_header
 pub fn expanded_explore_header(result VerifyResult, opts Options) {
-	println('Options: $opts')
+	// println('Options: $opts')
 	if result.pos_neg_classes[0] != '' {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-	println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
+		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 	} else {
 		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
 		println('                                                    test set          inferred           inferred     into this class')
 	}
-} 
+}
 
-// get_pos_neg_classes 
+// get_pos_neg_classes
 pub fn get_pos_neg_classes(class_counts map[string]int) []string {
 	mut pos_class := ''
 	mut neg_class := ''
@@ -142,7 +155,7 @@ pub fn get_pos_neg_classes(class_counts map[string]int) []string {
 		mut keys := []string{}
 		mut counts := []int{}
 		for key, value in class_counts {
-			keys << key 
+			keys << key
 			counts << value
 		}
 		// use the class with fewer instances as the true positive class

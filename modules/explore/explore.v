@@ -2,7 +2,7 @@
 module explore
 
 import tools
-import make 
+import make
 import cross
 import verify
 
@@ -11,7 +11,6 @@ import verify
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
 pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
-	// println(ds.class_counts)
 	mut ex_opts := opts
 	mut result := tools.VerifyResult{
 		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
@@ -49,7 +48,6 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 	if ex_opts.bins.len == 1 || (ex_opts.bins.len == 2 && ex_opts.bins[0] == ex_opts.bins[1]) {
 		start_bin = ex_opts.bins[0]
 		end_bin = start_bin
-		// ex_opts.uniform_bins = true
 	} else if ex_opts.bins.len >= 2 {
 		start_bin = ex_opts.bins[0]
 		end_bin = ex_opts.bins[1]
@@ -61,8 +59,12 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		start_bin = 0
 		end_bin = 0
 	}
-	if opts.show_flag { tools.show_explore_header(opts) }
-	if opts.expanded_flag { tools.expanded_explore_header(result, opts) }
+	if opts.show_flag {
+		tools.show_explore_header(opts)
+	}
+	if opts.expanded_flag {
+		tools.expanded_explore_header(result, opts)
+	}
 
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
@@ -72,29 +74,32 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 	mut bin := start_bin
 	mut cl := tools.Classifier{}
 	mut results := []tools.VerifyResult{}
+	// mut plot_data := [][]tools.PlotResult{}
 
 	for atts <= end_attr {
 		ex_opts.number_of_attributes = [atts]
 		bin = start_bin
 		for bin <= end_bin {
 			if ex_opts.uniform_bins {
-			ex_opts.bins = [bin]
+				ex_opts.bins = [bin]
 			} else {
 				ex_opts.bins = [start_bin, bin]
 			}
-			// println('ex_opts.bins: $ex_opts.bins')
 			if ex_opts.testfile_path == '' {
 				result = cross.cross_validate(ds, ex_opts)
 			} else {
 				cl = make.make_classifier(ds, ex_opts)
 				result = verify.verify(cl, ex_opts)
 			}
-			// if ex_opts.expanded_flag {tools.show_expanded_result(result, ex_opts)}
-			// tools.show_results(result, ex_opts)
-			results << result 
+			result.bin_values = ex_opts.bins
+			result.attributes_used = atts
+			results << result
 			bin += interval_bin
 		}
 		atts += interval_attr
+	}
+	if opts.graph_flag && opts.command == 'explore' {
+		tools.plot_explore(results, opts)
 	}
 	return results
 }

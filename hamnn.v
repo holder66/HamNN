@@ -16,7 +16,7 @@ import explore
 import os.cmdline as oscmdline
 import time
 import math
-import runtime
+// import runtime
 
 // main is the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 /*
@@ -36,9 +36,9 @@ Flags and options:
    limit for the number of bins, and the second gives the upper value
    for the explore range. Example: explore -b 3,6 would first use 3 - 3,
    then 3 - 4, then 3 - 5, and finally 3 - 6 for the binning ranges.
-   If the uniform flag is true, then a single integer specifies 
-   the number of bins for all continuous attributes; two integers for a 
-   range of uniform bin values for the explore command; a third integer 
+   If the uniform flag is true, then a single integer specifies
+   the number of bins for all continuous attributes; two integers for a
+   range of uniform bin values for the explore command; a third integer
    for the interval to be used over the explore range.
 -c --concurrent, permit parallel processing to use multiple cores;
 -e --expanded, expanded results on the console;
@@ -53,7 +53,7 @@ Flags and options:
 	instances to be included in each fold will be applied
 -s --show, output results to the console;
 -t --test, followed by the path to the datafile to be verified or validated;
--u --uniform, specifies if uniform binning is to be used for the explore 
+-u --uniform, specifies if uniform binning is to be used for the explore
    command;
 -v --verbose
 -w --weight, when classifying, weight the nearest neighbour counts by class prevalences;
@@ -61,9 +61,8 @@ Flags and options:
 pub fn main() {
 	// get the command line string and use it to create an Options struct
 	sw := time.new_stopwatch()
-	println('nr_cpus: ${runtime.nr_cpus()} nr_jobs: ${runtime.nr_jobs()}')
+	// println('nr_cpus: ${runtime.nr_cpus()} nr_jobs: ${runtime.nr_jobs()}')
 	mut opts := get_options(os.args[1..])
-
 
 	if opts.help_flag {
 		println(show_help(opts))
@@ -86,8 +85,8 @@ pub fn main() {
 	}
 	mut duration := sw.elapsed()
 	// println('duration: $duration')
-	println('processing time: ${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(), 60))} min ${math.fmod(duration.seconds(),
-		60):6.3f} sec')
+	println('processing time: ${int(duration.hours())} hrs ${int(math.fmod(duration.minutes(),
+		60))} min ${math.fmod(duration.seconds(), 60):6.3f} sec')
 }
 
 // get_options fills an Options struct with values from the command line

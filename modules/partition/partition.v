@@ -58,9 +58,9 @@ fn get_partition_indices(total int, n int, curr int) (int, int) {
 	s := curr * round
 	mut e := s + round
 	// if e > total || total - e == 1 {
-		if e > total  || n - curr == 1 {
+	if e > total || n - curr == 1 {
 		e = total
-	} 
+	}
 
 	return s, e
 }

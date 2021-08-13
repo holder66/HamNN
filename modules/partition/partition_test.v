@@ -16,7 +16,7 @@ fn test_get_partition_indices() {
 	assert s == 1 && e == 2
 	assert arr[s..e] == [22]
 	assert get_rest_of_array(arr, s, e) == [11, 33, 44, 55, 66]
-	
+
 	s, e = get_partition_indices(len, 0, 5)
 	assert s == 5 && e == 6
 	assert arr[s..e] == [66]
@@ -26,9 +26,9 @@ fn test_get_partition_indices() {
 	assert s == 4 && e == 6
 	assert arr[s..e] == [55, 66]
 	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44]
-	
+
 	arr = [11, 22, 33, 44, 55, 66, 77, 88, 99, 100, 111, 122, 133]
-	len = arr.len 
+	len = arr.len
 	s, e = get_partition_indices(len, 2, 0)
 	assert s == 0
 	assert e == 7
@@ -84,13 +84,13 @@ fn test_get_partition_indices() {
 	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55, 66, 77, 88, 99, 100]
 }
 
-
 // test_partition
 fn test_partition() {
 	mut opts := tools.Options{}
-	mut part_ds, mut fold := partition(0, 2, tools.load_file('datasets/developer.tab'), opts)
+	mut part_ds, mut fold := partition(0, 2, tools.load_file('datasets/developer.tab'),
+		opts)
 	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm', 'X']
-	assert part_ds.Class.class_counts == map{
+	assert part_ds.Class.class_counts == {
 		'X': 1
 		'f': 1
 		'm': 4

@@ -30,8 +30,8 @@ fn test_explore_cross() {
 	assert results[results.len - 1].total_count == 150
 
 	opts.folds = 10
-	opts.number_of_attributes = [27,29]
-	opts.bins = [20,22]
+	opts.number_of_attributes = [27, 29]
+	opts.bins = [20, 22]
 	opts.weighting_flag = true
 	opts.datafile_path = 'datasets/anneal.tab'
 	opts.uniform_bins = true
@@ -50,10 +50,10 @@ fn test_explore_cross() {
 	assert results[1].total_count == 898
 }
 
-// test_explore_verify 
+// test_explore_verify
 fn test_explore_verify() {
 	mut opts := tools.Options{
-		concurrency_flag: true 
+		concurrency_flag: true
 		weighting_flag: true
 		testfile_path: 'datasets/bcw174test'
 		datafile_path: 'datasets/bcw350train'

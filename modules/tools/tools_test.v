@@ -11,7 +11,7 @@ fn test_transpose() {
 }
 
 fn test_element_counts() {
-	assert string_element_counts(['i']) ==  {
+	assert string_element_counts(['i']) == {
 		'i': 1
 	}
 	assert string_element_counts([]) == map[string]int{}

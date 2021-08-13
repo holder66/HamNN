@@ -93,8 +93,8 @@ pub mut:
 	help_flag            bool
 	weighting_flag       bool
 	folds                int
-	repetitions int
-	random_pick bool
+	repetitions          int
+	random_pick          bool
 }
 
 pub struct ClassifyResult {
@@ -120,12 +120,22 @@ pub mut:
 	labeled_classes []string
 	// matches          []int
 	// counts           map[int]int
-	class_table   map[string]ResultForClass
+	class_table     map[string]ResultForClass
 	pos_neg_classes []string
-	correct_count int
-	misses_count  int
-	wrong_count   int
-	total_count   int
+	correct_count   int
+	misses_count    int
+	wrong_count     int
+	total_count     int
+	bin_values      []int
+	attributes_used int
+}
+
+pub struct PlotResult {
+pub mut:
+	bin             int
+	attributes_used int
+	correct_count   int
+	total_count     int
 }
 
 pub struct ValidateResult {

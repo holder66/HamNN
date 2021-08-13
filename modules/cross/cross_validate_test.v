@@ -27,13 +27,12 @@ fn test_cross_validate() {
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
-	opts.bins = [3,3]
+	opts.bins = [3, 3]
 	opts.folds = 0
 	ds = tools.load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	assert result.correct_count == 10
 	assert result.wrong_count == 3
-
 
 	opts.datafile_path = 'datasets/iris.tab'
 	opts.number_of_attributes = [2]
@@ -60,5 +59,4 @@ fn test_cross_validate() {
 	// result = cross_validate(ds, opts)
 	// assert result.correct_count == 9420
 	// assert result.wrong_count == 0
-
 }

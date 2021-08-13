@@ -74,10 +74,10 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	}
 	fold_instances := tools.transpose(byte_values_array)
 	// for each class, instantiate an entry in the class table for the result
-	// note that this needs to use the classes in the partition portion, not  
+	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
 	for key, value in part_cl.Class.class_counts {
-	// for key, value in fold.Class.class_counts {
+		// for key, value in fold.Class.class_counts {
 		fold_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
 		}
@@ -129,8 +129,7 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
-	mut current_fold := <- work_channel
+	mut current_fold := <-work_channel
 	result_channel <- do_one_fold(current_fold, folds, ds, opts)
 	return
 }
-

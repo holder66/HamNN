@@ -94,7 +94,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 				}
 				rank_value += sum_along_row(row, tools.get_map_values(ds.class_counts))
 			}
-			
+
 			// for each attribute, find the maximum for the rank_values and
 			// the corresponding number of bins
 			// println('$attr_index ${ds.attribute_names[attr_index]} $rank_value  bins: $bin_number')
@@ -107,7 +107,6 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 			bin_number -= interval
 		}
 		rank_value_array = rank_value_array.map(100. * f32(it) / perfect_rank_value)
-		println(rank_value_array)
 		ranked_atts << tools.RankedAttribute{
 			attribute_index: attr_index_for_maximum_rank_value
 			attribute_name: ds.attribute_names[attr_index_for_maximum_rank_value]

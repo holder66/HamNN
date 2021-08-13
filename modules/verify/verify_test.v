@@ -34,7 +34,7 @@ fn test_verify() {
 	opts.datafile_path = 'datasets/mnist_test.tab'
 	opts.testfile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [50]
-	opts.bins = [2,2]
+	opts.bins = [2, 2]
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
 	result = verify(cl, opts)
@@ -45,7 +45,7 @@ fn test_verify() {
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
-	opts.weighting_flag = true 
+	opts.weighting_flag = true
 	opts.expanded_flag = false
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
@@ -56,7 +56,7 @@ fn test_verify() {
 	opts.datafile_path = '/Users/henryolders/mnist_train.tab'
 	opts.testfile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [313]
-	opts.bins = [2,2]
+	opts.bins = [2, 2]
 	opts.concurrency_flag = true
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
@@ -64,7 +64,7 @@ fn test_verify() {
 	result = verify(cl, opts)
 	assert result.correct_count == 9566
 	assert result.wrong_count == 434
-	
+
 	opts.weighting_flag = true
 	cl = make.make_classifier(ds, opts)
 	result = verify(cl, opts)

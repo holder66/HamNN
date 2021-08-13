@@ -142,7 +142,7 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	return summarize_results(mut result)
 }
 
-// summarize_results 
+// summarize_results
 fn summarize_results(mut result tools.VerifyResult) tools.VerifyResult {
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
