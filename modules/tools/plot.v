@@ -1,5 +1,6 @@
 module tools
 
+import arrays
 import vsl.plot
 // import vsl.util
 
@@ -16,7 +17,7 @@ pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 			x: x
 			y: attr.rank_value_array.map(f64(it)).reverse()
 			mode: 'lines+markers'
-			name: attr.attribute_name
+			name: '$attr.attribute_name ${arrays.max(attr.rank_value_array):5.2f}'
 		)
 	}
 	plt.set_layout(
@@ -32,7 +33,7 @@ pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 			title: plot.AxisTitle{
 				text: 'Rank Value'
 			}
-			dtick: 100.
+			range: [0., 100]
 		}
 	)
 	plt.show() or { panic(err) }
