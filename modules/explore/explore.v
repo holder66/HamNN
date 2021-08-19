@@ -5,6 +5,7 @@ import tools
 import make
 import cross
 import verify
+import os
 
 // explore runs a series of cross-validations, over a range of
 // attributes and a range of binning values.
@@ -99,8 +100,18 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		atts += interval_attr
 	}
 	if opts.graph_flag && opts.command == 'explore' {
-		// tools.plot_explore(results, opts)
+		tools.plot_explore(results, opts)
+		// println(results)
+		if results[0].class_table.len == 2 {
 		tools.plot_roc(results, opts)
+	}
+	}
+	if opts.outputfile_path != '' && opts.command == 'explore' {
+		outputfile := opts.outputfile_path
+		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
+		f.write_struct(opts) or { panic(err.msg) }
+		f.write_struct(results) or { panic(err.msg) }
+		f.close()	
 	}
 	return results
 }
