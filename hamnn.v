@@ -45,8 +45,8 @@ Flags and options:
 -f --folds, default is leave-one-out;
 -g --graph, displays a plot;
 -h --help,
--j --json, followed by the path to a file in which a classifier stored
-	as json;
+-o --output, followed by the path to a file in which a classifier or a 
+   result will be stored;
 -p --part, followed by an integer indicating partition number (note that
 	partition number might be called fold number in other settings);
 -r --reps, number of repetitions; if > 1, a random selection of
@@ -126,6 +126,7 @@ fn get_options(args []string) tools.Options {
 	// 	opts.current_fold = option(args, ['-p', '--part']).int()
 	// }
 	opts.testfile_path = option(args, ['-t', '--test'])
+	opts.outputfile_path = option(args, ['-o', '--output'])
 	return opts
 }
 

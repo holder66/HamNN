@@ -99,7 +99,8 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		atts += interval_attr
 	}
 	if opts.graph_flag && opts.command == 'explore' {
-		tools.plot_explore(results, opts)
+		// tools.plot_explore(results, opts)
+		tools.plot_roc(results, opts)
 	}
 	return results
 }

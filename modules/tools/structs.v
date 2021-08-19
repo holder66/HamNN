@@ -90,6 +90,7 @@ pub mut:
 	expanded_flag        bool
 	datafile_path        string = 'datasets/developer.tab'
 	testfile_path        string
+	outputfile_path		 string
 	help_flag            bool
 	weighting_flag       bool
 	folds                int

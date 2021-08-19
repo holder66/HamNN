@@ -51,8 +51,8 @@ Flags:
 -f --folds:      default is leave-one-out;
 -g --graph:      displays a plot;
 -h --help:        
--j --json:       followed by the path to a file in which a classifier is to 
-                 be stored as json;
+-o --output:     followed by the path to a file in which a classifier or a 
+                 result will be stored;
 -p --part:       followed by an integer indicating partition number (note that
                  partition number might be called fold number in other
                  settings);
@@ -109,8 +109,8 @@ Options:
       ranked attributes) to be used in training the classifier
   -b --bins, eg, "3,6" specifies the lower and upper limits for the number
       of slices or bins for continuous attributes;
-  -j --json, followed by a file path for a file where a json serialization
-      of the classifier is to be stored; (TODO)
+  -o --output, followed by the path to a file in which a classifier or a 
+      result will be stored;
   -s --show, output to the console information about the classifier;
   -v --verbose, output debugging information to the console;
   -x --exclude, exclude missing values from rank value calculations;
@@ -282,7 +282,9 @@ Options:
       of ranked attributes) to be used in training the classifier;
   -b --bins, a range for the number of bins for continuous attributes;
   -c --concurrent, permit parallel processing to use multiple cores;
-  -f --folds, number of cross-validation folds (default is leave-one-out)
+  -f --folds, number of cross-validation folds (default is leave-one-out);
+  -o --output, followed by the path to a file in which a classifier or a 
+      result will be stored;
   -r --reps, number of repetitions; if > 1, a random selection of 
       instances to be included in each fold will be applied (TODO);
   -s --show, output to the console the results of the cross-validation;

@@ -9,6 +9,7 @@ import rank
 import arrays
 import math
 import time
+import os
 // import v.util
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
@@ -79,6 +80,18 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	if opts.show_flag && opts.command == 'make' {
 		show_classifier(cl)
 	}
+	if opts.outputfile_path != '' && opts.command == 'make' {
+		outputfile := opts.outputfile_path
+		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
+		f.write_struct(cl) or { panic(err.msg) }
+		f.close()
+		f = os.open_file(outputfile, 'r') or { panic(err.msg) }
+		mut tcl := tools.Classifier{}
+		f.read_struct(mut tcl) or { panic(err.msg) }
+		f.close()
+		println(tcl)
+	}
+
 	return cl
 }
 
