@@ -11,6 +11,7 @@ import verify
 import validate
 import cross
 import explore
+import display
 // import partition
 // import classify
 import os.cmdline as oscmdline
@@ -41,6 +42,7 @@ Flags and options:
    range of uniform bin values for the explore command; a third integer
    for the interval to be used over the explore range.
 -c --concurrent, permit parallel processing to use multiple cores;
+-d --display, output to the console or graph previously saved results;
 -e --expanded, expanded results on the console;
 -f --folds, default is leave-one-out;
 -g --graph, displays a plot;
@@ -71,6 +73,7 @@ pub fn main() {
 			'analyze' { analyze(opts) }
 			'classify' { classify(opts) }
 			'cross' { cross(opts) }
+			'display' { display(opts)}
 			'explore' { explore(opts) }
 			'make' { make(opts) }
 			'orange' { orange() }
@@ -144,6 +147,7 @@ fn show_help(opts tools.Options) string {
 		'cross' { tools.cross_help }
 		'explore' { tools.explore_help }
 		'validate' { tools.validate_help }
+		'display' {tools.display_help}
 		else { tools.hamnn_help }
 	}
 }
@@ -226,4 +230,9 @@ fn rank(opts tools.Options) []tools.RankedAttribute {
 // make returns a Classifier struct
 fn make(opts tools.Options) tools.Classifier {
 	return make.make_classifier(tools.load_file(opts.datafile_path), opts)
+}
+
+// display outputs to the console or graphs a previously saved result
+fn display(opts tools.Options) {
+	display.display(opts)
 }

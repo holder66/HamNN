@@ -79,8 +79,8 @@ fn test_explore_save() ? {
 		outputfile_path: 'testfile'
 		command: 'explore'
 	}
-	mut ds := tools.load_file(opts.datafile_path)
-	results = explore(ds, opts)
+	// mut ds := tools.load_file(opts.datafile_path)
+	// results = explore(ds, opts)
 
 	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }
 		mut testopts := tools.Options{}
@@ -89,6 +89,7 @@ fn test_explore_save() ? {
 		f.read_struct(mut testresults) or { panic(err.msg) }
 		f.close()
 		println(testopts)
+		println(testresults)
 		assert testopts == opts
 		assert results == testresults
 

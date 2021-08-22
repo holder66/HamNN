@@ -82,25 +82,32 @@ We can run a set of exploratory cross-validations using leave-one-out
 folding, and with the -w flag to weight the results using class prevalences.
 
 ```v
-v run hamnn.v explore -w -x datasets/breast-cancer-wisconsin-disc.tab
+v run hamnn.v explore -w -x -c -e -g datasets/breast-cancer-wisconsin-disc.tab
 ```
-```
-Explore "datasets/breast-cancer-wisconsin-disc.tab"
-Exclude: true; Weighting: true
-Attributes  Bins  Matches  Nonmatches  Percent
-__________  ____  _______  __________  _______
-         1     1      646          53    92.42
-         2     1      659          40    94.28
-         3     1      665          34    95.14
-         4     1      666          33    95.28
-         5     1      666          33    95.28
-         6     1      662          37    94.71
-         7     1      666          33    95.28
-         8     1      669          30    95.71
-         9     1      672          27    96.14
+Note the additional flags: -x to exclude missing values; -c to exploit 
+parallel processing by using all the available CPU cores on your machine;
+-e to show extended results; -g to have plots of the results.
 ```
 
-While using all 9 attributes gives the best classification result (96.14% correct) using only 4 attributes gives a quite good result of 95.28%.
+A correct classification to "malignant" is a True Positive (TP);
+A correct classification to "benign" is a True Negative (TN).
+Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy
+         1  0 - 0     229    12   417    41       0.848       0.972 0.950 0.910              0.910
+         2  0 - 0     231    10   428    30       0.885       0.977 0.959 0.934              0.931
+         3  0 - 0     226    15   439    19       0.922       0.967 0.938 0.959              0.945
+         4  0 - 0     227    14   439    19       0.923       0.969 0.942 0.959              0.946
+         5  0 - 0     224    17   442    16       0.933       0.963 0.929 0.965              0.948
+         6  0 - 0     218    23   444    14       0.940       0.951 0.905 0.969              0.945
+         7  0 - 0     221    20   445    13       0.944       0.957 0.917 0.972              0.951
+         8  0 - 0     224    17   445    13       0.945       0.963 0.929 0.972              0.954
+         9  0 - 0     227    14   445    13       0.946       0.969 0.942 0.972              0.958
+
+
+```
+
+While using all 9 attributes gives the best classification result (balanced accuracy 95.8%) using only 2 attributes gives the lowest false positive rate.
+Picking the best combination of attributes to be used, and bin range when
+there are continuous attributes, is often a matter of experience and judgment.
 
 Let us train our classifier using 4 attributes:
 

@@ -294,4 +294,9 @@ Options:
       class prevalences;
   -x --exclude, exclude missing values from rank value calculations;
 '
+
+  display_help = '
+  "display" takes a previously saved results file, and outputs to the console
+  and/or generates a plot.
+  '
 )

@@ -120,101 +120,147 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 	plt.show() or { panic(err) }
 }
 
+struct ROCResult {
+	sensitivity f64
+	one_minus_specificity f64
+	bin_range string
+	attributes_used string
+}
+
 struct ROCTrace {
 	mut:
-	label           string
-	sensitivity        []f64
-    one_minus_specificity    []f64
-	attributes_used []f64
+	x_coordinates	[]f64
+	y_coordinates []f64
+	bin_range           string
+	attributes_used string
 }
 // plot_roc plot receiver operating characteristic curve
 pub fn plot_roc(results []VerifyResult, opts Options) {
+	mut roc_results := []ROCResult{}
 	mut plt := plot.new_plot()
 	mut traces := []ROCTrace{}
-	mut z := []TwoArraySort{}
-	mut x := []f64{}
-	mut y := []f64{}
-	mut bin_values := []string{}
-	mut pos_class := ''
-	mut neg_class := ''
-	mut sensitivity := 0. 
-	mut one_minus_specificity := 1. 
+	mut x_coordinates := []f64{}
+	mut y_coordinates := []f64{}
+	mut bin_range_values := []string{}
+	mut attributes_used_values := []string{}
+	mut bin_range := ''
+	mut pos_class := results[0].pos_neg_classes[0]
+	mut neg_class := results[0].pos_neg_classes[1]
 
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
 
-z << TwoArraySort{
-	x: 0. 
-	y: 0. 
-}
 	for result in results {
-		// println(result)
-	pos_class = result.pos_neg_classes[0]
-	neg_class = result.pos_neg_classes[1]
-	sensitivity = result.class_table[pos_class].correct_inferences / f64(result.class_table[pos_class].correct_inferences + result.class_table[neg_class].missed_inferences)
-	one_minus_specificity = 1. - (result.class_table[neg_class].correct_inferences / f64(result.class_table[neg_class].correct_inferences + result.class_table[pos_class].missed_inferences))
-	x << one_minus_specificity
-	y << sensitivity
-	// create strings that can be used for filtering
+		// create strings that can be used for filtering
         if result.bin_values.len == 1 {
-            bin_values << '${result.bin_values[0]} bins'
+            bin_range = '${result.bin_values[0]} bins'
         } else {
-            bin_values << 'bin range ${result.bin_values[0]} - ${result.bin_values[1]}'
+            bin_range = 'bin range ${result.bin_values[0]} - ${result.bin_values[1]}'
         }
+	roc_results << ROCResult{
+		sensitivity: result.class_table[pos_class].correct_inferences / f64(result.class_table[pos_class].correct_inferences + result.class_table[neg_class].missed_inferences)
+		one_minus_specificity: 1. - (result.class_table[neg_class].correct_inferences / f64(result.class_table[neg_class].correct_inferences + result.class_table[pos_class].missed_inferences))
+		bin_range: bin_range
+		attributes_used: '$result.attributes_used'
 	}
-	// println(y)	
-
-// get the unique bin_values, each one will generate a separate trace
-	for key, _ in string_element_counts(bin_values) {
-		// println(key)
-		// x = 0. 
-		// y = 0. 
-
+}
+	// sort on the x axis value, ie one_minus_specificity
+	roc_results.sort(a.one_minus_specificity < b.one_minus_specificity)
+	
+// get the unique bin_range values, each one will generate a separate trace
+	for roc_result in roc_results {
+		bin_range_values << roc_result.bin_range
+		attributes_used_values << roc_result.attributes_used
+		x_coordinates << roc_result.one_minus_specificity
+		y_coordinates << roc_result.sensitivity
+	}
+	for key, _ in string_element_counts(bin_range_values) {
 		traces << ROCTrace{
-			label: '$key'
-			one_minus_specificity: filter(key, bin_values, x)
-			sensitivity: filter(key, bin_values, y)
+			bin_range: '$key'
+			x_coordinates: filter(key, bin_range_values, x_coordinates)
+			y_coordinates: filter(key, bin_range_values, y_coordinates)
 		}
 	}
-	// println(traces)
-	
-// z << TwoArraySort{
-// 	x: 1 
-// 	y: 1 
-// }
-	// z.sort(a.x < b.x)
-	// for val in z {
-	// 	x << val.x 
-	// 	y << val.y
-	// }
 	for mut trace in traces {
 		// append 0. and 1. to the beginning and end of the x and y arrays
 		
-		trace.sensitivity.prepend(0.)
-		trace.one_minus_specificity.prepend(0.)
-		trace.sensitivity << 1.
-		trace.one_minus_specificity << 1.
-		// println(trace.sensitivity)
+		trace.x_coordinates.prepend(0.)
+		trace.y_coordinates.prepend(0.)
+		trace.x_coordinates << 1.
+		trace.y_coordinates << 1.
+		
 	plt.add_trace(
 			trace_type: .scatter
-			x: trace.one_minus_specificity
-			y: trace.sensitivity
+			x: trace.x_coordinates
+			y: trace.y_coordinates
 			mode: 'lines+markers'
-			name: trace.label
+			name: trace.bin_range
 		)
+}
 	plt.set_layout(
-		title: 'Receiver Operating Characteristic'
-		width: 800
+		title: 'Receiver Operating Characteristic Curves by Bin Range'
+		width: 500
+		height: 500
 		xaxis: plot.Axis{
 			title: plot.AxisTitle{
 				text: '1 - specificity'
 			}
 		}
+		yaxis: plot.Axis{
+			title: plot.AxisTitle{
+				text: 'sensitivity'
+			}
+		}
 	)
+	plt.show() or { panic(err) }
+
+	// now a series of curves, one per attributes_used value
+	plt = plot.new_plot()
+	traces.clear()
+	for key, _ in string_element_counts(attributes_used_values) {
+		traces << ROCTrace{
+			attributes_used: '$key'
+			x_coordinates: filter(key, attributes_used_values, x_coordinates)
+			y_coordinates: filter(key, attributes_used_values, y_coordinates)
+		}
+	}
+	for mut trace in traces {
+		// append 0. and 1. to the beginning and end of the x and y arrays
+		
+		trace.x_coordinates.prepend(0.)
+		trace.y_coordinates.prepend(0.)
+		trace.x_coordinates << 1.
+		trace.y_coordinates << 1.
+		
+	plt.add_trace(
+			trace_type: .scatter
+			x: trace.x_coordinates
+			y: trace.y_coordinates
+			mode: 'lines+markers'
+			name: trace.attributes_used
+		)
 }
+plt.set_layout(
+		title: 'Receiver Operating Characteristic Curves by Attributes Used'
+		width: 600
+		height: 600
+		xaxis: plot.Axis{
+			title: plot.AxisTitle{
+				text: '1 - specificity'
+			}
+		}
+		yaxis: plot.Axis{
+			title: plot.AxisTitle{
+				text: 'sensitivity'
+			}
+		}
+	)
 	plt.show() or { panic(err) }
 }
 
+// filter takes two coordinated arrays. It filters array b
+// to include only elements whose corresponding element 
+// in array a is equal to the match_value.
 fn filter(match_value string, a []string, b []f64) []f64 {
 	mut result := []f64{}
 	for i, value in a {
@@ -225,8 +271,4 @@ fn filter(match_value string, a []string, b []f64) []f64 {
 	return result
 }
 
-struct TwoArraySort {
-	mut:
-	x f64
-	y f64
-}
+
