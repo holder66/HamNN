@@ -8,9 +8,11 @@ struct RankTrace {
     label           string
     rank_values        []f64
     maximum_rank_value    f32
+    hover_text	[]string
 }
 
-// plot_rank ranked_atts
+// plot_rank ranked_atts generates a scatterplot of the rank values
+// for continuous attributes, as a function of the number of bins.
 pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
     mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
@@ -23,18 +25,24 @@ pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
             label: '$attr.attribute_name ${arrays.max(attr.rank_value_array):5.2f}'
             rank_values: attr.rank_value_array.map(f64(it)).reverse()
             maximum_rank_value: arrays.max(attr.rank_value_array)
+            // the tooltip for each point shows the attribute name
+            hover_text: ['$attr.attribute_name'].repeat(opts.bins[1] + 1)
         }
 	}
     // sort in descending order of maximum_rank_value
     traces.sort(a.maximum_rank_value > b.maximum_rank_value)
 
+    mut attributes := []string{}
     for value in traces {
+    	attributes << value.hover_text
         plt.add_trace(
             trace_type: .scatter
             x: x
             y: value.rank_values
+            text: value.hover_text
             mode: 'lines+markers'
             name: value.label
+            hovertemplate: 'attribute: %{text}<br>bins: %{x}<br>rank: %{y}'
         )
     }
 	plt.set_layout(
@@ -82,7 +90,7 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
         if result.bin_values.len == 1 {
             bin_values << '${result.bin_values[0]} bins'
         } else {
-            bin_values << 'bin range ${result.bin_values[0]} - ${result.bin_values[1]}'
+            bin_values << 'bins ${result.bin_values[0]} - ${result.bin_values[1]}'
         }
 	}
     // get the unique bin_values, each one will generate a separate trace
@@ -106,6 +114,7 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 			y: value.percents
 			mode: 'lines+markers'
 			name: value.label
+			hovertemplate: ''
 		)
 	}
 	plt.set_layout(
@@ -155,7 +164,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
         if result.bin_values.len == 1 {
             bin_range = '${result.bin_values[0]} bins'
         } else {
-            bin_range = 'bin range ${result.bin_values[0]} - ${result.bin_values[1]}'
+            bin_range = 'bins ${result.bin_values[0]} - ${result.bin_values[1]}'
         }
 	roc_results << ROCResult{
 		sensitivity: result.class_table[pos_class].correct_inferences / f64(result.class_table[pos_class].correct_inferences + result.class_table[neg_class].missed_inferences)

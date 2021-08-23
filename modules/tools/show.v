@@ -66,6 +66,15 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 		println('   TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
 		println('${get_binary_stats(result)}')
 	}
+	// confusion matrix
+	print('\nConfusion Matrix\nPredicted Class            ')
+	for class, _ in result.class_table {
+		print('$class    ')
+	}
+	println('Actual Class')
+	for class, value in result.class_table {
+		println('${class:-27}    ${value.correct_inferences:5}')
+	}
 }
 
 // get_binary_stats
