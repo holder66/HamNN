@@ -122,6 +122,12 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 			hovertemplate: '%{text}<br>attributes: %{x}<br>accuracy: %{y}%'
 		)
 	}
+	annotation := plot.Annotation{
+		x: arrays.max(x)
+		y: 5
+		text: 'Hover your cursor over a marker to view details.'
+		align: 'right'
+	}
 	plt.set_layout(
 		title: 'Accuracy (%) by Attributes Used for $opts.datafile_path'
 		width: 800
@@ -130,6 +136,8 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 				text: 'Number of Attributes Used'
 			}
 		}
+		annotations: [annotation]
+		autosize: false
 	)
 	plt.show() or { panic(err) }
 }

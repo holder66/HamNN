@@ -67,6 +67,10 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 		println('${get_binary_stats(result)}')
 	}
 	// confusion matrix
+	// mut confusion_matrix := [][]int{}
+	// for i, value in result.class_table {
+	// 	println(value)
+	// }
 	print('\nConfusion Matrix\nPredicted Class            ')
 	for class, _ in result.class_table {
 		print('$class    ')
