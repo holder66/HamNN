@@ -1,6 +1,7 @@
 module tools
 
 import arrays
+import math
 import vsl.plot
 
 struct RankTrace {
@@ -70,9 +71,11 @@ mut:
 	percents        []f64
     max_percents    f64
 	attributes_used []f64
+	bin_range  []string
 }
 
-// plot_explore
+// plot_explore generates a scatterplot for the results of
+// an explore on a dataset
 pub fn plot_explore(results []VerifyResult, opts Options) {
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
@@ -95,13 +98,14 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 	}
     // get the unique bin_values, each one will generate a separate trace
 	for key, _ in string_element_counts(bin_values) {
-        percents = filter(key, bin_values, y)
+        percents = filter(key, bin_values, y).map((math.round(it * 100)) / 100)
         max_percents = arrays.max(percents)
 		traces << ExploreTrace{
 			label: '$key ${arrays.max(percents):5.2f}'
 			percents: percents
             max_percents: max_percents
 			attributes_used: filter(key, bin_values, x)
+			bin_range: ['$key']
 		}
 	}
     // sort the traces according to the maximum value of percents
@@ -112,17 +116,18 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 			trace_type: .scatter
 			x: value.attributes_used
 			y: value.percents
+			text: value.bin_range.repeat(value.percents.len)
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: ''
+			hovertemplate: '%{text}<br>attributes: %{x}<br>accuracy: %{y}%'
 		)
 	}
 	plt.set_layout(
-		title: 'Accuracy (%) by Attributes Used'
+		title: 'Accuracy (%) by Attributes Used for $opts.datafile_path'
 		width: 800
 		xaxis: plot.Axis{
 			title: plot.AxisTitle{
-				text: 'Attributes Used'
+				text: 'Number of Attributes Used'
 			}
 		}
 	)
