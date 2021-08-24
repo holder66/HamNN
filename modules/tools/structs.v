@@ -90,7 +90,7 @@ pub mut:
 	expanded_flag        bool
 	datafile_path        string = 'datasets/developer.tab'
 	testfile_path        string
-	outputfile_path		 string
+	outputfile_path      string
 	help_flag            bool
 	weighting_flag       bool
 	folds                int
@@ -109,10 +109,10 @@ pub mut:
 
 pub struct ResultForClass {
 pub mut:
-	labeled_instances  int
-	correct_inferences int
-	missed_inferences  int
-	wrong_inferences   int
+	labeled_instances    int
+	correct_inferences   int
+	missed_inferences    int
+	wrong_inferences     int
 	confusion_matrix_row map[string]int
 }
 
@@ -122,14 +122,14 @@ pub mut:
 	labeled_classes []string
 	// matches          []int
 	// counts           map[int]int
-	class_table     map[string]ResultForClass
-	pos_neg_classes []string
-	correct_count   int
-	misses_count    int
-	wrong_count     int
-	total_count     int
-	bin_values      []int
-	attributes_used int
+	class_table      map[string]ResultForClass
+	pos_neg_classes  []string
+	correct_count    int
+	misses_count     int
+	wrong_count      int
+	total_count      int
+	bin_values       []int
+	attributes_used  int
 	confusion_matrix [][]string
 }
 

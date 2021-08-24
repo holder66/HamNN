@@ -85,7 +85,7 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := tools.ClassifyResult{}
-// println('result in classify_to_verify: $result')
+	// println('result in classify_to_verify: $result')
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: runtime.nr_jobs()}
 		mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}

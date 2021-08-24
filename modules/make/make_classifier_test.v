@@ -47,7 +47,7 @@ fn test_make_translation_table() {
 	}
 }
 
-// test_save_classifier 
+// test_save_classifier
 fn test_save_classifier() ? {
 	mut opts := tools.Options{
 		bins: [2, 12]
@@ -61,10 +61,10 @@ fn test_save_classifier() ? {
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)
-	
+
 	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }
-		mut tcl := tools.Classifier{}
-		f.read_struct(mut tcl) or { panic(err.msg) }
-		f.close()
-		assert cl == tcl
+	mut tcl := tools.Classifier{}
+	f.read_struct(mut tcl) or { panic(err.msg) }
+	f.close()
+	assert cl == tcl
 }

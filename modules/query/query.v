@@ -27,7 +27,7 @@ pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 			// for each attribute in cl, create a prompt and collect responses
 			for attr in cl.attribute_ordering {
 				if cl.trained_attributes[attr].attribute_type == 'D' {
-					println('Possible values for "$attr": ${cl.trained_attributes[attr].translation_table.keys()}')
+					println('Possible values for "$attr": $cl.trained_attributes[attr].translation_table.keys()')
 					responses[attr] = readline.read_line('Please enter one of these values for attribute "$attr": ') or {
 						'error'
 					}.trim_space()

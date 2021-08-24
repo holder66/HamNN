@@ -16,10 +16,9 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	mut cross_result := tools.VerifyResult{
 		labeled_classes: ds.Class.class_values
 		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
-		
 	}
 	// instantiate a confusion_matrix_row
-	mut confusion_matrix_row := map[string]int
+	mut confusion_matrix_row := map[string]int{}
 	for key, _ in ds.class_counts {
 		confusion_matrix_row[key] = 0
 	}
@@ -79,7 +78,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
-		mut confusion_matrix_row := map[string]int{}
+	mut confusion_matrix_row := map[string]int{}
 	// for each class, instantiate an entry in the confusion matrix row
 	for key, _ in ds.Class.class_counts {
 		confusion_matrix_row[key] = 0
@@ -115,8 +114,9 @@ fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.Ve
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
 		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
-		value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row, fold_result.class_table[key].confusion_matrix_row)
-		}
+		value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
+			fold_result.class_table[key].confusion_matrix_row)
+	}
 	return cross_result
 }
 

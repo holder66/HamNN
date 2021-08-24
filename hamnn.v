@@ -47,7 +47,7 @@ Flags and options:
 -f --folds, default is leave-one-out;
 -g --graph, displays a plot;
 -h --help,
--o --output, followed by the path to a file in which a classifier or a 
+-o --output, followed by the path to a file in which a classifier or a
    result will be stored;
 -p --part, followed by an integer indicating partition number (note that
 	partition number might be called fold number in other settings);
@@ -73,7 +73,7 @@ pub fn main() {
 			'analyze' { analyze(opts) }
 			'classify' { classify(opts) }
 			'cross' { cross(opts) }
-			'display' { display(opts)}
+			'display' { display(opts) }
 			'explore' { explore(opts) }
 			'make' { make(opts) }
 			'orange' { orange() }
@@ -147,7 +147,7 @@ fn show_help(opts tools.Options) string {
 		'cross' { tools.cross_help }
 		'explore' { tools.explore_help }
 		'validate' { tools.validate_help }
-		'display' {tools.display_help}
+		'display' { tools.display_help }
 		else { tools.hamnn_help }
 	}
 }

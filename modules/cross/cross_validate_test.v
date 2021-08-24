@@ -61,9 +61,21 @@ import tools
 // 	// assert result.wrong_count == 0
 // }
 
-// test_append_map_values 
+// test_append_map_values
 fn test_append_map_values() {
-	mut a := {'m': 3, 'f': 0, 'X': 1}
-	b := {'m': 4, 'f': 5, 'X': 0}
-	assert append_map_values(mut a, b) == {'m': 7, 'f': 5, 'X': 1}
+	mut a := {
+		'm': 3
+		'f': 0
+		'X': 1
+	}
+	b := {
+		'm': 4
+		'f': 5
+		'X': 0
+	}
+	assert append_map_values(mut a, b) == {
+		'm': 7
+		'f': 5
+		'X': 1
+	}
 }
