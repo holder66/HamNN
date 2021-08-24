@@ -17,6 +17,11 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		labeled_classes: ds.Class.class_values
 		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
 	}
+	// instantiate a confusion_matrix_row
+	mut confusion_matrix_row := map[string]int{}
+	for key, _ in ds.class_counts {
+		confusion_matrix_row[key] = 0
+	}
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
 		folds = ds.class_values.len
@@ -26,6 +31,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	for key, value in ds.Class.class_counts {
 		cross_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
+			confusion_matrix_row: confusion_matrix_row.clone()
 		}
 	}
 	// if the concurrency flag is set
@@ -47,23 +53,19 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
-	// println(cross_result)
 	cross_result = finalize_cross_result(mut cross_result)
-	// println(cross_result)
 	tools.show_results(cross_result, cross_opts)
 	return cross_result
 }
 
 // do_one_fold
 fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.Options) tools.VerifyResult {
-	// mut byte_values_array := [][]byte{cap: cross_opts.number_of_attributes[0], init: []byte{}}
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition.partition(current_fold, folds, ds, cross_opts)
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
-	// println('fold_result: $fold_result')
 	part_cl := make.make_classifier(part_ds, cross_opts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
@@ -76,16 +78,19 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
+	mut confusion_matrix_row := map[string]int{}
+	// for each class, instantiate an entry in the confusion matrix row
+	for key, _ in ds.Class.class_counts {
+		confusion_matrix_row[key] = 0
+	}
 	for key, value in part_cl.Class.class_counts {
-		// for key, value in fold.Class.class_counts {
 		fold_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
+			confusion_matrix_row: confusion_matrix_row.clone()
 		}
 	}
 	fold_result = verify.classify_to_verify(part_cl, fold_instances, mut fold_result,
 		cross_opts)
-
-	// println('fold_result: $fold_result')
 	return fold_result
 }
 
@@ -105,14 +110,22 @@ fn process_fold_data(part_attr tools.TrainedAttribute, fold_data []string) []byt
 
 // update_cross_result
 fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.VerifyResult) tools.VerifyResult {
-	// mut correct_count := 0
 	// for each class, add the fold counts to the cross_result counts
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
 		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
+		value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
+			fold_result.class_table[key].confusion_matrix_row)
 	}
-	// println(cross_result)
 	return cross_result
+}
+
+// append_map_values appends values from b to a
+fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
+	for key, mut value in a {
+		value += b[key]
+	}
+	return a
 }
 
 // finalize_cross_result
@@ -124,6 +137,19 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 		cross_result.wrong_count += value.wrong_inferences
 		cross_result.total_count += value.labeled_instances
 	}
+	// collect confusion matrix rows into a matrix
+	mut header_row := ['Predicted Classes (columns)']
+	mut data_row := []string{}
+	for key, value in cross_result.class_table {
+		header_row << key
+		data_row = [key]
+		for _, value2 in value.confusion_matrix_row {
+			data_row << '$value2'
+		}
+		cross_result.confusion_matrix << data_row
+	}
+	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
+	cross_result.confusion_matrix.prepend(header_row)
 	return cross_result
 }
 

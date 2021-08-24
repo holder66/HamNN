@@ -2,6 +2,8 @@
 
 module tools
 
+import etienne_napoleone.chalk
+
 // show_results
 // note that in the case of `explore` and the expanded_flag, explore.v
 // initiates the printing of headers to the console, while the printing
@@ -58,7 +60,8 @@ fn get_show_bins(bins []int) string {
 
 // show_expanded_result
 pub fn show_expanded_result(result VerifyResult, opts Options) {
-	println('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class')
+	println(chalk.fg('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class',
+		'green'))
 
 	show_multiple_classes_stats(result, 0)
 	if result.class_table.len == 2 {
@@ -67,17 +70,18 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 		println('${get_binary_stats(result)}')
 	}
 	// confusion matrix
-	// mut confusion_matrix := [][]int{}
-	// for i, value in result.class_table {
-	// 	println(value)
-	// }
-	print('\nConfusion Matrix\nPredicted Class            ')
-	for class, _ in result.class_table {
-		print('$class    ')
-	}
-	println('Actual Class')
-	for class, value in result.class_table {
-		println('${class:-27}    ${value.correct_inferences:5}')
+	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
+	for i, rows in result.confusion_matrix {
+		for j, item in rows {
+			if i == 0 && j == 0 {
+				print('$item      ')
+			} else if j == 0 {
+				print('${item:-27}      ')
+			} else {
+				print('${item:5}      ')
+			}
+		}
+		println('')
 	}
 }
 

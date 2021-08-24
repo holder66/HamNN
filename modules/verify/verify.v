@@ -21,51 +21,28 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 		labeled_classes: test_ds.Class.class_values
 		pos_neg_classes: tools.get_pos_neg_classes(test_ds.class_counts)
 	}
+	mut confusion_matrix_row := map[string]int{}
+	// for each class, instantiate an entry in the confusion matrix row
+	for key, _ in test_ds.Class.class_counts {
+		confusion_matrix_row[key] = 0
+	}
 	// for each class, instantiate an entry in the class table
 	for key, value in test_ds.Class.class_counts {
 		verify_result.class_table[key] = tools.ResultForClass{
 			labeled_instances: value
+			confusion_matrix_row: confusion_matrix_row.clone()
 		}
 	}
 	// massage each instance in the test dataset according to the
 	// attribute parameters in the classifier
 	test_instances := generate_test_instances_array(cl, test_ds)
-	// for each instance in the test data, perform a classification
+	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
 	tools.show_results(verify_result, opts)
-	// if opts.show_flag && opts.command == 'verify' {
-
-	// 	percent := (f32(verify_result.correct_count) * 100 / verify_result.labeled_classes.len)
-	// 	println('correct inferences: $verify_result.correct_count out of $verify_result.labeled_classes.len (${percent:5.2f}%)')
-	// }
-	// if opts.expanded_flag && opts.command == 'verify' {
-	// 	tools.show_expanded_result(verify_result, opts)
-	// }
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('verify_result.class_table in verify: $verify_result.class_table')
+		// println('verify_result.class_table in verify: $verify_result.class_table')
 	}
 	return verify_result
-}
-
-// verify_classify_results
-fn verify_classify_results(classify_result_array []tools.ClassifyResult, mut result tools.VerifyResult) tools.VerifyResult {
-	for classify_result in classify_result_array {
-		if classify_result.inferred_class == classify_result.labeled_class {
-			result.class_table[classify_result.inferred_class].correct_inferences += 1
-		} else {
-			result.class_table[classify_result.inferred_class].wrong_inferences += 1
-		}
-	}
-	return summarize_results(mut result)
-}
-
-// do_classification
-fn do_classification(cl tools.Classifier, test_instances [][]byte, opts tools.Options) []tools.ClassifyResult {
-	mut classify_result_array := []tools.ClassifyResult{}
-	for test_instance in test_instances {
-		classify_result_array << classify.classify_instance(cl, test_instance, opts)
-	}
-	return classify_result_array
 }
 
 // generate_test_instances_array
@@ -108,7 +85,7 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := tools.ClassifyResult{}
-
+	// println('result in classify_to_verify: $result')
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: runtime.nr_jobs()}
 		mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
@@ -119,11 +96,16 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 		}
 		for _ in test_instances {
 			classify_result = <-result_channel
+			// println(classify_result)
 			if classify_result.inferred_class == classify_result.labeled_class {
 				result.class_table[classify_result.inferred_class].correct_inferences += 1
 			} else {
 				result.class_table[classify_result.inferred_class].wrong_inferences += 1
 			}
+			// update confusion matrix row
+			// println(result.class_table[classify_result.labeled_class])
+			result.class_table[classify_result.labeled_class].confusion_matrix_row[classify_result.inferred_class] += 1
+			// println(result.class_table)
 		}
 	} else {
 		for i, test_instance in test_instances {
@@ -133,10 +115,12 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 			} else {
 				result.class_table[inferred_class].wrong_inferences += 1
 			}
+			// update confusion matrix row
+			result.class_table[result.labeled_classes[i]].confusion_matrix_row[inferred_class] += 1
 		}
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('result.class_table in verify: $result.class_table')
+		// println('result.class_table in verify: $result.class_table')
 	}
 
 	return summarize_results(mut result)

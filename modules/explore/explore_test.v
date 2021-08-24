@@ -65,7 +65,7 @@ import os
 // 	assert results[7].wrong_count == 4
 // }
 
-// test_explore_save 
+// test_explore_save
 fn test_explore_save() ? {
 	mut results := []tools.VerifyResult{}
 	mut opts := tools.Options{
@@ -83,14 +83,13 @@ fn test_explore_save() ? {
 	// results = explore(ds, opts)
 
 	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }
-		mut testopts := tools.Options{}
-		f.read_struct(mut testopts) or { panic(err.msg) }
-		mut testresults := []tools.VerifyResult{}
-		f.read_struct(mut testresults) or { panic(err.msg) }
-		f.close()
-		println(testopts)
-		println(testresults)
-		assert testopts == opts
-		assert results == testresults
-
+	mut testopts := tools.Options{}
+	f.read_struct(mut testopts) or { panic(err.msg) }
+	mut testresults := []tools.VerifyResult{}
+	f.read_struct(mut testresults) or { panic(err.msg) }
+	f.close()
+	println(testopts)
+	println(testresults)
+	assert testopts == opts
+	assert results == testresults
 }

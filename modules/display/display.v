@@ -4,12 +4,12 @@ module display
 import tools
 import os
 
-// display outputs to the console or generates plots for a previously saved 
+// display outputs to the console or generates plots for a previously saved
 // result
 pub fn display(opts tools.Options) {
 	mut a := tools.Options{}
 	mut b := []tools.VerifyResult{}
-	
+
 	println('opts in display: $opts')
 	a, b = read_struct(opts)
 
