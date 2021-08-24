@@ -113,6 +113,7 @@ pub mut:
 	correct_inferences int
 	missed_inferences  int
 	wrong_inferences   int
+	confusion_matrix_row map[string]int
 }
 
 pub struct VerifyResult {
@@ -129,6 +130,7 @@ pub mut:
 	total_count     int
 	bin_values      []int
 	attributes_used int
+	confusion_matrix [][]string
 }
 
 pub struct PlotResult {
