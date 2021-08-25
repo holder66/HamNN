@@ -123,10 +123,10 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 		)
 	}
 	annotation := plot.Annotation{
-		x: arrays.max(x)
+		x: (arrays.max(x) + arrays.min(x))/2
 		y: 5
 		text: 'Hover your cursor over a marker to view details.'
-		align: 'right'
+		align: 'center'
 	}
 	plt.set_layout(
 		title: 'Accuracy (%) by Attributes Used for $opts.datafile_path'
@@ -154,10 +154,12 @@ mut:
 	x_coordinates   []f64
 	y_coordinates   []f64
 	bin_range       string
+	bin_range_values []string
 	attributes_used string
+	attributes_used_values []string
 }
 
-// plot_roc plot receiver operating characteristic curve
+// plot_roc plot receiver operating characteristic curves
 pub fn plot_roc(results []VerifyResult, opts Options) {
 	mut roc_results := []ROCResult{}
 	mut plt := plot.new_plot()
@@ -191,9 +193,9 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			attributes_used: '$result.attributes_used'
 		}
 	}
+	// println('roc_results: $roc_results')
 	// sort on the x axis value, ie one_minus_specificity
 	roc_results.sort(a.one_minus_specificity < b.one_minus_specificity)
-
 	// get the unique bin_range values, each one will generate a separate trace
 	for roc_result in roc_results {
 		bin_range_values << roc_result.bin_range
@@ -206,28 +208,40 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			bin_range: '$key'
 			x_coordinates: filter(key, bin_range_values, x_coordinates)
 			y_coordinates: filter(key, bin_range_values, y_coordinates)
+			attributes_used_values: filter(key, bin_range_values, attributes_used_values)
 		}
 	}
 	for mut trace in traces {
 		// append 0. and 1. to the beginning and end of the x and y arrays
+		// and 'none' to the attributes_used_values array
 
 		trace.x_coordinates.prepend(0.)
 		trace.y_coordinates.prepend(0.)
+		trace.attributes_used_values.prepend('none')
 		trace.x_coordinates << 1.
 		trace.y_coordinates << 1.
+		trace.attributes_used_values << 'none'
 
 		plt.add_trace(
 			trace_type: .scatter
 			x: trace.x_coordinates
 			y: trace.y_coordinates
+			text: trace.attributes_used_values
 			mode: 'lines+markers'
 			name: trace.bin_range
+			hovertemplate: 'attributes used: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
 		)
+	}
+	annotation := plot.Annotation{
+		x: 0.5
+		y: -.05
+		text: 'Hover your cursor over a marker to view details.'
+		align: 'center'
 	}
 	plt.set_layout(
 		title: 'Receiver Operating Characteristic Curves by Bin Range'
-		width: 500
-		height: 500
+		width: 800
+		height: 800
 		xaxis: plot.Axis{
 			title: plot.AxisTitle{
 				text: '1 - specificity'
@@ -238,6 +252,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 				text: 'sensitivity'
 			}
 		}
+		annotations: [annotation]
 	)
 	plt.show() or { panic(err) }
 
@@ -249,6 +264,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			attributes_used: '$key'
 			x_coordinates: filter(key, attributes_used_values, x_coordinates)
 			y_coordinates: filter(key, attributes_used_values, y_coordinates)
+			bin_range_values: filter(key, attributes_used_values, bin_range_values)
 		}
 	}
 	for mut trace in traces {
@@ -256,8 +272,10 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 
 		trace.x_coordinates.prepend(0.)
 		trace.y_coordinates.prepend(0.)
+		trace.bin_range_values.prepend('none')
 		trace.x_coordinates << 1.
 		trace.y_coordinates << 1.
+		trace.bin_range_values << 'none'
 
 		plt.add_trace(
 			trace_type: .scatter
@@ -265,12 +283,14 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			y: trace.y_coordinates
 			mode: 'lines+markers'
 			name: trace.attributes_used
+			text: trace.bin_range_values
+			hovertemplate: 'binning: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
 		)
 	}
 	plt.set_layout(
 		title: 'Receiver Operating Characteristic Curves by Attributes Used'
-		width: 600
-		height: 600
+		width: 800
+		height: 800
 		xaxis: plot.Axis{
 			title: plot.AxisTitle{
 				text: '1 - specificity'
@@ -281,15 +301,17 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 				text: 'sensitivity'
 			}
 		}
+		annotations: [annotation]
 	)
 	plt.show() or { panic(err) }
 }
 
+
 // filter takes two coordinated arrays. It filters array b
 // to include only elements whose corresponding element
 // in array a is equal to the match_value.
-fn filter(match_value string, a []string, b []f64) []f64 {
-	mut result := []f64{}
+fn filter<T>(match_value string, a []string, b []T) []T {
+	mut result := []T{}
 	for i, value in a {
 		if match_value == value {
 			result << b[i]
