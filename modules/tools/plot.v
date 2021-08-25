@@ -157,6 +157,7 @@ mut:
 	bin_range_values []string
 	attributes_used string
 	attributes_used_values []string
+	area_under_curve f64
 }
 
 // plot_roc plot receiver operating characteristic curves
@@ -221,6 +222,10 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 		trace.x_coordinates << 1.
 		trace.y_coordinates << 1.
 		trace.attributes_used_values << 'none'
+		trace.area_under_curve = area_under_curve(trace.x_coordinates, trace.y_coordinates)
+	}
+	traces.sort(a.area_under_curve > b.area_under_curve)
+	for trace in traces {
 
 		plt.add_trace(
 			trace_type: .scatter
@@ -228,7 +233,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			y: trace.y_coordinates
 			text: trace.attributes_used_values
 			mode: 'lines+markers'
-			name: trace.bin_range
+			name: '$trace.bin_range (AUC=${trace.area_under_curve:3.2})'
 			hovertemplate: 'attributes used: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
 		)
 	}
@@ -276,13 +281,16 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 		trace.x_coordinates << 1.
 		trace.y_coordinates << 1.
 		trace.bin_range_values << 'none'
-
+		trace.area_under_curve = area_under_curve(trace.x_coordinates, trace.y_coordinates)
+	}
+	traces.sort(a.area_under_curve > b.area_under_curve)
+	for trace in traces {
 		plt.add_trace(
 			trace_type: .scatter
 			x: trace.x_coordinates
 			y: trace.y_coordinates
 			mode: 'lines+markers'
-			name: trace.attributes_used
+			name: '$trace.attributes_used (AUC=${trace.area_under_curve:3.2})'
 			text: trace.bin_range_values
 			hovertemplate: 'binning: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
 		)
@@ -318,4 +326,17 @@ fn filter<T>(match_value string, a []string, b []T) []T {
 		}
 	}
 	return result
+}
+
+// area_under_curve
+fn area_under_curve(x []f64, y []f64) f64 {
+	mut area := 0.
+	mut b := 0.
+	if x.len != 0 {
+	for i in 0 .. (x.len - 1) {
+		b = (x[i + 1] - x[i])
+		area += b * y[i] + 0.5 * b * (y[i + 1] - y[i])
+	}
+}
+	return area
 }

@@ -1,29 +1,20 @@
 // plot_test.v
-import vsl.plot
-import vsl.util
 
-fn test_hovertemplate() {
-	y := [0., 1, 3, 1, 0, -1, -3, -1]
-	text := ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-	x := util.arange(y.len).map(f64(it))
-	mut plt := plot.new_plot()
-	plt.add_trace(
-		trace_type: .scatter
-		x: x
-		y: y
-		text: text
-		mode: 'lines+markers'
-		marker: plot.Marker{
-			size: []f64{len: x.len, init: 10.}
-			color: []string{len: x.len, init: '#FF0000'}
-		}
-		line: plot.Line{
-			color: '#FF0000'
-		}
-		hovertemplate: '<b>X value:</b>%{x}<br><i>Y value:</i>%{y}<br>text: %{text}'
-	)
-	plt.set_layout(
-		title: 'Scatter plot example'
-	)
-	plt.show() or { panic(err) }
+module tools
+// import vsl.plot
+// import vsl.util
+
+// test_area_under_curve 
+fn test_area_under_curve() {
+  mut x := []f64{}
+  mut y := []f64{}
+  x = [0.,1]
+  y = [0.,1]
+  assert area_under_curve(x, y) == 0.5
+  x = [0.2, 0.4]
+  y = [0.3, 0.4]
+  assert area_under_curve(x, y) == 0.07
+  x = [0.2, 0.3, 0.4]
+  y = [0.5, 0.3, 0.1]
+  assert area_under_curve(x, y) == 0.06 
 }
