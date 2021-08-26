@@ -44,7 +44,7 @@ pub fn analyze_dataset(ds tools.Dataset) []string {
 		' Index  Name                   Min         Max',
 		' _____  __________________  ______      ______',
 	]
-	mut min := 0.
+	mut min := 0.0
 	for key, value in ds.useful_continuous_attributes {
 		// to calculate the minimum, strip out missing values (placeholder is -math.max_f32)
 		min = f32_abs(arrays.min(value.filter(it != -math.max_f32)))

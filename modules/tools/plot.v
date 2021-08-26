@@ -59,7 +59,7 @@ pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 			title: plot.AxisTitle{
 				text: 'Rank Value'
 			}
-			range: [0., 100]
+			range: [0.0, 100]
 		}
 	)
 	plt.show() or { panic(err) }
@@ -82,9 +82,9 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 	mut x := []f64{}
 	mut y := []f64{}
 	mut bin_values := []string{}
-	mut y_value := 1.
+	mut y_value := 1.0
 	mut percents := []f64{}
-	mut max_percents := 0.
+	mut max_percents := 0.0
 	for result in results {
 		y_value = (f32(result.correct_count) * 100 / result.total_count)
 		x << f64(result.attributes_used)
@@ -153,11 +153,11 @@ struct ROCTrace {
 mut:
 	x_coordinates   []f64
 	y_coordinates   []f64
-	bin_range       string
-	bin_range_values []string
-	attributes_used string
-	attributes_used_values []string
 	area_under_curve f64
+	// curve_series_variable string 
+	curve_series_variable_values string 
+	// curve_variable string 
+	curve_variable_values []string
 }
 
 // plot_roc plot receiver operating characteristic curves
@@ -187,7 +187,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 			sensitivity: result.class_table[pos_class].correct_inferences / f64(
 				result.class_table[pos_class].correct_inferences +
 				result.class_table[neg_class].missed_inferences)
-			one_minus_specificity: 1. - (result.class_table[neg_class].correct_inferences / f64(
+			one_minus_specificity: 1.0 - (result.class_table[neg_class].correct_inferences / f64(
 				result.class_table[neg_class].correct_inferences +
 				result.class_table[pos_class].missed_inferences))
 			bin_range: bin_range
@@ -206,59 +206,22 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 	}
 	for key, _ in string_element_counts(bin_range_values) {
 		traces << ROCTrace{
-			bin_range: '$key'
+			curve_series_variable_values: '$key'
 			x_coordinates: filter(key, bin_range_values, x_coordinates)
 			y_coordinates: filter(key, bin_range_values, y_coordinates)
-			attributes_used_values: filter(key, bin_range_values, attributes_used_values)
+			curve_variable_values: filter(key, bin_range_values, attributes_used_values)
 		}
 	}
-	for mut trace in traces {
-		// append 0. and 1. to the beginning and end of the x and y arrays
-		// and 'none' to the attributes_used_values array
-
-		trace.x_coordinates.prepend(0.)
-		trace.y_coordinates.prepend(0.)
-		trace.attributes_used_values.prepend('none')
-		trace.x_coordinates << 1.
-		trace.y_coordinates << 1.
-		trace.attributes_used_values << 'none'
-		trace.area_under_curve = area_under_curve(trace.x_coordinates, trace.y_coordinates)
-	}
-	traces.sort(a.area_under_curve > b.area_under_curve)
-	for trace in traces {
-
-		plt.add_trace(
-			trace_type: .scatter
-			x: trace.x_coordinates
-			y: trace.y_coordinates
-			text: trace.attributes_used_values
-			mode: 'lines+markers'
-			name: '$trace.bin_range (AUC=${trace.area_under_curve:3.2})'
-			hovertemplate: 'attributes used: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
-		)
-	}
+	traces = massage_roc_traces(mut traces)
+	make_roc_plot_traces(traces, mut plt, 'attributes used')
 	annotation := plot.Annotation{
 		x: 0.5
-		y: -.05
+		y: -0.05
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
 	}
-	plt.set_layout(
-		title: 'Receiver Operating Characteristic Curves by Bin Range'
-		width: 800
-		height: 800
-		xaxis: plot.Axis{
-			title: plot.AxisTitle{
-				text: '1 - specificity'
-			}
-		}
-		yaxis: plot.Axis{
-			title: plot.AxisTitle{
-				text: 'sensitivity'
-			}
-		}
-		annotations: [annotation]
-	)
+	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation])
+	
 	plt.show() or { panic(err) }
 
 	// now a series of curves, one per attributes_used value
@@ -266,51 +229,16 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 	traces.clear()
 	for key, _ in string_element_counts(attributes_used_values) {
 		traces << ROCTrace{
-			attributes_used: '$key'
+			curve_series_variable_values: '$key'
 			x_coordinates: filter(key, attributes_used_values, x_coordinates)
 			y_coordinates: filter(key, attributes_used_values, y_coordinates)
-			bin_range_values: filter(key, attributes_used_values, bin_range_values)
+			curve_variable_values: filter(key, attributes_used_values, bin_range_values)
 		}
 	}
-	for mut trace in traces {
-		// append 0. and 1. to the beginning and end of the x and y arrays
+	traces = massage_roc_traces(mut traces)
+	make_roc_plot_traces(traces, mut plt, 'binning')
+	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation])
 
-		trace.x_coordinates.prepend(0.)
-		trace.y_coordinates.prepend(0.)
-		trace.bin_range_values.prepend('none')
-		trace.x_coordinates << 1.
-		trace.y_coordinates << 1.
-		trace.bin_range_values << 'none'
-		trace.area_under_curve = area_under_curve(trace.x_coordinates, trace.y_coordinates)
-	}
-	traces.sort(a.area_under_curve > b.area_under_curve)
-	for trace in traces {
-		plt.add_trace(
-			trace_type: .scatter
-			x: trace.x_coordinates
-			y: trace.y_coordinates
-			mode: 'lines+markers'
-			name: '$trace.attributes_used (AUC=${trace.area_under_curve:3.2})'
-			text: trace.bin_range_values
-			hovertemplate: 'binning: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
-		)
-	}
-	plt.set_layout(
-		title: 'Receiver Operating Characteristic Curves by Attributes Used'
-		width: 800
-		height: 800
-		xaxis: plot.Axis{
-			title: plot.AxisTitle{
-				text: '1 - specificity'
-			}
-		}
-		yaxis: plot.Axis{
-			title: plot.AxisTitle{
-				text: 'sensitivity'
-			}
-		}
-		annotations: [annotation]
-	)
 	plt.show() or { panic(err) }
 }
 
@@ -328,10 +256,11 @@ fn filter<T>(match_value string, a []string, b []T) []T {
 	return result
 }
 
-// area_under_curve
+// area_under_curve calculates area under the curve 
+// as the areas of a series of rectangles and triangles
 fn area_under_curve(x []f64, y []f64) f64 {
-	mut area := 0.
-	mut b := 0.
+	mut area := 0.0
+	mut b := 0.0
 	if x.len != 0 {
 	for i in 0 .. (x.len - 1) {
 		b = (x[i + 1] - x[i])
@@ -339,4 +268,56 @@ fn area_under_curve(x []f64, y []f64) f64 {
 	}
 }
 	return area
+}
+
+// massage_roc_traces appends 0. and 1. to the beginning and end of
+// the x and y arrays and 'none' to the curve_variable_values array;
+// it then calculates areas under the curve (AUC), and sorts the traces
+// in descending order of AUC
+fn massage_roc_traces(mut traces []ROCTrace) []ROCTrace {
+	for mut trace in traces {
+		trace.x_coordinates.prepend(0.0)
+		trace.y_coordinates.prepend(0.0)
+		trace.curve_variable_values.prepend('none')
+		trace.x_coordinates << 1.0
+		trace.y_coordinates << 1.0
+		trace.curve_variable_values << 'none'
+		trace.area_under_curve = area_under_curve(trace.x_coordinates, trace.y_coordinates)
+	}
+	traces.sort(a.area_under_curve > b.area_under_curve)
+	return traces
+}
+// make_roc_plot_traces 
+fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable string) {
+	for trace in traces {
+		plt.add_trace(
+			trace_type: .scatter
+			x: trace.x_coordinates
+			y: trace.y_coordinates
+			mode: 'lines+markers'
+			name: '$trace.curve_series_variable_values (AUC=${trace.area_under_curve:3.2})'
+			text: trace.curve_variable_values
+			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
+		)
+	}
+}
+
+// make_roc_plot_layout 
+fn make_roc_plot_layout(mut plt plot.Plot, curve_series string, annotations []plot.Annotation) {
+	plt.set_layout(
+		title: 'Receiver Operating Characteristic Curves by $curve_series'
+		width: 800
+		height: 800
+		xaxis: plot.Axis{
+			title: plot.AxisTitle{
+				text: '1 - specificity'
+			}
+		}
+		yaxis: plot.Axis{
+			title: plot.AxisTitle{
+				text: 'sensitivity'
+			}
+		}
+		annotations: annotations
+	)
 }

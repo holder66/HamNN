@@ -46,8 +46,8 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	mut maximum_rank_value := i64(0)
 	mut attr_index_for_maximum_rank_value := 0
 	mut bin_number_for_maximum_rank_value := 0
-	mut min := f32(0.)
-	mut max := f32(0.)
+	mut min := f32(0.0)
+	mut max := f32(0.0)
 	mut binned_values := []int{}
 	// loop through usable continuous attributes
 	for attr_index, attr_values in ds.useful_continuous_attributes {
@@ -106,12 +106,12 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 			rank_value_array << f32(rank_value)
 			bin_number -= interval
 		}
-		rank_value_array = rank_value_array.map(100. * f32(it) / perfect_rank_value)
+		rank_value_array = rank_value_array.map(100.0 * f32(it) / perfect_rank_value)
 		ranked_atts << tools.RankedAttribute{
 			attribute_index: attr_index_for_maximum_rank_value
 			attribute_name: ds.attribute_names[attr_index_for_maximum_rank_value]
 			inferred_attribute_type: ds.inferred_attribute_types[attr_index_for_maximum_rank_value]
-			rank_value: 100. * f32(maximum_rank_value) / perfect_rank_value
+			rank_value: 100.0 * f32(maximum_rank_value) / perfect_rank_value
 			rank_value_array: rank_value_array
 			bins: bin_number_for_maximum_rank_value
 		}
@@ -124,7 +124,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 			attribute_index: attr_index
 			attribute_name: ds.attribute_names[attr_index]
 			inferred_attribute_type: ds.inferred_attribute_types[attr_index]
-			rank_value: 100. * f32(rank_value) / perfect_rank_value
+			rank_value: 100.0 * f32(rank_value) / perfect_rank_value
 		}
 	}
 	// descending sort on rank value

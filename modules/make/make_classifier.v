@@ -44,8 +44,8 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	// strings to integers (note that this table needs to be saved)
 	mut attr_values := []f32{}
 	mut attr_string_values := []string{}
-	mut min := f32(0.)
-	mut max := f32(0.)
+	mut min := f32(0.0)
+	mut max := f32(0.0)
 	mut binned_values := [1]
 	mut translation_table := map[string]int{}
 	mut attr_binned_values := [][]byte{}
@@ -85,11 +85,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
 		f.write_struct(cl) or { panic(err.msg) }
 		f.close()
-		f = os.open_file(outputfile, 'r') or { panic(err.msg) }
-		mut tcl := tools.Classifier{}
-		f.read_struct(mut tcl) or { panic(err.msg) }
-		f.close()
-		println(tcl)
+		
 	}
 
 	return cl
