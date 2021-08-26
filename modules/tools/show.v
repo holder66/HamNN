@@ -66,7 +66,7 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 	show_multiple_classes_stats(result, 0)
 	if result.class_table.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-		println('   TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
+		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
 		println('${get_binary_stats(result)}')
 	}
 	// confusion matrix
@@ -98,7 +98,8 @@ fn get_binary_stats(result VerifyResult) string {
 	ppv := t_p / f64(t_p + f_p)
 	npv := t_n / f64(t_n + f_n)
 	ba := (sens + spec) / 2
-	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:5.3f} ${npv:5.3f} ${ba:18.3f}'
+	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
+	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f} ${ba:18.3f} ${f1_score:10.3f}'
 }
 
 // show_expanded_explore_result
@@ -157,7 +158,7 @@ pub fn expanded_explore_header(result VerifyResult, opts Options) {
 	// println('Options: $opts')
 	if result.pos_neg_classes[0] != '' {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy')
+		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
 	} else {
 		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
 		println('                                                    test set          inferred           inferred     into this class')
