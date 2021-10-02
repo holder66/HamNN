@@ -6,7 +6,7 @@ module make
 
 import tools
 import rank
-import arrays
+// import arrays
 import math
 import time
 import os
@@ -54,8 +54,8 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		attr_names << ra.attribute_name
 		if ra.inferred_attribute_type == 'C' {
 			attr_values = ds.useful_continuous_attributes[ra.attribute_index]
-			min = arrays.min(attr_values.filter(it != -math.max_f32))
-			max = arrays.max(attr_values)
+			min = tools.min(attr_values.filter(it != -math.max_f32))
+			max = tools.max(attr_values)
 			binned_values = tools.discretize_attribute(attr_values, min, max, ra.bins)
 			cl.trained_attributes[ra.attribute_name] = tools.TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type

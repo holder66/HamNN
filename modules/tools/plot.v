@@ -1,6 +1,6 @@
 module tools
 
-import arrays
+// import arrays
 import math
 import vsl.plot
 
@@ -23,9 +23,9 @@ pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 	}
 	for attr in ranked_atts.filter(it.inferred_attribute_type == 'C') {
 		traces << RankTrace{
-			label: '$attr.attribute_name ${arrays.max(attr.rank_value_array):5.2f}'
+			label: '$attr.attribute_name ${max(attr.rank_value_array):5.2f}'
 			rank_values: attr.rank_value_array.map(f64(it)).reverse()
-			maximum_rank_value: arrays.max(attr.rank_value_array)
+			maximum_rank_value: max(attr.rank_value_array)
 			// the tooltip for each point shows the attribute name
 			hover_text: ['$attr.attribute_name'].repeat(opts.bins[1] + 1)
 		}
@@ -99,9 +99,9 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 	// get the unique bin_values, each one will generate a separate trace
 	for key, _ in string_element_counts(bin_values) {
 		percents = filter(key, bin_values, y).map((math.round(it * 100)) / 100)
-		max_percents = arrays.max(percents)
+		max_percents = max(percents)
 		traces << ExploreTrace{
-			label: '$key ${arrays.max(percents):5.2f}'
+			label: '$key ${max(percents):5.2f}'
 			percents: percents
 			max_percents: max_percents
 			attributes_used: filter(key, bin_values, x)
@@ -123,7 +123,7 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 		)
 	}
 	annotation := plot.Annotation{
-		x: (arrays.max(x) + arrays.min(x))/2
+		x: (max(x) + min(x))/2
 		y: 5
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
