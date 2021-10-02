@@ -3,7 +3,7 @@ module rank
 
 import tools
 import math
-import arrays
+// import arrays
 
 // rank_attributes takes a Dataset and returns a list of all the
 // dataset's usable attributes, ranked in order of each attribute's
@@ -55,8 +55,8 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 		maximum_rank_value = 0
 		attr_index_for_maximum_rank_value = 0
 		bin_number_for_maximum_rank_value = 0
-		min = arrays.min(attr_values.filter(it != -math.max_f32))
-		max = arrays.max(attr_values)
+		min = tools.min(attr_values.filter(it != -math.max_f32))
+		max = tools.max(attr_values)
 		// discretize each attribute by binning, over the bins given by lower
 		// and upper and using an interval given by interval; go from high to
 		// low, so that the maximum rank value used

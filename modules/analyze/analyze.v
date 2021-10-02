@@ -3,7 +3,7 @@ module analyze
 
 import tools
 import math
-import arrays
+// import arrays
 
 // analyze_dataset outputs to the console information about a datafile.
 // Type: `v run hamnn.v analyze --help`
@@ -47,9 +47,9 @@ pub fn analyze_dataset(ds tools.Dataset) []string {
 	mut min := 0.0
 	for key, value in ds.useful_continuous_attributes {
 		// to calculate the minimum, strip out missing values (placeholder is -math.max_f32)
-		min = f32_abs(arrays.min(value.filter(it != -math.max_f32)))
+		min = f32_abs(tools.min(value.filter(it != -math.max_f32)))
 
-		show_continuous_attributes << '${key:6}  ${ds.attribute_names[key]:-27} ${min:6.3g}      ${arrays.max(value):6}'
+		show_continuous_attributes << '${key:6}  ${ds.attribute_names[key]:-27} ${min:6.3g}      ${tools.max(value):6}'
 	}
 
 	mut show_class := ['', 'The Class Attribute: "$ds.Class.class_name"',

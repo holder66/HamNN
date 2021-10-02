@@ -1,7 +1,7 @@
 // tools.v contains functions used elsewhere in hamnn
 module tools
 
-import arrays
+// import arrays
 import math
 
 // transpose a 2d array
@@ -189,7 +189,7 @@ pub fn lcm(arr []int) i64 {
 	mut res := i64(1)
 	mut x := 2
 	mut indexes := []int{}
-	for x <= arrays.max(numbers) {
+	for x <= max(numbers) {
 		indexes = []
 		for i, val in numbers {
 			if val % x == 0 {
@@ -210,4 +210,32 @@ pub fn lcm(arr []int) i64 {
 	}
 	// println('res in tools.lcm: $res')
 	return res
+}
+
+// min returns the minimum value in the array
+pub fn min<T>(a []T) T {
+	// if a.len == 0 {
+	// 	return error('.min called on an empty array')
+	// }
+	mut val := a[0]
+	for e in a {
+		if e < val {
+			val = e
+		}
+	}
+	return val
+}
+
+// max returns the maximum the maximum value in the array
+pub fn max<T>(a []T) T {
+	// if a.len == 0 {
+	// 	return error('.max called on an empty array')
+	// }
+	mut val := a[0]
+	for e in a {
+		if e > val {
+			val = e
+		}
+	}
+	return val
 }
