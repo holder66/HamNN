@@ -6,6 +6,7 @@ import partition
 import make
 import verify
 import strconv
+import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
 // Type: `v run hamnn.v cross --help`
@@ -36,12 +37,23 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	}
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
-		mut work_channel := chan int{cap: folds}
 		mut result_channel := chan tools.VerifyResult{cap: folds}
+		// queue all work + the sentinel values:
+		jobs := runtime.nr_jobs()
+		mut work_channel := chan int{cap: folds + jobs}
 		for i in 0 .. folds {
 			work_channel <- i
-			go option_worker(work_channel, result_channel, folds, ds, opts)
 		}
+		for _ in 0 .. jobs {
+			work_channel <- -1
+		}
+		// start a thread pool to do the work:
+		mut tpool := []thread{}
+		for _ in 0 .. jobs {
+			tpool << go option_worker(work_channel, result_channel, folds, ds, opts)
+		}
+		tpool.wait()
+		//
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
 			cross_result = update_cross_result(fold_result, mut cross_result)
@@ -155,7 +167,11 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
-	mut current_fold := <-work_channel
-	result_channel <- do_one_fold(current_fold, folds, ds, opts)
-	return
+	for {
+		mut current_fold := <-work_channel
+		if current_fold < 0 {
+			break
+		}
+		result_channel <- do_one_fold(current_fold, folds, ds, opts)
+	}
 }
