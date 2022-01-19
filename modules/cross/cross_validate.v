@@ -6,6 +6,7 @@ import partition
 import make
 import verify
 import strconv
+import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
 // Type: `v run hamnn.v cross --help`
@@ -40,7 +41,11 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		mut result_channel := chan tools.VerifyResult{cap: folds}
 		for i in 0 .. folds {
 			work_channel <- i
+		}
+		jobs := runtime.nr_jobs()
+		for _ in 0 .. jobs {
 			go option_worker(work_channel, result_channel, folds, ds, opts)
+			work_channel <- -1
 		}
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
@@ -155,7 +160,11 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
-	mut current_fold := <-work_channel
-	result_channel <- do_one_fold(current_fold, folds, ds, opts)
-	return
+	for {
+		mut current_fold := <-work_channel
+		if current_fold < 0 {
+			break
+		}
+		result_channel <- do_one_fold(current_fold, folds, ds, opts)
+	}
 }
