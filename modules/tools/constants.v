@@ -61,6 +61,8 @@ Flags:
 -s --show:       output results to the console;
 -t --test:       followed by the path to the datafile to be verified or
                  validated;
+-u --uniform:    specifies that the number of bins used will be the same
+                 for all attributes;
 -v --verbose:    display additional information for debugging
 -w --weight:     when classifying, weight the nearest neighbour counts by class 
                  prevalences;
@@ -95,14 +97,15 @@ Options:
       of slices or bins for continuous attributes;
   -x --exclude, exclude missing values from rank value calculations;
   -s --show, output to the console a list ordered by rank value;
-  -g --graph, produce a graph showing rank values vs number of bins. TODO
+  -g --graph, produce a plot showing rank values vs number of bins for   
+      continuous attributes.
 	'
 
 	make_help = '
 "make" creates a classifier from the datafile given as the last argument.
 Returns a classifier struct.
 
-Usage: v run hamnn.v make -v datasets/iris.tab
+Usage: v run hamnn.v make -s datasets/iris.tab
 
 Options:
   -a --attributes, the number of attributes (picked from the list of 
@@ -110,7 +113,7 @@ Options:
   -b --bins, eg, "3,6" specifies the lower and upper limits for the number
       of slices or bins for continuous attributes;
   -o --output, followed by the path to a file in which a classifier or a 
-      result will be stored;
+      result will be stored; TODO
   -s --show, output to the console information about the classifier;
   -v --verbose, output debugging information to the console;
   -x --exclude, exclude missing values from rank value calculations;
@@ -188,10 +191,10 @@ Options:
   -c --concurrent, permit parallel processing to use multiple cores;
   -e --expanded, expanded results on the console;
 	-t --test, followed by the file path for the datafile to be used 
-	for verification
-	-v --verbose, output debugging information to the console 
-	-s --show, output the results of the verification to the terminal
-	-w --weight, weight the number of nearest neighbor counts 
+	for verification;
+	-v --verbose, output debugging information to the console;
+	-s --show, output the results of the verification to the terminal;
+	-w --weight, weight the number of nearest neighbor counts
 	by class prevalences.
 	'
 
@@ -207,9 +210,9 @@ Options:
   In addition to the options below, the options for "make" apply to 
   both the classification and the validation datafile.
   -t --test, followed by the file path for the datafile to be used 
-  for validation
-  -v --verbose, output debugging information to the console 
-  -s --show, output the results of the validation to the terminal
+  for validation;
+  -v --verbose, output debugging information to the console;
+  -s --show, output the results of the validation to the terminal;
   -w --weight, weight the number of nearest neighbor counts 
   by class prevalences.
   '
@@ -273,7 +276,8 @@ settings, used when seeking optimal values for parameters. A parameter
 range can be specified with up to 3 integers, with the first two for 
 lower and upper ends of the range, and the 3rd integer (optional) for
 the interval. For example, --bins 2,12,3 would indicate to do 
-cross-validations for bins settings of 2, 5, 8, and 11. 
+cross-validations for bins settings of 2, 5, 8, and 11. Note that a 
+single integer specifies the upper end of a range starting at 1.
 
 Usage: v run hamnn.v explore -s datasets.iris.translation_tab 
 
@@ -283,12 +287,16 @@ Options:
   -b --bins, a range for the number of bins for continuous attributes;
   -c --concurrent, permit parallel processing to use multiple cores;
   -f --folds, number of cross-validation folds (default is leave-one-out);
+  -g --graph, generates plots of accuracy vs number of attributes used; for 
+      binary classifiers (ie only 2 classes) also generates AUC plots;
   -o --output, followed by the path to a file in which a classifier or a 
       result will be stored;
   -r --reps, number of repetitions; if > 1, a random selection of 
       instances to be included in each fold will be applied (TODO);
   -s --show, output to the console the results of the cross-validation;
   -t --test, followed by the path to a second file, used for verifications;
+  -u --uniform, specifies that the number of bins used will be the same
+      for all attributes;
   -v --verbose, output debugging information to the console;
   -w --weight, weight the number of nearest neighbor counts by 
       class prevalences;

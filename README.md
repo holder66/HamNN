@@ -71,7 +71,7 @@ At the present time, the best way to prevent a memory leak (which may eventually
  cause the program to be "killed" by the OS when the available memory is exceeded) is to compile with the gc flag, eg:
 
  ```sh
- v -gc boehm run hamnn.v explore -w -b 2,12 -a 1,10 datasets/prostata.tab
+ v -gc boehm run hamnn.v ...
  ```
 You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 
@@ -112,4 +112,4 @@ The process of development in its early stages is described in [this essay](http
 
 
 
-Copyright (c) 2017, 2021: Henry Olders.
+Copyright (c) 2017, 2022: Henry Olders.
