@@ -39,14 +39,16 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: folds}
 		mut result_channel := chan tools.VerifyResult{cap: folds}
+		mut tpool := []thread{}
 		for i in 0 .. folds {
 			work_channel <- i
 		}
 		jobs := runtime.nr_jobs()
 		for _ in 0 .. jobs {
-			go option_worker(work_channel, result_channel, folds, ds, opts)
+			tpool << go option_worker(work_channel, result_channel, folds, ds, opts)
 			work_channel <- -1
 		}
+		tpool.wait()
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
 			cross_result = update_cross_result(fold_result, mut cross_result)
