@@ -3,6 +3,7 @@ module analyze
 
 import tools
 import math
+import arrays
 // import arrays
 
 // analyze_dataset outputs to the console information about a datafile.
@@ -15,17 +16,21 @@ missing values;
 4. a list of continuous attributes useful for training a classifier;
 5. a breakdown of the class attribute, showing counts for each class.
 */
-pub fn analyze_dataset(ds tools.Dataset) []string {
-	// mut spaces := 18
+pub fn analyze_dataset(ds tools.Dataset) ?[]string {
+	cases_count := ds.data[0].len
 	mut show_dataset := ['']
+	mut missings := ds.data.map(missing_values(it))
+	missings << 0
 	mut show_attributes := ['',
 		'Analysis of Dataset "$ds.path" (File Type ${tools.file_type(ds.path)})', 'All Attributes',
-		'Index  Name                          Count  Uniques  Missing    Type',
-		'_____  __________________________  _______  _______  _______    ____',
+		'Index  Name                          Count  Uniques  Missing     %   Type',
+		'_____  __________________________  _______  _______  _______  ____   ____',
 	]
 	for i, name in ds.attribute_names {
-		show_attributes << '${i:5}  ${name:-27}   ${ds.data[i].len:5}    ${uniques(ds.data[i]):5}     ${missing_values(ds.data[i]):4}    ${ds.inferred_attribute_types[i]}'
+		show_attributes << '${i:5}  ${name:-27}   ${ds.data[i].len:5}    ${uniques(ds.data[i]):5}     ${missings[i]:4} ${f32(missings[i])/f32(cases_count)*100.0:5.1f}   ${ds.inferred_attribute_types[i]}'
 	}
+	show_attributes << '______                             -------           _______ _____'
+	show_attributes << 'Totals (less Class attribute)   ${cases_count * (ds.data.len - 1):10}        ${arrays.sum<int>(missings)?:10}  ${f32(arrays.sum<int>(missings)?)/(cases_count * (ds.data.len - 1))*100.0:5.2f}%'
 	mut show_types := ['', 'Counts of Attributes by Type', 'Type        Count', '____        _____']
 	for key, value in tools.string_element_counts(ds.inferred_attribute_types) {
 		show_types << '$key          ${value:6}'
@@ -41,8 +46,8 @@ pub fn analyze_dataset(ds tools.Dataset) []string {
 	}
 
 	mut show_continuous_attributes := ['', 'Continuous Attributes for Training',
-		' Index  Name                   Min         Max',
-		' _____  __________________  ______      ______',
+		' Index  Name                           Min         Max',
+		' _____  __________________________  ______      ______',
 	]
 	mut min := 0.0
 	for key, value in ds.useful_continuous_attributes {
@@ -75,4 +80,9 @@ fn uniques(attribute_values []string) int {
 // missing_values
 fn missing_values(attribute_values []string) int {
 	return attribute_values.filter(it in tools.missings).len
+}
+
+// sum_elements 
+fn sum_elements() ? {
+	
 }
