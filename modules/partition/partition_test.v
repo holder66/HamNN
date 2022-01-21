@@ -9,21 +9,25 @@ fn test_get_partition_indices() {
 	mut len := arr.len
 	// leave-one-out, first fold
 	mut s, mut e := get_partition_indices(len, 0, 0)
-	assert s == 0 && e == 1
+	assert s == 0 
+	assert e == 1
 	assert arr[s..e] == [11]
 	assert get_rest_of_array(arr, s, e) == [22, 33, 44, 55, 66]
 	s, e = get_partition_indices(len, 0, 1)
-	assert s == 1 && e == 2
+	assert s == 1
+	assert e == 2
 	assert arr[s..e] == [22]
 	assert get_rest_of_array(arr, s, e) == [11, 33, 44, 55, 66]
 
 	s, e = get_partition_indices(len, 0, 5)
-	assert s == 5 && e == 6
+	assert s == 5
+	assert e == 6
 	assert arr[s..e] == [66]
 	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44, 55]
 
 	s, e = get_partition_indices(len, 3, 2)
-	assert s == 4 && e == 6
+	assert s == 4
+	assert e == 6
 	assert arr[s..e] == [55, 66]
 	assert get_rest_of_array(arr, s, e) == [11, 22, 33, 44]
 
