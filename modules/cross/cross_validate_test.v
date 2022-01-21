@@ -19,8 +19,10 @@ fn test_cross_validate() {
 	opts.folds = 0
 	mut ds := tools.load_file(opts.datafile_path)
 	mut result := cross_validate(ds, opts)
-	assert result.correct_count == 10
+	assert result.correct_count == 11
+	assert result.misses_count == 2
 	assert result.wrong_count == 3
+	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/iris.tab'
 	opts.number_of_attributes = [2]
@@ -28,15 +30,19 @@ fn test_cross_validate() {
 	opts.folds = 0
 	ds = tools.load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	assert result.correct_count == 147
+	assert result.correct_count == 148
+	assert result.misses_count == 2
 	assert result.wrong_count == 3
+	assert result.total_count == 150
 
 	opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
 	opts.number_of_attributes = [9]
 	ds = tools.load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	assert result.correct_count == 670
+	assert result.correct_count == 671
+	assert result.misses_count == 28
 	assert result.wrong_count == 29
+	assert result.total_count == 699
 
 	opts.datafile_path = 'datasets/anneal.tab'
 	opts.number_of_attributes = [7]
@@ -44,13 +50,17 @@ fn test_cross_validate() {
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	assert result.correct_count == 885
+	assert result.correct_count == 886
+	assert result.misses_count == 12
 	assert result.wrong_count == 13
+	assert result.total_count == 898
 
 	opts.weighting_flag = true
 	result = cross_validate(ds, opts)
-	assert result.correct_count == 883
+	assert result.correct_count == 884
+	assert result.misses_count == 14
 	assert result.wrong_count == 15
+	assert result.total_count == 898
 
 	opts.datafile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [310]

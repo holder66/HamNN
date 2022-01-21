@@ -19,15 +19,15 @@ fn test_explore_cross() {
 	mut ds := tools.load_file(opts.datafile_path)
 	results = explore(ds, opts)
 	// println(results)
-	assert results[0].correct_count == 100
-	assert results[0].misses_count == 50
+	assert results[0].correct_count == 101
+	assert results[0].misses_count == 49
 	assert results[0].wrong_count == 50
 	assert results[0].total_count == 150
 
 	opts.uniform_bins = false
 	results = explore(ds, opts)
-	assert results[results.len - 1].correct_count == 141
-	assert results[results.len - 1].misses_count == 9
+	assert results[results.len - 1].correct_count == 142
+	assert results[results.len - 1].misses_count == 8
 	assert results[results.len - 1].wrong_count == 9
 	assert results[results.len - 1].total_count == 150
 
