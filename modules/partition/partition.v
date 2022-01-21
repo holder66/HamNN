@@ -47,21 +47,31 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 }
 
 // get_partition_indices returns indices s & e, for the start and end of a fold,
-// given the total number of indices total, the number of folds n, and the fold number
+// given the total number of elements total, the number of folds n, and the fold number
 fn get_partition_indices(total int, n int, curr int) (int, int) {
 	mut n1 := f64(n)
 	if n == 0 { // ie each fold will be length 1, thus the total number of folds
 		// will be the same as the array length
 		n1 = total
 	}
-	round := int(math.round(total / n1))
-	s := curr * round
-	mut e := s + round
-	// if e > total || total - e == 1 {
-	if e > total || n - curr == 1 {
+	// note that math.round uses the "Round to nearest, ties to even" rule
+	fsize := f64(total) / n1
+	floor := math.floor(fsize)
+	frac := fsize - floor
+	mut s := curr * int(floor)
+	mut e := s + int(math.floor(fsize))
+	if frac < 0.5 {
+		if total - e == 1 {
+		e = e + 1
+	}
+	return s, e
+	}
+	ceiling := int(math.ceil(fsize))
+	s = curr * ceiling
+	e = s + ceiling
+	if e > total || total - e == 1 {
 		e = total
 	}
-
 	return s, e
 }
 

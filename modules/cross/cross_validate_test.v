@@ -7,30 +7,18 @@ import tools
 fn test_cross_validate() {
 	mut opts := tools.Options{
 		command: 'cross'
-		bins: [21, 21]
 		exclude_flag: false
 		verbose_flag: false
-		number_of_attributes: [28]
 		show_flag: false
-		datafile_path: 'datasets/anneal.tab'
 		concurrency_flag: true
 	}
-	mut ds := tools.load_file(opts.datafile_path)
-	mut result := cross_validate(ds, opts)
-	assert result.correct_count == 881
-	assert result.wrong_count == 17
-
-	opts.weighting_flag = true
-	result = cross_validate(ds, opts)
-	assert result.correct_count == 876
-	assert result.wrong_count == 22
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]
 	opts.folds = 0
-	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	mut ds := tools.load_file(opts.datafile_path)
+	mut result := cross_validate(ds, opts)
 	assert result.correct_count == 10
 	assert result.wrong_count == 3
 
@@ -47,8 +35,22 @@ fn test_cross_validate() {
 	opts.number_of_attributes = [9]
 	ds = tools.load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	assert result.correct_count == 672
-	assert result.wrong_count == 27
+	assert result.correct_count == 670
+	assert result.wrong_count == 29
+
+	opts.datafile_path = 'datasets/anneal.tab'
+	opts.number_of_attributes = [7]
+	opts.bins = [14, 14]
+	opts.weighting_flag = false
+	ds = tools.load_file(opts.datafile_path)
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 885
+	assert result.wrong_count == 13
+
+	opts.weighting_flag = true
+	result = cross_validate(ds, opts)
+	assert result.correct_count == 883
+	assert result.wrong_count == 15
 
 	opts.datafile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [310]
