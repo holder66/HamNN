@@ -75,6 +75,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition.partition(current_fold, folds, ds, cross_opts)
+	// println('fold: $fold')
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
