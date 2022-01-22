@@ -70,19 +70,32 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 		println('${get_binary_stats(result)}')
 	}
 	// confusion matrix
+	print_confusion_matrix(result)
+}
+
+// print_confusion_matrix 
+fn print_confusion_matrix(result VerifyResult) {
+	println(result.confusion_matrix)
 	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
 	for i, rows in result.confusion_matrix {
 		for j, item in rows {
 			if i == 0 && j == 0 {
-				print('$item      ')
-			} else if j == 0 {
-				print('${item:-27}      ')
+				// print first item in first row, ie 'predicted classes (columns)'
+				print('$item  ')
+			} else if i == 0 {
+				// print column headers, ie classes
+				print('${item:20}  ')
+			}
+			else if j == 0 {
+				// print first item in remaining rows, ie classes
+				print('         ${item:20}')
 			} else {
-				print('${item:5}      ')
+				// print integers for each cell 
+				print('${item:20}  ')
 			}
 		}
 		println('')
-	}
+}
 }
 
 // get_binary_stats
