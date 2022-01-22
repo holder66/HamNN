@@ -74,26 +74,29 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 }
 
 // print_confusion_matrix 
-fn print_confusion_matrix(result VerifyResult) {
+pub fn print_confusion_matrix(result VerifyResult) {
 	println(result.confusion_matrix)
 	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
 	for i, rows in result.confusion_matrix {
 		for j, item in rows {
 			if i == 0 && j == 0 {
 				// print first item in first row, ie 'predicted classes (columns)'
-				print('$item  ')
+				// print('$item  ')
+				print(chalk.fg(chalk.style('$item  ', 'bold'), 'red'))
 			} else if i == 0 {
 				// print column headers, ie classes
-				print('${item:20}  ')
+				print(chalk.fg(chalk.style('${item:20}  ', 'bold'), 'red'))
 			}
 			else if j == 0 {
 				// print first item in remaining rows, ie classes
-				print('         ${item:20}')
+				// print('        ${item:21}')
+				print(chalk.fg(chalk.style('        ${item:21}', 'bold'), 'green'))
 			} else {
 				// print integers for each cell 
 				print('${item:20}  ')
 			}
 		}
+		// carriage return at end of line
 		println('')
 }
 }
