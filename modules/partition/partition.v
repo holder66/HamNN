@@ -2,8 +2,6 @@
 module partition
 
 import tools
-// import make
-import math
 
 // partition splits a dataset into a fold set of instances, and the remainder
 // of the dataset (ie with the fold instances taken out). Type: `v run hamnn.v partition --help`
@@ -46,23 +44,28 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 	return part_ds, fold
 }
 
-// get_partition_indices returns indices s & e, for the start and end of a fold,
-// given the total number of indices total, the number of folds n, and the fold number
+// get_partition_indices returns indices start & end, for the start and end of a fold, given the total number of indices `total`, the number of folds `n`, and the fold number `curr`
 fn get_partition_indices(total int, n int, curr int) (int, int) {
+	if curr >= n || n == 1 { return 0, 0 }
 	mut n1 := f64(n)
 	if n == 0 { // ie each fold will be length 1, thus the total number of folds
 		// will be the same as the array length
 		n1 = total
 	}
-	round := int(math.round(total / n1))
-	s := curr * round
-	mut e := s + round
-	// if e > total || total - e == 1 {
-	if e > total || n - curr == 1 {
-		e = total
+	mut start := 0
+	mut end := 0
+	real := total / n1
+	mut fold_size := int(real) + 1
+	r := (n * fold_size) - total
+	if curr < r {
+		start = curr * ( fold_size - 1)
+		end = start + fold_size - 1
+	} else {
+		start = curr * fold_size - r
+		end = start + fold_size
 	}
-
-	return s, e
+	// println('$total $n $curr $fold_size $r $start $end')
+	return start, end
 }
 
 // get_rest_of_array given the start s and the end e of the slice to be removed,
