@@ -52,12 +52,12 @@ fn testsuite_begin() ? {
 	os.rmdir_all(tools.tfolder) or {}
 	assert !os.is_dir(tools.tfolder)
 	os.mkdir_all(tools.tfolder) ?
-	os.chdir(tools.tfolder)
+	os.chdir(tools.tfolder) ?
 	assert os.is_dir(tools.tfolder)
 }
 
 fn testsuite_end() ? {
-	os.chdir(os.wd_at_startup)
+	os.chdir(os.wd_at_startup) ?
 	os.rmdir_all(tools.tfolder) ?
 	assert !os.is_dir(tools.tfolder)
 }
