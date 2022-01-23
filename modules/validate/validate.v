@@ -48,7 +48,7 @@ pub fn validate(cl tools.Classifier, opts tools.Options) tools.ValidateResult {
 }
 
 // classify_to_validate
-pub fn classify_to_validate(cl tools.Classifier, test_instances [][]byte, mut result tools.ValidateResult, opts tools.Options) tools.ValidateResult {
+fn classify_to_validate(cl tools.Classifier, test_instances [][]byte, mut result tools.ValidateResult, opts tools.Options) tools.ValidateResult {
 	// for each instance in the test data, perform a classification
 	for test_instance in test_instances {
 		result.inferred_classes << classify.classify_instance(cl, test_instance, opts).inferred_class

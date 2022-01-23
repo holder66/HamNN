@@ -1,4 +1,4 @@
-// classify.v
+ // classify.v
 module classify
 
 import tools
@@ -103,7 +103,7 @@ fn get_hamming_distance<T>(left T, right T) int {
 
 // idx_count_max returns the index of the first maximum and the count
 // of that maximum
-pub fn idx_count_max<T>(a []T) (int, int) {
+fn idx_count_max<T>(a []T) (int, int) {
 	if a.len == 0 {
 		panic('.idx_count_max called on an empty array')
 	}

@@ -1,6 +1,5 @@
-// main.v
+// hamnn.v
 module main
-
 import os
 import tools
 import analyze
@@ -19,7 +18,7 @@ import time
 import math
 // import runtime
 
-// main is the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
+// the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 /*
 Usage: v run hamnn [command] [flags] datafile
 Commands: analyze | classify | cross | explore | make | orange |
