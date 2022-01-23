@@ -132,8 +132,3 @@ fn test_lcm() {
 	assert lcm(arr) == 2726317818350369934
 }
 
-// test_round_to_nearest_away_from_zero 
-fn test_round_to_nearest_away_from_zero() {
-	arr := [0.0, 1.0, -1.0, 0.5, -0.5, 0.2, -0.2, 0.9, -0.9]
-	assert arr.map(round_to_nearest_away_from_zero(it)).map(int(it)) == [0, 1, -1, 1, 0, 0, 0, 1, -1]
-}

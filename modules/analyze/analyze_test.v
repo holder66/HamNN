@@ -6,7 +6,7 @@ import tools
 
 fn test_analyze_dataset()? {
 	mut ds := tools.load_file('datasets/developer.tab')
-	mut pr := analyze_dataset(ds)?
+	mut pr := analyze_dataset(ds)
 	tools.print_array(pr)
 	assert pr[2..3] == [
 		'Analysis of Dataset "datasets/developer.tab" (File Type orange_newer)',
@@ -21,7 +21,7 @@ fn test_analyze_dataset()? {
 	]
 
 	ds = tools.load_file('datasets/iris.tab')
-	pr = analyze_dataset(ds)?
+	pr = analyze_dataset(ds)
 	tools.print_array(pr)
 
 	// // ds = tools.load_file('datasets/prostata.tab')
@@ -29,6 +29,6 @@ fn test_analyze_dataset()? {
 	// // tools.print_array(pr)
 
 	ds = tools.load_file('datasets/anneal.tab')
-	pr = analyze_dataset(ds)?
+	pr = analyze_dataset(ds)
 	tools.print_array(pr)
 }
