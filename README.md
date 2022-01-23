@@ -18,7 +18,7 @@ A machine learning library for classification using a nearest neighbor algorithm
 - lends itself to parallel computing
 - has an exceptionally tiny footprint in terms of memory and computing resources needed
 
-### What problems does it solve
+### What problems can it solve
 #### data reduction
 identifies and uses only those variables which are most likely to contribute to classification accuracy
 #### image preprocessing

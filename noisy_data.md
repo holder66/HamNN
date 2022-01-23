@@ -8,10 +8,10 @@ are 12534 data points, of which one is the class attribute. Can this
 mass of data be used to predict whether a person has a tumor or is normal?
 
 
-```v
+```sh
 v run hamnn.v rank -w -s datasets/prostata.tab 
 ```   
-```
+```sh
 Attributes Sorted by Rank Value, including missing values
 For datafile: datasets/prostata.tab, binning range [2, 16]
  Index  Name                         Type   Rank Value   Bins
@@ -36,10 +36,10 @@ For datafile: datasets/prostata.tab, binning range [2, 16]
 
 Accumulated experience with the algorithm suggests that using a fixed number
 of bins often gives good results. 
-```v
+```sh
 v run hamnn.v rank -w -s -b 6 datasets/prostata.tab
 ```
-```
+```sh
 Attributes Sorted by Rank Value, including missing values
 For datafile: datasets/prostata.tab, binning range [6]
  Index  Name                         Type   Rank Value   Bins
@@ -70,13 +70,13 @@ which is optimized over a range.
 
 Here are the results for exploring over a range of attributes from 1 to 20, 
 and a binning range from 2 to 12:
-```v
+```sh
 v -gc boehm run hamnn.v explore -c -e -g -w -b 2,12 -a 1,20 datasets/prostata.tab
 ```
 Note the flags: -c calls for parallel processing, using all available CPU cores
 on you machine; -e for expanded output to the console; -g results in graphical
 plots of the results as ROC curves.
-```
+```sh
 A correct classification to "normal" is a True Positive (TP);
 A correct classification to "tumor" is a True Negative (TN).
 Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy
@@ -313,10 +313,10 @@ Experience with this algorithm suggests that using the same number of bins for
 all continuous attributes in some cases provides better results. We can try this
 with the -u flag, over an abbreviated range of attributes and bins:
 
-```v
+```sh
 v -gc boehm run hamnn.v explore -c -e -g -w -b 6,12 -a 3,5 -u datasets/prostata.tab
 ```
-```
+```sh
 A correct classification to "normal" is a True Positive (TP);
 A correct classification to "tumor" is a True Negative (TN).
 Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity   PPV   NPV  Balanced Accuracy
@@ -347,9 +347,8 @@ It turns out that three attributes and 6 bins for all attributes,
 gives us the best balanced accuracy of 0.943, marginally better than when using a range of bins. Let's stick with these settings, and create a classifier that
 can be used for predicting outcomes:
 
-```v
+```sh
 v run hamnn.v make -a 3 -b 6 -u -c -o ../classifiers/prostata_classifier datasets/prostata.tab
 ```
 
-Note the use of the -o flag to specify a file where the classifier is to stored
-for later use (work in progress).
+Note the use of the -o flag to specify a file where the classifier is to be stored for later use (work in progress).
