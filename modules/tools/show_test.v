@@ -8,6 +8,13 @@ fn test_setup() {
 	os.execute_or_panic('v -gc boehm hamnn.v')
 }
 
+// test_show_classifier 
+fn test_show_classifier() {
+	mut s := './hamnn make -s -a 2 -b 3,6 datasets/iris.tab'
+	println(s)
+	println(os.execute_or_panic(s))
+}
+
 // test_show_verify
 fn test_show_verify() {
 	mut s := './hamnn verify -c -s -t datasets/bcw174test datasets/bcw350train'

@@ -47,6 +47,25 @@ pub fn show_results(result VerifyResult, opts Options) {
 	}
 }
 
+// show_classifier outputs to the console information about a classifier
+pub fn show_classifier(cl Classifier) {
+	mut show_classifier_array := ['\nClassifier for "$cl.datafile_path"',
+		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
+		
+			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
+			' when calculating rank values',
+		'included attributes: $cl.trained_attributes.len',
+		'Name                        Type  Uniques        Min        Max  Bins',
+		'__________________________  ____  _______  _________  _________  ____']
+	mut line := ''
+	for attr, val in cl.trained_attributes {
+		line = '${attr:-27} ${val.attribute_type:-2} ' +
+			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
+		show_classifier_array << line
+	}
+	tools.print_array(show_classifier_array)
+}
+
 // get_show_bins
 fn get_show_bins(bins []int) string {
 	mut show_bins := ''

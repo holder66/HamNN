@@ -78,7 +78,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	cl.instances = tools.transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
 	if opts.show_flag && opts.command == 'make' {
-		show_classifier(cl)
+		tools.show_classifier(cl)
 	}
 	if opts.outputfile_path != '' && opts.command == 'make' {
 		outputfile := opts.outputfile_path
@@ -90,24 +90,6 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	return cl
 }
 
-// show_classifier outputs to the console information about a classifier
-fn show_classifier(cl tools.Classifier) {
-	mut show_classifier_array := ['\nClassifier for "$cl.datafile_path"',
-		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
-		
-			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-			' when calculating rank values',
-		'included attributes: $cl.trained_attributes.len',
-		'Name                        Type  Uniques        Min        Max  Bins',
-		'__________________________  ____  _______  _________  _________  ____']
-	mut line := ''
-	for attr, val in cl.trained_attributes {
-		line = '${attr:-27} ${val.attribute_type:-2} ' +
-			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
-		show_classifier_array << line
-	}
-	tools.print_array(show_classifier_array)
-}
 
 // make_translation_table returns a map with the integer for each element in
 // an array of strings; 0 for missing values. This makes discrete attributes
