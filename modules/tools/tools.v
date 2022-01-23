@@ -239,3 +239,21 @@ pub fn max<T>(a []T) T {
 	}
 	return val
 }
+
+// sum returns the sum of an array's numeric values
+pub fn sum<T>(list []T) T {
+	// if list.len == 0 {
+	// 	return error('Cannot sum up array of nothing.')
+	// } else {
+		mut head := list[0]
+
+		for i, e in list {
+			if i == 0 {
+				continue
+			} else {
+				head += e
+			}
+		}
+
+		return head
+	}
