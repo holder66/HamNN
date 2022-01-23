@@ -123,7 +123,7 @@ pub fn plot_explore(results []VerifyResult, opts Options) {
 		)
 	}
 	annotation := plot.Annotation{
-		x: (max(x) + min(x))/2
+		x: (max(x) + min(x)) / 2
 		y: 5
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
@@ -151,12 +151,12 @@ struct ROCResult {
 
 struct ROCTrace {
 mut:
-	x_coordinates   []f64
-	y_coordinates   []f64
+	x_coordinates    []f64
+	y_coordinates    []f64
 	area_under_curve f64
-	// curve_series_variable string 
-	curve_series_variable_values string 
-	// curve_variable string 
+	// curve_series_variable string
+	curve_series_variable_values string
+	// curve_variable string
 	curve_variable_values []string
 }
 
@@ -221,7 +221,7 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 		align: 'center'
 	}
 	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation])
-	
+
 	plt.show() or { panic(err) }
 
 	// now a series of curves, one per attributes_used value
@@ -242,7 +242,6 @@ pub fn plot_roc(results []VerifyResult, opts Options) {
 	plt.show() or { panic(err) }
 }
 
-
 // filter takes two coordinated arrays. It filters array b
 // to include only elements whose corresponding element
 // in array a is equal to the match_value.
@@ -256,17 +255,17 @@ fn filter<T>(match_value string, a []string, b []T) []T {
 	return result
 }
 
-// area_under_curve calculates area under the curve 
+// area_under_curve calculates area under the curve
 // as the areas of a series of rectangles and triangles
 fn area_under_curve(x []f64, y []f64) f64 {
 	mut area := 0.0
 	mut b := 0.0
 	if x.len != 0 {
-	for i in 0 .. (x.len - 1) {
-		b = (x[i + 1] - x[i])
-		area += b * y[i] + 0.5 * b * (y[i + 1] - y[i])
+		for i in 0 .. (x.len - 1) {
+			b = (x[i + 1] - x[i])
+			area += b * y[i] + 0.5 * b * (y[i + 1] - y[i])
+		}
 	}
-}
 	return area
 }
 
@@ -287,7 +286,8 @@ fn massage_roc_traces(mut traces []ROCTrace) []ROCTrace {
 	traces.sort(a.area_under_curve > b.area_under_curve)
 	return traces
 }
-// make_roc_plot_traces 
+
+// make_roc_plot_traces
 fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable string) {
 	for trace in traces {
 		plt.add_trace(
@@ -302,7 +302,7 @@ fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable str
 	}
 }
 
-// make_roc_plot_layout 
+// make_roc_plot_layout
 fn make_roc_plot_layout(mut plt plot.Plot, curve_series string, annotations []plot.Annotation) {
 	plt.set_layout(
 		title: 'Receiver Operating Characteristic Curves by $curve_series'

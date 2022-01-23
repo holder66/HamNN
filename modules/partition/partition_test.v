@@ -9,7 +9,7 @@ fn test_get_partition_indices() {
 	mut len := arr.len
 	// leave-one-out, first fold
 	mut s, mut e := get_partition_indices(len, 0, 0)
-	assert s == 0 
+	assert s == 0
 	assert e == 1
 	assert arr[s..e] == [11]
 	assert get_rest_of_array(arr, s, e) == [22, 33, 44, 55, 66]

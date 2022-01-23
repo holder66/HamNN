@@ -245,15 +245,15 @@ pub fn sum<T>(list []T) T {
 	// if list.len == 0 {
 	// 	return error('Cannot sum up array of nothing.')
 	// } else {
-		mut head := list[0]
+	mut head := list[0]
 
-		for i, e in list {
-			if i == 0 {
-				continue
-			} else {
-				head += e
-			}
+	for i, e in list {
+		if i == 0 {
+			continue
+		} else {
+			head += e
 		}
-
-		return head
 	}
+
+	return head
+}

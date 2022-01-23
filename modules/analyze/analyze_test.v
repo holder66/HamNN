@@ -4,7 +4,7 @@ module analyze
 // import main
 import tools
 
-fn test_analyze_dataset()? {
+fn test_analyze_dataset() ? {
 	mut ds := tools.load_file('datasets/developer.tab')
 	mut pr := analyze_dataset(ds)
 	tools.print_array(pr)

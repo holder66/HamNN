@@ -82,18 +82,40 @@ fn test_discretize_attribute() {
 		3,
 	]
 	mut values_int := [-10, -5, 0, 5, 10, 15, 19, 20]
-	assert discretize_attribute(values_int, min(values_int), max(values_int),
-		3) == [1, 1, 2, 2, 3, 3, 3, 3]
-	assert discretize_attribute(values_int, min(values_int), max(values_int),
-		2) == [1, 1, 1, 2, 2, 2, 2, 2]
-	assert discretize_attribute(values_int, min(values_int), max(values_int),
-		1) == [1, 1, 1, 1, 1, 1, 1, 1]
+	assert discretize_attribute(values_int, min(values_int), max(values_int), 3) == [
+		1,
+		1,
+		2,
+		2,
+		3,
+		3,
+		3,
+		3,
+	]
+	assert discretize_attribute(values_int, min(values_int), max(values_int), 2) == [
+		1,
+		1,
+		1,
+		2,
+		2,
+		2,
+		2,
+		2,
+	]
+	assert discretize_attribute(values_int, min(values_int), max(values_int), 1) == [
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+		1,
+	]
 	values = [1.0, 2, 0, -3.4028234663852886e+38, 3.0]
 	assert discretize_attribute(values, 0.0, max(values), 3) == [2, 3, 1, 0, 3]
 	values = [-10.0, -5, 0, 5, -3.4028234663852886e+38, 10, 15, 19, 20]
-	assert discretize_attribute(values, -10.0, max(values), 3) == [1, 1, 2, 2, 0, 3, 3, 3,
-		3,
-	]
+	assert discretize_attribute(values, -10.0, max(values), 3) == [1, 1, 2, 2, 0, 3, 3, 3, 3]
 }
 
 // test_get_map_values
@@ -131,4 +153,3 @@ fn test_lcm() {
 	arr = [5421, 5923, 6742, 5949, 5958, 6131, 5918, 6265, 5851]
 	assert lcm(arr) == 2726317818350369934
 }
-

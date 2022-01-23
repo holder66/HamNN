@@ -85,7 +85,6 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
 		f.write_struct(cl) or { panic(err.msg) }
 		f.close()
-		
 	}
 
 	return cl
@@ -100,8 +99,7 @@ fn show_classifier(cl tools.Classifier) {
 			' when calculating rank values',
 		'included attributes: $cl.trained_attributes.len',
 		'Name                        Type  Uniques        Min        Max  Bins',
-		'__________________________  ____  _______  _________  _________  ____',
-	]
+		'__________________________  ____  _______  _________  _________  ____']
 	mut line := ''
 	for attr, val in cl.trained_attributes {
 		line = '${attr:-27} ${val.attribute_type:-2} ' +

@@ -83,7 +83,6 @@ fn test_cross_validate() {
 	assert result.wrong_count == 4
 	assert result.total_count == 13
 
-
 	opts.datafile_path = 'datasets/iris.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]

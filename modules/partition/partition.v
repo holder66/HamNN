@@ -52,13 +52,15 @@ fn get_partition_indices(total int, n int, curr int) (int, int) {
 		// will be the same as the array length
 		return curr, curr + 1
 	}
-	if curr > n || n == 1 { return 0, 0 }
+	if curr > n || n == 1 {
+		return 0, 0
+	}
 	mut n1 := f64(n)
 	real := total / n1
 	mut fold_size := int(real) + 1
 	r := (n * fold_size) - total
 	if curr < r {
-		start = curr * ( fold_size - 1)
+		start = curr * (fold_size - 1)
 		end = start + fold_size - 1
 	} else {
 		start = curr * fold_size - r

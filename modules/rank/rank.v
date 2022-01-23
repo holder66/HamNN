@@ -137,8 +137,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 		mut show_ranked_attributes := ['', 'Attributes Sorted by Rank Value, $exclude_phrase',
 			'For datafile: $opts.datafile_path, binning range $opts.bins',
 			' Index  Name                         Type   Rank Value   Bins',
-			' _____  ___________________________  ____   __________   ____',
-		]
+			' _____  ___________________________  ____   __________   ____']
 		for attr in ranked_atts {
 			show_ranked_attributes << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
 		}

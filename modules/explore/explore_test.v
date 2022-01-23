@@ -4,7 +4,6 @@ module explore
 import tools
 // import os
 
-
 fn test_explore_cross() {
 	mut results := []tools.VerifyResult{}
 	mut opts := tools.Options{
@@ -52,7 +51,6 @@ fn test_explore_cross() {
 	assert results[1].total_count == 898
 }
 
-
 fn test_explore_verify() {
 	mut opts := tools.Options{
 		concurrency_flag: true
@@ -65,7 +63,6 @@ fn test_explore_verify() {
 	assert results[7].correct_count == 170
 	assert results[7].wrong_count == 4
 }
-
 
 // fn test_explore_save() ? {
 // 	mut results := []tools.VerifyResult{}

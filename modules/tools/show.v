@@ -73,7 +73,7 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 	print_confusion_matrix(result)
 }
 
-// print_confusion_matrix 
+// print_confusion_matrix
 pub fn print_confusion_matrix(result VerifyResult) {
 	// println(result.confusion_matrix)
 	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
@@ -85,18 +85,17 @@ pub fn print_confusion_matrix(result VerifyResult) {
 			} else if i == 0 {
 				// print column headers, ie classes
 				print(chalk.fg(chalk.style('${item:20}  ', 'bold'), 'red'))
-			}
-			else if j == 0 {
+			} else if j == 0 {
 				// print first item in remaining rows, ie classes
 				print(chalk.fg(chalk.style('        ${item:21}', 'bold'), 'green'))
 			} else {
-				// print integers for each cell 
+				// print integers for each cell
 				print('${item:20}  ')
 			}
 		}
 		// carriage return at end of line
 		println('')
-}
+	}
 }
 
 // get_binary_stats
