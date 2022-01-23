@@ -4,11 +4,7 @@ module main
 import os
 import tools
 
-fn test_save_classifier() ? {
- 
-}
-
- 
+//  
 
 // test_load_file_newer verify that load_file works with an orange-newer datafile
 fn test_load_file_newer() {
