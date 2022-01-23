@@ -46,14 +46,14 @@ pub fn partition(current_fold int, folds int, ds tools.Dataset, opts tools.Optio
 
 // get_partition_indices returns indices start & end, for the start and end of a fold, given the total number of indices `total`, the number of folds `n`, and the fold number `curr`
 fn get_partition_indices(total int, n int, curr int) (int, int) {
-	if curr >= n || n == 1 { return 0, 0 }
-	mut n1 := f64(n)
-	if n == 0 { // ie each fold will be length 1, thus the total number of folds
-		// will be the same as the array length
-		n1 = total
-	}
 	mut start := 0
 	mut end := 0
+	if n == 0 { // ie each fold will be length 1, thus the total number of folds
+		// will be the same as the array length
+		return curr, curr + 1
+	}
+	if curr > n || n == 1 { return 0, 0 }
+	mut n1 := f64(n)
 	real := total / n1
 	mut fold_size := int(real) + 1
 	r := (n * fold_size) - total
