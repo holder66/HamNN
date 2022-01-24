@@ -1,4 +1,4 @@
-//environment.v
+// environment.v
 module tools
 
 import os
@@ -95,7 +95,6 @@ fn (mut a Environment) collect_info() {
 	a.vflags = os.getenv('VFLAGS')
 }
 
-
 struct CmdConfig {
 	line    int
 	command string
@@ -117,7 +116,6 @@ fn (mut a Environment) cmd(c CmdConfig) string {
 	}
 	return 'Error: $x.output'
 }
-
 
 fn (app &Environment) parse(config string, sep string) map[string]string {
 	mut m := map[string]string{}
@@ -191,7 +189,7 @@ fn (mut a Environment) cpu_info(key string) string {
 	return a.cached_cpuinfo[key]
 }
 
-// get_environment 
+// get_environment
 pub fn get_environment() Environment {
 	mut env := Environment{}
 	env.collect_info()

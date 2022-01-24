@@ -64,7 +64,7 @@ pub fn show_classifier(cl Classifier) {
 			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
 		show_classifier_array << line
 	}
-	tools.print_array(show_classifier_array)
+	print_array(show_classifier_array)
 }
 
 // get_show_bins

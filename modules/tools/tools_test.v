@@ -3,7 +3,7 @@ module tools
 
 // import arrays
 
-// test_get_environment 
+// test_get_environment
 fn test_get_environment() {
 	mut env := Environment{}
 	env = get_environment()

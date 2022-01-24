@@ -92,7 +92,6 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	return cl
 }
 
-
 // make_translation_table returns a map with the integer for each element in
 // an array of strings; 0 for missing values. This makes discrete attributes
 // resemble binned continuous attributes for subsequent processing

@@ -1,5 +1,6 @@
 // hamnn.v
 module main
+
 import os
 import tools
 import analyze
@@ -79,7 +80,7 @@ pub fn main() {
 			'query' { query(opts) }
 			'rank' { rank(opts) }
 			'validate' { validate(opts) }
-			'verify' { verify(opts)? }
+			'verify' { verify(opts) ? }
 			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
 		}
@@ -193,7 +194,7 @@ fn verify(opts tools.Options) ? {
 	if opts.classifierfile_path == '' {
 		verify.verify(make(opts), opts)
 	} else {
-		verify.verify(tools.load_classifier_file(opts.classifierfile_path)?, opts)
+		verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	}
 }
 

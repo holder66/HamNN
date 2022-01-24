@@ -5,7 +5,6 @@ import tools
 import make
 // import os
 
-
 // test_load_classifier_file
 fn test_load_classifier_file() {
 	mut opts := tools.Options{}
@@ -19,7 +18,6 @@ fn test_load_classifier_file() {
 	// ds = tools.load_file('datasets/developer.tab')
 	// cl = make.make_classifier(ds, opts)
 
-	
 	// mut f := os.open_file(opts.classifierfile_path, 'r') or { panic(err.msg) }
 	// f.read_struct(mut tcl) or { panic(err.msg) }
 	// f.close()
@@ -32,16 +30,15 @@ fn test_load_classifier_file() {
 	// cl = make.make_classifier(ds, opts)
 	// tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg)}
 	// assert cl == tcl
-	opts.bins = [3,3]
+	opts.bins = [3, 3]
 	opts.number_of_attributes = [2]
 
 	ds = tools.load_file('datasets/iris.tab')
 	cl = make.make_classifier(ds, opts)
 	// println(cl)
-	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg)}
+	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg) }
 	tools.show_classifier(tcl)
 	assert cl == tcl
-
 }
 
 // test_verify
