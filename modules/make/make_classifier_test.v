@@ -57,9 +57,11 @@ fn test_save_classifier() ? {
 		number_of_attributes: [6]
 		show_flag: false
 		weighting_flag: true
-		outputfile_path: 'testfile'
+		outputfile_path: 'testdata/classifierfile'
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
+	// we first write the cl struct as part of the make classifier process,
+	// as the outputfile_path is not an empty string
 	mut cl := make_classifier(ds, opts)
 
 	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }

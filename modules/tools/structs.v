@@ -63,7 +63,7 @@ pub struct Classifier {
 	Class
 pub mut:
 	// TrainedAttribute
-	// datafile_path      string
+	datafile_path      string
 	utc_date_time      time.Time
 	vlang_version      string
 	hamnn_version      string
@@ -82,7 +82,7 @@ pub mut:
 	bins                 []int = [2, 16]
 	uniform_bins         bool
 	concurrency_flag     bool = true
-	exclude_flag         bool = true
+	exclude_flag         bool
 	graph_flag           bool
 	verbose_flag         bool
 	number_of_attributes []int = [0]
@@ -91,11 +91,23 @@ pub mut:
 	datafile_path        string = 'datasets/developer.tab'
 	testfile_path        string
 	outputfile_path      string
+	classifierfile_path	 string
 	help_flag            bool
 	weighting_flag       bool
 	folds                int
 	repetitions          int
 	random_pick          bool
+}
+
+pub struct Environment {
+pub mut:
+	cached_cpuinfo 		map[string]string
+	os_kind				string
+	os_details			string
+	arch_details 		[]string
+	vexe_mtime			string
+	v_full_version		string
+	vflags				string
 }
 
 pub struct ClassifyResult {

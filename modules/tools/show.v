@@ -49,7 +49,7 @@ pub fn show_results(result VerifyResult, opts Options) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	mut show_classifier_array := ['\nClassifier for "$cl.datafile_path"',
+	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
 		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
 		
 			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +

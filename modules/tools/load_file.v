@@ -18,6 +18,15 @@ pub fn load_file(path string) Dataset {
 	return ds
 }
 
+// load_classifier_file 
+pub fn load_classifier_file(path string) ?Classifier {
+	mut cl := Classifier{}
+	mut f := os.open_file(path, 'r') or { panic(err.msg) }
+	f.read_struct(mut cl) or { panic('failed to open $path')}
+	f.close()
+	return cl
+}
+
 // load_orange_older_file loads from a file into a Dataset struct
 pub fn load_orange_older_file(path string) Dataset {
 	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }

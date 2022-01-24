@@ -3,6 +3,44 @@ module verify
 
 import tools
 import make
+// import os
+
+
+// test_load_classifier_file
+fn test_load_classifier_file() {
+	mut opts := tools.Options{}
+	mut ds := tools.Dataset{}
+	mut cl := tools.Classifier{}
+	mut tcl := tools.Classifier{}
+
+	opts.command = 'make'
+	opts.outputfile_path = 'testdata/classifierfile'
+	opts.classifierfile_path = 'testdata/classifierfile'
+	// ds = tools.load_file('datasets/developer.tab')
+	// cl = make.make_classifier(ds, opts)
+
+	
+	// mut f := os.open_file(opts.classifierfile_path, 'r') or { panic(err.msg) }
+	// f.read_struct(mut tcl) or { panic(err.msg) }
+	// f.close()
+	// assert cl == tcl
+
+	// tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg)}
+	// assert cl == tcl
+
+	// ds = tools.load_file('datasets/leukemia38train.tab')
+	// cl = make.make_classifier(ds, opts)
+	// tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg)}
+	// assert cl == tcl
+
+	ds = tools.load_file('datasets/iris.tab')
+	cl = make.make_classifier(ds, opts)
+	println(cl)
+	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg)}
+	tools.show_classifier(tcl)
+	assert cl == tcl
+
+}
 
 // test_verify
 fn test_verify() {

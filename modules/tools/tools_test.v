@@ -3,6 +3,14 @@ module tools
 
 // import arrays
 
+// test_get_environment 
+fn test_get_environment() {
+	mut env := Environment{}
+	env = get_environment()
+	println(env)
+	assert env.v_full_version[0..1] == 'V'
+}
+
 fn test_transpose() {
 	matrix := [['1', '2', '3'], ['4', '5', '6']]
 	assert transpose(matrix) == [['1', '4'], ['2', '5'], ['3', '6']]

@@ -43,6 +43,7 @@ import math
 // -f --folds, default is leave-one-out;
 // -g --graph, displays a plot;
 // -h --help,
+// -k --classifier, followed by the path to a file for a saved Classifier struct
 // -o --output, followed by the path to a file in which a classifier or a
 //    result will be stored;
 // -p --part, followed by an integer indicating partition number (note that
@@ -78,7 +79,7 @@ pub fn main() {
 			'query' { query(opts) }
 			'rank' { rank(opts) }
 			'validate' { validate(opts) }
-			'verify' { verify(opts) }
+			'verify' { verify(opts)? }
 			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
 		}
@@ -127,6 +128,7 @@ fn get_options(args []string) tools.Options {
 	// }
 	opts.testfile_path = option(args, ['-t', '--test'])
 	opts.outputfile_path = option(args, ['-o', '--output'])
+	opts.classifierfile_path = option(args, ['-k', '--classifier'])
 	return opts
 }
 
@@ -187,8 +189,12 @@ fn query(opts tools.Options) {
 }
 
 // verify
-fn verify(opts tools.Options) {
-	verify.verify(make(opts), opts)
+fn verify(opts tools.Options) ? {
+	if opts.classifierfile_path == '' {
+		verify.verify(make(opts), opts)
+	} else {
+		verify.verify(tools.load_classifier_file(opts.classifierfile_path)?, opts)
+	}
 }
 
 // validate
