@@ -11,54 +11,52 @@ import validate
 import cross
 import explore
 import display
-// import partition
-// import classify
 import os.cmdline as oscmdline
 import time
 import math
-// import runtime
 
 // the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
-/*
-Usage: v run hamnn [command] [flags] datafile
-Commands: analyze | classify | cross | explore | make | orange |
-          partition | query | rank | validate | verify
-Flags and options:
--a --attributes, can be one, two, or 3 integers; a single integer will
-   be used by make_classifier to produce a classifier with that number
-   of attributes. More than one integer will be used by
-   explore to provide a range and an interval.
--b --bins, can be one, two, or 3 integers; a single integer for one bin
-   value to be used for all attributes; two integers for a range of bin
-   values; a third integer specifies an interval for the range (note that
-   the binning range is from the upper to the lower value);
-   note: when doing an explore, the first integer specifies the lower
-   limit for the number of bins, and the second gives the upper value
-   for the explore range. Example: explore -b 3,6 would first use 3 - 3,
-   then 3 - 4, then 3 - 5, and finally 3 - 6 for the binning ranges.
-   If the uniform flag is true, then a single integer specifies
-   the number of bins for all continuous attributes; two integers for a
-   range of uniform bin values for the explore command; a third integer
-   for the interval to be used over the explore range.
--c --concurrent, permit parallel processing to use multiple cores;
--d --display, output to the console or graph previously saved results;
--e --expanded, expanded results on the console;
--f --folds, default is leave-one-out;
--g --graph, displays a plot;
--h --help,
--o --output, followed by the path to a file in which a classifier or a
-   result will be stored;
--p --part, followed by an integer indicating partition number (note that
-	partition number might be called fold number in other settings);
--r --reps, number of repetitions; if > 1, a random selection of
-	instances to be included in each fold will be applied
--s --show, output results to the console;
--t --test, followed by the path to the datafile to be verified or validated;
--u --uniform, specifies if uniform binning is to be used for the explore
-   command;
--v --verbose
--w --weight, when classifying, weight the nearest neighbour counts by class prevalences;
--x --exclude, do not take into account missing values when ranking attributes;*/
+// ```sh
+// Usage: v run hamnn [command] [flags] datafile
+// Commands: analyze | classify | cross | explore | make | orange |
+//           partition | query | rank | validate | verify
+// Flags and options:
+// -a --attributes, can be one, two, or 3 integers; a single integer will
+//    be used by make_classifier to produce a classifier with that number
+//    of attributes. More than one integer will be used by
+//    explore to provide a range and an interval.
+// -b --bins, can be one, two, or 3 integers; a single integer for one bin
+//    value to be used for all attributes; two integers for a range of bin
+//    values; a third integer specifies an interval for the range (note that
+//    the binning range is from the upper to the lower value);
+//    note: when doing an explore, the first integer specifies the lower
+//    limit for the number of bins, and the second gives the upper value
+//    for the explore range. Example: explore -b 3,6 would first use 3 - 3,
+//    then 3 - 4, then 3 - 5, and finally 3 - 6 for the binning ranges.
+//    If the uniform flag is true, then a single integer specifies
+//    the number of bins for all continuous attributes; two integers for a
+//    range of uniform bin values for the explore command; a third integer
+//    for the interval to be used over the explore range.
+// -c --concurrent, permit parallel processing to use multiple cores;
+// -d --display, output to the console or graph previously saved results;
+// -e --expanded, expanded results on the console;
+// -f --folds, default is leave-one-out;
+// -g --graph, displays a plot;
+// -h --help,
+// -o --output, followed by the path to a file in which a classifier or a
+//    result will be stored;
+// -p --part, followed by an integer indicating partition number (note that
+// 	partition number might be called fold number in other settings);
+// -r --reps, number of repetitions; if > 1, a random selection of
+// 	instances to be included in each fold will be applied
+// -s --show, output results to the console;
+// -t --test, followed by the path to the datafile to be verified or validated;
+// -u --uniform, specifies if uniform binning is to be used for the explore
+//    command;
+// -v --verbose
+// -w --weight, when classifying, weight the nearest neighbour counts by class prevalences;
+// -x --exclude, do not take into account missing values when ranking attributes;
+// ```
 pub fn main() {
 	// get the command line string and use it to create an Options struct
 	sw := time.new_stopwatch()

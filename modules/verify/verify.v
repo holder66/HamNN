@@ -81,7 +81,7 @@ fn option_worker(work_channel chan int, result_channel chan tools.ClassifyResult
 }
 
 // classify_to_verify is used by cross_validate
-pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
+fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := tools.ClassifyResult{}
