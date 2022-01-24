@@ -81,6 +81,8 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		tools.show_classifier(cl)
 	}
 	if opts.outputfile_path != '' && opts.command == 'make' {
+		// get the environment used in generating this classifier
+		cl.Environment = tools.get_environment()
 		outputfile := opts.outputfile_path
 		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
 		f.write_struct(cl) or { panic(err.msg) }

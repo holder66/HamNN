@@ -59,6 +59,7 @@ pub mut:
 }
 
 pub struct Classifier {
+	Environment
 	Options
 	Class
 pub mut:
