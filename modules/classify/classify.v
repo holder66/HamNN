@@ -6,7 +6,6 @@ import tools
 
 // classify_instance takes a trained classifier and an instance to be
 // classified; returns the inferred class for the instance.
-// Type: `v run hamnn.v classify --help`
 pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, opts tools.Options) tools.ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance

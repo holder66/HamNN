@@ -19,8 +19,8 @@ import math
 // the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 // ```sh
 // Usage: v run hamnn [command] [flags] datafile
-// Commands: analyze | classify | cross | explore | make | orange |
-//           partition | query | rank | validate | verify
+// Commands: analyze | cross | explore | make | orange |
+//           query | rank | validate | verify
 // Flags and options:
 // -a --attributes, can be one, two, or 3 integers; a single integer will
 //    be used by make_classifier to produce a classifier with that number
@@ -47,8 +47,6 @@ import math
 // -k --classifier, followed by the path to a file for a saved Classifier
 // -o --output, followed by the path to a file in which a classifier or a
 //    result will be stored;
-// -p --part, followed by an integer indicating partition number (note that
-// 	partition number might be called fold number in other settings);
 // -r --reps, number of repetitions; if > 1, a random selection of
 // 	instances to be included in each fold will be applied
 // -s --show, output results to the console;
@@ -70,13 +68,11 @@ pub fn main() {
 	} else {
 		match opts.command {
 			'analyze' { analyze(opts) }
-			'classify' { classify(opts) }
 			'cross' { cross(opts) }
 			'display' { display(opts) }
 			'explore' { explore(opts) }
 			'make' { make(opts) }
 			'orange' { orange() }
-			'partition' { partition(opts) }
 			'query' { query(opts) }
 			'rank' { rank(opts) }
 			'validate' { validate(opts) }
@@ -124,9 +120,6 @@ fn get_options(args []string) tools.Options {
 	if option(args, ['-r', '--reps']) != '' {
 		opts.repetitions = option(args, ['-r', '--reps']).int()
 	}
-	// if option(args, ['-p', '--part']) != '' {
-	// 	opts.current_fold = option(args, ['-p', '--part']).int()
-	// }
 	opts.testfile_path = option(args, ['-t', '--test'])
 	opts.outputfile_path = option(args, ['-o', '--output'])
 	opts.classifierfile_path = option(args, ['-k', '--classifier'])
@@ -138,12 +131,10 @@ fn show_help(opts tools.Options) string {
 	return match opts.command {
 		'rank' { tools.rank_help }
 		'query' { tools.query_help }
-		'classify' { tools.classify_help }
 		'analyze' { tools.analyze_help }
 		'make' { tools.make_help }
 		'orange' { tools.orange_help }
 		'verify' { tools.verify_help }
-		'partition' { tools.partition_help }
 		'cross' { tools.cross_help }
 		'explore' { tools.explore_help }
 		'validate' { tools.validate_help }
@@ -216,16 +207,8 @@ fn explore(opts tools.Options) {
 	explore.explore(tools.load_file(opts.datafile_path), opts)
 }
 
-// classify
-fn classify(opts tools.Options) {
-}
-
 // orange
 fn orange() {
-}
-
-// partition
-fn partition(opts tools.Options) {
 }
 
 // rank returns an array of attributes sorted

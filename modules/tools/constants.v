@@ -120,14 +120,6 @@ Options:
   -x --exclude, exclude missing values from rank value calculations;
 	'
 
-	classify_help = '
-"classify" classifies one or more unlabeled instances, using a classifier
-created by "make". It returns a list of inferred classes.
-
-Options: 
-  -w --weight, weight the number of nearest neighbor counts by class 
-      prevalences.
-	'
 
 	query_help = '
 "query" takes a classifier created by make(), and interactively asks the user
