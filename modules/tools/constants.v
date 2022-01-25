@@ -47,10 +47,12 @@ Flags:
                  range (note that the binning range is from the upper to the 
                  lower value);
 -c --concurrent: enable parallel processing to use multiple cores;
+-d --display:    output to the console or graph previously saved results;
 -e --expanded:   show expanded results on the console;
 -f --folds:      default is leave-one-out;
 -g --graph:      displays a plot;
 -h --help:        
+-k --classifier: followed by the path to a file for a saved Classifier
 -o --output:     followed by the path to a file in which a classifier or a 
                  result will be stored;
 -p --part:       followed by an integer indicating partition number (note that
@@ -112,8 +114,7 @@ Options:
       ranked attributes) to be used in training the classifier
   -b --bins, eg, "3,6" specifies the lower and upper limits for the number
       of slices or bins for continuous attributes;
-  -o --output, followed by the path to a file in which a classifier or a 
-      result will be stored; TODO
+  -o --output, followed by the path to a file in which the classifier will be stored;
   -s --show, output to the console information about the classifier;
   -v --verbose, output debugging information to the console;
   -x --exclude, exclude missing values from rank value calculations;
@@ -190,6 +191,7 @@ Options:
 	both the classification and the verification datafile.
   -c --concurrent, permit parallel processing to use multiple cores;
   -e --expanded, expanded results on the console;
+  -k --classifier, followed by the path to a file for a saved Classifier
 	-t --test, followed by the file path for the datafile to be used 
 	for verification;
 	-v --verbose, output debugging information to the console;
@@ -208,12 +210,15 @@ dataset is classified, and the inferred classes are returned.
 
 Options:
   In addition to the options below, the options for "make" apply to 
-  both the classification and the validation datafile.
+  both the classification and the verification datafile.
+  -c --concurrent, permit parallel processing to use multiple cores;
+  -e --expanded, expanded results on the console;
+  -k --classifier, followed by the path to a file for a saved Classifier
   -t --test, followed by the file path for the datafile to be used 
-  for validation;
+  for verification;
   -v --verbose, output debugging information to the console;
-  -s --show, output the results of the validation to the terminal;
-  -w --weight, weight the number of nearest neighbor counts 
+  -s --show, output the results of the verification to the terminal;
+  -w --weight, weight the number of nearest neighbor counts
   by class prevalences.
   '
 

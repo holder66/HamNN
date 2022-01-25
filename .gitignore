@@ -2,3 +2,4 @@ hamnn
 *.dylib
 testfile
 testfile
+*.cl

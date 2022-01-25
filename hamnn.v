@@ -44,7 +44,7 @@ import math
 // -f --folds, default is leave-one-out;
 // -g --graph, displays a plot;
 // -h --help,
-// -k --classifier, followed by the path to a file for a saved Classifier struct
+// -k --classifier, followed by the path to a file for a saved Classifier
 // -o --output, followed by the path to a file in which a classifier or a
 //    result will be stored;
 // -p --part, followed by an integer indicating partition number (note that
@@ -190,11 +190,14 @@ fn query(opts tools.Options) {
 }
 
 // verify
-fn verify(opts tools.Options) ? {
+fn verify(opts tools.Options) ?tools.VerifyResult {
+	println(opts)
 	if opts.classifierfile_path == '' {
-		verify.verify(make(opts), opts)
+		return verify.verify(make(opts), opts)
 	} else {
-		verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return verify.verify(cl, opts)
 	}
 }
 

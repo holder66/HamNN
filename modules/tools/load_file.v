@@ -3,6 +3,7 @@ module tools
 import os
 import strconv
 import math
+import json
 // import arrays
 
 // const integer_range_for_discrete = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -21,9 +22,13 @@ pub fn load_file(path string) Dataset {
 // load_classifier_file
 pub fn load_classifier_file(path string) ?Classifier {
 	mut cl := Classifier{}
-	mut f := os.open_file(path, 'r') or { panic(err.msg) }
-	f.read_struct(mut cl) or { panic('failed to open $path') }
-	f.close()
+	mut s := ''
+	// mut f := os.open_file(path, 'r') or { panic(err.msg) }
+	// f.read_lines(mut cl) or { panic('failed to open $path') }
+	// f.close()
+	s = os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	// println(s)
+	cl = json.decode(Classifier, s) or { panic('Failed to parse json') }
 	return cl
 }
 
