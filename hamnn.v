@@ -73,9 +73,9 @@ pub fn main() {
 			'explore' { explore(opts) }
 			'make' { make(opts) }
 			'orange' { orange() }
-			'query' { query(opts) }
+			'query' { query(opts) ? }
 			'rank' { rank(opts) }
-			'validate' { validate(opts) }
+			'validate' { validate(opts) ? }
 			'verify' { verify(opts) ? }
 			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
@@ -176,13 +176,20 @@ fn analyze(opts tools.Options) {
 }
 
 // query
-fn query(opts tools.Options) {
-	query.query(make(opts), opts)
+fn query(opts tools.Options) ?tools.ClassifyResult {
+	// println(opts)
+	if opts.classifierfile_path == '' {
+		return query.query(make(opts), opts)
+	} else {
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return query.query(cl, opts)
+	}
 }
 
 // verify
 fn verify(opts tools.Options) ?tools.VerifyResult {
-	println(opts)
+	// println(opts)
 	if opts.classifierfile_path == '' {
 		return verify.verify(make(opts), opts)
 	} else {
@@ -193,8 +200,14 @@ fn verify(opts tools.Options) ?tools.VerifyResult {
 }
 
 // validate
-fn validate(opts tools.Options) {
-	validate.validate(make(opts), opts)
+fn validate(opts tools.Options) ?tools.ValidateResult {
+	if opts.classifierfile_path == '' {
+		return validate.validate(make(opts), opts)
+	} else {
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return validate.validate(cl, opts)
+	}
 }
 
 // cross
