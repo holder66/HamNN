@@ -122,8 +122,8 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 	if opts.verbose_flag && opts.command == 'verify' {
 		// println('result.class_table in verify: $result.class_table')
 	}
-
-	return summarize_results(mut result)
+	return tools.finalize_verify_result(mut result)
+	// return summarize_results(mut result)
 }
 
 // summarize_results

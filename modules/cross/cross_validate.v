@@ -65,7 +65,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
-	cross_result = finalize_cross_result(mut cross_result)
+	cross_result = tools.finalize_verify_result(mut cross_result)
 	tools.show_results(cross_result, cross_opts)
 	return cross_result
 }
@@ -139,31 +139,6 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 		value += b[key]
 	}
 	return a
-}
-
-// finalize_cross_result
-fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult {
-	for _, mut value in cross_result.class_table {
-		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		cross_result.correct_count += value.correct_inferences
-		cross_result.misses_count += value.missed_inferences
-		cross_result.wrong_count += value.wrong_inferences
-		cross_result.total_count += value.labeled_instances
-	}
-	// collect confusion matrix rows into a matrix
-	mut header_row := ['Predicted Classes (columns)']
-	mut data_row := []string{}
-	for key, value in cross_result.class_table {
-		header_row << key
-		data_row = [key]
-		for _, value2 in value.confusion_matrix_row {
-			data_row << '$value2'
-		}
-		cross_result.confusion_matrix << data_row
-	}
-	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
-	cross_result.confusion_matrix.prepend(header_row)
-	return cross_result
 }
 
 // option_worker
