@@ -11,7 +11,7 @@ import classify
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
 // Type: `v run hamnn.v validate --help`
-pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
+pub fn validate(cl tools.Classifier, opts tools.Options) tools.ValidateResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := tools.load_file(opts.testfile_path)
 	// instantiate a struct for the result

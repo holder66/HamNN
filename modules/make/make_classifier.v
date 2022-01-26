@@ -78,13 +78,12 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	}
 	cl.instances = tools.transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
-	// get the environment used in generating this classifier
-	cl.Environment = tools.get_environment()
-
 	if opts.show_flag && opts.command == 'make' {
 		tools.show_classifier(cl)
 	}
 	if opts.outputfile_path != '' && opts.command == 'make' {
+		// get the environment used in generating this classifier
+		cl.Environment = tools.get_environment()
 		outputfile := opts.outputfile_path
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')

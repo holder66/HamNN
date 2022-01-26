@@ -11,7 +11,7 @@ import strconv
 // trained attribute. It then asks to confirm or redo the responses. Once
 // confirmed, the instance is classified and the inferred class is shown.
 // Type: `v run hamnn.v query --help`
-pub fn query(cl tools.Classifier, opts tools.Options) ?tools.ClassifyResult {
+pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 	mut answer := ''
 	mut classify_result := tools.ClassifyResult{}
 	mut byte_values := []byte{}
