@@ -72,23 +72,13 @@ fn test_load_file_newer() {
 // 	run_command_line_tests(s)
 // }
 
-// // test_cross_validate 
-// fn test_cross_validate() {
-// 	s := [
-// 	'./hamnn cross',
-// 	'./hamnn cross -a 2 -b 3,3 -s -c datasets/iris.tab',
-// 	'./hamnn cross -a 2 -b 3,3 -e -c datasets/iris.tab',
-// 	'./hamnn cross -a 2 -b 3,3 -e -f 10 -r 3 datasets/iris.tab']
-// 	run_command_line_tests(s)
-// }
-
-// test_verify
-fn test_verify() {
+// test_cross_validate 
+fn test_cross_validate() {
 	s := [
-	'./hamnn verify',
-	'./hamnn verify -a 4 -b 2,4 -s -c -t datasets/bcw174test datasets/bcw350train',
-	'./hamnn verify -a 4 -b 2,4 -e -c -t datasets/bcw174test datasets/bcw350train',
-	'./hamnn verify -a 4 -b 2,4 -e -c -t datasets/bcw174test datasets/bcw350train']
+	'./hamnn cross',
+	'./hamnn cross -a 2 -b 3,3 -s -c datasets/iris.tab',
+	'./hamnn cross -a 2 -b 3,3 -e -c datasets/iris.tab',
+	'./hamnn cross -a 2 -b 3,3 -e -f 10 -r 3 datasets/iris.tab']
 	run_command_line_tests(s)
 }
 

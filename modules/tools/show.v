@@ -93,31 +93,6 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 	print_confusion_matrix(result)
 }
 
-// finalize_verify_result is used in both cross_validate and verify
-pub fn finalize_verify_result(mut result VerifyResult) VerifyResult {
-	for _, mut value in result.class_table {
-		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		result.correct_count += value.correct_inferences
-		result.misses_count += value.missed_inferences
-		result.wrong_count += value.wrong_inferences
-		result.total_count += value.labeled_instances
-	}
-	// collect confusion matrix rows into a matrix
-	mut header_row := ['Predicted Classes (columns)']
-	mut data_row := []string{}
-	for key, value in result.class_table {
-		header_row << key
-		data_row = [key]
-		for _, value2 in value.confusion_matrix_row {
-			data_row << '$value2'
-		}
-		result.confusion_matrix << data_row
-	}
-	result.confusion_matrix.prepend(['Actual Classes (rows)'])
-	result.confusion_matrix.prepend(header_row)
-	return result
-}
-
 // print_confusion_matrix
 pub fn print_confusion_matrix(result VerifyResult) {
 	// println(result.confusion_matrix)
