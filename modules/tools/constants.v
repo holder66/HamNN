@@ -120,7 +120,6 @@ Options:
   -x --exclude, exclude missing values from rank value calculations;
 	'
 
-
 	query_help = '
 "query" takes a classifier created by make(), and interactively asks the user
 to input (at the console) values for each attribute included in the classifier.

@@ -61,15 +61,14 @@ fn test_save_classifier() ? {
 	mut ds := tools.load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)
 	opts.classifierfile_path = opts.outputfile_path
-	mut tcl := tools.load_classifier_file(opts.classifierfile_path)?
+	mut tcl := tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = tools.load_file('datasets/anneal.tab')
 	cl = make_classifier(ds, opts)
 	opts.classifierfile_path = opts.outputfile_path
-	tcl = tools.load_classifier_file(opts.classifierfile_path)?
+	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
-
 }
