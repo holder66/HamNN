@@ -200,6 +200,9 @@ binning information for continuous attributes is copied from the
 classification dataset. Each instance in the validation
 dataset is classified, and the inferred classes are returned.
 
+IMPORTANT: The validation dataset should still have an identified
+class attribute; however, the values should be empty.
+
 Options:
   In addition to the options below, the options for "make" apply to 
   both the classification and the validation datafile.
