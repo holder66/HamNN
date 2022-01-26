@@ -193,7 +193,8 @@ Options:
 
 	validate_help = '
 "validate" takes a classifier created by make, and another datafile
-to be used as a validation dataset. The parameters for which attributes to 
+to be used as a validation dataset. Note that a validation dataset does 
+not contain class information. The parameters for which attributes to 
 use, the list of permissible attribute values for discrete attributes, and the 
 binning information for continuous attributes is copied from the 
 classification dataset. Each instance in the validation
@@ -201,14 +202,14 @@ dataset is classified, and the inferred classes are returned.
 
 Options:
   In addition to the options below, the options for "make" apply to 
-  both the classification and the verification datafile.
+  both the classification and the validation datafile.
   -c --concurrent, permit parallel processing to use multiple cores;
   -e --expanded, expanded results on the console;
   -k --classifier, followed by the path to a file for a saved Classifier
   -t --test, followed by the file path for the datafile to be used 
-  for verification;
+  for validation;
   -v --verbose, output debugging information to the console;
-  -s --show, output the results of the verification to the terminal;
+  -s --show, output the results of the validation to the terminal;
   -w --weight, weight the number of nearest neighbor counts
   by class prevalences.
   '

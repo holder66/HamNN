@@ -155,6 +155,8 @@ pub mut:
 }
 
 pub struct ValidateResult {
+	Class
 pub mut:
 	inferred_classes []string
+	counts           [][]int
 }

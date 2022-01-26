@@ -75,7 +75,7 @@ pub fn main() {
 			'orange' { orange() }
 			'query' { query(opts) }
 			'rank' { rank(opts) }
-			'validate' { validate(opts) }
+			'validate' { validate(opts) ? }
 			'verify' { verify(opts) ? }
 			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
@@ -193,8 +193,8 @@ fn verify(opts tools.Options) ?tools.VerifyResult {
 }
 
 // validate
-fn validate(opts tools.Options) {
-	validate.validate(make(opts), opts)
+fn validate(opts tools.Options) ?tools.ValidateResult {
+	return validate.validate(make(opts), opts)
 }
 
 // cross

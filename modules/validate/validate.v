@@ -11,7 +11,7 @@ import classify
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
 // Type: `v run hamnn.v validate --help`
-pub fn validate(cl tools.Classifier, opts tools.Options) tools.ValidateResult {
+pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := tools.load_file(opts.testfile_path)
 	// instantiate a struct for the result
@@ -49,9 +49,13 @@ pub fn validate(cl tools.Classifier, opts tools.Options) tools.ValidateResult {
 
 // classify_to_validate
 fn classify_to_validate(cl tools.Classifier, test_instances [][]byte, mut result tools.ValidateResult, opts tools.Options) tools.ValidateResult {
+	result.Class = cl.Class
+	mut classify_result := tools.ClassifyResult{}
 	// for each instance in the test data, perform a classification
 	for test_instance in test_instances {
-		result.inferred_classes << classify.classify_instance(cl, test_instance, opts).inferred_class
+		classify_result = classify.classify_instance(cl, test_instance, opts)
+		result.inferred_classes << classify_result.inferred_class
+		result.counts << classify_result.nearest_neighbors_by_class
 	}
 	return result
 }
