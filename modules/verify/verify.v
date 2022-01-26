@@ -135,5 +135,18 @@ fn summarize_results(mut result tools.VerifyResult) tools.VerifyResult {
 		result.misses_count += value.missed_inferences
 		result.wrong_count += value.wrong_inferences
 	}
+	// collect confusion matrix rows into a matrix
+	mut header_row := ['Predicted Classes (columns)']
+	mut data_row := []string{}
+	for key, value in result.class_table {
+		header_row << key
+		data_row = [key]
+		for _, value2 in value.confusion_matrix_row {
+			data_row << '$value2'
+		}
+		result.confusion_matrix << data_row
+	}
+	result.confusion_matrix.prepend(['Actual Classes (rows)'])
+	result.confusion_matrix.prepend(header_row)
 	return result
 }
