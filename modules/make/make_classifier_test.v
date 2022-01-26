@@ -2,7 +2,6 @@
 module make
 
 import tools
-import os
 
 // test_make_classifier
 fn test_make_classifier() {
@@ -57,16 +56,20 @@ fn test_save_classifier() ? {
 		number_of_attributes: [6]
 		show_flag: false
 		weighting_flag: true
-		outputfile_path: 'testdata/classifierfile'
+		outputfile_path: '../temp_files/classifierfile'
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
-	// we first write the cl struct as part of the make classifier process,
-	// as the outputfile_path is not an empty string
 	mut cl := make_classifier(ds, opts)
+	opts.classifierfile_path = opts.outputfile_path
+	mut tcl := tools.load_classifier_file(opts.classifierfile_path)?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
 
-	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }
-	mut tcl := tools.Classifier{}
-	f.read_struct(mut tcl) or { panic(err.msg) }
-	f.close()
-	assert cl == tcl
+	ds = tools.load_file('datasets/anneal.tab')
+	cl = make_classifier(ds, opts)
+	opts.classifierfile_path = opts.outputfile_path
+	tcl = tools.load_classifier_file(opts.classifierfile_path)?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
+
 }
