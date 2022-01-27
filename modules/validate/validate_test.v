@@ -3,6 +3,18 @@ module validate
 
 import tools
 import make
+import os
+
+fn testsuite_begin() ? {
+	if os.is_dir('tempfolder') {
+	os.rmdir_all('tempfolder') ?
+	}
+	os.mkdir_all('tempfolder') ?
+}
+
+fn testsuite_end() ? {
+	os.rmdir_all('tempfolder') ?
+}
 
 // test_validate
 fn test_validate() ? {
@@ -14,6 +26,7 @@ fn test_validate() ? {
 	}
 
 	mut result := tools.ValidateResult{}
+	mut test_result := tools.ValidateResult{}
 	mut ds := tools.Dataset{}
 	mut cl := tools.Classifier{}
 	mut saved_cl := tools.Classifier{}
@@ -149,84 +162,91 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
-	// // now with a saved classifier
-	// opts.outputfile_path = 'testdata/bcw350train.cl'
-	// cl = tools.Classifier{}
-	// result = tools.ValidateResult{}
-	// cl = make.make_classifier(ds, opts)
-	// cl = tools.Classifier{}
-	// opts.classifierfile_path = 'testdata/bcw350train.cl'
-	// result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
-	// assert result.correct_count == 171
-	// assert result.wrong_count == 3
+	// now with a saved classifier
+	opts.outputfile_path = 'tempfolder/bcw350train.cl'
+	opts.weighting_flag = true
+	cl = tools.Classifier{}
+	result = tools.ValidateResult{}
+	cl = make.make_classifier(ds, opts)
+	cl = tools.Classifier{}
+	opts.classifierfile_path = 'tempfolder/bcw350train.cl'
+	result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign',
+		'malignant', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'benign', 'benign', 'malignant', 'malignant', 'malignant', 'malignant', 'benign', 'benign',
+		'malignant', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'malignant', 'benign', 'benign', 'benign', 'malignant', 'benign', 'malignant', 'benign',
+		'malignant', 'malignant', 'malignant', 'benign', 'malignant', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'malignant', 'malignant',
+		'benign', 'benign', 'malignant', 'benign', 'malignant', 'malignant', 'malignant', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
+		'benign', 'malignant', 'benign', 'benign', 'malignant', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'malignant', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
+		'benign', 'malignant', 'malignant', 'benign', 'benign', 'benign', 'benign', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'malignant', 'benign',
+		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
+		'benign', 'benign', 'benign', 'benign', 'malignant', 'malignant', 'malignant']
+	assert result.counts == [[15741, 0], [15741, 0], [15741, 0],
+		[636, 0], [2226, 0], [318, 1337], [636, 0], [2226, 0],
+		[15741, 0], [15741, 0], [636, 0], [15741, 0], [795, 0],
+		[15741, 0], [15741, 0], [954, 0], [15741, 0], [159, 0],
+		[15741, 0], [636, 0], [15741, 0], [0, 3056], [2226, 0],
+		[2226, 0], [0, 191], [15741, 0], [15741, 0], [636, 0],
+		[159, 191], [15741, 0], [159, 0], [159, 0], [15741, 0],
+		[15741, 0], [15741, 0], [15741, 0], [15741, 0], [15741, 0],
+		[15741, 0], [15741, 0], [0, 764], [795, 0], [477, 0],
+		[0, 191], [0, 191], [0, 1146], [0, 573], [15741, 0], [15741, 0],
+		[0, 955], [795, 0], [15741, 0], [15741, 0], [15741, 0],
+		[15741, 0], [795, 0], [0, 764], [0, 382], [15741, 0],
+		[795, 0], [15741, 0], [0, 191], [15741, 0], [0, 191],
+		[15741, 0], [0, 382], [0, 191], [0, 191], [795, 0], [0, 764],
+		[15741, 0], [795, 0], [636, 0], [15741, 0], [477, 191],
+		[15741, 0], [2226, 0], [15741, 0], [159, 382], [0, 191],
+		[0, 191], [15741, 0], [15741, 0], [0, 764], [15741, 0],
+		[0, 191], [0, 382], [0, 191], [159, 0], [2226, 0], [636, 0],
+		[15741, 0], [159, 0], [15741, 0], [15741, 0], [15741, 0],
+		[318, 0], [795, 0], [15741, 0], [2226, 0], [477, 0], [318, 0],
+		[636, 0], [15741, 0], [15741, 0], [159, 0], [15741, 0],
+		[15741, 0], [159, 1910], [15741, 0], [318, 0], [0, 1528],
+		[318, 0], [15741, 0], [15741, 0], [15741, 0], [15741, 0],
+		[15741, 0], [15741, 0], [15741, 0], [15741, 0], [636, 0],
+		[15741, 0], [0, 1719], [15741, 0], [954, 0], [318, 0],
+		[15741, 0], [15741, 0], [15741, 0], [15741, 0], [15741, 0],
+		[0, 191], [159, 955], [15741, 0], [15741, 0], [15741, 0],
+		[636, 0], [636, 0], [15741, 0], [15741, 0], [636, 0],
+		[15741, 0], [477, 1528], [0, 382], [159, 0], [318, 0],
+		[15741, 0], [159, 0], [15741, 0], [318, 0], [795, 0],
+		[15741, 0], [15741, 0], [15741, 0], [0, 382], [0, 3056],
+		[15741, 0], [15741, 0], [15741, 0], [15741, 0], [15741, 0],
+		[15741, 0], [15741, 0], [15741, 0], [15741, 0], [0, 191],
+		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
+		[159, 191], [0, 191]]
 
-	// 	opts.datafile_path = 'datasets/mnist_test.tab'
-	// 	opts.testfile_path = 'datasets/mnist_test.tab'
-	// 	opts.classifierfile_path = ''
-	// 	opts.number_of_attributes = [50]
-	// 	opts.bins = [2, 2]
-	// 	ds = tools.load_file(opts.datafile_path)
-	// 	cl = make.make_classifier(ds, opts)
-	// 	result = verify(cl, opts) ?
-	// 	assert result.correct_count == 9982
-	// 	assert result.wrong_count == 18
 
-	// 	// now with a saved classifier
-	// 	opts.outputfile_path = 'testdata/mnist_test.cl'
-	// 	cl = tools.Classifier{}
-	// 	result = tools.VerifyResult{}
-	// 	cl = make.make_classifier(ds, opts)
-	// 	cl = tools.Classifier{}
-	// 	opts.classifierfile_path = 'testdata/mnist_test.cl'
-	// 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
-	// 	assert result.correct_count == 9982
-	// 	assert result.wrong_count == 18
+		opts.datafile_path = 'datasets/soybean-large-train.tab'
+		opts.testfile_path = 'datasets/soybean-large-validate.tab'
+		opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
+		opts.classifierfile_path = ''
+		opts.number_of_attributes = [33]
+		opts.bins = [2, 16]
+		opts.weighting_flag = true
+		ds = tools.load_file(opts.datafile_path)
+		cl = make.make_classifier(ds, opts)
+		result = validate(cl, opts) ?
+		assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		s := result.inferred_classes[0..4]
+		assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker']
 
-	// 	opts.datafile_path = 'datasets/soybean-large-train.tab'
-	// 	opts.testfile_path = 'datasets/soybean-large-test.tab'
-	// 	opts.classifierfile_path = ''
-	// 	opts.number_of_attributes = [33]
-	// 	opts.bins = [2, 16]
-	// 	opts.weighting_flag = true
-	// 	ds = tools.load_file(opts.datafile_path)
-	// 	cl = make.make_classifier(ds, opts)
-	// 	result = verify(cl, opts) ?
-	// 	assert result.correct_count == 340
-	// 	assert result.wrong_count == 36
-
-	// 	// now with a saved classifier
-	// 	opts.outputfile_path = 'testdata/soybean-large-train.cl'
-	// 	cl = tools.Classifier{}
-	// 	result = tools.VerifyResult{}
-	// 	cl = make.make_classifier(ds, opts)
-	// 	cl = tools.Classifier{}
-	// 	opts.classifierfile_path = 'testdata/soybean-large-train.cl'
-	// 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
-	// 	assert result.correct_count == 340
-	// 	assert result.wrong_count == 36
-
-	// 	cl = tools.Classifier{}
-	// 	ds = tools.Dataset{}
-	// 	result = tools.VerifyResult{}
-	// 	opts.datafile_path = '/Users/henryolders/mnist_train.tab'
-	// 	opts.testfile_path = ''
-	// 	opts.outputfile_path = 'testdata/mnist_train.cl'
-	// 	opts.number_of_attributes = [313]
-	// 	opts.bins = [2, 2]
-	// 	opts.concurrency_flag = true
-	// 	opts.weighting_flag = false
-	// 	ds = tools.load_file(opts.datafile_path)
-	// 	cl = make.make_classifier(ds, opts)
-	// 	opts.testfile_path = 'datasets/mnist_test.tab'
-	// 	opts.classifierfile_path = 'testdata/mnist_train.cl'
-	// 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
-	// 	assert result.correct_count == 9566
-	// 	assert result.wrong_count == 434
-
-	// 	opts.weighting_flag = true
-	// 	cl = make.make_classifier(ds, opts)
-	// 	result = verify(cl, opts) ?
-	// 	assert result.correct_count == 9279
-	// 	assert result.wrong_count == 721
-	// }
+		opts.classifierfile_path = opts.outputfile_path
+		test_result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+		assert result.inferred_classes == test_result.inferred_classes
+		assert result.counts == test_result.counts
+		
+	
 }

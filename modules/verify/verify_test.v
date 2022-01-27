@@ -3,6 +3,18 @@ module verify
 
 import tools
 import make
+import os
+
+fn testsuite_begin() ? {
+	if os.is_dir('tempfolder') {
+	os.rmdir_all('tempfolder') ?
+}
+	os.mkdir_all('tempfolder') ?
+}
+
+fn testsuite_end() ? {
+	os.rmdir_all('tempfolder') ?
+}
 
 // test_load_classifier_file
 fn test_load_classifier_file() {
@@ -12,8 +24,8 @@ fn test_load_classifier_file() {
 	mut tcl := tools.Classifier{}
 
 	opts.command = 'make'
-	opts.outputfile_path = 'testdata/classifierfile'
-	opts.classifierfile_path = 'testdata/classifierfile'
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.classifierfile_path = 'tempfolder/classifierfile'
 	ds = tools.load_file('datasets/developer.tab')
 	cl = make.make_classifier(ds, opts)
 
@@ -75,12 +87,12 @@ fn test_verify() ? {
 	assert result.wrong_count == 3
 
 	// now with a saved classifier
-	opts.outputfile_path = 'testdata/bcw350train.cl'
+	opts.outputfile_path = 'tempfolder/bcw350train.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
 	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	opts.classifierfile_path = 'testdata/bcw350train.cl'
+	opts.classifierfile_path = 'tempfolder/bcw350train.cl'
 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
@@ -97,12 +109,12 @@ fn test_verify() ? {
 	assert result.wrong_count == 18
 
 	// now with a saved classifier
-	opts.outputfile_path = 'testdata/mnist_test.cl'
+	opts.outputfile_path = 'tempfolder/mnist_test.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
 	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	opts.classifierfile_path = 'testdata/mnist_test.cl'
+	opts.classifierfile_path = 'tempfolder/mnist_test.cl'
 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 9982
 	assert result.wrong_count == 18
@@ -120,12 +132,12 @@ fn test_verify() ? {
 	assert result.wrong_count == 36
 
 	// now with a saved classifier
-	opts.outputfile_path = 'testdata/soybean-large-train.cl'
+	opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
 	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	opts.classifierfile_path = 'testdata/soybean-large-train.cl'
+	opts.classifierfile_path = 'tempfolder/soybean-large-train.cl'
 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
@@ -135,7 +147,7 @@ fn test_verify() ? {
 	result = tools.VerifyResult{}
 	opts.datafile_path = '/Users/henryolders/mnist_train.tab'
 	opts.testfile_path = ''
-	opts.outputfile_path = 'testdata/mnist_train.cl'
+	opts.outputfile_path = 'tempfolder/mnist_train.cl'
 	opts.number_of_attributes = [313]
 	opts.bins = [2, 2]
 	opts.concurrency_flag = true
@@ -143,7 +155,7 @@ fn test_verify() ? {
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
 	opts.testfile_path = 'datasets/mnist_test.tab'
-	opts.classifierfile_path = 'testdata/mnist_train.cl'
+	opts.classifierfile_path = 'tempfolder/mnist_train.cl'
 	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 9566
 	assert result.wrong_count == 434
