@@ -73,7 +73,7 @@ pub fn main() {
 			'explore' { explore(opts) }
 			'make' { make(opts) }
 			'orange' { orange() }
-			'query' { query(opts) }
+			'query' { query(opts) ? }
 			'rank' { rank(opts) }
 			'validate' { validate(opts) ? }
 			'verify' { verify(opts) ? }
@@ -176,8 +176,14 @@ fn analyze(opts tools.Options) {
 }
 
 // query
-fn query(opts tools.Options) {
-	query.query(make(opts), opts)
+fn query(opts tools.Options) ?tools.ClassifyResult {
+	if opts.classifierfile_path == '' {
+		return query.query(make(opts), opts)
+	} else {
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return query.query(make(opts), opts)
+	}
 }
 
 // verify
@@ -194,7 +200,13 @@ fn verify(opts tools.Options) ?tools.VerifyResult {
 
 // validate
 fn validate(opts tools.Options) ?tools.ValidateResult {
-	return validate.validate(make(opts), opts)
+	if opts.classifierfile_path == '' {
+		return validate.validate(make(opts), opts)
+	} else {
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return validate.validate(cl, opts)
+	}
 }
 
 // cross
