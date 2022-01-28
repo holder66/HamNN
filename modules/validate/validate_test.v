@@ -7,7 +7,7 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-	os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder') ?
 	}
 	os.mkdir_all('tempfolder') ?
 }
@@ -228,25 +228,23 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
+	opts.datafile_path = 'datasets/soybean-large-train.tab'
+	opts.testfile_path = 'datasets/soybean-large-validate.tab'
+	opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
+	opts.classifierfile_path = ''
+	opts.number_of_attributes = [33]
+	opts.bins = [2, 16]
+	opts.weighting_flag = true
+	ds = tools.load_file(opts.datafile_path)
+	cl = make.make_classifier(ds, opts)
+	result = validate(cl, opts) ?
+	assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	s := result.inferred_classes[0..4]
+	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
+		'diaporthe-stem-canker']
 
-		opts.datafile_path = 'datasets/soybean-large-train.tab'
-		opts.testfile_path = 'datasets/soybean-large-validate.tab'
-		opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
-		opts.classifierfile_path = ''
-		opts.number_of_attributes = [33]
-		opts.bins = [2, 16]
-		opts.weighting_flag = true
-		ds = tools.load_file(opts.datafile_path)
-		cl = make.make_classifier(ds, opts)
-		result = validate(cl, opts) ?
-		assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-		s := result.inferred_classes[0..4]
-		assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker']
-
-		opts.classifierfile_path = opts.outputfile_path
-		test_result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
-		assert result.inferred_classes == test_result.inferred_classes
-		assert result.counts == test_result.counts
-		
-	
+	opts.classifierfile_path = opts.outputfile_path
+	test_result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	assert result.inferred_classes == test_result.inferred_classes
+	assert result.counts == test_result.counts
 }
