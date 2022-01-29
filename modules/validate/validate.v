@@ -6,10 +6,14 @@ module validate
 
 import tools
 import classify
+import json
+import os
 
 // validate classifies each instance of a validation datafile against
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
+// Optionally, saves the instances and their predicted classes in a file
+// specified by -o.
 // Type: `v run hamnn.v validate --help`
 pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	// load the testfile as a Dataset struct
@@ -43,6 +47,14 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
 	if opts.show_flag {
 		println('validate_result: $validate_result')
+	}
+	if opts.outputfile_path != '' && opts.command == 'validate' {
+		outputfile := opts.outputfile_path
+		s := json.encode(validate_result)
+		println('After json encoding, before writing:\n $s')
+		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
+		f.write_string(s) or { panic(err.msg) }
+		f.close()
 	}
 	return validate_result
 }

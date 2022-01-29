@@ -177,14 +177,10 @@ fn analyze(opts tools.Options) {
 	tools.print_array(analyze.analyze_dataset(tools.load_file(opts.datafile_path)))
 }
 
+// append appends instances in a file, to a classifier in a file specified
+// by flag -k, and (optionally)stores the extended classifier in a file specified by -o. It returns the extended classifier
 fn append(opts tools.Options) ?tools.Classifier {
-	if opts.classifierfile_path == '' {
-		return append.append(make(opts), opts)
-	} else {
-		cl := tools.load_classifier_file(opts.classifierfile_path) ?
-		tools.show_classifier(cl)
-		return append.append(make(opts), opts)
-	}
+		return append.append_file_to_file(opts)
 }
 
 // query

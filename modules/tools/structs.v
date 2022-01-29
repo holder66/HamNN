@@ -62,17 +62,25 @@ pub struct Classifier {
 	Environment
 	Options
 	Class
+	History
 pub mut:
-	// TrainedAttribute
 	datafile_path      string
 	utc_date_time      time.Time
 	vlang_version      string
 	hamnn_version      string
 	attribute_ordering []string
-	// class_values       []string
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	instances          [][]byte
+}
+
+pub struct History {
+pub mut:
+	append_dates	[]time.Time
+	vlang_version	[]string
+	hamnn_version	[]string
+	instances_appended	[]int 
+	
 }
 
 pub struct Options {
