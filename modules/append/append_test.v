@@ -4,6 +4,7 @@ module append
 import tools
 import make
 import validate
+import verify
 import os
 
 fn testsuite_begin() ? {
@@ -13,14 +14,14 @@ fn testsuite_begin() ? {
 	os.mkdir_all('tempfolder') ?
 }
 
-// fn testsuite_end() ? {
-// 	os.rmdir_all('tempfolder') ?
-// }
+fn testsuite_end() ? {
+	os.rmdir_all('tempfolder') ?
+}
 
 // test_append_file_to_file 
 fn test_append_file_to_file() ? {
 	mut opts := tools.Options{
-		verbose_flag: true
+		verbose_flag: false
 		command: 'append'
 		show_flag: true
 		concurrency_flag: false 
@@ -39,4 +40,12 @@ fn test_append_file_to_file() ? {
 	// do a validation and save the result
 	val_results = validate.validate(cl, opts) ?
 	tcl = append_file_to_file(opts) ?
+
+	// test if the appended classifier works as a classifier
+	opts.testfile_path = 'datasets/test_verify.tab'
+	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
+	result := verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+
+	assert result.correct_count == 10
+	assert result.wrong_count == 0
 }

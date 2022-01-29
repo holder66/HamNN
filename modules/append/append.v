@@ -39,13 +39,14 @@ pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
 	mut cl := tools.Classifier{}
 	mut ext_cl := tools.Classifier{}
 	cl = tools.load_classifier_file(opts.classifierfile_path) ?
-	// println(cl)
 	instances_to_append = tools.load_instances_file(opts.instancesfile_path) ?
-	// println(instances_to_append)
 	ext_cl = append(cl, instances_to_append, opts) ?
+	if opts.show_flag {
+		tools.show_classifier(ext_cl)
+	}
 	if opts.outputfile_path != '' && opts.command == 'append' {
 		s := json.encode(ext_cl)
-		println('After json encoding, before writing:\n $s')
+		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()

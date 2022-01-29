@@ -45,12 +45,11 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	test_instances := tools.transpose(test_attr_binned_values)
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
-	if opts.show_flag {
+	if opts.show_flag && opts.command == 'validate' {
 		println('validate_result: $validate_result')
 	}
 	if opts.instancesfile_path != '' {
 		validate_result.instances = test_instances
-		println(validate_result)
 		s := json.encode(validate_result)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.instancesfile_path, 'w') or { panic(err.msg) }
