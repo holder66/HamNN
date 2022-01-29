@@ -4,6 +4,7 @@ module main
 import os
 import tools
 import analyze
+import append
 import rank
 import make
 import query
@@ -19,7 +20,7 @@ import math
 // the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 // ```sh
 // Usage: v run hamnn [command] [flags] datafile
-// Commands: analyze | cross | explore | make | orange |
+// Commands: analyze | append | cross | explore | make | orange |
 //           query | rank | validate | verify
 // Flags and options:
 // -a --attributes, can be one, two, or 3 integers; a single integer will
@@ -68,6 +69,7 @@ pub fn main() {
 	} else {
 		match opts.command {
 			'analyze' { analyze(opts) }
+			'append' { append(opts) ? }
 			'cross' { cross(opts) }
 			'display' { display(opts) }
 			'explore' { explore(opts) }
@@ -77,7 +79,6 @@ pub fn main() {
 			'rank' { rank(opts) }
 			'validate' { validate(opts) ? }
 			'verify' { verify(opts) ? }
-			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
 		}
 	}
@@ -132,6 +133,7 @@ fn show_help(opts tools.Options) string {
 		'rank' { tools.rank_help }
 		'query' { tools.query_help }
 		'analyze' { tools.analyze_help }
+		'append' { tools.append_help}
 		'make' { tools.make_help }
 		'orange' { tools.orange_help }
 		'verify' { tools.verify_help }
@@ -173,6 +175,16 @@ fn flag(args []string, what []string) bool {
 // analyze
 fn analyze(opts tools.Options) {
 	tools.print_array(analyze.analyze_dataset(tools.load_file(opts.datafile_path)))
+}
+
+fn append(opts tools.Options) ?tools.Classifier {
+	if opts.classifierfile_path == '' {
+		return append.append(make(opts), opts)
+	} else {
+		cl := tools.load_classifier_file(opts.classifierfile_path) ?
+		tools.show_classifier(cl)
+		return append.append(make(opts), opts)
+	}
 }
 
 // query

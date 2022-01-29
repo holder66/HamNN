@@ -88,6 +88,20 @@ Usage: v run hamnn.v analyze datasets/iris.tab
 Options:
   -h, --help displays this message.
 		'
+    
+  append_help = '
+"append" extends a classifier by adding one or more labeled cases. It 
+returns the extended classifier as a classifier struct.
+
+Usage: v run hamnn.v append -s -o iris.cl datasets/iris.tab
+
+Options:
+  -o --output, followed by the path to a file in which the extended 
+      classifier will be stored;
+  -s --show, output to the console information about the extended classifier;
+  -v --verbose, output debugging information to the console;
+  -x --exclude, exclude missing values from rank value calculations;
+  ' 
 
 	rank_help = '"rank" rank orders a dataset\'s attributes in terms of ability 
 to distinguish between classes; it takes into account class prevalences.
