@@ -2,6 +2,18 @@
 module make
 
 import tools
+import os 
+
+fn testsuite_begin() ? {
+	if os.is_dir('tempfolder') {
+	os.rmdir_all('tempfolder') ?
+	}
+	os.mkdir_all('tempfolder') ?
+}
+
+fn testsuite_end() ? {
+	os.rmdir_all('tempfolder') ?
+}
 
 // test_make_classifier
 fn test_make_classifier() {
@@ -56,18 +68,18 @@ fn test_save_classifier() ? {
 		number_of_attributes: [6]
 		show_flag: false
 		weighting_flag: true
-		outputfile_path: '../temp_files/classifierfile'
+		classifierfile_path: 'tempfolder/classifierfile'
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)
-	opts.classifierfile_path = opts.outputfile_path
+	
 	mut tcl := tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = tools.load_file('datasets/anneal.tab')
 	cl = make_classifier(ds, opts)
-	opts.classifierfile_path = opts.outputfile_path
+	
 	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances

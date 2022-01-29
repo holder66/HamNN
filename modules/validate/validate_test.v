@@ -16,6 +16,23 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
 
+// test_validate_save_result 
+fn test_validate_save_result() ? {
+	mut opts := tools.Options{
+		verbose_flag: false
+		command: 'validate'
+		show_flag: false
+		concurrency_flag: true
+		instancesfile_path: 'tempfolder/instancesfile'
+	}
+
+	mut result := tools.ValidateResult{}
+	mut test_result := tools.ValidateResult{}
+	mut ds := tools.Dataset{}
+	mut cl := tools.Classifier{}
+	mut saved_cl := tools.Classifier{}
+}
+
 // test_validate
 fn test_validate() ? {
 	mut opts := tools.Options{
@@ -44,6 +61,7 @@ fn test_validate() ? {
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
 	assert result.counts == [[1, 0], [1, 0], [1, 0], [0, 1], [0, 1],
 		[0, 1], [1, 0], [1, 0], [0, 1], [3, 0]]
+
 
 	opts.datafile_path = 'datasets/bcw350train'
 	opts.testfile_path = 'datasets/bcw174validate'
@@ -163,13 +181,12 @@ fn test_validate() ? {
 		[159, 191], [0, 191]]
 
 	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/bcw350train.cl'
+	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.weighting_flag = true
 	cl = tools.Classifier{}
 	result = tools.ValidateResult{}
 	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	opts.classifierfile_path = 'tempfolder/bcw350train.cl'
 	result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
@@ -231,8 +248,7 @@ fn test_validate() ? {
 
 		opts.datafile_path = 'datasets/soybean-large-train.tab'
 		opts.testfile_path = 'datasets/soybean-large-validate.tab'
-		opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
-		opts.classifierfile_path = ''
+		opts.classifierfile_path = 'tempfolder/classifierfile'
 		opts.number_of_attributes = [33]
 		opts.bins = [2, 16]
 		opts.weighting_flag = true
@@ -243,7 +259,7 @@ fn test_validate() ? {
 		s := result.inferred_classes[0..4]
 		assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker']
 
-		opts.classifierfile_path = opts.outputfile_path
+		
 		test_result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 		assert result.inferred_classes == test_result.inferred_classes
 		assert result.counts == test_result.counts
