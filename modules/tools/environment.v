@@ -5,8 +5,10 @@ import os
 import time
 import v.util.version
 import runtime
+import v.vmod
 
-fn (mut a Environment) collect_info() {
+fn (mut a Environment) collect_info() ? {
+	vmod.from_file('v.mod') ?
 	mut os_kind := os.user_os()
 	mut arch_details := []string{}
 	arch_details << '$runtime.nr_cpus() cpus'
@@ -190,8 +192,10 @@ fn (mut a Environment) cpu_info(key string) string {
 }
 
 // get_environment
-pub fn get_environment() Environment {
+pub fn get_environment() ?Environment {
 	mut env := Environment{}
-	env.collect_info()
+	env.collect_info() ?
+	vmod := vmod.from_file('v.mod') ?
+	env.hamnn_version = vmod.version
 	return env
 }

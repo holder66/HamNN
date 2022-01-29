@@ -33,8 +33,12 @@ pub fn load_classifier_file(path string) ?Classifier {
 }
 
 // load_instances_file 
-pub fn load_instances_file(path string) ?[]ValidateResult {
-	mut instances := []ValidateResult{}
+pub fn load_instances_file(path string) ?ValidateResult {
+	mut instances := ValidateResult{}
+	mut s := ''
+	s = os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	// println(s)
+	instances = json.decode(ValidateResult, s) or { panic('Failed to parse json') }
 	return instances
 	
 }

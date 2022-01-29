@@ -77,9 +77,8 @@ pub mut:
 pub struct History {
 pub mut:
 	append_dates	[]time.Time
-	vlang_version	[]string
-	hamnn_version	[]string
 	instances_appended	[]int 
+	append_environment	[]Environment
 
 }
 
@@ -111,6 +110,7 @@ pub mut:
 
 pub struct Environment {
 pub mut:
+	hamnn_version	string
 	cached_cpuinfo map[string]string
 	os_kind        string
 	os_details     string

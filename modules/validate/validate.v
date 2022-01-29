@@ -49,11 +49,11 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 		println('validate_result: $validate_result')
 	}
 	if opts.instancesfile_path != '' {
-		instancesfile := opts.instancesfile_path
 		validate_result.instances = test_instances
+		println(validate_result)
 		s := json.encode(validate_result)
-		println('After json encoding, before writing:\n $s')
-		mut f := os.open_file(instancesfile, 'w') or { panic(err.msg) }
+		// println('After json encoding, before writing:\n $s')
+		mut f := os.open_file(opts.instancesfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()
 	}

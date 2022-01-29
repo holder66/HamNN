@@ -11,7 +11,7 @@ import math
 import time
 import os
 import json
-// import v.util
+
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
 // tools.load_file). Type: `v run hamnn.v make --help`
@@ -20,10 +20,9 @@ Options: bins = number of bins or slices for continuous
 attributes; number_of_attributes = the number of attributes to include in
 the classifier (chosen from the list of ranked attributes); exclude_flag
 (set to true to exclude missing values when ranking attributes)*/
-pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
+pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
 	mut cl := tools.Classifier{
 		utc_date_time: time.utc()
-		// vlang_version: util.full_v_version(true)
 		hamnn_version: '0.1.0'
 		Class: ds.Class
 		Options: opts
@@ -83,7 +82,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	}
 	if opts.classifierfile_path != '' {
 		// get the environment used in generating this classifier
-		cl.Environment = tools.get_environment()
+		cl.Environment = tools.get_environment() ?
 		outputfile := opts.classifierfile_path
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
