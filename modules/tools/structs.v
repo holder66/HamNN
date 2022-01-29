@@ -80,7 +80,7 @@ pub mut:
 	vlang_version	[]string
 	hamnn_version	[]string
 	instances_appended	[]int 
-	
+
 }
 
 pub struct Options {
@@ -167,4 +167,5 @@ pub struct ValidateResult {
 pub mut:
 	inferred_classes []string
 	counts           [][]int
+	instances 		 [][]byte
 }
