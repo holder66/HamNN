@@ -101,6 +101,7 @@ pub mut:
 	testfile_path        string
 	outputfile_path      string
 	classifierfile_path  string
+	instancesfile_path	 string
 	help_flag            bool
 	weighting_flag       bool
 	folds                int

@@ -6,11 +6,11 @@ import json
 import os
 
 // append 
-pub fn append(cl tools.Classifier) ?tools.Classifier {
+pub fn append(cl tools.Classifier) tools.Classifier {
 	// append needs to append the array of byte values for each new instance
 	// to cl.instances, and append the class value for each new instance
 	// cl.class_values, update the cl.class_counts map, and calculate a new lcm
-	println(cl)
+	// println(cl)
 	return cl
 }
 
@@ -19,10 +19,14 @@ pub fn append(cl tools.Classifier) ?tools.Classifier {
 // by opts.datafile_path, and writes the extended classifier to a file
 // specified by opts.outputfile_path
 pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
-	println(opts)
+	// println(opts)
+	mut instances_to_append := [][]byte{}
 	mut cl := tools.Classifier{}
 	cl = tools.load_classifier_file(opts.classifierfile_path) ?
-	println(cl)
+	// println(cl)
+	inst := tools.load_instances_file(opts.datafile_path) ?
+	println(inst)
+	cl = append(cl)
 	if opts.outputfile_path != '' && opts.command == 'append' {
 		outputfile := opts.outputfile_path
 		s := json.encode(cl)

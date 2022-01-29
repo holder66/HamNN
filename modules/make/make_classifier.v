@@ -81,10 +81,10 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	if opts.show_flag && opts.command == 'make' {
 		tools.show_classifier(cl)
 	}
-	if opts.outputfile_path != '' && opts.command == 'make' {
+	if opts.classifierfile_path != '' {
 		// get the environment used in generating this classifier
 		cl.Environment = tools.get_environment()
-		outputfile := opts.outputfile_path
+		outputfile := opts.classifierfile_path
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }

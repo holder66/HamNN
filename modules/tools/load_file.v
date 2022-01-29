@@ -32,6 +32,13 @@ pub fn load_classifier_file(path string) ?Classifier {
 	return cl
 }
 
+// load_instances_file 
+pub fn load_instances_file(path string) ?[]ValidateResult {
+	mut instances := []ValidateResult{}
+	return instances
+	
+}
+
 // load_orange_older_file loads from a file into a Dataset struct
 pub fn load_orange_older_file(path string) Dataset {
 	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
