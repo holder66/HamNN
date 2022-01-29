@@ -24,6 +24,7 @@ fn test_append_file_to_file() ? {
 		command: 'append'
 		show_flag: true
 		concurrency_flag: false 
+		weighting_flag: true
 		testfile_path: 'datasets/test_validate.tab'
 		classifierfile_path: 'tempfolder/classifierfile'
 		instancesfile_path: 'tempfolder/instancesfile'

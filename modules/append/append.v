@@ -20,6 +20,11 @@ pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opt
 	ext_cl.append_environment << [tools.get_environment() ?]
 	ext_cl.instances << instances_to_append.instances
 	ext_cl.class_values << instances_to_append.inferred_classes
+	ext_cl.class_counts = tools.string_element_counts(ext_cl.class_values)
+	// when the weighting_flag is set
+	if opts.weighting_flag {
+		ext_cl.lcm_class_counts = i64(tools.lcm(tools.get_map_values(ext_cl.class_counts)))
+	}
 	
 	return ext_cl
 }

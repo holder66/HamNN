@@ -66,8 +66,6 @@ pub struct Classifier {
 pub mut:
 	datafile_path      string
 	utc_date_time      time.Time
-	vlang_version      string
-	hamnn_version      string
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
 	options            []string
