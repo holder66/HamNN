@@ -26,14 +26,14 @@ fn test_load_classifier_file() ? {
 	opts.command = 'make'
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	ds = tools.load_file('datasets/developer.tab')
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 
 	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg) }
 	assert cl.instances == tcl.instances
 	assert cl.trained_attributes == tcl.trained_attributes
 
 	ds = tools.load_file('datasets/leukemia38train.tab')
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg) }
 	assert cl.instances == tcl.instances
 	assert cl.trained_attributes == tcl.trained_attributes
@@ -42,7 +42,7 @@ fn test_load_classifier_file() ? {
 	opts.number_of_attributes = [2]
 
 	ds = tools.load_file('datasets/iris.tab')
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	tcl = tools.load_classifier_file(opts.classifierfile_path) or { panic(err.msg) }
 	tools.show_classifier(tcl)
 	assert cl.instances == tcl.instances
@@ -71,8 +71,8 @@ fn test_verify() ? {
 	opts.bins = [2, 3]
 	opts.number_of_attributes = [2]
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts) ?
-	assert verify(cl, opts) ?.correct_count == 10
+	cl = make.make_classifier(ds, opts)
+	assert verify(cl, opts).correct_count == 10
 
 	opts.datafile_path = 'datasets/bcw350train'
 	opts.testfile_path = 'datasets/bcw174test'
@@ -80,8 +80,8 @@ fn test_verify() ? {
 	opts.number_of_attributes = [4]
 	opts.bins = [2, 4]
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts) ?
-	result = verify(cl, opts) ?
+	cl = make.make_classifier(ds, opts)
+	result = verify(cl, opts)
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -89,9 +89,9 @@ fn test_verify() ? {
 	opts.classifierfile_path = 'tempfolder/bcw350train.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -101,8 +101,8 @@ fn test_verify() ? {
 	opts.number_of_attributes = [50]
 	opts.bins = [2, 2]
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts) ?
-	result = verify(cl, opts) ?
+	cl = make.make_classifier(ds, opts)
+	result = verify(cl, opts)
 	assert result.correct_count == 9982
 	assert result.wrong_count == 18
 
@@ -110,9 +110,9 @@ fn test_verify() ? {
 	opts.classifierfile_path = 'tempfolder/mnist_test.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 9982
 	assert result.wrong_count == 18
 
@@ -123,8 +123,8 @@ fn test_verify() ? {
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts) ?
-	result = verify(cl, opts) ?
+	cl = make.make_classifier(ds, opts)
+	result = verify(cl, opts)
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
@@ -132,9 +132,9 @@ fn test_verify() ? {
 	opts.classifierfile_path = 'tempfolder/soybean-large-train.cl'
 	cl = tools.Classifier{}
 	result = tools.VerifyResult{}
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
@@ -149,15 +149,15 @@ fn test_verify() ? {
 	opts.concurrency_flag = true
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts) ?
+	cl = make.make_classifier(ds, opts)
 	opts.testfile_path = 'datasets/mnist_test.tab'
-	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 9566
 	assert result.wrong_count == 434
 
 	opts.weighting_flag = true
-	cl = make.make_classifier(ds, opts) ?
-	result = verify(cl, opts) ?
+	cl = make.make_classifier(ds, opts)
+	result = verify(cl, opts)
 	assert result.correct_count == 9279
 	assert result.wrong_count == 721
 }

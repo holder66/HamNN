@@ -13,7 +13,7 @@ import runtime
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
 // Type: `v run hamnn.v verify --help`
-pub fn verify(cl tools.Classifier, opts tools.Options) ?tools.VerifyResult {
+pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := tools.load_file(opts.testfile_path)
 	// instantiate a struct for the result

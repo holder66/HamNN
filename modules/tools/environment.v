@@ -10,7 +10,7 @@ import v.vmod
 // get_package_version 
 fn get_package_version() string {
 	vmod := vmod.from_file('v.mod') or {panic(err.msg)}
-	println(vmod)
+	// println(vmod)
 	return vmod.version
 }
 

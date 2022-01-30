@@ -36,7 +36,7 @@ fn test_append_file_to_file() ? {
 	mut tcl := tools.Classifier{}
 	mut val_results := tools.ValidateResult{}
 	// create the classifier file and save it
-	cl = make.make_classifier(tools.load_file('datasets/test.tab'), opts) ?
+	cl = make.make_classifier(tools.load_file('datasets/test.tab'), opts)
 	// do a validation and save the result
 	val_results = validate.validate(cl, opts) ?
 	tcl = append_file_to_file(opts) ?

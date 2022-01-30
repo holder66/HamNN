@@ -79,7 +79,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
-	part_cl := make.make_classifier(part_ds, cross_opts) ?
+	part_cl := make.make_classifier(part_ds, cross_opts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
