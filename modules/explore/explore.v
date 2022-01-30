@@ -11,7 +11,7 @@ import os
 // attributes and a range of binning values.
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
-pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
+pub fn explore(ds tools.Dataset, opts tools.Options) ?[]tools.VerifyResult {
 	mut ex_opts := opts
 	mut result := tools.VerifyResult{
 		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
@@ -87,9 +87,9 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 				ex_opts.bins = [start_bin, bin]
 			}
 			if ex_opts.testfile_path == '' {
-				result = cross.cross_validate(ds, ex_opts)
+				result = cross.cross_validate(ds, ex_opts) ?
 			} else {
-				cl = make.make_classifier(ds, ex_opts)
+				cl = make.make_classifier(ds, ex_opts) ?
 				result = verify.verify(cl, ex_opts) or { panic(err) }
 			}
 			result.bin_values = ex_opts.bins

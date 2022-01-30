@@ -23,7 +23,6 @@ the classifier (chosen from the list of ranked attributes); exclude_flag
 pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
 	mut cl := tools.Classifier{
 		utc_date_time: time.utc()
-		hamnn_version: '0.1.0'
 		Class: ds.Class
 		Options: opts
 	}
@@ -83,10 +82,9 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
 	if opts.classifierfile_path != '' {
 		// get the environment used in generating this classifier
 		cl.Environment = tools.get_environment() ?
-		outputfile := opts.classifierfile_path
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
-		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
+		mut f := os.open_file(opts.classifierfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()
 	}

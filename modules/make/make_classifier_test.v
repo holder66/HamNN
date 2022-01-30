@@ -16,7 +16,7 @@ fn testsuite_end() ? {
 }
 
 // test_make_classifier
-fn test_make_classifier() {
+fn test_make_classifier() ? {
 	mut opts := tools.Options{
 		bins: [2, 12]
 		exclude_flag: false
@@ -27,7 +27,7 @@ fn test_make_classifier() {
 		weighting_flag: true
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(ds, opts) ?
 	assert cl.class_counts == {
 		'm': 8
 		'f': 3
@@ -71,14 +71,14 @@ fn test_save_classifier() ? {
 		classifierfile_path: 'tempfolder/classifierfile'
 	}
 	mut ds := tools.load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(ds, opts) ?
 	
 	mut tcl := tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = tools.load_file('datasets/anneal.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(ds, opts) ?
 	
 	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes

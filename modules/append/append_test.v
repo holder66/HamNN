@@ -40,6 +40,7 @@ fn test_append_file_to_file() ? {
 	// do a validation and save the result
 	val_results = validate.validate(cl, opts) ?
 	tcl = append_file_to_file(opts) ?
+	assert tcl.class_counts == {'f': 9, 'm': 7}
 
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'

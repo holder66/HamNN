@@ -4,7 +4,7 @@ module cross
 import tools
 
 // test_cross_validate
-fn test_cross_validate() {
+fn test_cross_validate() ? {
 	mut ds := tools.Dataset{}
 	mut opts := tools.Options{
 		command: 'cross'
@@ -19,7 +19,7 @@ fn test_cross_validate() {
 	opts.number_of_attributes = [28]
 	opts.bins = [21, 21]
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 881
 	assert result.misses_count == 17
@@ -27,7 +27,7 @@ fn test_cross_validate() {
 	assert result.total_count == 898
 
 	opts.weighting_flag = true
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 876
 	assert result.misses_count == 22
@@ -40,7 +40,7 @@ fn test_cross_validate() {
 	opts.folds = 0
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 10
 	assert result.misses_count == 3
@@ -52,7 +52,7 @@ fn test_cross_validate() {
 	opts.bins = [3, 3]
 	opts.folds = 2
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 8
 	assert result.misses_count == 5
@@ -64,7 +64,7 @@ fn test_cross_validate() {
 	opts.bins = [3, 3]
 	opts.folds = 3
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 11
 	assert result.misses_count == 2
@@ -76,7 +76,7 @@ fn test_cross_validate() {
 	opts.bins = [3, 3]
 	opts.folds = 4
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 9
 	assert result.misses_count == 4
@@ -88,7 +88,7 @@ fn test_cross_validate() {
 	opts.bins = [3, 3]
 	opts.folds = 0
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 147
 	assert result.misses_count == 3
@@ -98,7 +98,7 @@ fn test_cross_validate() {
 	opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
 	opts.number_of_attributes = [9]
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 670
 	assert result.misses_count == 29
@@ -111,7 +111,7 @@ fn test_cross_validate() {
 	opts.folds = 200
 	opts.weighting_flag = false
 	ds = tools.load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	// tools.print_confusion_matrix(result)
 	assert result.correct_count == 9420
 	assert result.misses_count == 580

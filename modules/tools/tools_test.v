@@ -4,9 +4,9 @@ module tools
 // import arrays
 
 // test_get_environment
-fn test_get_environment() {
+fn test_get_environment() ? {
 	mut env := Environment{}
-	env = get_environment()
+	env = get_environment() ?
 	println(env)
 	assert env.v_full_version[0..1] == 'V'
 }

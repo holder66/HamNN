@@ -56,7 +56,7 @@ fn test_validate() ? {
 	opts.bins = [2, 3]
 	opts.number_of_attributes = [2]
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts)
+	cl = make.make_classifier(ds, opts) ?
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
 	assert result.counts == [[1, 0], [1, 0], [1, 0], [0, 1], [0, 1],
@@ -69,7 +69,7 @@ fn test_validate() ? {
 	opts.number_of_attributes = [4]
 	opts.bins = [2, 4]
 	ds = tools.load_file(opts.datafile_path)
-	cl = make.make_classifier(ds, opts)
+	cl = make.make_classifier(ds, opts) ?
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
@@ -121,7 +121,7 @@ fn test_validate() ? {
 
 	// repeat with weighting
 	opts.weighting_flag = true
-	cl = make.make_classifier(ds, opts)
+	cl = make.make_classifier(ds, opts) ?
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
@@ -185,7 +185,7 @@ fn test_validate() ? {
 	opts.weighting_flag = true
 	cl = tools.Classifier{}
 	result = tools.ValidateResult{}
-	cl = make.make_classifier(ds, opts)
+	cl = make.make_classifier(ds, opts) ?
 	cl = tools.Classifier{}
 	result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
@@ -253,7 +253,7 @@ fn test_validate() ? {
 		opts.bins = [2, 16]
 		opts.weighting_flag = true
 		ds = tools.load_file(opts.datafile_path)
-		cl = make.make_classifier(ds, opts)
+		cl = make.make_classifier(ds, opts) ?
 		result = validate(cl, opts) ?
 		assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		s := result.inferred_classes[0..4]

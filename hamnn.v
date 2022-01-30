@@ -70,10 +70,10 @@ pub fn main() {
 		match opts.command {
 			'analyze' { analyze(opts) }
 			'append' { append(opts) ? }
-			'cross' { cross(opts) }
+			'cross' { cross(opts) ? }
 			'display' { display(opts) }
-			'explore' { explore(opts) }
-			'make' { make(opts) }
+			'explore' { explore(opts) ? }
+			'make' { make(opts) ? }
 			'orange' { orange() }
 			'query' { query(opts) ? }
 			'rank' { rank(opts) }
@@ -186,11 +186,11 @@ fn append(opts tools.Options) ?tools.Classifier {
 // query
 fn query(opts tools.Options) ?tools.ClassifyResult {
 	if opts.classifierfile_path == '' {
-		return query.query(make(opts), opts)
-	} else {
+		return query.query(make(opts) ?, opts)
+			} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
-		return query.query(make(opts), opts)
+		return query.query(make(opts) ?, opts)
 	}
 }
 
@@ -198,7 +198,7 @@ fn query(opts tools.Options) ?tools.ClassifyResult {
 fn verify(opts tools.Options) ?tools.VerifyResult {
 	println(opts)
 	if opts.classifierfile_path == '' {
-		return verify.verify(make(opts), opts)
+		return verify.verify(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
@@ -209,7 +209,7 @@ fn verify(opts tools.Options) ?tools.VerifyResult {
 // validate
 fn validate(opts tools.Options) ?tools.ValidateResult {
 	if opts.classifierfile_path == '' {
-		return validate.validate(make(opts), opts)
+		return validate.validate(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
@@ -218,13 +218,13 @@ fn validate(opts tools.Options) ?tools.ValidateResult {
 }
 
 // cross
-fn cross(opts tools.Options) {
-	cross.cross_validate(tools.load_file(opts.datafile_path), opts)
+fn cross(opts tools.Options) ? {
+	cross.cross_validate(tools.load_file(opts.datafile_path), opts) ?
 }
 
 // explore
-fn explore(opts tools.Options) {
-	explore.explore(tools.load_file(opts.datafile_path), opts)
+fn explore(opts tools.Options) ? {
+	explore.explore(tools.load_file(opts.datafile_path), opts) ?
 }
 
 // orange
@@ -238,7 +238,7 @@ fn rank(opts tools.Options) []tools.RankedAttribute {
 }
 
 // make returns a Classifier struct
-fn make(opts tools.Options) tools.Classifier {
+fn make(opts tools.Options) ?tools.Classifier {
 	return make.make_classifier(tools.load_file(opts.datafile_path), opts)
 }
 
