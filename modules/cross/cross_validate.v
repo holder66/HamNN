@@ -61,7 +61,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) ?tools.VerifyResult 
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
-			fold_result = do_one_fold(current_fold, folds, ds, cross_opts) ?
+			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
 			cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
@@ -71,7 +71,7 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) ?tools.VerifyResult 
 }
 
 // do_one_fold
-fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.Options) ?tools.VerifyResult {
+fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.Options) tools.VerifyResult {
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition.partition(current_fold, folds, ds, cross_opts)
@@ -79,7 +79,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 	mut fold_result := tools.VerifyResult{
 		labeled_classes: fold.class_values
 	}
-	part_cl := make.make_classifier(part_ds, cross_opts) ?
+	part_cl := make.make_classifier(part_ds, cross_opts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold

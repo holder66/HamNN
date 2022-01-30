@@ -20,7 +20,7 @@ Options: bins = number of bins or slices for continuous
 attributes; number_of_attributes = the number of attributes to include in
 the classifier (chosen from the list of ranked attributes); exclude_flag
 (set to true to exclude missing values when ranking attributes)*/
-pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
+pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	mut cl := tools.Classifier{
 		utc_date_time: time.utc()
 		Class: ds.Class
@@ -81,7 +81,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
 	}
 	if opts.classifierfile_path != '' {
 		// get the environment used in generating this classifier
-		cl.Environment = tools.get_environment() ?
+		// cl.Environment = tools.get_environment() ?
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.classifierfile_path, 'w') or { panic(err.msg) }
