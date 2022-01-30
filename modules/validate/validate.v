@@ -13,7 +13,8 @@ import os
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
 // Optionally, saves the instances and their predicted classes in a file
-// specified by -o.
+// specified by -o. This file can be used to append these instances to the
+// classifier.
 // Type: `v run hamnn.v validate --help`
 pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	// load the testfile as a Dataset struct
@@ -48,11 +49,11 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	if opts.show_flag && opts.command == 'validate' {
 		println('validate_result: $validate_result')
 	}
-	if opts.instancesfile_path != '' {
+	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
 		s := json.encode(validate_result)
 		// println('After json encoding, before writing:\n $s')
-		mut f := os.open_file(opts.instancesfile_path, 'w') or { panic(err.msg) }
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()
 	}

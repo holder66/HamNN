@@ -6,7 +6,9 @@ import json
 import os
 import time
 
-// append 
+// append appends instances in a file, to a classifier in a file specified
+// by flag -k, and (optionally) stores the extended classifier in a file 
+// specified by -o. It returns the extended classifier. 
 pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opts tools.Options) tools.Classifier {
 	// append needs to append the array of byte values for each new instance
 	// to cl.instances, and append the class value for each new instance
@@ -39,7 +41,7 @@ pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
 	mut cl := tools.Classifier{}
 	mut ext_cl := tools.Classifier{}
 	cl = tools.load_classifier_file(opts.classifierfile_path) ?
-	instances_to_append = tools.load_instances_file(opts.instancesfile_path) ?
+	instances_to_append = tools.load_instances_file(opts.datafile_path) ?
 	ext_cl = append(cl, instances_to_append, opts)
 	if opts.show_flag {
 		tools.show_classifier(ext_cl)

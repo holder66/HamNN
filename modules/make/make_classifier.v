@@ -14,12 +14,14 @@ import json
 
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
-// tools.load_file). Type: `v run hamnn.v make --help`
-/*
-Options: bins = number of bins or slices for continuous
-attributes; number_of_attributes = the number of attributes to include in
-the classifier (chosen from the list of ranked attributes); exclude_flag
-(set to true to exclude missing values when ranking attributes)*/
+// tools.load_file).
+// ```sh
+// Options: bins = number of bins or slices for continuous attributes; 
+// number_of_attributes = the number of attributes to include in
+// the classifier (chosen from the list of ranked attributes); 
+// exclude_flag = true to exclude missing values when ranking attributes;
+// outputfile_path specifies if and where to save the classifier as a file;
+// ```
 pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	mut cl := tools.Classifier{
 		utc_date_time: time.utc()
@@ -79,12 +81,12 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	if opts.show_flag && opts.command == 'make' {
 		tools.show_classifier(cl)
 	}
-	if opts.classifierfile_path != '' {
+	if opts.outputfile_path != '' {
 		// get the environment used in generating this classifier
 		cl.Environment = tools.get_environment()
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
-		mut f := os.open_file(opts.classifierfile_path, 'w') or { panic(err.msg) }
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()
 	}

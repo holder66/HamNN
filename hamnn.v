@@ -46,8 +46,8 @@ import math
 // -g --graph, displays a plot;
 // -h --help,
 // -k --classifier, followed by the path to a file for a saved Classifier
-// -o --output, followed by the path to a file in which a classifier or a
-//    result will be stored;
+// -o --output, followed by the path to a file in which a classifier, a
+//    result, instances used for validation, or a query instance will be stored;
 // -r --reps, number of repetitions; if > 1, a random selection of
 // 	instances to be included in each fold will be applied
 // -s --show, output results to the console;
@@ -70,9 +70,9 @@ pub fn main() {
 		match opts.command {
 			'analyze' { analyze(opts) }
 			'append' { append(opts) ? }
-			'cross' { cross(opts) ? }
+			'cross' { cross(opts) }
 			'display' { display(opts) }
-			'explore' { explore(opts) ? }
+			'explore' { explore(opts) }
 			'make' { make(opts) ? }
 			'orange' { orange() }
 			'query' { query(opts) ? }
@@ -178,7 +178,8 @@ fn analyze(opts tools.Options) {
 }
 
 // append appends instances in a file, to a classifier in a file specified
-// by flag -k, and (optionally)stores the extended classifier in a file specified by -o. It returns the extended classifier
+// by flag -k, and (optionally) stores the extended classifier in a file 
+// specified by -o. It returns the extended classifier.
 fn append(opts tools.Options) ?tools.Classifier {
 		return append.append_file_to_file(opts)
 }
@@ -218,13 +219,13 @@ fn validate(opts tools.Options) ?tools.ValidateResult {
 }
 
 // cross
-fn cross(opts tools.Options) ? {
-	cross.cross_validate(tools.load_file(opts.datafile_path), opts) ?
+fn cross(opts tools.Options) {
+	cross.cross_validate(tools.load_file(opts.datafile_path), opts)
 }
 
 // explore
-fn explore(opts tools.Options) ? {
-	explore.explore(tools.load_file(opts.datafile_path), opts) ?
+fn explore(opts tools.Options) {
+	explore.explore(tools.load_file(opts.datafile_path), opts)
 }
 
 // orange

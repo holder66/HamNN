@@ -5,15 +5,21 @@ import tools
 import classify
 import readline
 import strconv
+import json
+import os
 
 // query takes a trained classifier and performs an interactive session
 // with the user at the console, asking the user to input a value for each
 // trained attribute. It then asks to confirm or redo the responses. Once
 // confirmed, the instance is classified and the inferred class is shown.
-// Type: `v run hamnn.v query --help`
+// The classified instance can optionally be saved in a file.
+// The saved instance can be appended to the classifier using append.append().
 pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 	mut answer := ''
 	mut classify_result := tools.ClassifyResult{}
+	mut validate_result := tools.ValidateResult{
+		Class: cl.Class
+	}
 	mut byte_values := []byte{}
 	mut responses := map[string]string{}
 	// for testing, skip the query by putting some values in responses
@@ -61,6 +67,16 @@ pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 	} else {
 		println("For the classes $classify_result.classes the numbers of nearest neighbors are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.inferred_class'")
 	}
+	if opts.outputfile_path != '' {
+		validate_result.instances = [byte_values]
+		validate_result.inferred_classes = [classify_result.inferred_class]
+		validate_result.counts = [classify_result.nearest_neighbors_by_class]
+		s := json.encode(validate_result)
+		// println('After json encoding, before writing:\n $s')
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		f.write_string(s) or { panic(err.msg) }
+		f.close()
+	}
 	return classify_result
 }
 
@@ -81,5 +97,6 @@ fn get_byte_values(cl tools.Classifier, responses map[string]string) []byte {
 			}
 		}
 	}
+	
 	return byte_values
 }
