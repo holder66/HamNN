@@ -81,7 +81,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) ?tools.Classifier {
 	}
 	if opts.classifierfile_path != '' {
 		// get the environment used in generating this classifier
-		cl.Environment = tools.get_environment() ?
+		cl.Environment = tools.get_environment()
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.classifierfile_path, 'w') or { panic(err.msg) }

@@ -7,8 +7,14 @@ import v.util.version
 import runtime
 import v.vmod
 
-fn (mut a Environment) collect_info() ? {
-	vmod.from_file('v.mod') ?
+// get_package_version 
+fn get_package_version() string {
+	vmod := vmod.from_file('v.mod') or {panic(err.msg)}
+	println(vmod)
+	return vmod.version
+}
+
+fn (mut a Environment) collect_info() {
 	mut os_kind := os.user_os()
 	mut arch_details := []string{}
 	arch_details << '$runtime.nr_cpus() cpus'
@@ -192,10 +198,10 @@ fn (mut a Environment) cpu_info(key string) string {
 }
 
 // get_environment
-pub fn get_environment() ?Environment {
+pub fn get_environment() Environment {
 	mut env := Environment{}
-	env.collect_info() ?
-	vmod := vmod.from_file('v.mod') ?
-	env.hamnn_version = vmod.version
+	env.collect_info() 
+	// vmod := vmod.from_file('v.mod') ?
+	env.hamnn_version = get_package_version()
 	return env
 }
