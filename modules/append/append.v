@@ -41,7 +41,7 @@ pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
 	mut cl := tools.Classifier{}
 	mut ext_cl := tools.Classifier{}
 	cl = tools.load_classifier_file(opts.classifierfile_path) ?
-	instances_to_append = tools.load_instances_file(opts.datafile_path) ?
+	instances_to_append = tools.load_instances_file(opts.instancesfile_path) ?
 	ext_cl = append(cl, instances_to_append, opts)
 	if opts.show_flag {
 		tools.show_classifier(ext_cl)

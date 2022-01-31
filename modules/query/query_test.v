@@ -12,6 +12,6 @@ fn test_query() ? {
 		exclude_flag: false
 		verbose_flag: false
 	}
-	mut cl := make.make_classifier(tools.load_file('datasets/developer.tab'), opts) ?
+	mut cl := make.make_classifier(tools.load_file('datasets/developer.tab'), opts)
 	// println(query(cl, opts))
 }

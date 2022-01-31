@@ -109,7 +109,8 @@ Options:
   -x --exclude, exclude missing values from rank value calculations;
   ' 
 
-	rank_help = '"rank" rank orders a dataset\'s attributes in terms of ability 
+	rank_help = '
+  "rank" rank orders a dataset\'s attributes in terms of ability 
 to distinguish between classes; it takes into account class prevalences.
 
 Usage: v run hamnn.v rank -s datasets/anneal.tab
@@ -145,10 +146,14 @@ Options:
 to input (at the console) values for each attribute included in the classifier.
 After the last entry, it classifies the new instance and returns its inferred
 class.
+Optionally, the new instance can be saved in an instances file specified by -o.
+This instances file can be used by "append" to extend the classifier.
 In addition to the options below, the options for the "make" command are also
 applicable.
 
 Options:
+  -k --classifier, followed by the path to a classifier file.
+  -o --output, followed by the path for saving the instance file.
 	-v --verbose, show additional information for each query, and additional 
 	statistics for the classification.
 	-w --weight, weight the number of nearest neighbor counts by class prevalences.

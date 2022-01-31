@@ -19,16 +19,13 @@ pub fn load_file(path string) Dataset {
 	return ds
 }
 
-// load_classifier_file
+// load_classifier_file loads the file given by `path`, and decodes 
+// the json string into a Classifier struct which is returned
 pub fn load_classifier_file(path string) ?Classifier {
-	mut cl := Classifier{}
-	mut s := ''
-	// mut f := os.open_file(path, 'r') or { panic(err.msg) }
-	// f.read_lines(mut cl) or { panic('failed to open $path') }
-	// f.close()
-	s = os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	// println(s)
-	cl = json.decode(Classifier, s) or { panic('Failed to parse json') }
+	// println(typeof(s))
+	cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
 	return cl
 }
 
