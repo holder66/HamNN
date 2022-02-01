@@ -181,7 +181,7 @@ fn analyze(opts tools.Options) {
 // by flag -k, and (optionally) stores the extended classifier in a file
 // specified by -o. It returns the extended classifier.
 fn append(opts tools.Options) ?tools.Classifier {
-	return append.append_file_to_file(opts)
+	return append.append(opts)
 }
 
 // query

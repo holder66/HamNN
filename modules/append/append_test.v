@@ -18,8 +18,8 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
 
-// test_append_file_to_file
-fn test_append_file_to_file() ? {
+// test_append
+fn test_append() ? {
 	mut opts := tools.Options{
 		verbose_flag: false
 		command: 'append'
@@ -42,7 +42,7 @@ fn test_append_file_to_file() ? {
 	opts.instancesfile_path = 'tempfolder/instancesfile'
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
-	tcl = append_file_to_file(opts) ?
+	tcl = append(opts) ?
 	assert tcl.class_counts == {
 		'f': 9
 		'm': 7
@@ -68,7 +68,7 @@ fn test_append_file_to_file() ? {
 	opts.instancesfile_path = 'tempfolder/instancesfile'
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
-	tcl = append_file_to_file(opts) ?
+	tcl = append(opts) ?
 	assert tcl.class_counts == {
 		'diaporthe-stem-canker':       20
 		'charcoal-rot':                20

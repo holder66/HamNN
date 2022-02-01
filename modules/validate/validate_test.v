@@ -250,7 +250,6 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
-
 	println('Done with bcw350train saved classifier')
 
 	opts.datafile_path = 'datasets/soybean-large-train.tab'

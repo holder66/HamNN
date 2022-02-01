@@ -3,7 +3,6 @@ module query
 
 import tools
 import make
-import os
 
 
 // test_query
@@ -17,4 +16,3 @@ fn test_query() ? {
 	mut cl := make.make_classifier(tools.load_file('datasets/developer.tab'), opts)
 	// println(query(cl, opts))
 }
-

@@ -6,10 +6,9 @@ import json
 import os
 import time
 
-// append appends instances in a file, to a classifier in a file specified
-// by flag -k, and (optionally) stores the extended classifier in a file
-// specified by -o. It returns the extended classifier.
-pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opts tools.Options) tools.Classifier {
+// do_append appends instances to a classifier.
+// It returns the extended classifier.
+pub fn do_append(cl tools.Classifier, instances_to_append tools.ValidateResult, opts tools.Options) tools.Classifier {
 	// append needs to append the array of byte values for each new instance
 	// to cl.instances, and append the class value for each new instance
 	// cl.class_values, update the cl.class_counts map, and calculate a new lcm
@@ -32,18 +31,19 @@ pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opt
 	return ext_cl
 }
 
-// append_file_to_file extends the classifier in the file specified by
+// append extends the classifier in the file specified by
 // opts.classifierfile_path, with the instances in the file specified
-// by opts.instancesfile_path, and writes the extended classifier to a file
-// specified by opts.outputfile_path
-pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
+// by opts.instancesfile_path, and returns the extended classifier.
+// Optionally, it writes the extended classifier to a file
+// specified by opts.outputfile_path.
+pub fn append(opts tools.Options) ?tools.Classifier {
 	// println(opts)
 	mut instances_to_append := tools.ValidateResult{}
 	mut cl := tools.Classifier{}
 	mut ext_cl := tools.Classifier{}
 	cl = tools.load_classifier_file(opts.classifierfile_path) ?
 	instances_to_append = tools.load_instances_file(opts.instancesfile_path) ?
-	ext_cl = append(cl, instances_to_append, opts)
+	ext_cl = do_append(cl, instances_to_append, opts)
 	if opts.show_flag {
 		tools.show_classifier(ext_cl)
 	}
