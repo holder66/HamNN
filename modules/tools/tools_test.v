@@ -3,6 +3,11 @@ module tools
 
 // import arrays
 
+// test_get_vmod
+fn test_get_vmod() {
+	println('HamNN version: $get_package_version()')
+}
+
 // test_get_environment
 fn test_get_environment() {
 	mut env := Environment{}
@@ -133,24 +138,24 @@ fn test_get_map_values() {
 }
 
 // test_convert_to_one_bit
-fn test_convert_to_one_bit() {
-	assert convert_to_one_bit(0) == 0
-	assert convert_to_one_bit(1) == 1
-	assert convert_to_one_bit(3) == 8
-	assert convert_to_one_bit(8) == 256
-	assert convert_to_one_bit(16) == 65536
-	assert convert_to_one_bit(31) == 2147483648
-	assert convert_to_one_bit(32) == 1 // wraps around
-}
+// fn test_convert_to_one_bit() {
+// 	assert convert_to_one_bit(0) == 0
+// 	assert convert_to_one_bit(1) == 1
+// 	assert convert_to_one_bit(3) == 8
+// 	assert convert_to_one_bit(8) == 256
+// 	assert convert_to_one_bit(16) == 65536
+// 	assert convert_to_one_bit(31) == 2147483648
+// 	assert convert_to_one_bit(32) == 1 // wraps around
+// }
 
 // test_hamming_distance
-fn test_hamming_distance() {
-	assert hamming_distance([u32(1)], [u32(0)]) == 1
-	assert hamming_distance([u32(1)], [u32(2)]) == 2
-	assert hamming_distance([u32(1)], [u32(1)]) == 0
-	assert hamming_distance([u32(0)], [u32(0)]) == 0
-	assert hamming_distance([u32(1), u32(1), u32(1), u32(0)], [u32(0), u32(2), u32(1), u32(0)]) == 3
-}
+// fn test_hamming_distance() {
+// 	assert hamming_distance([u32(1)], [u32(0)]) == 1
+// 	assert hamming_distance([u32(1)], [u32(2)]) == 2
+// 	assert hamming_distance([u32(1)], [u32(1)]) == 0
+// 	assert hamming_distance([u32(0)], [u32(0)]) == 0
+// 	assert hamming_distance([u32(1), u32(1), u32(1), u32(0)], [u32(0), u32(2), u32(1), u32(0)]) == 3
+// }
 
 // test_lcm
 fn test_lcm() {

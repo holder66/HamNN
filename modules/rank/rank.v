@@ -7,13 +7,17 @@ import math
 
 // rank_attributes takes a Dataset and returns a list of all the
 // dataset's usable attributes, ranked in order of each attribute's
-// ability to separate the classes. Type `v run hamnn.v rank --help`
-/*
-Options: 'bins' specifies the range for binning (slicing)
-continous attributes; 'uniform_bins causes a single bln value to
-be used for all attributes; 'exclude_flag' to exclude missing
-values when calculating rank values; 'show_flag' to output
-the ranked list to the console.*/
+// ability to separate the classes.
+// ```sh
+// Options settings:
+// `bins` specifies the range for binning (slicing) continous attributes;
+// `uniform_bins` the same bin value will be used for all attributes;
+// `exclude_flag` to exclude missing values when calculating rank values;
+// `weighting_flag` calculates rankings taking into account class prevalences;
+// `show_flag` to print the ranked list to the console;
+// `graph_flag` to generate plots of rank values for each attribute on the
+//     y axis, with number of bins on the x axis.
+// ```
 pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttribute {
 	// to get the denominator for calculating percentages of rank values,
 	// we get the rank value for the class attribute, which should be 100%

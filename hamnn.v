@@ -4,6 +4,7 @@ module main
 import os
 import tools
 import analyze
+import append
 import rank
 import make
 import query
@@ -19,7 +20,7 @@ import math
 // the command line interface for using hamnn. In a terminal, type: `v run hamnn.v --help`
 // ```sh
 // Usage: v run hamnn [command] [flags] datafile
-// Commands: analyze | cross | explore | make | orange |
+// Commands: analyze | append | cross | explore | make | orange |
 //           query | rank | validate | verify
 // Flags and options:
 // -a --attributes, can be one, two, or 3 integers; a single integer will
@@ -45,8 +46,8 @@ import math
 // -g --graph, displays a plot;
 // -h --help,
 // -k --classifier, followed by the path to a file for a saved Classifier
-// -o --output, followed by the path to a file in which a classifier or a
-//    result will be stored;
+// -o --output, followed by the path to a file in which a classifier, a
+//    result, instances used for validation, or a query instance will be stored;
 // -r --reps, number of repetitions; if > 1, a random selection of
 // 	instances to be included in each fold will be applied
 // -s --show, output results to the console;
@@ -68,16 +69,16 @@ pub fn main() {
 	} else {
 		match opts.command {
 			'analyze' { analyze(opts) }
+			'append' { append(opts) ? }
 			'cross' { cross(opts) }
 			'display' { display(opts) }
 			'explore' { explore(opts) }
-			'make' { make(opts) }
+			'make' { make(opts) ? }
 			'orange' { orange() }
 			'query' { query(opts) ? }
 			'rank' { rank(opts) }
 			'validate' { validate(opts) ? }
 			'verify' { verify(opts) ? }
-			// 'partition' { partition(opts) }
 			else { println('unrecognized command') }
 		}
 	}
@@ -132,6 +133,7 @@ fn show_help(opts tools.Options) string {
 		'rank' { tools.rank_help }
 		'query' { tools.query_help }
 		'analyze' { tools.analyze_help }
+		'append' { tools.append_help }
 		'make' { tools.make_help }
 		'orange' { tools.orange_help }
 		'verify' { tools.verify_help }
@@ -175,14 +177,21 @@ fn analyze(opts tools.Options) {
 	tools.print_array(analyze.analyze_dataset(tools.load_file(opts.datafile_path)))
 }
 
+// append appends instances in a file, to a classifier in a file specified
+// by flag -k, and (optionally) stores the extended classifier in a file
+// specified by -o. It returns the extended classifier.
+fn append(opts tools.Options) ?tools.Classifier {
+	return append.append_file_to_file(opts)
+}
+
 // query
 fn query(opts tools.Options) ?tools.ClassifyResult {
 	if opts.classifierfile_path == '' {
-		return query.query(make(opts), opts)
+		return query.query(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
-		return query.query(make(opts), opts)
+		return query.query(make(opts) ?, opts)
 	}
 }
 
@@ -190,7 +199,7 @@ fn query(opts tools.Options) ?tools.ClassifyResult {
 fn verify(opts tools.Options) ?tools.VerifyResult {
 	println(opts)
 	if opts.classifierfile_path == '' {
-		return verify.verify(make(opts), opts)
+		return verify.verify(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
@@ -201,7 +210,7 @@ fn verify(opts tools.Options) ?tools.VerifyResult {
 // validate
 fn validate(opts tools.Options) ?tools.ValidateResult {
 	if opts.classifierfile_path == '' {
-		return validate.validate(make(opts), opts)
+		return validate.validate(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
@@ -230,7 +239,7 @@ fn rank(opts tools.Options) []tools.RankedAttribute {
 }
 
 // make returns a Classifier struct
-fn make(opts tools.Options) tools.Classifier {
+fn make(opts tools.Options) ?tools.Classifier {
 	return make.make_classifier(tools.load_file(opts.datafile_path), opts)
 }
 

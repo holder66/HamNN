@@ -16,11 +16,27 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
 
+// test_validate_save_result
+// fn test_validate_save_result() ? {
+// 	mut opts := tools.Options{
+// 		verbose_flag: false
+// 		command: 'validate'
+// 		show_flag: false
+// 		concurrency_flag: true
+// 		outputfile_path: 'tempfolder/instancesfile'
+// 	}
+
+// 	mut result := tools.ValidateResult{}
+// 	mut test_result := tools.ValidateResult{}
+// 	mut ds := tools.Dataset{}
+// 	mut cl := tools.Classifier{}
+// 	mut saved_cl := tools.Classifier{}
+// }
+
 // test_validate
 fn test_validate() ? {
 	mut opts := tools.Options{
 		verbose_flag: false
-		command: 'validate'
 		show_flag: false
 		concurrency_flag: true
 	}
@@ -32,7 +48,7 @@ fn test_validate() ? {
 	mut saved_cl := tools.Classifier{}
 
 	// test validate with a non-saved classifier
-	opts.command = 'make'
+	opts.command = 'validate'
 	opts.datafile_path = 'datasets/test.tab'
 	opts.testfile_path = 'datasets/test_validate.tab'
 	opts.classifierfile_path = ''
@@ -44,6 +60,8 @@ fn test_validate() ? {
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
 	assert result.counts == [[1, 0], [1, 0], [1, 0], [0, 1], [0, 1],
 		[0, 1], [1, 0], [1, 0], [0, 1], [3, 0]]
+
+	println('Done test.tab')
 
 	opts.datafile_path = 'datasets/bcw350train'
 	opts.testfile_path = 'datasets/bcw174validate'
@@ -100,6 +118,8 @@ fn test_validate() ? {
 		[0, 16], [99, 0], [99, 0], [99, 0], [99, 0], [99, 0],
 		[99, 0], [99, 0], [99, 0], [99, 0], [0, 1], [99, 0], [99, 0],
 		[1, 0], [99, 0], [0, 2], [1, 6], [0, 1]]
+
+	println('Done with bcw350train')
 
 	// repeat with weighting
 	opts.weighting_flag = true
@@ -162,14 +182,16 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
+	println('Done with bcw350train and weighting')
+
 	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/bcw350train.cl'
+	opts.outputfile_path = 'tempfolder/classifierfile'
 	opts.weighting_flag = true
 	cl = tools.Classifier{}
 	result = tools.ValidateResult{}
 	cl = make.make_classifier(ds, opts)
 	cl = tools.Classifier{}
-	opts.classifierfile_path = 'tempfolder/bcw350train.cl'
+	opts.classifierfile_path = opts.outputfile_path
 	result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
@@ -228,23 +250,27 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
+
+	println('Done with bcw350train saved classifier')
+
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
-	opts.outputfile_path = 'tempfolder/soybean-large-train.cl'
-	opts.classifierfile_path = ''
+	opts.outputfile_path = 'tempfolder/classifierfile'
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
 	ds = tools.load_file(opts.datafile_path)
 	cl = make.make_classifier(ds, opts)
+	// reset the outputfile_path so that validate won't overwrite the classifier
+	opts.outputfile_path = ''
 	result = validate(cl, opts) ?
 	assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	s := result.inferred_classes[0..4]
 	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
 		'diaporthe-stem-canker']
+	tcl := tools.load_classifier_file('tempfolder/classifierfile') ?
+	test_result = validate(tcl, opts) ?
 
-	opts.classifierfile_path = opts.outputfile_path
-	test_result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.inferred_classes == test_result.inferred_classes
 	assert result.counts == test_result.counts
 }

@@ -174,5 +174,8 @@ fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, 
 			break
 		}
 		result_channel <- do_one_fold(current_fold, folds, ds, opts)
+		// if x := do_one_fold(current_fold, folds, ds, opts) {
+		// 	result_channel <- x
+		// }
 	}
 }

@@ -12,7 +12,7 @@ mut:
 	hover_text         []string
 }
 
-// plot_rank ranked_atts generates a scatterplot of the rank values
+// plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
 pub fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 	mut traces := []RankTrace{}
@@ -75,7 +75,7 @@ mut:
 }
 
 // plot_explore generates a scatterplot for the results of
-// an explore on a dataset
+// an explore.explore() on a dataset.
 pub fn plot_explore(results []VerifyResult, opts Options) {
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
@@ -160,7 +160,7 @@ mut:
 	curve_variable_values []string
 }
 
-// plot_roc plot receiver operating characteristic curves
+// plot_roc generates plots of receiver operating characteristic curves.
 pub fn plot_roc(results []VerifyResult, opts Options) {
 	mut roc_results := []ROCResult{}
 	mut plt := plot.new_plot()

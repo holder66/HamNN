@@ -4,7 +4,7 @@ module explore
 import tools
 // import os
 
-fn test_explore_cross() {
+fn test_explore_cross() ? {
 	mut results := []tools.VerifyResult{}
 	mut opts := tools.Options{
 		verbose_flag: false
@@ -63,31 +63,3 @@ fn test_explore_verify() {
 	assert results[7].correct_count == 170
 	assert results[7].wrong_count == 4
 }
-
-// fn test_explore_save() ? {
-// 	mut results := []tools.VerifyResult{}
-// 	mut opts := tools.Options{
-// 		verbose_flag: false
-// 		number_of_attributes: [1, 4]
-// 		bins: [2, 12]
-// 		show_flag: false
-// 		concurrency_flag: true
-// 		uniform_bins: true
-// 		datafile_path: 'datasets/iris.tab'
-// 		outputfile_path: 'testfile'
-// 		command: 'explore'
-// 	}
-// 	// mut ds := tools.load_file(opts.datafile_path)
-// 	// results = explore(ds, opts)
-
-// 	mut f := os.open_file(opts.outputfile_path, 'r') or { panic(err.msg) }
-// 	mut testopts := tools.Options{}
-// 	f.read_struct(mut testopts) or { panic(err.msg) }
-// 	mut testresults := []tools.VerifyResult{}
-// 	f.read_struct(mut testresults) or { panic(err.msg) }
-// 	f.close()
-// 	println(testopts)
-// 	println(testresults)
-// 	assert testopts == opts
-// 	assert results == testresults
-// }

@@ -5,6 +5,14 @@ import os
 import time
 import v.util.version
 import runtime
+import v.vmod
+
+// get_package_version
+fn get_package_version() string {
+	vmod := vmod.from_file('v.mod') or { panic(err.msg) }
+	// println(vmod)
+	return vmod.version
+}
 
 fn (mut a Environment) collect_info() {
 	mut os_kind := os.user_os()
@@ -189,9 +197,14 @@ fn (mut a Environment) cpu_info(key string) string {
 	return a.cached_cpuinfo[key]
 }
 
-// get_environment
+// get_environment collects and returns information about the
+// computer, the operating system and its version,
+// the version and build of V, the version of HamNN,
+// and the date and time.
 pub fn get_environment() Environment {
 	mut env := Environment{}
 	env.collect_info()
+	// vmod := vmod.from_file('v.mod') ?
+	env.hamnn_version = get_package_version()
 	return env
 }

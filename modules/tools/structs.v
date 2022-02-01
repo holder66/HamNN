@@ -62,17 +62,21 @@ pub struct Classifier {
 	Environment
 	Options
 	Class
+	History
 pub mut:
-	// TrainedAttribute
 	datafile_path      string
 	utc_date_time      time.Time
-	vlang_version      string
-	hamnn_version      string
 	attribute_ordering []string
-	// class_values       []string
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	instances          [][]byte
+}
+
+pub struct History {
+pub mut:
+	append_dates       []time.Time
+	instances_appended []int
+	append_environment []Environment
 }
 
 pub struct Options {
@@ -93,6 +97,7 @@ pub mut:
 	testfile_path        string
 	outputfile_path      string
 	classifierfile_path  string
+	instancesfile_path   string
 	help_flag            bool
 	weighting_flag       bool
 	folds                int
@@ -102,6 +107,7 @@ pub mut:
 
 pub struct Environment {
 pub mut:
+	hamnn_version  string
 	cached_cpuinfo map[string]string
 	os_kind        string
 	os_details     string
@@ -159,4 +165,5 @@ pub struct ValidateResult {
 pub mut:
 	inferred_classes []string
 	counts           [][]int
+	instances        [][]byte
 }
