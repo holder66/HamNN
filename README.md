@@ -50,10 +50,14 @@ Clone this github repository, and run the algorithms:
 ```sh
 git clone https://github.com/holder66/hamnn
 cd hamnn
-v run hamnn.v --help    # displays help information about the various commands
+v .                     # compiles all the files in the folder
+./hamnn --help    # displays help information about the various commands
 # and options available. More specific help information
 # is available for each command.
 ```
+
+## Examples showing use of the Command Line Interface
+Please see [examples_of_command_line_usage.md](https://github.com/holder66/hamnn/blob/main/examples_of_command_line_usage.md)
 
 ## Example: typical use case, a clinical risk calculator
 
@@ -71,7 +75,7 @@ At the present time, the best way to prevent a memory leak (which may eventually
  cause the program to be "killed" by the OS when the available memory is exceeded) is to compile with the gc flag, eg:
 
  ```sh
- v -gc boehm run hamnn.v ...
+ v -gc boehm .
  ```
 You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 

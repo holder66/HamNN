@@ -9,7 +9,7 @@ mass of data be used to predict whether a person has a tumor or is normal?
 
 
 ```sh
-v run hamnn.v rank -w -s datasets/prostata.tab 
+./hamnn rank -w -s datasets/prostata.tab 
 ```   
 ```sh
 Attributes Sorted by Rank Value, including missing values
@@ -37,7 +37,7 @@ For datafile: datasets/prostata.tab, binning range [2, 16]
 Accumulated experience with the algorithm suggests that using a fixed number
 of bins often gives good results. 
 ```sh
-v run hamnn.v rank -w -s -b 6 datasets/prostata.tab
+./hamnn rank -w -s -b 6 datasets/prostata.tab
 ```
 ```sh
 Attributes Sorted by Rank Value, including missing values
@@ -71,7 +71,7 @@ which is optimized over a range.
 Here are the results for exploring over a range of attributes from 1 to 20, 
 and a binning range from 2 to 12:
 ```sh
-v -gc boehm run hamnn.v explore -c -e -g -w -b 2,12 -a 1,20 datasets/prostata.tab
+./hamnn explore -c -e -g -w -b 2,12 -a 1,20 datasets/prostata.tab
 ```
 Note the flags: -c calls for parallel processing, using all available CPU cores
 on you machine; -e for expanded output to the console; -g results in graphical
@@ -314,7 +314,7 @@ all continuous attributes in some cases provides better results. We can try this
 with the -u flag, over an abbreviated range of attributes and bins:
 
 ```sh
-v -gc boehm run hamnn.v explore -c -e -g -w -b 6,12 -a 3,5 -u datasets/prostata.tab
+./hamnn explore -c -e -g -w -b 6,12 -a 3,5 -u datasets/prostata.tab
 ```
 ```sh
 A correct classification to "normal" is a True Positive (TP);
@@ -348,7 +348,7 @@ gives us the best balanced accuracy of 0.943, marginally better than when using 
 can be used for predicting outcomes:
 
 ```sh
-v run hamnn.v make -a 3 -b 6 -u -c -o ../classifiers/prostata_classifier datasets/prostata.tab
+./hamnn make -a 3 -b 6 -u -c -o ../classifiers/prostata_classifier datasets/prostata.tab
 ```
 
 Note the use of the -o flag to specify a file where the classifier is to be stored for later use (work in progress).
