@@ -12,13 +12,12 @@ import time
 import os
 import json
 
-
 // make_classifier returns a Classifier struct, given a Dataset (as created by
 // tools.load_file).
 // ```sh
-// Options: bins = number of bins or slices for continuous attributes; 
+// Options: bins = number of bins or slices for continuous attributes;
 // number_of_attributes = the number of attributes to include in
-// the classifier (chosen from the list of ranked attributes); 
+// the classifier (chosen from the list of ranked attributes);
 // exclude_flag = true to exclude missing values when ranking attributes;
 // outputfile_path specifies if and where to save the classifier as a file;
 // ```

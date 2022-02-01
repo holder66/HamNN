@@ -12,10 +12,8 @@ import os
 // validate classifies each instance of a validation datafile against
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
-// Optionally, saves the instances and their predicted classes in a file
-// specified by -o. This file can be used to append these instances to the
-// classifier.
-// Type: `v run hamnn.v validate --help`
+// Optionally, saves the instances and their predicted classes in a file.
+// This file can be used to append these instances to the classifier.
 pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := tools.load_file(opts.testfile_path)

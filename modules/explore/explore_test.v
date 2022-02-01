@@ -51,7 +51,7 @@ fn test_explore_cross() ? {
 	assert results[1].total_count == 898
 }
 
-fn test_explore_verify()  {
+fn test_explore_verify() {
 	mut opts := tools.Options{
 		concurrency_flag: true
 		weighting_flag: true

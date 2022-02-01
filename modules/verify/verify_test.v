@@ -7,8 +7,8 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-	os.rmdir_all('tempfolder') ?
-}
+		os.rmdir_all('tempfolder') ?
+	}
 	os.mkdir_all('tempfolder') ?
 }
 

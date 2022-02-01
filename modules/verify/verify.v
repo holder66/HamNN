@@ -12,7 +12,6 @@ import runtime
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
-// Type: `v run hamnn.v verify --help`
 pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := tools.load_file(opts.testfile_path)
@@ -80,7 +79,8 @@ fn option_worker(work_channel chan int, result_channel chan tools.ClassifyResult
 	return
 }
 
-// classify_to_verify is used by cross_validate
+// classify_to_verify classifies each instance in an array, and
+// returns the results of the classification.
 pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''

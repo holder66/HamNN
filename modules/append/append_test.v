@@ -9,7 +9,7 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-	os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder') ?
 	}
 	os.mkdir_all('tempfolder') ?
 }
@@ -18,14 +18,14 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
 
-// test_append_file_to_file 
+// test_append_file_to_file
 fn test_append_file_to_file() ? {
 	mut opts := tools.Options{
 		verbose_flag: false
 		command: 'append'
 		show_flag: false
-		concurrency_flag: false 
-		weighting_flag: true	
+		concurrency_flag: false
+		weighting_flag: true
 	}
 
 	mut cl := tools.Classifier{}
@@ -43,12 +43,16 @@ fn test_append_file_to_file() ? {
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
 	tcl = append_file_to_file(opts) ?
-	assert tcl.class_counts == {'f': 9, 'm': 7}
+	assert tcl.class_counts == {
+		'f': 9
+		'm': 7
+	}
 
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'
 	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
-	mut result := verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
+	mut result := verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?,
+		opts)
 	assert result.correct_count == 10
 	assert result.wrong_count == 0
 
@@ -65,7 +69,27 @@ fn test_append_file_to_file() ? {
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
 	tcl = append_file_to_file(opts) ?
-	assert tcl.class_counts == {'diaporthe-stem-canker': 20, 'charcoal-rot': 20, 'rhizoctonia-root-rot': 20, 'phytophthora-rot': 88, 'brown-stem-rot': 44, 'powdery-mildew': 20, 'downy-mildew': 19, 'brown-spot': 84, 'bacterial-blight': 20, 'bacterial-pustule': 19, 'purple-seed-stain': 21, 'anthracnose': 44, 'phyllosticta-leaf-spot': 23, 'alternarialeaf-spot': 94, 'frog-eye-leaf-spot': 94, 'diaporthe-pod-&-stem-blight': 15, 'cyst-nematode': 14, '2-4-d-injury': 16, 'herbicide-injury': 8}
+	assert tcl.class_counts == {
+		'diaporthe-stem-canker':       20
+		'charcoal-rot':                20
+		'rhizoctonia-root-rot':        20
+		'phytophthora-rot':            88
+		'brown-stem-rot':              44
+		'powdery-mildew':              20
+		'downy-mildew':                19
+		'brown-spot':                  84
+		'bacterial-blight':            20
+		'bacterial-pustule':           19
+		'purple-seed-stain':           21
+		'anthracnose':                 44
+		'phyllosticta-leaf-spot':      23
+		'alternarialeaf-spot':         94
+		'frog-eye-leaf-spot':          94
+		'diaporthe-pod-&-stem-blight': 15
+		'cyst-nematode':               14
+		'2-4-d-injury':                16
+		'herbicide-injury':            8
+	}
 
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
@@ -73,6 +97,4 @@ fn test_append_file_to_file() ? {
 	result = verify.verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 333
 	assert result.wrong_count == 43
-
-
 }

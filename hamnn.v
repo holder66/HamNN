@@ -133,7 +133,7 @@ fn show_help(opts tools.Options) string {
 		'rank' { tools.rank_help }
 		'query' { tools.query_help }
 		'analyze' { tools.analyze_help }
-		'append' { tools.append_help}
+		'append' { tools.append_help }
 		'make' { tools.make_help }
 		'orange' { tools.orange_help }
 		'verify' { tools.verify_help }
@@ -178,17 +178,17 @@ fn analyze(opts tools.Options) {
 }
 
 // append appends instances in a file, to a classifier in a file specified
-// by flag -k, and (optionally) stores the extended classifier in a file 
+// by flag -k, and (optionally) stores the extended classifier in a file
 // specified by -o. It returns the extended classifier.
 fn append(opts tools.Options) ?tools.Classifier {
-		return append.append_file_to_file(opts)
+	return append.append_file_to_file(opts)
 }
 
 // query
 fn query(opts tools.Options) ?tools.ClassifyResult {
 	if opts.classifierfile_path == '' {
 		return query.query(make(opts) ?, opts)
-			} else {
+	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
 		return query.query(make(opts) ?, opts)

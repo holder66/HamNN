@@ -7,15 +7,16 @@ import os
 import time
 
 // append appends instances in a file, to a classifier in a file specified
-// by flag -k, and (optionally) stores the extended classifier in a file 
-// specified by -o. It returns the extended classifier. 
+// by flag -k, and (optionally) stores the extended classifier in a file
+// specified by -o. It returns the extended classifier.
 pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opts tools.Options) tools.Classifier {
 	// append needs to append the array of byte values for each new instance
 	// to cl.instances, and append the class value for each new instance
 	// cl.class_values, update the cl.class_counts map, and calculate a new lcm
 	// println(cl)
-	if opts.verbose_flag { 
-		println('$cl\n$instances_to_append')}
+	if opts.verbose_flag {
+		println('$cl\n$instances_to_append')
+	}
 	mut ext_cl := cl
 	ext_cl.instances_appended << [instances_to_append.inferred_classes.len]
 	ext_cl.append_dates << [time.utc()]
@@ -27,7 +28,7 @@ pub fn append(cl tools.Classifier, instances_to_append tools.ValidateResult, opt
 	if opts.weighting_flag {
 		ext_cl.lcm_class_counts = i64(tools.lcm(tools.get_map_values(ext_cl.class_counts)))
 	}
-	
+
 	return ext_cl
 }
 
@@ -53,5 +54,5 @@ pub fn append_file_to_file(opts tools.Options) ?tools.Classifier {
 		f.write_string(s) or { panic(err.msg) }
 		f.close()
 	}
-	return ext_cl 
+	return ext_cl
 }

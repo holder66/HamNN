@@ -2,11 +2,11 @@
 module make
 
 import tools
-import os 
+import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-	os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder') ?
 	}
 	os.mkdir_all('tempfolder') ?
 }
@@ -60,7 +60,7 @@ fn test_make_translation_table() {
 
 // test_save_classifier
 fn test_save_classifier() ? {
-	mut ds:= tools.Dataset{}
+	mut ds := tools.Dataset{}
 	mut cl := tools.Classifier{}
 	mut tcl := tools.Classifier{}
 	mut opts := tools.Options{
@@ -84,15 +84,14 @@ fn test_save_classifier() ? {
 
 	ds = tools.load_file('datasets/anneal.tab')
 	cl = make_classifier(ds, opts)
-	
+
 	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
-
 	ds = tools.load_file('datasets/soybean-large-train.tab')
 	cl = make_classifier(ds, opts)
-	
+
 	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
@@ -100,7 +99,7 @@ fn test_save_classifier() ? {
 	println('$path ${tools.file_type(path)}')
 	ds = tools.load_file(path)
 	cl = make_classifier(ds, opts)
-	
+
 	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances

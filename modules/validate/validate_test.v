@@ -7,7 +7,7 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-	os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder') ?
 	}
 	os.mkdir_all('tempfolder') ?
 }
@@ -16,7 +16,7 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
 
-// test_validate_save_result 
+// test_validate_save_result
 // fn test_validate_save_result() ? {
 // 	mut opts := tools.Options{
 // 		verbose_flag: false
@@ -62,7 +62,6 @@ fn test_validate() ? {
 		[0, 1], [1, 0], [1, 0], [0, 1], [3, 0]]
 
 	println('Done test.tab')
-
 
 	opts.datafile_path = 'datasets/bcw350train'
 	opts.testfile_path = 'datasets/bcw174validate'
@@ -251,27 +250,25 @@ fn test_validate() ? {
 		[15741, 0], [15741, 0], [159, 0], [15741, 0], [0, 382],
 		[159, 191], [0, 191]]
 
-		println('Done with bcw350train saved classifier')
+	println('Done with bcw350train saved classifier')
 
-
-		opts.datafile_path = 'datasets/soybean-large-train.tab'
-		opts.testfile_path = 'datasets/soybean-large-validate.tab'
-		opts.outputfile_path = 'tempfolder/classifierfile'
-		opts.number_of_attributes = [33]
-		opts.bins = [2, 16]
-		opts.weighting_flag = true
-		ds = tools.load_file(opts.datafile_path)
-		cl = make.make_classifier(ds, opts)
-		// reset the outputfile_path so that validate won't overwrite the classifier
-		opts.outputfile_path = ''
-		result = validate(cl, opts) ?
-		assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-		s := result.inferred_classes[0..4]
-		assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker']
-		tcl := tools.load_classifier_file('tempfolder/classifierfile') ?
-		test_result = validate(tcl, opts) ?
-		assert result.inferred_classes == test_result.inferred_classes
-		assert result.counts == test_result.counts
-		
-	
+	opts.datafile_path = 'datasets/soybean-large-train.tab'
+	opts.testfile_path = 'datasets/soybean-large-validate.tab'
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.number_of_attributes = [33]
+	opts.bins = [2, 16]
+	opts.weighting_flag = true
+	ds = tools.load_file(opts.datafile_path)
+	cl = make.make_classifier(ds, opts)
+	// reset the outputfile_path so that validate won't overwrite the classifier
+	opts.outputfile_path = ''
+	result = validate(cl, opts) ?
+	assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+	s := result.inferred_classes[0..4]
+	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
+		'diaporthe-stem-canker']
+	tcl := tools.load_classifier_file('tempfolder/classifierfile') ?
+	test_result = validate(tcl, opts) ?
+	assert result.inferred_classes == test_result.inferred_classes
+	assert result.counts == test_result.counts
 }

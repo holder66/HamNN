@@ -97,6 +97,6 @@ fn get_byte_values(cl tools.Classifier, responses map[string]string) []byte {
 			}
 		}
 	}
-	
+
 	return byte_values
 }

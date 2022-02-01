@@ -4,7 +4,6 @@ module display
 import tools
 // import os
 
-// display 
+// display
 pub fn display(opts tools.Options) {
-	
 }

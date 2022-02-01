@@ -89,7 +89,7 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 			if ex_opts.testfile_path == '' {
 				result = cross.cross_validate(ds, ex_opts)
 			} else {
-				cl = make.make_classifier(ds, ex_opts) 
+				cl = make.make_classifier(ds, ex_opts)
 				result = verify.verify(cl, ex_opts)
 			}
 			result.bin_values = ex_opts.bins

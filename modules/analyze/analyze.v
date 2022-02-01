@@ -4,16 +4,15 @@ module analyze
 import tools
 import math
 
-// analyze_dataset outputs to the console information about a datafile.
-// Type: `v run hamnn.v analyze --help`
-/*
-1. a list of attributes, their types, the unique values, and a count of
-missing values;
-2. a table with counts for each type of attribute;
-3. a list of discrete attributes useful for training a classifier;
-4. a list of continuous attributes useful for training a classifier;
-5. a breakdown of the class attribute, showing counts for each class.
-*/
+// analyze_dataset returns an array of strings with information about a datafile:
+// ```sh
+// 1. a list of attributes, their types, the unique values, and a count of
+// missing values;
+// 2. a table with counts for each type of attribute;
+// 3. a list of discrete attributes useful for training a classifier;
+// 4. a list of continuous attributes useful for training a classifier;
+// 5. a breakdown of the class attribute, showing counts for each class.
+// ```
 pub fn analyze_dataset(ds tools.Dataset) []string {
 	cases_count := ds.data[0].len
 	mut show_dataset := ['']

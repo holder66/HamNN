@@ -5,7 +5,10 @@ import tools
 // import arrays
 
 // classify_instance takes a trained classifier and an instance to be
-// classified; returns the inferred class for the instance.
+// classified and returns the inferred class for the instance.
+// The classification algorithm gets Hamming distances between the instance
+// to be classified and all the instances in the trained classifier, and
+// infers class based on minimum Hamming distance.
 pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, opts tools.Options) tools.ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
