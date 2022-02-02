@@ -57,7 +57,7 @@ import math
 // -w --weight, when classifying, weight the nearest neighbour counts by class prevalences;
 // -x --exclude, do not take into account missing values when ranking attributes;
 // ```
-pub fn main() {
+fn main() {
 	// get the command line string and use it to create an Options struct
 	sw := time.new_stopwatch()
 	// println('nr_cpus: ${runtime.nr_cpus()} nr_jobs: ${runtime.nr_jobs()}')

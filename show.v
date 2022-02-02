@@ -8,7 +8,7 @@ import etienne_napoleone.chalk
 // note that in the case of `explore` and the expanded_flag, explore.v
 // initiates the printing of headers to the console, while the printing
 // of each line of the result is initiated in either cross.v or verify.v
-pub fn show_results(result VerifyResult, opts Options) {
+fn show_results(result VerifyResult, opts Options) {
 	if opts.show_flag {
 		match opts.command {
 			'verify' {
@@ -48,7 +48,7 @@ pub fn show_results(result VerifyResult, opts Options) {
 }
 
 // show_classifier outputs to the console information about a classifier
-pub fn show_classifier(cl Classifier) {
+fn show_classifier(cl Classifier) {
 	println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
 		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
@@ -79,7 +79,7 @@ fn get_show_bins(bins []int) string {
 }
 
 // show_expanded_result
-pub fn show_expanded_result(result VerifyResult, opts Options) {
+fn show_expanded_result(result VerifyResult, opts Options) {
 	println(chalk.fg('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class',
 		'green'))
 
@@ -94,7 +94,7 @@ pub fn show_expanded_result(result VerifyResult, opts Options) {
 }
 
 // print_confusion_matrix
-pub fn print_confusion_matrix(result VerifyResult) {
+fn print_confusion_matrix(result VerifyResult) {
 	// println(result.confusion_matrix)
 	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
 	for i, rows in result.confusion_matrix {
@@ -160,7 +160,7 @@ fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
 }
 
 // show_crossvalidation_result
-pub fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
+fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
 	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 	exclude_string := if opts.exclude_flag {
@@ -179,7 +179,7 @@ pub fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 }
 
 // show_explore_header
-pub fn show_explore_header(opts Options) {
+fn show_explore_header(opts Options) {
 	println('\nExplore "$opts.datafile_path"')
 	println('Exclude: $opts.exclude_flag; Weighting: $opts.weighting_flag')
 	println('Attributes     Bins  Matches  Nonmatches  Percent')
@@ -187,7 +187,7 @@ pub fn show_explore_header(opts Options) {
 }
 
 // expanded_explore_header
-pub fn expanded_explore_header(result VerifyResult, opts Options) {
+fn expanded_explore_header(result VerifyResult, opts Options) {
 	// println('Options: $opts')
 	if result.pos_neg_classes[0] != '' {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
@@ -199,7 +199,7 @@ pub fn expanded_explore_header(result VerifyResult, opts Options) {
 }
 
 // get_pos_neg_classes
-pub fn get_pos_neg_classes(class_counts map[string]int) []string {
+fn get_pos_neg_classes(class_counts map[string]int) []string {
 	mut pos_class := ''
 	mut neg_class := ''
 	if class_counts.len == 2 {

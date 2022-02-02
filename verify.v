@@ -81,7 +81,7 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 
 // classify_to_verify classifies each instance in an array, and
 // returns the results of the classification.
-pub fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyResult, opts Options) VerifyResult {
+fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyResult, opts Options) VerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := ClassifyResult{}

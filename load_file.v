@@ -198,7 +198,7 @@ fn infer_type_from_data(values []string) string {
 }
 
 // get_useful_continuous_attributes
-pub fn get_useful_continuous_attributes(ds Dataset) map[int][]f32 {
+fn get_useful_continuous_attributes(ds Dataset) map[int][]f32 {
 	// initialize the values of the result to -max_f32, to indicate missing values
 	// mut min_value := f32(0.)
 	// mut max_value := f32{0.}
@@ -217,7 +217,7 @@ pub fn get_useful_continuous_attributes(ds Dataset) map[int][]f32 {
 }
 
 // get_useful_discrete_attributes
-pub fn get_useful_discrete_attributes(ds Dataset) map[int][]string {
+fn get_useful_discrete_attributes(ds Dataset) map[int][]string {
 	mut disc_att := map[int][]string{}
 	for i in 0 .. ds.attribute_names.len {
 		if ds.inferred_attribute_types[i] == 'D' && string_element_counts(ds.data[i]).len != 1 {

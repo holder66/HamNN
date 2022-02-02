@@ -8,7 +8,7 @@ module main
 /*
 Specify in Options
 'fold', the total number of folds and 'current_fold', the fold number for this fold to be returned (the first fold is fold 1; changed to fold 0 on 2021-7-13).*/
-pub fn partition(current_fold int, folds int, ds Dataset, opts Options) (Dataset, Fold) {
+fn partition(current_fold int, folds int, ds Dataset, opts Options) (Dataset, Fold) {
 	// fold will be the fold instance, part_ds will be the rest of the dataset.
 	mut part_ds := ds
 	mut total_instances := ds.Class.class_values.len

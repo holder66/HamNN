@@ -5,7 +5,7 @@ module main
 import math
 
 // transpose a 2d array
-pub fn transpose<T>(matrix [][]T) [][]T {
+fn transpose<T>(matrix [][]T) [][]T {
 	mut matrix_t := [][]T{len: matrix[0].len, init: []T{len: matrix.len}}
 	for i, row_element in matrix {
 		for j, col_element in row_element {
@@ -16,7 +16,7 @@ pub fn transpose<T>(matrix [][]T) [][]T {
 }
 
 // string_element_counts returns a map with the counts for each element in an array of strings
-pub fn string_element_counts(array []string) map[string]int {
+fn string_element_counts(array []string) map[string]int {
 	mut counts := map[string]int{}
 	for word in array {
 		counts[word]++
@@ -25,7 +25,7 @@ pub fn string_element_counts(array []string) map[string]int {
 }
 
 // integer_element_counts returns a map with the counts for each element in an array of integers
-pub fn integer_element_counts(array []int) map[int]int {
+fn integer_element_counts(array []int) map[int]int {
 	mut counts := map[int]int{}
 	for word in array {
 		counts[word]++
@@ -42,14 +42,14 @@ pub fn integer_element_counts(array []int) map[int]int {
 // }
 
 // print_array
-pub fn print_array(array []string) {
+fn print_array(array []string) {
 	for line in array {
 		println(line)
 	}
 }
 
 // parse_range takes a string like '3,6,8' and returns [3, 6, 8]
-pub fn parse_range(arg string) []int {
+fn parse_range(arg string) []int {
 	mut str := arg
 	mut res := [arg.int()]
 	for _ in 0 .. (arg.len - 1) {
@@ -62,12 +62,12 @@ pub fn parse_range(arg string) []int {
 }
 
 // last returns the last element of a string array
-pub fn last(array []string) string {
+fn last(array []string) string {
 	return array[array.len - 1]
 }
 
 // get_map_values returns an array of a map's values (for integer values)
-pub fn get_map_values(input map[string]int) []int {
+fn get_map_values(input map[string]int) []int {
 	mut values := []int{}
 	for _, value in input {
 		values << value
@@ -76,7 +76,7 @@ pub fn get_map_values(input map[string]int) []int {
 }
 
 // get_integer_keys returns the keys for an integer map
-pub fn get_integer_keys(input map[int]int) []int {
+fn get_integer_keys(input map[int]int) []int {
 	mut keys := []int{}
 	for key, _ in input {
 		keys << key
@@ -85,7 +85,7 @@ pub fn get_integer_keys(input map[int]int) []int {
 }
 
 // get_string_keys returns the string keys for a map
-pub fn get_string_keys(input map[string]int) []string {
+fn get_string_keys(input map[string]int) []string {
 	mut keys := []string{}
 	for key, _ in input {
 		keys << key
@@ -104,7 +104,7 @@ alternatively, substitute -max_f32 for missing values
 use the previously calculated min and max to discretize. The routine should set the bin number to 0 when it encounters -max_f32
 */
 // pub fn discretize_attribute(values []f32, min f32, max f32, bins int) []int {
-pub fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
+fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
 	// println('$min  $max  $bins')
 	mut bin_values := []int{}
 	mut bin := bins
@@ -123,7 +123,7 @@ pub fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
 }
 
 // bin_values_array
-pub fn bin_values_array<T>(values []T, min T, max T, bins int) []byte {
+fn bin_values_array<T>(values []T, min T, max T, bins int) []byte {
 	bin_size := (max - min) / bins
 	mut bin_values := []byte{}
 	mut bin := byte(0)
@@ -141,7 +141,7 @@ pub fn bin_values_array<T>(values []T, min T, max T, bins int) []byte {
 }
 
 // bin_single_value
-pub fn bin_single_value<T>(value T, min T, max T, bins int) byte {
+fn bin_single_value<T>(value T, min T, max T, bins int) byte {
 	bin_size := (max - min) / bins
 	mut bin := byte(0)
 	if value == -math.max_f32 {
@@ -155,7 +155,7 @@ pub fn bin_single_value<T>(value T, min T, max T, bins int) byte {
 }
 
 // convert_to_one_bit
-pub fn convert_to_one_bit(value int) u32 {
+fn convert_to_one_bit(value int) u32 {
 	mut one_bit := u32(0)
 	if value == 1 {
 		one_bit = u32(1)
@@ -167,7 +167,7 @@ pub fn convert_to_one_bit(value int) u32 {
 
 // hamming_distance returns the Hamming distance between two arrays of bit
 // values; it is predicated on each value having at most one bit set.
-pub fn hamming_distance(a []u32, b []u32) int {
+fn hamming_distance(a []u32, b []u32) int {
 	mut sum := 0
 	for i in 0 .. a.len {
 		mut d := 0
@@ -184,7 +184,7 @@ pub fn hamming_distance(a []u32, b []u32) int {
 }
 
 // lcm returns the least common multiple of an array of integers
-pub fn lcm(arr []int) i64 {
+fn lcm(arr []int) i64 {
 	mut numbers := arr.clone()
 	mut res := i64(1)
 	mut x := 2
@@ -213,7 +213,7 @@ pub fn lcm(arr []int) i64 {
 }
 
 // array_min returns the minimum value in the array
-pub fn array_min<T>(a []T) T {
+fn array_min<T>(a []T) T {
 	// if a.len == 0 {
 	// 	return error('.min called on an empty array')
 	// }
@@ -227,7 +227,7 @@ pub fn array_min<T>(a []T) T {
 }
 
 // array_max returns the maximum the maximum value in the array
-pub fn array_max<T>(a []T) T {
+fn array_max<T>(a []T) T {
 	// if a.len == 0 {
 	// 	return error('.max called on an empty array')
 	// }
@@ -241,7 +241,7 @@ pub fn array_max<T>(a []T) T {
 }
 
 // array_sum returns the sum of an array's numeric values
-pub fn array_sum<T>(list []T) T {
+fn array_sum<T>(list []T) T {
 	// if list.len == 0 {
 	// 	return error('Cannot sum up array of nothing.')
 	// } else {
