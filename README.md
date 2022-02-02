@@ -1,5 +1,5 @@
 # hamnn
-A machine learning library for classification using a nearest neighbor algorithm based on Hamming distances.
+A machine learning library, and stand-alone CLI app, for classification using a nearest neighbor algorithm based on Hamming distances.
 
 ## Description
 
@@ -38,7 +38,7 @@ quickly identifies and removes from consideration variables which add noise
 - robotics
 - neural prosthetic devices, to enhance our senses, processing capacity and speed, memory
 
-## Installation
+## Installation of the stand-alone command line interface app:
 First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
 ```sh
 git clone https://github.com/vlang/v
@@ -79,11 +79,6 @@ Please see [clinical_calculator_example.md](https://github.com/holder66/hamnn/bl
 Please see a worked example here: [noisy_data.md](https://github.com/holder66/hamnn/blob/main/noisy_data.md)
 
 
-## Previous versions
-The most recent version (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.
-
-The process of development in its early stages is described in [this essay](https://henry.olders.ca/wordpress/?p=731) written in 1989.
-
 ## Glossary of terms
 **instances:** synonyms: cases; records; examples
 - instances can be grouped into sets, eg training set, test set, validation set
@@ -113,6 +108,12 @@ The process of development in its early stages is described in [this essay](http
 
 **continuous:** (as applied to a attribute or variable): real-valued
 - ordinal data with a range greater than a certain parameter may also be treated as continous data
+
+
+## Previous versions
+The most recent version (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.
+
+The process of development in its early stages is described in [this essay](https://henry.olders.ca/wordpress/?p=731) written in 1989.
 
 
 
