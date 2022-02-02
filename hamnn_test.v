@@ -4,7 +4,9 @@ module main
 import os
 import tools
 
-//
+// fn testsuite_begin() {
+// 	os.execute_or_panic(v -gc boehm .)
+// }
 
 // test_load_file_newer verify that load_file works with an orange-newer datafile
 fn test_load_file_newer() {
@@ -18,7 +20,7 @@ fn test_load_file_newer() {
 
 // test_analyze_datafile
 fn test_analyze_datafile() {
-	os.execute_or_panic('v hamnn.v')
+	// os.execute_or_panic('v hamnn.v')
 	println(os.execute_or_panic('./hamnn'))
 	println(os.execute_or_panic('./hamnn analyze datasets/developer.tab'))
 	println(os.execute_or_panic('./hamnn analyze datasets/bcw174test'))
@@ -27,7 +29,7 @@ fn test_analyze_datafile() {
 
 // test_rank_attributes
 fn test_rank_attributes() {
-	os.execute_or_panic('v hamnn.v')
+	// os.execute_or_panic('v hamnn.v')
 	println(os.execute_or_panic('./hamnn rank -h'))
 	println(os.execute_or_panic('./hamnn rank'))
 	println(os.execute_or_panic('./hamnn rank datasets/developer.tab'))

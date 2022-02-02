@@ -3,15 +3,15 @@ module main
 
 import os
 import tools
-import analyze
-import append
-import rank
-import make
-import query
-import verify
-import validate
-import cross
-import explore
+// import analyze
+// import append
+// import rank
+// import make
+// import query
+// import verify
+// import validate
+// import cross
+// import explore
 import display
 import os.cmdline as oscmdline
 import time
@@ -69,16 +69,16 @@ pub fn main() {
 	} else {
 		match opts.command {
 			'analyze' { analyze(opts) }
-			'append' { append(opts) ? }
+			'append' { do_append(opts) ? }
 			'cross' { cross(opts) }
 			'display' { display(opts) }
-			'explore' { explore(opts) }
+			'explore' { do_explore(opts) }
 			'make' { make(opts) ? }
 			'orange' { orange() }
-			'query' { query(opts) ? }
+			'query' { do_query(opts) ? }
 			'rank' { rank(opts) }
-			'validate' { validate(opts) ? }
-			'verify' { verify(opts) ? }
+			'validate' { do_validate(opts) ? }
+			'verify' { do_verify(opts) ? }
 			else { println('unrecognized command') }
 		}
 	}
@@ -174,58 +174,58 @@ fn flag(args []string, what []string) bool {
 
 // analyze
 fn analyze(opts tools.Options) {
-	tools.print_array(analyze.analyze_dataset(tools.load_file(opts.datafile_path)))
+	tools.print_array(analyze_dataset(tools.load_file(opts.datafile_path)))
 }
 
 // append appends instances in a file, to a classifier in a file specified
 // by flag -k, and (optionally) stores the extended classifier in a file
 // specified by -o. It returns the extended classifier.
-fn append(opts tools.Options) ?tools.Classifier {
-	return append.append(opts)
+fn do_append(opts tools.Options) ?tools.Classifier {
+	return append(opts)
 }
 
 // query
-fn query(opts tools.Options) ?tools.ClassifyResult {
+fn do_query(opts tools.Options) ?tools.ClassifyResult {
 	if opts.classifierfile_path == '' {
-		return query.query(make(opts) ?, opts)
+		return query(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
-		return query.query(make(opts) ?, opts)
+		return query(make(opts) ?, opts)
 	}
 }
 
 // verify
-fn verify(opts tools.Options) ?tools.VerifyResult {
+fn do_verify(opts tools.Options) ?tools.VerifyResult {
 	println(opts)
 	if opts.classifierfile_path == '' {
-		return verify.verify(make(opts) ?, opts)
+		return verify(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
-		return verify.verify(cl, opts)
+		return verify(cl, opts)
 	}
 }
 
 // validate
-fn validate(opts tools.Options) ?tools.ValidateResult {
+fn do_validate(opts tools.Options) ?tools.ValidateResult {
 	if opts.classifierfile_path == '' {
-		return validate.validate(make(opts) ?, opts)
+		return validate(make(opts) ?, opts)
 	} else {
 		cl := tools.load_classifier_file(opts.classifierfile_path) ?
 		tools.show_classifier(cl)
-		return validate.validate(cl, opts)
+		return validate(cl, opts)
 	}
 }
 
 // cross
 fn cross(opts tools.Options) {
-	cross.cross_validate(tools.load_file(opts.datafile_path), opts)
+	cross_validate(tools.load_file(opts.datafile_path), opts)
 }
 
 // explore
-fn explore(opts tools.Options) {
-	explore.explore(tools.load_file(opts.datafile_path), opts)
+fn do_explore(opts tools.Options) {
+	explore(tools.load_file(opts.datafile_path), opts)
 }
 
 // orange
@@ -235,12 +235,12 @@ fn orange() {
 // rank returns an array of attributes sorted
 // according to their capacity to separate the classes
 fn rank(opts tools.Options) []tools.RankedAttribute {
-	return rank.rank_attributes(tools.load_file(opts.datafile_path), opts)
+	return rank_attributes(tools.load_file(opts.datafile_path), opts)
 }
 
 // make returns a Classifier struct
 fn make(opts tools.Options) ?tools.Classifier {
-	return make.make_classifier(tools.load_file(opts.datafile_path), opts)
+	return make_classifier(tools.load_file(opts.datafile_path), opts)
 }
 
 // display outputs to the console or graphs a previously saved result
