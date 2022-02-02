@@ -5,20 +5,20 @@ Given a classifier and a verification dataset, classifies each instance
   comparing the predicted classes to the assigned classes.*/
 module main
 
-import tools
+// import tools
 // import classify
 import runtime
 
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
-pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
+pub fn verify(cl Classifier, opts Options) VerifyResult {
 	// load the testfile as a Dataset struct
-	mut test_ds := tools.load_file(opts.testfile_path)
+	mut test_ds := load_file(opts.testfile_path)
 	// instantiate a struct for the result
-	mut verify_result := tools.VerifyResult{
+	mut verify_result := VerifyResult{
 		labeled_classes: test_ds.Class.class_values
-		pos_neg_classes: tools.get_pos_neg_classes(test_ds.class_counts)
+		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 	}
 	mut confusion_matrix_row := map[string]int{}
 	// for each class, instantiate an entry in the confusion matrix row
@@ -27,7 +27,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	}
 	// for each class, instantiate an entry in the class table
 	for key, value in test_ds.Class.class_counts {
-		verify_result.class_table[key] = tools.ResultForClass{
+		verify_result.class_table[key] = ResultForClass{
 			labeled_instances: value
 			confusion_matrix_row: confusion_matrix_row.clone()
 		}
@@ -37,7 +37,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	tools.show_results(verify_result, opts)
+	show_results(verify_result, opts)
 	if opts.verbose_flag && opts.command == 'verify' {
 		// println('verify_result.class_table in verify: $verify_result.class_table')
 	}
@@ -45,7 +45,7 @@ pub fn verify(cl tools.Classifier, opts tools.Options) tools.VerifyResult {
 }
 
 // generate_test_instances_array
-fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][]byte {
+fn generate_test_instances_array(cl Classifier, test_ds Dataset) [][]byte {
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
 	mut test_attr_binned_values := [][]byte{}
@@ -58,7 +58,7 @@ fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][
 			}
 		}
 		if cl.trained_attributes[attr].attribute_type == 'C' {
-			test_binned_values = tools.discretize_attribute<f32>(test_ds.useful_continuous_attributes[test_index],
+			test_binned_values = discretize_attribute<f32>(test_ds.useful_continuous_attributes[test_index],
 				cl.trained_attributes[attr].minimum, cl.trained_attributes[attr].maximum,
 				cl.trained_attributes[attr].bins)
 		} else { // ie for discrete attributes
@@ -66,11 +66,11 @@ fn generate_test_instances_array(cl tools.Classifier, test_ds tools.Dataset) [][
 		}
 		test_attr_binned_values << test_binned_values.map(byte(it))
 	}
-	return tools.transpose(test_attr_binned_values)
+	return transpose(test_attr_binned_values)
 }
 
 // option_worker_verify
-fn option_worker_verify(work_channel chan int, result_channel chan tools.ClassifyResult, cl tools.Classifier, test_instances [][]byte, labeled_classes []string, opts tools.Options) {
+fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResult, cl Classifier, test_instances [][]byte, labeled_classes []string, opts Options) {
 	mut index := <-work_channel
 	mut classify_result := classify_instance(cl, test_instances[index], opts)
 	classify_result.labeled_class = labeled_classes[index]
@@ -81,18 +81,18 @@ fn option_worker_verify(work_channel chan int, result_channel chan tools.Classif
 
 // classify_to_verify classifies each instance in an array, and
 // returns the results of the classification.
-pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut result tools.VerifyResult, opts tools.Options) tools.VerifyResult {
+pub fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyResult, opts Options) VerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
-	mut classify_result := tools.ClassifyResult{}
+	mut classify_result := ClassifyResult{}
 	// println('result in classify_to_verify: $result')
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: runtime.nr_jobs()}
-		mut result_channel := chan tools.ClassifyResult{cap: test_instances.len}
+		mut result_channel := chan ClassifyResult{cap: test_instances.len}
 		for i, _ in test_instances {
 			work_channel <- i
-			go option_worker_verify(work_channel, result_channel, cl, test_instances, result.labeled_classes,
-				opts)
+			go option_worker_verify(work_channel, result_channel, cl, test_instances,
+				result.labeled_classes, opts)
 		}
 		for _ in test_instances {
 			classify_result = <-result_channel
@@ -127,7 +127,7 @@ pub fn classify_to_verify(cl tools.Classifier, test_instances [][]byte, mut resu
 }
 
 // summarize_results
-fn summarize_results(mut result tools.VerifyResult) tools.VerifyResult {
+fn summarize_results(mut result VerifyResult) VerifyResult {
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		result.correct_count += value.correct_inferences

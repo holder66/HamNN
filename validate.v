@@ -4,7 +4,7 @@ Given a classifier and a validation dataset, classifies each instance
   of the validation_set on the trained classifier; returns the predicted classes for each instance of the validation_set.*/
 module main
 
-import tools
+// import tools
 // import classify
 import json
 import os
@@ -14,11 +14,11 @@ import os
 // of the validation_set.
 // Optionally, saves the instances and their predicted classes in a file.
 // This file can be used to append these instances to the classifier.
-pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
+pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	// load the testfile as a Dataset struct
-	mut test_ds := tools.load_file(opts.testfile_path)
+	mut test_ds := load_file(opts.testfile_path)
 	// instantiate a struct for the result
-	mut validate_result := tools.ValidateResult{
+	mut validate_result := ValidateResult{
 		inferred_classes: []string{}
 	}
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
@@ -33,7 +33,7 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 			}
 		}
 		if cl.trained_attributes[attr].attribute_type == 'C' {
-			test_binned_values = tools.discretize_attribute<f32>(test_ds.useful_continuous_attributes[test_index],
+			test_binned_values = discretize_attribute<f32>(test_ds.useful_continuous_attributes[test_index],
 				cl.trained_attributes[attr].minimum, cl.trained_attributes[attr].maximum,
 				cl.trained_attributes[attr].bins)
 		} else { // ie for discrete attributes
@@ -41,7 +41,7 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 		}
 		test_attr_binned_values << test_binned_values.map(byte(it))
 	}
-	test_instances := tools.transpose(test_attr_binned_values)
+	test_instances := transpose(test_attr_binned_values)
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
 	if opts.show_flag && opts.command == 'validate' {
@@ -59,9 +59,9 @@ pub fn validate(cl tools.Classifier, opts tools.Options) ?tools.ValidateResult {
 }
 
 // classify_to_validate
-fn classify_to_validate(cl tools.Classifier, test_instances [][]byte, mut result tools.ValidateResult, opts tools.Options) tools.ValidateResult {
+fn classify_to_validate(cl Classifier, test_instances [][]byte, mut result ValidateResult, opts Options) ValidateResult {
 	result.Class = cl.Class
-	mut classify_result := tools.ClassifyResult{}
+	mut classify_result := ClassifyResult{}
 	// for each instance in the test data, perform a classification
 	for test_instance in test_instances {
 		classify_result = classify_instance(cl, test_instance, opts)

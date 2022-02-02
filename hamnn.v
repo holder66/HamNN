@@ -2,7 +2,7 @@
 module main
 
 import os
-import tools
+// import tools
 // import analyze
 // import append
 // import rank
@@ -12,7 +12,6 @@ import tools
 // import validate
 // import cross
 // import explore
-import display
 import os.cmdline as oscmdline
 import time
 import math
@@ -71,7 +70,7 @@ pub fn main() {
 			'analyze' { analyze(opts) }
 			'append' { do_append(opts) ? }
 			'cross' { cross(opts) }
-			'display' { display(opts) }
+			// 'display' { display(opts) }
 			'explore' { do_explore(opts) }
 			'make' { make(opts) ? }
 			'orange' { orange() }
@@ -89,8 +88,8 @@ pub fn main() {
 }
 
 // get_options fills an Options struct with values from the command line
-fn get_options(args []string) tools.Options {
-	mut opts := tools.Options{
+fn get_options(args []string) Options {
+	mut opts := Options{
 		args: args
 	}
 	if (flag(args, ['-h', '--help', 'help']) && args.len == 2) || args.len <= 1 {
@@ -99,10 +98,10 @@ fn get_options(args []string) tools.Options {
 	opts.non_options = oscmdline.only_non_options(args)
 	if opts.non_options.len > 0 {
 		opts.command = opts.non_options[0]
-		opts.datafile_path = tools.last(opts.non_options)
+		opts.datafile_path = last(opts.non_options)
 	}
 	if option(args, ['-b', '--bins']) != '' {
-		opts.bins = tools.parse_range(option(args, ['-b', '--bins']))
+		opts.bins = parse_range(option(args, ['-b', '--bins']))
 	}
 	opts.concurrency_flag = flag(args, ['-c', '--concurrent'])
 	opts.exclude_flag = flag(args, ['-x', '--exclude'])
@@ -113,7 +112,7 @@ fn get_options(args []string) tools.Options {
 	opts.show_flag = flag(args, ['-s', '--show'])
 	opts.expanded_flag = flag(args, ['-e', '--expanded'])
 	if option(args, ['-a', '--attributes']) != '' {
-		opts.number_of_attributes = tools.parse_range(option(args, ['-a', '--attributes']))
+		opts.number_of_attributes = parse_range(option(args, ['-a', '--attributes']))
 	}
 	if option(args, ['-f', '--folds']) != '' {
 		opts.folds = option(args, ['-f', '--folds']).int()
@@ -128,20 +127,20 @@ fn get_options(args []string) tools.Options {
 }
 
 // show_help
-fn show_help(opts tools.Options) string {
+fn show_help(opts Options) string {
 	return match opts.command {
-		'rank' { tools.rank_help }
-		'query' { tools.query_help }
-		'analyze' { tools.analyze_help }
-		'append' { tools.append_help }
-		'make' { tools.make_help }
-		'orange' { tools.orange_help }
-		'verify' { tools.verify_help }
-		'cross' { tools.cross_help }
-		'explore' { tools.explore_help }
-		'validate' { tools.validate_help }
-		'display' { tools.display_help }
-		else { tools.hamnn_help }
+		'rank' { rank_help }
+		'query' { query_help }
+		'analyze' { analyze_help }
+		'append' { append_help }
+		'make' { make_help }
+		'orange' { orange_help }
+		'verify' { verify_help }
+		'cross' { cross_help }
+		'explore' { explore_help }
+		'validate' { validate_help }
+		'display' { display_help }
+		else { hamnn_help }
 	}
 }
 
@@ -173,59 +172,59 @@ fn flag(args []string, what []string) bool {
 }
 
 // analyze
-fn analyze(opts tools.Options) {
-	tools.print_array(analyze_dataset(tools.load_file(opts.datafile_path)))
+fn analyze(opts Options) {
+	print_array(analyze_dataset(load_file(opts.datafile_path)))
 }
 
 // append appends instances in a file, to a classifier in a file specified
 // by flag -k, and (optionally) stores the extended classifier in a file
 // specified by -o. It returns the extended classifier.
-fn do_append(opts tools.Options) ?tools.Classifier {
+fn do_append(opts Options) ?Classifier {
 	return append(opts)
 }
 
 // query
-fn do_query(opts tools.Options) ?tools.ClassifyResult {
+fn do_query(opts Options) ?ClassifyResult {
 	if opts.classifierfile_path == '' {
 		return query(make(opts) ?, opts)
 	} else {
-		cl := tools.load_classifier_file(opts.classifierfile_path) ?
-		tools.show_classifier(cl)
+		cl := load_classifier_file(opts.classifierfile_path) ?
+		show_classifier(cl)
 		return query(make(opts) ?, opts)
 	}
 }
 
 // verify
-fn do_verify(opts tools.Options) ?tools.VerifyResult {
+fn do_verify(opts Options) ?VerifyResult {
 	println(opts)
 	if opts.classifierfile_path == '' {
 		return verify(make(opts) ?, opts)
 	} else {
-		cl := tools.load_classifier_file(opts.classifierfile_path) ?
-		tools.show_classifier(cl)
+		cl := load_classifier_file(opts.classifierfile_path) ?
+		show_classifier(cl)
 		return verify(cl, opts)
 	}
 }
 
 // validate
-fn do_validate(opts tools.Options) ?tools.ValidateResult {
+fn do_validate(opts Options) ?ValidateResult {
 	if opts.classifierfile_path == '' {
 		return validate(make(opts) ?, opts)
 	} else {
-		cl := tools.load_classifier_file(opts.classifierfile_path) ?
-		tools.show_classifier(cl)
+		cl := load_classifier_file(opts.classifierfile_path) ?
+		show_classifier(cl)
 		return validate(cl, opts)
 	}
 }
 
 // cross
-fn cross(opts tools.Options) {
-	cross_validate(tools.load_file(opts.datafile_path), opts)
+fn cross(opts Options) {
+	cross_validate(load_file(opts.datafile_path), opts)
 }
 
 // explore
-fn do_explore(opts tools.Options) {
-	explore(tools.load_file(opts.datafile_path), opts)
+fn do_explore(opts Options) {
+	explore(load_file(opts.datafile_path), opts)
 }
 
 // orange
@@ -234,16 +233,16 @@ fn orange() {
 
 // rank returns an array of attributes sorted
 // according to their capacity to separate the classes
-fn rank(opts tools.Options) []tools.RankedAttribute {
-	return rank_attributes(tools.load_file(opts.datafile_path), opts)
+fn rank(opts Options) []RankedAttribute {
+	return rank_attributes(load_file(opts.datafile_path), opts)
 }
 
 // make returns a Classifier struct
-fn make(opts tools.Options) ?tools.Classifier {
-	return make_classifier(tools.load_file(opts.datafile_path), opts)
+fn make(opts Options) ?Classifier {
+	return make_classifier(load_file(opts.datafile_path), opts)
 }
 
 // display outputs to the console or graphs a previously saved result
-fn display(opts tools.Options) {
-	display.display(opts)
-}
+// fn display(opts Options) {
+// 	display.display(opts)
+// }

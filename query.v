@@ -1,7 +1,7 @@
 // query.v
 module main
 
-import tools
+// import tools
 // import classify
 import readline
 import strconv
@@ -14,10 +14,10 @@ import os
 // confirmed, the instance is classified and the inferred class is shown.
 // The classified instance can optionally be saved in a file.
 // The saved instance can be appended to the classifier using append.append().
-pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
+pub fn query(cl Classifier, opts Options) ClassifyResult {
 	mut answer := ''
-	mut classify_result := tools.ClassifyResult{}
-	mut validate_result := tools.ValidateResult{
+	mut classify_result := ClassifyResult{}
+	mut validate_result := ValidateResult{
 		Class: cl.Class
 	}
 	mut byte_values := []byte{}
@@ -81,7 +81,7 @@ pub fn query(cl tools.Classifier, opts tools.Options) tools.ClassifyResult {
 }
 
 // get_byte_values
-fn get_byte_values(cl tools.Classifier, responses map[string]string) []byte {
+fn get_byte_values(cl Classifier, responses map[string]string) []byte {
 	mut byte_values := []byte{}
 	for attr in cl.attribute_ordering {
 		// if discrete, use translation table to get a "binned value" equivalent
@@ -91,7 +91,7 @@ fn get_byte_values(cl tools.Classifier, responses map[string]string) []byte {
 			if responses[attr] == '' {
 				byte_values << byte(0)
 			} else {
-				byte_values << tools.bin_single_value(f32(strconv.atof_quick(responses[attr])),
+				byte_values << bin_single_value(f32(strconv.atof_quick(responses[attr])),
 					cl.trained_attributes[attr].minimum, cl.trained_attributes[attr].maximum,
 					cl.trained_attributes[attr].bins)
 			}

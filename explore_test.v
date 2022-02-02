@@ -1,12 +1,12 @@
 // explore_test.v
 module main
 
-import tools
+// import tools
 // import os
 
 fn test_explore_cross() ? {
-	mut results := []tools.VerifyResult{}
-	mut opts := tools.Options{
+	mut results := []VerifyResult{}
+	mut opts := Options{
 		verbose_flag: false
 		number_of_attributes: [1, 4]
 		bins: [2, 12]
@@ -15,7 +15,7 @@ fn test_explore_cross() ? {
 		uniform_bins: true
 		datafile_path: 'datasets/iris.tab'
 	}
-	mut ds := tools.load_file(opts.datafile_path)
+	mut ds := load_file(opts.datafile_path)
 	results = explore(ds, opts)
 	// println(results)
 	assert results[0].correct_count == 100
@@ -36,7 +36,7 @@ fn test_explore_cross() ? {
 	opts.weighting_flag = true
 	opts.datafile_path = 'datasets/anneal.tab'
 	opts.uniform_bins = true
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	results = explore(ds, opts)
 	assert results[1].correct_count == 875
 	assert results[1].misses_count == 23
@@ -52,13 +52,13 @@ fn test_explore_cross() ? {
 }
 
 fn test_explore_verify() {
-	mut opts := tools.Options{
+	mut opts := Options{
 		concurrency_flag: true
 		weighting_flag: true
 		testfile_path: 'datasets/bcw174test'
 		datafile_path: 'datasets/bcw350train'
 	}
-	mut ds := tools.load_file(opts.datafile_path)
+	mut ds := load_file(opts.datafile_path)
 	mut results := explore(ds, opts)
 	assert results[7].correct_count == 170
 	assert results[7].wrong_count == 4

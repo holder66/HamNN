@@ -1,7 +1,7 @@
 // cross_validate.v
 module main
 
-import tools
+// import tools
 // import partition
 // import make
 // import verify
@@ -10,13 +10,13 @@ import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
 // Type: `v run hamnn.v cross --help`
-pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
+pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	cross_opts := opts
 	mut folds := opts.folds
-	mut fold_result := tools.VerifyResult{}
-	mut cross_result := tools.VerifyResult{
+	mut fold_result := VerifyResult{}
+	mut cross_result := VerifyResult{
 		labeled_classes: ds.Class.class_values
-		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
+		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 	}
 	// instantiate a confusion_matrix_row
 	mut confusion_matrix_row := map[string]int{}
@@ -30,14 +30,14 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 
 	// instantiate an entry for each class in the cross_result class_table
 	for key, value in ds.Class.class_counts {
-		cross_result.class_table[key] = tools.ResultForClass{
+		cross_result.class_table[key] = ResultForClass{
 			labeled_instances: value
 			confusion_matrix_row: confusion_matrix_row.clone()
 		}
 	}
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
-		mut result_channel := chan tools.VerifyResult{cap: folds}
+		mut result_channel := chan VerifyResult{cap: folds}
 		// queue all work + the sentinel values:
 		jobs := runtime.nr_jobs()
 		mut work_channel := chan int{cap: folds + jobs}
@@ -66,17 +66,17 @@ pub fn cross_validate(ds tools.Dataset, opts tools.Options) tools.VerifyResult {
 		}
 	}
 	cross_result = finalize_cross_result(mut cross_result)
-	tools.show_results(cross_result, cross_opts)
+	show_results(cross_result, cross_opts)
 	return cross_result
 }
 
 // do_one_fold
-fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.Options) tools.VerifyResult {
+fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) VerifyResult {
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(current_fold, folds, ds, cross_opts)
 	// println('fold: $fold')
-	mut fold_result := tools.VerifyResult{
+	mut fold_result := VerifyResult{
 		labeled_classes: fold.class_values
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
@@ -87,7 +87,7 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
-	fold_instances := tools.transpose(byte_values_array)
+	fold_instances := transpose(byte_values_array)
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
@@ -97,24 +97,22 @@ fn do_one_fold(current_fold int, folds int, ds tools.Dataset, cross_opts tools.O
 		confusion_matrix_row[key] = 0
 	}
 	for key, value in part_cl.Class.class_counts {
-		fold_result.class_table[key] = tools.ResultForClass{
+		fold_result.class_table[key] = ResultForClass{
 			labeled_instances: value
 			confusion_matrix_row: confusion_matrix_row.clone()
 		}
 	}
-	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result,
-		cross_opts)
+	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result, cross_opts)
 	return fold_result
 }
 
 // process_fold_data
-fn process_fold_data(part_attr tools.TrainedAttribute, fold_data []string) []byte {
+fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 	mut byte_vals := []byte{cap: fold_data.len}
 	// for a continuous attribute
 	if part_attr.attribute_type == 'C' {
 		values := fold_data.map(f32(strconv.atof_quick(it)))
-		byte_vals << tools.bin_values_array(values, part_attr.minimum, part_attr.maximum,
-			part_attr.bins)
+		byte_vals << bin_values_array(values, part_attr.minimum, part_attr.maximum, part_attr.bins)
 	} else {
 		byte_vals << fold_data.map(byte(part_attr.translation_table[it]))
 	}
@@ -122,7 +120,7 @@ fn process_fold_data(part_attr tools.TrainedAttribute, fold_data []string) []byt
 }
 
 // update_cross_result
-fn update_cross_result(fold_result tools.VerifyResult, mut cross_result tools.VerifyResult) tools.VerifyResult {
+fn update_cross_result(fold_result VerifyResult, mut cross_result VerifyResult) VerifyResult {
 	// for each class, add the fold counts to the cross_result counts
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
@@ -142,7 +140,7 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 }
 
 // finalize_cross_result
-fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult {
+fn finalize_cross_result(mut cross_result VerifyResult) VerifyResult {
 	for _, mut value in cross_result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		cross_result.correct_count += value.correct_inferences
@@ -167,7 +165,7 @@ fn finalize_cross_result(mut cross_result tools.VerifyResult) tools.VerifyResult
 }
 
 // option_worker
-fn option_worker(work_channel chan int, result_channel chan tools.VerifyResult, folds int, ds tools.Dataset, opts tools.Options) {
+fn option_worker(work_channel chan int, result_channel chan VerifyResult, folds int, ds Dataset, opts Options) {
 	for {
 		mut current_fold := <-work_channel
 		if current_fold < 0 {

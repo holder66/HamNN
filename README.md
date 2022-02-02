@@ -55,6 +55,15 @@ v .                     # compiles all the files in the folder
 # and options available. More specific help information
 # is available for each command.
 ```
+## Memory leak problem:
+
+At the present time, the best way to prevent a memory leak (which may eventually
+ cause the program to be "killed" by the OS when the available memory is exceeded) is to compile with the gc flag, eg:
+
+ ```sh
+ v -gc boehm .
+ ```
+You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 
 ## Examples showing use of the Command Line Interface
 Please see [examples_of_command_line_usage.md](https://github.com/holder66/hamnn/blob/main/examples_of_command_line_usage.md)
@@ -69,15 +78,6 @@ Please see [clinical_calculator_example.md](https://github.com/holder66/hamnn/bl
 
 Please see a worked example here: [noisy_data.md](https://github.com/holder66/hamnn/blob/main/noisy_data.md)
 
-## Memory leak problem:
-
-At the present time, the best way to prevent a memory leak (which may eventually
- cause the program to be "killed" by the OS when the available memory is exceeded) is to compile with the gc flag, eg:
-
- ```sh
- v -gc boehm .
- ```
-You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 
 ## Previous versions
 The most recent version (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.

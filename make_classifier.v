@@ -4,7 +4,7 @@
 // actually, more fruitful might be just to use the u8 type, since it is unlikely that there would be more than 255 values for discrete attributes. And in this situation, compression is unnecessary, since we do not need bitstrings to get Hamming distances when only positive integers are involved.
 module main
 
-import tools
+// import tools
 // import rank
 // import arrays
 import math
@@ -13,7 +13,7 @@ import os
 import json
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
-// tools.load_file).
+// load_file).
 // ```sh
 // Options: bins = number of bins or slices for continuous attributes;
 // number_of_attributes = the number of attributes to include in
@@ -21,8 +21,8 @@ import json
 // exclude_flag = true to exclude missing values when ranking attributes;
 // outputfile_path specifies if and where to save the classifier as a file;
 // ```
-pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
-	mut cl := tools.Classifier{
+pub fn make_classifier(ds Dataset, opts Options) Classifier {
+	mut cl := Classifier{
 		utc_date_time: time.utc()
 		Class: ds.Class
 		Options: opts
@@ -30,7 +30,7 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	if opts.weighting_flag {
-		cl.lcm_class_counts = i64(tools.lcm(tools.get_map_values(ds.class_counts)))
+		cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
 	}
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
@@ -54,10 +54,10 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 		attr_names << ra.attribute_name
 		if ra.inferred_attribute_type == 'C' {
 			attr_values = ds.useful_continuous_attributes[ra.attribute_index]
-			min = tools.min(attr_values.filter(it != -math.max_f32))
-			max = tools.max(attr_values)
-			binned_values = tools.discretize_attribute(attr_values, min, max, ra.bins)
-			cl.trained_attributes[ra.attribute_name] = tools.TrainedAttribute{
+			min = array_min(attr_values.filter(it != -math.max_f32))
+			max = array_max(attr_values)
+			binned_values = discretize_attribute(attr_values, min, max, ra.bins)
+			cl.trained_attributes[ra.attribute_name] = TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type
 				minimum: min
 				maximum: max
@@ -68,21 +68,21 @@ pub fn make_classifier(ds tools.Dataset, opts tools.Options) tools.Classifier {
 			translation_table = make_translation_table(attr_string_values)
 			// use the translation table to generate an array of translated values
 			binned_values = attr_string_values.map(translation_table[it])
-			cl.trained_attributes[ra.attribute_name] = tools.TrainedAttribute{
+			cl.trained_attributes[ra.attribute_name] = TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type
 				translation_table: translation_table
 			}
 		}
 		attr_binned_values << binned_values.map(byte(it))
 	}
-	cl.instances = tools.transpose(attr_binned_values)
+	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
 	if opts.show_flag && opts.command == 'make' {
-		tools.show_classifier(cl)
+		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
 		// get the environment used in generating this classifier
-		cl.Environment = tools.get_environment()
+		cl.Environment = get_environment()
 		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
@@ -100,7 +100,7 @@ fn make_translation_table(array []string) map[string]int {
 	mut val := map[string]int{}
 	mut i := 1
 	for word in array {
-		if word in tools.missings {
+		if word in missings {
 			val[word] = 0
 			continue
 		} else if val[word] == 0 {

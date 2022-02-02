@@ -1,7 +1,7 @@
 // validate_test.v
 module main
 
-import tools
+// import tools
 // import make
 import os
 
@@ -18,7 +18,7 @@ fn testsuite_end() ? {
 
 // test_validate_save_result
 // fn test_validate_save_result() ? {
-// 	mut opts := tools.Options{
+// 	mut opts := Options{
 // 		verbose_flag: false
 // 		command: 'validate'
 // 		show_flag: false
@@ -26,26 +26,26 @@ fn testsuite_end() ? {
 // 		outputfile_path: 'tempfolder/instancesfile'
 // 	}
 
-// 	mut result := tools.ValidateResult{}
-// 	mut test_result := tools.ValidateResult{}
-// 	mut ds := tools.Dataset{}
-// 	mut cl := tools.Classifier{}
-// 	mut saved_cl := tools.Classifier{}
+// 	mut result := ValidateResult{}
+// 	mut test_result := ValidateResult{}
+// 	mut ds := Dataset{}
+// 	mut cl := Classifier{}
+// 	mut saved_cl := Classifier{}
 // }
 
 // test_validate
 fn test_validate() ? {
-	mut opts := tools.Options{
+	mut opts := Options{
 		verbose_flag: false
 		show_flag: false
 		concurrency_flag: true
 	}
 
-	mut result := tools.ValidateResult{}
-	mut test_result := tools.ValidateResult{}
-	mut ds := tools.Dataset{}
-	mut cl := tools.Classifier{}
-	mut saved_cl := tools.Classifier{}
+	mut result := ValidateResult{}
+	mut test_result := ValidateResult{}
+	mut ds := Dataset{}
+	mut cl := Classifier{}
+	mut saved_cl := Classifier{}
 
 	// test validate with a non-saved classifier
 	opts.command = 'validate'
@@ -54,7 +54,7 @@ fn test_validate() ? {
 	opts.classifierfile_path = ''
 	opts.bins = [2, 3]
 	opts.number_of_attributes = [2]
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
@@ -68,7 +68,7 @@ fn test_validate() ? {
 	opts.classifierfile_path = ''
 	opts.number_of_attributes = [4]
 	opts.bins = [2, 4]
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
@@ -187,12 +187,12 @@ fn test_validate() ? {
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
 	opts.weighting_flag = true
-	cl = tools.Classifier{}
-	result = tools.ValidateResult{}
+	cl = Classifier{}
+	result = ValidateResult{}
 	cl = make_classifier(ds, opts)
-	cl = tools.Classifier{}
+	cl = Classifier{}
 	opts.classifierfile_path = opts.outputfile_path
-	result = validate(tools.load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = validate(load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign',
@@ -258,7 +258,7 @@ fn test_validate() ? {
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	// reset the outputfile_path so that validate won't overwrite the classifier
 	opts.outputfile_path = ''
@@ -267,7 +267,7 @@ fn test_validate() ? {
 	s := result.inferred_classes[0..4]
 	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
 		'diaporthe-stem-canker']
-	tcl := tools.load_classifier_file('tempfolder/classifierfile') ?
+	tcl := load_classifier_file('tempfolder/classifierfile') ?
 	test_result = validate(tcl, opts) ?
 
 	assert result.inferred_classes == test_result.inferred_classes

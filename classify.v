@@ -1,7 +1,7 @@
 // classify.v
 module main
 
-import tools
+// import tools
 // import arrays
 
 // classify_instance takes a trained classifier and an instance to be
@@ -9,20 +9,20 @@ import tools
 // The classification algorithm gets Hamming distances between the instance
 // to be classified and all the instances in the trained classifier, and
 // infers class based on minimum Hamming distance.
-pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, opts tools.Options) tools.ClassifyResult {
+pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
 	// mut lcm_class_counts := i64(0)
 	// if opts.weighting_flag {
-	// 	lcm_class_counts = i64(tools.lcm(tools.get_map_values(cl.class_counts)))
+	// 	lcm_class_counts = i64(lcm(get_map_values(cl.class_counts)))
 	// }
 	mut results := [][]int{len: 10000, init: []int{len: cl.class_counts.len}}
 	// mut results := [][]int{}
 
 	mut hamming_dist_array := []int{}
 	mut hamming_dist := 0
-	mut classify_result := tools.ClassifyResult{}
+	mut classify_result := ClassifyResult{}
 	for instance in cl.instances {
 		hamming_dist = 0
 		for i, byte_value in instance_to_be_classified {
@@ -32,11 +32,11 @@ pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, 
 		hamming_dist_array << hamming_dist
 	}
 	// get counts of unique hamming distance values and sort
-	counts := tools.integer_element_counts(hamming_dist_array)
+	counts := integer_element_counts(hamming_dist_array)
 
 	// println('counts: $counts')
 
-	mut distances := tools.get_integer_keys(counts)
+	mut distances := get_integer_keys(counts)
 	distances.sort()
 
 	// println('distances: $distances')
@@ -45,7 +45,7 @@ pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, 
 	// for each distance in distances, get the classes for instances this
 	// distance away
 	// first, get an array of unique class values
-	classes := tools.get_string_keys(tools.string_element_counts(cl.class_values))
+	classes := get_string_keys(string_element_counts(cl.class_values))
 	for i, dist in distances {
 		for j, instance_dist in hamming_dist_array {
 			for k, class in classes {
@@ -73,7 +73,7 @@ pub fn classify_instance(cl tools.Classifier, instance_to_be_classified []byte, 
 		// look for a single maximum; if found, return its class
 		index, max_count := idx_count_max(results[i])
 		if max_count == 1 {
-			classify_result = tools.ClassifyResult{
+			classify_result = ClassifyResult{
 				inferred_class: classes[index]
 				nearest_neighbors_by_class: results[i]
 				classes: cl.class_counts.keys()

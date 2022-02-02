@@ -2,7 +2,7 @@
 module main
 
 import os
-import tools
+// import tools
 
 // fn testsuite_begin() {
 // 	os.execute_or_panic(v -gc boehm .)
@@ -11,7 +11,7 @@ import tools
 // test_load_file_newer verify that load_file works with an orange-newer datafile
 fn test_load_file_newer() {
 	path := 'datasets/developer.tab'
-	ds := tools.load_file(path)
+	ds := load_file(path)
 	assert ds.attribute_names == ['firstname', 'lastname', 'age', 'gender', 'height', 'weight',
 		'SEC', 'city', 'number', 'negative']
 	assert ds.data[0] == ['Henry', 'John', 'Will', 'Flo', 'Star', 'Jonathan', 'Aislin', 'Agatha',

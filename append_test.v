@@ -1,7 +1,7 @@
 // append_test.v
 module main
 
-import tools
+// import tools
 // import make
 // import validate
 // import verify
@@ -20,7 +20,7 @@ fn testsuite_end() ? {
 
 // test_append
 fn test_append() ? {
-	mut opts := tools.Options{
+	mut opts := Options{
 		verbose_flag: false
 		command: 'append'
 		show_flag: false
@@ -28,12 +28,12 @@ fn test_append() ? {
 		weighting_flag: true
 	}
 
-	mut cl := tools.Classifier{}
-	mut tcl := tools.Classifier{}
-	mut val_results := tools.ValidateResult{}
+	mut cl := Classifier{}
+	mut tcl := Classifier{}
+	mut val_results := ValidateResult{}
 	// create the classifier file and save it
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = make_classifier(tools.load_file('datasets/test.tab'), opts)
+	cl = make_classifier(load_file('datasets/test.tab'), opts)
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/test_validate.tab'
@@ -51,15 +51,14 @@ fn test_append() ? {
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'
 	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
-	mut result := verify(tools.load_classifier_file(opts.classifierfile_path) ?,
-		opts)
+	mut result := verify(load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 10
 	assert result.wrong_count == 0
 
 	// test with the soybean files
 	// create the classifier file and save it
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = make_classifier(tools.load_file('datasets/soybean-large-train.tab'), opts)
+	cl = make_classifier(load_file('datasets/soybean-large-train.tab'), opts)
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
@@ -94,7 +93,7 @@ fn test_append() ? {
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
 	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
-	result = verify(tools.load_classifier_file(opts.classifierfile_path) ?, opts)
+	result = verify(load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 333
 	assert result.wrong_count == 43
 }

@@ -1,7 +1,7 @@
 // rank
 module main
 
-import tools
+// import tools
 import math
 // import arrays
 
@@ -18,7 +18,7 @@ import math
 // `graph_flag` to generate plots of rank values for each attribute on the
 //     y axis, with number of bins on the x axis.
 // ```
-pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttribute {
+pub fn rank_attributes(ds Dataset, opts Options) []RankedAttribute {
 	// to get the denominator for calculating percentages of rank values,
 	// we get the rank value for the class attribute, which should be 100%
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
@@ -26,7 +26,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	if opts.verbose_flag && opts.command == 'rank' {
 		println('perfect_rank_value: $perfect_rank_value')
 	}
-	mut ranked_atts := []tools.RankedAttribute{}
+	mut ranked_atts := []RankedAttribute{}
 	mut lower := opts.bins[0]
 	mut upper := opts.bins[0] + 1
 	mut interval := 1
@@ -42,7 +42,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
 	// create an array of the unique class values
-	// mut class_counts_array := tools.get_map_values(ds.class_counts)
+	// mut class_counts_array := get_map_values(ds.class_counts)
 	mut count := 0
 	// mut diff := 0
 	mut rank_value := i64(0)
@@ -59,8 +59,8 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 		maximum_rank_value = 0
 		attr_index_for_maximum_rank_value = 0
 		bin_number_for_maximum_rank_value = 0
-		min = tools.min(attr_values.filter(it != -math.max_f32))
-		max = tools.max(attr_values)
+		min = array_min(attr_values.filter(it != -math.max_f32))
+		max = array_max(attr_values)
 		// discretize each attribute by binning, over the bins given by lower
 		// and upper and using an interval given by interval; go from high to
 		// low, so that the maximum rank value used
@@ -70,7 +70,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 		for bin_number >= lower {
 			rank_value = i64(0)
 
-			binned_values = tools.discretize_attribute(attr_values, min, max, bin_number)
+			binned_values = discretize_attribute(attr_values, min, max, bin_number)
 			// println('attr_values: $attr_values')
 			// println('binned_values: $binned_values')
 			// loop through each possible value for bin in the bins bin_number + 1
@@ -96,7 +96,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 					}
 					row << count
 				}
-				rank_value += sum_along_row(row, tools.get_map_values(ds.class_counts))
+				rank_value += sum_along_row(row, get_map_values(ds.class_counts))
 			}
 
 			// for each attribute, find the maximum for the rank_values and
@@ -111,7 +111,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 			bin_number -= interval
 		}
 		rank_value_array = rank_value_array.map(100.0 * f32(it) / perfect_rank_value)
-		ranked_atts << tools.RankedAttribute{
+		ranked_atts << RankedAttribute{
 			attribute_index: attr_index_for_maximum_rank_value
 			attribute_name: ds.attribute_names[attr_index_for_maximum_rank_value]
 			inferred_attribute_type: ds.inferred_attribute_types[attr_index_for_maximum_rank_value]
@@ -124,7 +124,7 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 	for attr_index, attr_values in ds.useful_discrete_attributes {
 		rank_value = get_rank_value_for_strings(attr_values, ds.class_values, ds.class_counts,
 			opts.exclude_flag)
-		ranked_atts << tools.RankedAttribute{
+		ranked_atts << RankedAttribute{
 			attribute_index: attr_index
 			attribute_name: ds.attribute_names[attr_index]
 			inferred_attribute_type: ds.inferred_attribute_types[attr_index]
@@ -145,10 +145,10 @@ pub fn rank_attributes(ds tools.Dataset, opts tools.Options) []tools.RankedAttri
 		for attr in ranked_atts {
 			show_ranked_attributes << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
 		}
-		tools.print_array(show_ranked_attributes)
+		print_array(show_ranked_attributes)
 	}
 	if opts.graph_flag && opts.command == 'rank' {
-		tools.plot_rank(ranked_atts, opts)
+		plot_rank(ranked_atts, opts)
 	}
 
 	return ranked_atts
@@ -160,8 +160,8 @@ fn get_rank_value_for_strings(values []string, class_values []string, class_coun
 	mut rank_val := i64(0)
 	mut count := 0
 	mut row := []int{}
-	for unique_val, _ in tools.string_element_counts(values) {
-		if unique_val in tools.missings && exclude {
+	for unique_val, _ in string_element_counts(values) {
+		if unique_val in missings && exclude {
 			continue
 		}
 		row = []int{}
@@ -177,7 +177,7 @@ fn get_rank_value_for_strings(values []string, class_values []string, class_coun
 			}
 			row << count
 		}
-		rank_val += sum_along_row(row, tools.get_map_values(class_counts))
+		rank_val += sum_along_row(row, get_map_values(class_counts))
 	}
 	return rank_val
 }

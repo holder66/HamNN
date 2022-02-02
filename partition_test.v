@@ -1,7 +1,7 @@
 // partition_test.v
 module main
 
-import tools
+// import tools
 
 // test_get_partition_indices
 fn test_get_partition_indices() {
@@ -90,9 +90,8 @@ fn test_get_partition_indices() {
 
 // test_partition
 fn test_partition() {
-	mut opts := tools.Options{}
-	mut part_ds, mut fold := partition(0, 2, tools.load_file('datasets/developer.tab'),
-		opts)
+	mut opts := Options{}
+	mut part_ds, mut fold := partition(0, 2, load_file('datasets/developer.tab'), opts)
 	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm']
 	assert part_ds.Class.class_counts == {
 		'X': 2

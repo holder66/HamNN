@@ -1,7 +1,7 @@
 // make_classifier_test
 module main
 
-import tools
+// import tools
 import os
 
 fn testsuite_begin() ? {
@@ -17,7 +17,7 @@ fn testsuite_end() ? {
 
 // test_make_classifier
 fn test_make_classifier() ? {
-	mut opts := tools.Options{
+	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
 		verbose_flag: false
@@ -26,7 +26,7 @@ fn test_make_classifier() ? {
 		show_flag: false
 		weighting_flag: true
 	}
-	mut ds := tools.load_file('datasets/developer.tab')
+	mut ds := load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)
 	assert cl.class_counts == {
 		'm': 8
@@ -60,10 +60,10 @@ fn test_make_translation_table() {
 
 // test_save_classifier
 fn test_save_classifier() ? {
-	mut ds := tools.Dataset{}
-	mut cl := tools.Classifier{}
-	mut tcl := tools.Classifier{}
-	mut opts := tools.Options{
+	mut ds := Dataset{}
+	mut cl := Classifier{}
+	mut tcl := Classifier{}
+	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
 		verbose_flag: false
@@ -75,32 +75,32 @@ fn test_save_classifier() ? {
 	}
 	opts.classifierfile_path = opts.outputfile_path
 
-	ds = tools.load_file('datasets/developer.tab')
+	ds = load_file('datasets/developer.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
-	ds = tools.load_file('datasets/anneal.tab')
+	ds = load_file('datasets/anneal.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
-	ds = tools.load_file('datasets/soybean-large-train.tab')
+	ds = load_file('datasets/soybean-large-train.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 	path := '../../mnist_train.tab'
-	println('$path ${tools.file_type(path)}')
-	ds = tools.load_file(path)
+	println('$path ${file_type(path)}')
+	ds = load_file(path)
 	cl = make_classifier(ds, opts)
 
-	tcl = tools.load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 }

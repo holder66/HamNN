@@ -1,12 +1,12 @@
 // classify_test.v
 module main
 
-import tools
+// import tools
 // import make
 
 // test_classify_instance
 fn test_classify_instance() {
-	mut opts := tools.Options{
+	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
 		verbose_flag: false
@@ -14,7 +14,7 @@ fn test_classify_instance() {
 		number_of_attributes: [6]
 		show_flag: false
 	}
-	mut ds := tools.load_file('datasets/developer.tab')
+	mut ds := load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)
 	assert classify_instance(cl, cl.instances[0], opts).inferred_class == 'm'
 	assert classify_instance(cl, cl.instances[0], opts).nearest_neighbors_by_class == [

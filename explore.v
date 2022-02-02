@@ -1,7 +1,7 @@
 // trial.v
 module main
 
-import tools
+// import tools
 // import make
 // import cross
 // import verify
@@ -11,10 +11,10 @@ import os
 // attributes and a range of binning values.
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
-pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
+pub fn explore(ds Dataset, opts Options) []VerifyResult {
 	mut ex_opts := opts
-	mut result := tools.VerifyResult{
-		pos_neg_classes: tools.get_pos_neg_classes(ds.class_counts)
+	mut result := VerifyResult{
+		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 	}
 	// mut percent := 0.0
 	mut attribute_max := ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len
@@ -61,10 +61,10 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		end_bin = 0
 	}
 	if opts.show_flag {
-		tools.show_explore_header(opts)
+		show_explore_header(opts)
 	}
 	if opts.expanded_flag {
-		tools.expanded_explore_header(result, opts)
+		expanded_explore_header(result, opts)
 	}
 
 	if opts.verbose_flag && opts.command == 'explore' {
@@ -73,9 +73,9 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 	}
 	mut atts := start_attr
 	mut bin := start_bin
-	mut cl := tools.Classifier{}
-	mut results := []tools.VerifyResult{}
-	// mut plot_data := [][]tools.PlotResult{}
+	mut cl := Classifier{}
+	mut results := []VerifyResult{}
+	// mut plot_data := [][]PlotResult{}
 
 	for atts <= end_attr {
 		ex_opts.number_of_attributes = [atts]
@@ -100,10 +100,10 @@ pub fn explore(ds tools.Dataset, opts tools.Options) []tools.VerifyResult {
 		atts += interval_attr
 	}
 	if opts.graph_flag && opts.command == 'explore' {
-		tools.plot_explore(results, opts)
+		plot_explore(results, opts)
 		// println(results)
 		if results[0].class_table.len == 2 {
-			tools.plot_roc(results, opts)
+			plot_roc(results, opts)
 		}
 	}
 	if opts.outputfile_path != '' && opts.command == 'explore' {

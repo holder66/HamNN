@@ -1,7 +1,7 @@
 // verify_test.v
 module main
 
-import tools
+// import tools
 // import make
 import os
 
@@ -18,16 +18,16 @@ fn testsuite_end() ? {
 
 // test_verify
 fn test_verify() ? {
-	mut opts := tools.Options{
+	mut opts := Options{
 		verbose_flag: false
 		show_flag: false
 		concurrency_flag: true
 	}
 
-	mut result := tools.VerifyResult{}
-	mut ds := tools.Dataset{}
-	mut cl := tools.Classifier{}
-	mut saved_cl := tools.Classifier{}
+	mut result := VerifyResult{}
+	mut ds := Dataset{}
+	mut cl := Classifier{}
+	mut saved_cl := Classifier{}
 
 	// test verify with a non-saved classifier
 	opts.command = 'make'
@@ -36,7 +36,7 @@ fn test_verify() ? {
 	opts.classifierfile_path = ''
 	opts.bins = [2, 3]
 	opts.number_of_attributes = [2]
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	assert verify(cl, opts).correct_count == 10
 
@@ -47,7 +47,7 @@ fn test_verify() ? {
 	opts.classifierfile_path = ''
 	opts.number_of_attributes = [4]
 	opts.bins = [2, 4]
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = verify(cl, opts)
 	assert result.correct_count == 171
@@ -57,11 +57,11 @@ fn test_verify() ? {
 
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = tools.Classifier{}
-	result = tools.VerifyResult{}
+	cl = Classifier{}
+	result = VerifyResult{}
 	cl = make_classifier(ds, opts)
-	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file('tempfolder/classifierfile') ?, opts)
+	cl = Classifier{}
+	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -72,7 +72,7 @@ fn test_verify() ? {
 	opts.classifierfile_path = ''
 	opts.number_of_attributes = [50]
 	opts.bins = [2, 2]
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = verify(cl, opts)
 	assert result.correct_count == 9982
@@ -82,11 +82,11 @@ fn test_verify() ? {
 
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = tools.Classifier{}
-	result = tools.VerifyResult{}
+	cl = Classifier{}
+	result = VerifyResult{}
 	cl = make_classifier(ds, opts)
-	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file('tempfolder/classifierfile') ?, opts)
+	cl = Classifier{}
+	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
 	assert result.correct_count == 9982
 	assert result.wrong_count == 18
 
@@ -98,7 +98,7 @@ fn test_verify() ? {
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = verify(cl, opts)
 	assert result.correct_count == 340
@@ -108,19 +108,19 @@ fn test_verify() ? {
 
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = tools.Classifier{}
-	result = tools.VerifyResult{}
+	cl = Classifier{}
+	result = VerifyResult{}
 	cl = make_classifier(ds, opts)
-	cl = tools.Classifier{}
-	result = verify(tools.load_classifier_file('tempfolder/classifierfile') ?, opts)
+	cl = Classifier{}
+	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
 	println('Done with soybean-large-train.tab using saved classifier')
 
-	cl = tools.Classifier{}
-	ds = tools.Dataset{}
-	result = tools.VerifyResult{}
+	cl = Classifier{}
+	ds = Dataset{}
+	result = VerifyResult{}
 	opts.datafile_path = '../../mnist_train.tab'
 	opts.testfile_path = ''
 	opts.outputfile_path = 'tempfolder/classifierfile'
@@ -128,10 +128,10 @@ fn test_verify() ? {
 	opts.bins = [2, 2]
 	opts.concurrency_flag = true
 	opts.weighting_flag = false
-	ds = tools.load_file(opts.datafile_path)
+	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	opts.testfile_path = 'datasets/mnist_test.tab'
-	result = verify(tools.load_classifier_file('tempfolder/classifierfile') ?, opts)
+	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
 	assert result.correct_count == 9566
 	assert result.wrong_count == 434
 
