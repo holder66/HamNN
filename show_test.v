@@ -1,5 +1,5 @@
 // show_test.v
-module main
+module hamnn
 
 import os
 // test_setup 

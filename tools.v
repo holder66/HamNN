@@ -1,5 +1,5 @@
 // v contains functions used elsewhere in hamnn
-module main
+module hamnn
 
 // import arrays
 import math

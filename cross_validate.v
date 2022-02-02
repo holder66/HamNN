@@ -1,5 +1,5 @@
 // cross_validate.v
-module main
+module hamnn
 
 // import tools
 // import partition

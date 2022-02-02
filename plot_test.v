@@ -1,6 +1,6 @@
 // plot_test.v
 
-module main
+module hamnn
 
 // import vsl.plot
 // import vsl.util

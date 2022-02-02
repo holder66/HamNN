@@ -1,5 +1,5 @@
 // hamnn.v
-module main
+module hamnn
 
 import os
 // import tools

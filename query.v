@@ -1,5 +1,5 @@
 // query.v
-module main
+module hamnn
 
 // import tools
 // import classify

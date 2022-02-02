@@ -2,7 +2,7 @@
 // TODO: not necessary to rank attributes if all usable attributes will be used
 // TODO: have a "compressed" flag which only uses the appropriate number of bits for each attribute, in the attr_one_bit_values array, with each attribute's value concatenated with the next and the results squeezed into u64 values.
 // actually, more fruitful might be just to use the u8 type, since it is unlikely that there would be more than 255 values for discrete attributes. And in this situation, compression is unnecessary, since we do not need bitstrings to get Hamming distances when only positive integers are involved.
-module main
+module hamnn
 
 // import tools
 // import rank

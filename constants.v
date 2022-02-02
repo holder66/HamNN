@@ -1,6 +1,6 @@
 // constants.v
 
-module main
+module hamnn
 
 const (
 	missings                   = ['?', '']

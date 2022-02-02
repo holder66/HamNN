@@ -1,6 +1,6 @@
 // show.v
 
-module main
+module hamnn
 
 import etienne_napoleone.chalk
 

@@ -1,5 +1,5 @@
 // validate_test.v
-module main
+module hamnn
 
 // import tools
 // import make

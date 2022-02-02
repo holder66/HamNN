@@ -38,6 +38,11 @@ quickly identifies and removes from consideration variables which add noise
 - robotics
 - neural prosthetic devices, to enhance our senses, processing capacity and speed, memory
 
+## To use the hamnn library
+`v install holder66.hamnn`
+
+In your source code: `import holder66.hamnn`
+
 ## Installation of the stand-alone command line interface app:
 First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
 ```sh

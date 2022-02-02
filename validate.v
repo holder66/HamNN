@@ -2,7 +2,7 @@
 /*
 Given a classifier and a validation dataset, classifies each instance
   of the validation_set on the trained classifier; returns the predicted classes for each instance of the validation_set.*/
-module main
+module hamnn
 
 // import tools
 // import classify

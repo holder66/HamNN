@@ -3,7 +3,7 @@
 Given a classifier and a verification dataset, classifies each instance
   of the verification_set on the trained classifier; returns metrics
   comparing the predicted classes to the assigned classes.*/
-module main
+module hamnn
 
 // import tools
 // import classify

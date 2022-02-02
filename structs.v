@@ -1,5 +1,5 @@
 // structs.v
-module main
+module hamnn
 
 import time
 

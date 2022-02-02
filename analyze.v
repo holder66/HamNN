@@ -1,5 +1,5 @@
 // analyze
-module main
+module hamnn
 
 // import tools
 import math

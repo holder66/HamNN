@@ -1,5 +1,5 @@
 // rank__test.v
-module main
+module hamnn
 
 // import tools
 

@@ -1,5 +1,5 @@
 // partition.v
-module main
+module hamnn
 
 // import tools
 

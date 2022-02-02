@@ -1,5 +1,5 @@
 // tools_test.v
-module main
+module hamnn
 
 // import arrays
 

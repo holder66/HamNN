@@ -1,4 +1,4 @@
-module main
+module hamnn
 
 import os
 import strconv

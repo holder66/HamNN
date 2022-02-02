@@ -1,4 +1,4 @@
-module main
+module hamnn
 
 // import arrays
 import math

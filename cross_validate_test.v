@@ -1,5 +1,5 @@
 // cross_validate_test.v
-module main
+module hamnn
 
 // import tools
 

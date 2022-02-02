@@ -1,5 +1,5 @@
 // trial.v
-module main
+module hamnn
 
 // import tools
 // import make

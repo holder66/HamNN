@@ -1,5 +1,5 @@
 // test_analyze
-module main
+module hamnn
 
 // import main
 // import tools
