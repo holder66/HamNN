@@ -41,7 +41,20 @@ quickly identifies and removes from consideration variables which add noise
 ## To use the hamnn library
 `v install holder66.hamnn`
 
-In your source code: `import holder66.hamnn`
+Example source code:
+```v
+module main
+
+import holder66.hamnn
+import os
+
+fn main() {
+    datafile_path := os.home_dir() + '/.vmodules/holder66/hamnn/datasets/iris.tab'
+    ds := hamnn.load_file(datafile_path)
+    result := hamnn.analyze_dataset(ds)
+    for line in result {println(line)}
+}
+```
 
 ## Installation of the stand-alone command line interface app:
 First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
