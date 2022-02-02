@@ -18,7 +18,7 @@ import math
 // `graph_flag` to generate plots of rank values for each attribute on the
 //     y axis, with number of bins on the x axis.
 // ```
-pub fn rank_attributes(ds Dataset, opts Options) []RankedAttribute {
+pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	// to get the denominator for calculating percentages of rank values,
 	// we get the rank value for the class attribute, which should be 100%
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
@@ -151,7 +151,9 @@ pub fn rank_attributes(ds Dataset, opts Options) []RankedAttribute {
 		plot_rank(ranked_atts, opts)
 	}
 
-	return ranked_atts
+	return RankingResult{
+		array_of_ranked_attributes: ranked_atts
+	}
 }
 
 // get_rank_value_for_strings

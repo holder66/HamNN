@@ -35,7 +35,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
-	mut ranked_attributes := rank_attributes(ds, opts)
+	mut ranked_attributes := rank_attributes(ds, opts).array_of_ranked_attributes
 	if opts.number_of_attributes[0] != 0 {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}

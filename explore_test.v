@@ -6,7 +6,6 @@ module hamnn
 
 fn test_explore_cross() ? {
 	mut results := []VerifyResult{}
-	// mut results := ExploreResult{}
 	mut opts := Options{
 		verbose_flag: false
 		number_of_attributes: [1, 4]

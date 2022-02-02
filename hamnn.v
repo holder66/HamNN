@@ -233,7 +233,7 @@ fn orange() {
 
 // rank returns an array of attributes sorted
 // according to their capacity to separate the classes
-fn rank(opts Options) []RankedAttribute {
+fn rank(opts Options) RankingResult {
 	return rank_attributes(load_file(opts.datafile_path), opts)
 }
 

@@ -10,22 +10,22 @@ fn test_rank_attributes() {
 		exclude_flag: true
 	}
 	mut ds := load_file('datasets/developer.tab')
-	mut rank_value := rank_attributes(ds, opts)[1].rank_value
+	mut rank_value := rank_attributes(ds, opts).array_of_ranked_attributes[1].rank_value
 	assert rank_value >= 65.26315
 	assert rank_value <= 65.26317
 	opts.exclude_flag = false
-	assert rank_attributes(ds, opts)[2].attribute_name == 'number'
+	assert rank_attributes(ds, opts).array_of_ranked_attributes[2].attribute_name == 'number'
 	opts.bins = [2, 16]
-	assert rank_attributes(ds, opts)[7].attribute_index == 7
+	assert rank_attributes(ds, opts).array_of_ranked_attributes[7].attribute_index == 7
 	opts.exclude_flag = true
-	rank_value = rank_attributes(ds, opts)[0].rank_value
+	rank_value = rank_attributes(ds, opts).array_of_ranked_attributes[0].rank_value
 	assert rank_value >= 94.73683
 	assert rank_value <= 94.73684
 	ds = load_file('datasets/anneal.tab')
-	assert rank_attributes(ds, opts)[3].attribute_name == 'hardness'
+	assert rank_attributes(ds, opts).array_of_ranked_attributes[3].attribute_name == 'hardness'
 	opts.bins = [2, 2]
 	ds = load_file('datasets/mnist_test.tab')
-	rank_value = rank_attributes(ds, opts)[0].rank_value
+	rank_value = rank_attributes(ds, opts).array_of_ranked_attributes[0].rank_value
 	assert rank_value >= 38.13513
 	assert rank_value <= 38.13514
 	// ds = load_file('datasets/mnist_train.tab')

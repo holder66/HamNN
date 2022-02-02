@@ -49,6 +49,11 @@ pub mut:
 	bins                    int
 }
 
+pub struct RankingResult {
+pub mut:
+	array_of_ranked_attributes	[]RankedAttribute
+}
+
 pub struct TrainedAttribute {
 pub mut:
 	attribute_type    string
