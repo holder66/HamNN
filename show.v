@@ -4,6 +4,11 @@ module hamnn
 
 import etienne_napoleone.chalk
 
+// show 
+pub fn show<T>(a []T) {
+	println(typeof(a).name)
+}
+
 // show_results
 // note that in the case of `explore` and the expanded_flag, explore.v
 // initiates the printing of headers to the console, while the printing

@@ -152,6 +152,11 @@ pub mut:
 	confusion_matrix [][]string
 }
 
+pub struct ExploreResult{
+pub mut:
+	array_of_results	[]VerifyResult
+}
+
 pub struct PlotResult {
 pub mut:
 	bin             int

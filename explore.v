@@ -11,7 +11,7 @@ import os
 // attributes and a range of binning values.
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
-pub fn explore(ds Dataset, opts Options) []VerifyResult {
+pub fn explore(ds Dataset, opts Options) ExploreResult {
 	mut ex_opts := opts
 	mut result := VerifyResult{
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
@@ -113,5 +113,8 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 		f.write_struct(results) or { panic(err.msg) }
 		f.close()
 	}
-	return results
+	explore_result := ExploreResult{
+		array_of_results: results
+	}
+	return explore_result
 }
