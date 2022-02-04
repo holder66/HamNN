@@ -48,23 +48,9 @@ fn print_array(array []string) {
 	}
 }
 
-// parse_range takes a string like '3,6,8' and returns [3, 6, 8]
-fn parse_range(arg string) []int {
-	mut str := arg
-	mut res := [arg.int()]
-	for _ in 0 .. (arg.len - 1) {
-		str = str[1..]
-		if str[0] == 44 {
-			res << str[1..].int()
-		}
-	}
-	return res
-}
 
-// last returns the last element of a string array
-fn last(array []string) string {
-	return array[array.len - 1]
-}
+
+
 
 // get_map_values returns an array of a map's values (for integer values)
 fn get_map_values(input map[string]int) []int {

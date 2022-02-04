@@ -53,7 +53,7 @@ fn show_results(result VerifyResult, opts Options) {
 }
 
 // show_classifier outputs to the console information about a classifier
-fn show_classifier(cl Classifier) {
+pub fn show_classifier(cl Classifier) {
 	println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
 		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
