@@ -1,4 +1,4 @@
-// rank__test.v
+// rank_test.v
 module hamnn
 
 // import tools
