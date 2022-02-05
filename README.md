@@ -1,10 +1,12 @@
 # hamnn
 
-A machine learning library for classification using a nearest neighbor algorithm based on Hamming distances.
+A machine learning (ML) library for classification using a nearest neighbor algorithm based on Hamming distances.
 
-There is an associated Command Line Interface app, vhamnn, which facilitates 
+There is an associated Command Line Interface app, `vhamnn`, which facilitates 
 using the hamnn library.
 
+You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These datasets are in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html) (see [Orange Data Mining](https://orangedatamining.com)), a useful way to specify information about feature types and relevance. 
+The Command Line Interface (CLI) app, `vhamnn` (see below) provides a command `orange` to quickly review Orange file format.
 ## Description
 
 ### What it is
@@ -26,11 +28,11 @@ using the hamnn library.
 #### data reduction
 identifies and uses only those variables which are most likely to contribute to classification accuracy
 #### image preprocessing
-eliminates the need to correct for variations in size, skew, or rotation
+eliminates the need to correct for variations in size, skew, or rotation (under development)
 #### noisy data
 quickly identifies and removes from consideration variables which add noise
 
-### Where it can be applied
+### Where it can be applied - potential use cases
 - speech recognition
 - emotion recognition (from facial expression, body language, speech prosody)
 - prediction of weather, earthquakes, traffic patterns
@@ -60,7 +62,7 @@ fn main() {
 }
 ```
 
-## Installation of the stand-alone command line interface app vhamnn:
+## Installation of the command line interface app vhamnn:
 First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
 ```sh
 git clone https://github.com/vlang/v
