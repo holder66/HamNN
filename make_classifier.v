@@ -23,9 +23,14 @@ import json
 // ```
 pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut cl := Classifier{
-		utc_date_time: time.utc()
 		Class: ds.Class
 		Options: opts
+	}
+	mut event := HistoryEvent{
+		event_date: time.utc()
+		event_environment: get_environment()
+		event: 'make'
+		file_path: ds.path
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
@@ -77,19 +82,17 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
-	if opts.show_flag && opts.command == 'make' {
+	event.instances_count = cl.instances.len
+	cl.history << event
+	if opts.show_flag {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
-		// get the environment used in generating this classifier
-		cl.Environment = get_environment()
-		s := json.encode(cl)
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(s) or { panic(err.msg) }
+		f.write_string(json.encode(cl)) or { panic(err.msg) }
 		f.close()
 	}
-
 	return cl
 }
 

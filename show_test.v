@@ -36,9 +36,12 @@ fn test_show_append() ? {
 
 // test_show_classifier
 fn test_show_classifier() {
-	// mut s := './hamnn make -s -a 2 -b 3,6 datasets/iris.tab'
-	// println(s)
-	// println(os.execute_or_panic(s))
+	mut opts := Options{
+		show_flag: true
+	}
+	mut ds := load_file('datasets/iris.tab')
+	assert show(analyze_dataset(ds)) == '[]string'
+	mut cl := make_classifier(ds, opts)
 }
 
 // test_show_verify

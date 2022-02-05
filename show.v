@@ -72,9 +72,9 @@ pub fn show_analyze(ds Dataset) {
 
 // show_append prints to the console, information about an extended classifier
 fn show_append(cl Classifier, opts Options) {
-	println(cl.Environment)
+	// println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
+		'created:  with hamnn version: ',
 		
 			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 			' when calculating rank values',
@@ -165,9 +165,9 @@ fn show_results(result VerifyResult, opts Options) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	println(cl.Environment)
+	// println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
+		'created:  with hamnn version: ',
 		
 			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 			' when calculating rank values',

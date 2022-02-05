@@ -70,24 +70,24 @@ pub mut:
 }
 
 pub struct Classifier {
-	Environment
 	Options
 	Class
-	History
 pub mut:
 	datafile_path      string
-	utc_date_time      time.Time
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	instances          [][]byte
+	history				[]HistoryEvent
 }
 
-pub struct History {
+pub struct HistoryEvent {
 pub mut:
-	append_dates       []time.Time
-	instances_appended []int
-	append_environment []Environment
+	event_date       time.Time
+	instances_count 		 int
+	event_environment Environment
+	event 				string
+	file_path 			string
 }
 
 pub struct Options {
