@@ -70,15 +70,14 @@ pub fn show_analyze(ds Dataset) {
 	print_array(show_dataset)
 }
 
-// show_append prints to the console, information about an extended classifier
-fn show_append(cl Classifier, opts Options) {
+// show_classifier outputs to the console information about a classifier
+pub fn show_classifier(cl Classifier) {
 	// println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-		'created:  with hamnn version: ',
-		
 			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 			' when calculating rank values',
-		'included attributes: $cl.trained_attributes.len',
+		'Included attributes: $cl.trained_attributes.len',
+		'Trained on $cl.instances.len instances.'
 		'Name                        Type  Uniques        Min        Max  Bins',
 		'__________________________  ____  _______  _________  _________  ____']
 	mut line := ''
@@ -88,6 +87,20 @@ fn show_append(cl Classifier, opts Options) {
 		show_classifier_array << line
 	}
 	print_array(show_classifier_array)
+	println('')
+	print_array(show_classifier_history(cl.history))
+	println('\n\n')
+}
+
+// show_classifier_history history []HistoryEvent
+fn show_classifier_history(history []HistoryEvent) []string {
+	mut array := ['Classifier History:',
+	'Date & Time (UTC)    Event   From file                            Instances',
+	'_________________    _____   _________                            _________']
+	for events in history {
+		array << '${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}'
+	}
+	return array
 }
 
 // show_cross_validate 
@@ -163,25 +176,6 @@ fn show_results(result VerifyResult, opts Options) {
 	}
 }
 
-// show_classifier outputs to the console information about a classifier
-pub fn show_classifier(cl Classifier) {
-	// println(cl.Environment)
-	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-		'created:  with hamnn version: ',
-		
-			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-			' when calculating rank values',
-		'included attributes: $cl.trained_attributes.len',
-		'Name                        Type  Uniques        Min        Max  Bins',
-		'__________________________  ____  _______  _________  _________  ____']
-	mut line := ''
-	for attr, val in cl.trained_attributes {
-		line = '${attr:-27} ${val.attribute_type:-2} ' +
-			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
-		show_classifier_array << line
-	}
-	print_array(show_classifier_array)
-}
 
 // get_show_bins
 fn get_show_bins(bins []int) string {

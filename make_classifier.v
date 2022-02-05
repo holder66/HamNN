@@ -84,7 +84,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	cl.attribute_ordering = attr_names
 	event.instances_count = cl.instances.len
 	cl.history << event
-	if opts.show_flag {
+	if opts.show_flag || opts.expanded_flag {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {

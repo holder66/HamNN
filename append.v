@@ -43,17 +43,13 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 pub fn append(opts Options) ?Classifier {
 	// println(opts)
 	mut cl := load_classifier_file(opts.classifierfile_path) ?
+	// println(cl.history)
 	mut instances_to_append := load_instances_file(opts.instancesfile_path) ?
 	mut ext_cl := append_instances(cl, instances_to_append, opts)
-	mut event := HistoryEvent{
-		instances_count: instances_to_append.inferred_classes.len
-		event_date: time.utc()
-		event_environment: get_environment()
-		event: 'append'
-		file_path: opts.instancesfile_path
-	}
-	ext_cl.history << event
-	if opts.show_flag {
+	mut last_event := ext_cl.history.pop()
+	last_event.file_path = opts.instancesfile_path
+	ext_cl.history << last_event
+	if opts.show_flag || opts.expanded_flag {
 		show_classifier(ext_cl)
 	}
 	if opts.outputfile_path != '' {
@@ -61,6 +57,5 @@ pub fn append(opts Options) ?Classifier {
 		f.write_string(json.encode(ext_cl)) or { panic(err.msg) }
 		f.close()
 	}
-	println(ext_cl.history)
 	return ext_cl
 }

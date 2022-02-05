@@ -23,7 +23,7 @@ fn test_make_classifier() ? {
 		verbose_flag: false
 		command: 'make'
 		number_of_attributes: [6]
-		show_flag: false
+		show_flag: true
 		weighting_flag: true
 	}
 	mut ds := load_file('datasets/developer.tab')
@@ -69,7 +69,7 @@ fn test_save_classifier() ? {
 		verbose_flag: false
 		command: 'make'
 		number_of_attributes: [6]
-		show_flag: false
+		show_flag: true
 		weighting_flag: true
 		outputfile_path: 'tempfolder/classifierfile'
 	}
