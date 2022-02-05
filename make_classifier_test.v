@@ -95,12 +95,12 @@ fn test_save_classifier() ? {
 	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
-	path := '../../mnist_train.tab'
-	println('$path ${file_type(path)}')
-	ds = load_file(path)
-	cl = make_classifier(ds, opts)
+	// path := '../../mnist_train.tab'
+	// println('$path ${file_type(path)}')
+	// ds = load_file(path)
+	// cl = make_classifier(ds, opts)
 
-	tcl = load_classifier_file(opts.classifierfile_path) ?
-	assert tcl.trained_attributes == cl.trained_attributes
-	assert tcl.instances == cl.instances
+	// tcl = load_classifier_file(opts.classifierfile_path) ?
+	// assert tcl.trained_attributes == cl.trained_attributes
+	// assert tcl.instances == cl.instances
 }

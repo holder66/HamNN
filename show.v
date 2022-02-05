@@ -3,10 +3,121 @@
 module hamnn
 
 import etienne_napoleone.chalk
+import math
 
 // show 
-pub fn show<T>(a []T) {
-	println(typeof(a).name)
+pub fn show<T>(a []T) string {
+	return typeof(a).name
+}
+
+// show_analyze prints to the console, information regarding a dataset:
+// ```sh
+// 1. a list of attributes, their types, the unique values, and a count of
+// missing values;
+// 2. a table with counts for each type of attribute;
+// 3. a list of discrete attributes useful for training a classifier;
+// 4. a list of continuous attributes useful for training a classifier;
+// 5. a breakdown of the class attribute, showing counts for each class.
+// ```
+pub fn show_analyze(ds Dataset) {
+	cases_count := ds.data[0].len
+	mut show_dataset := ['']
+	mut missing_vals := ds.data.map(missing_values(it))
+	missing_vals << 0
+	mut show_attributes := ['', 'Analysis of Dataset "$ds.path" (File Type ${file_type(ds.path)})',
+		'All Attributes', 'Index  Name                          Count  Uniques  Missing     %   Type',
+		'_____  __________________________  _______  _______  _______  ____   ____']
+	for i, name in ds.attribute_names {
+		show_attributes << '${i:5}  ${name:-27}   ${ds.data[i].len:5}    ${uniques(ds.data[i]):5}     ${missing_vals[i]:4} ${f32(missing_vals[i]) / f32(cases_count) * 100.0:5.1f}   ${ds.inferred_attribute_types[i]}'
+	}
+	show_attributes << '______                             _______           _______ _____'
+	show_attributes << 'Totals (less Class attribute)   ${cases_count * (ds.data.len - 1):10}        ${array_sum<int>(missing_vals):10}  ${f32(array_sum<int>(missing_vals)) / (cases_count * (ds.data.len - 1)) * 100.0:5.2f}%'
+	mut show_types := ['', 'Counts of Attributes by Type', 'Type        Count', '____        _____']
+	for key, value in string_element_counts(ds.inferred_attribute_types) {
+		show_types << '$key          ${value:6}'
+	}
+	show_types << 'Total:     ${ds.inferred_attribute_types.len:6}'
+
+	mut show_discrete_attributes := ['', 'Discrete Attributes for Training',
+		' Index  Name                           Uniques',
+		' _____  __________________________     _______']
+	for key, value in ds.useful_discrete_attributes {
+		show_discrete_attributes << '${key:6}  ${ds.attribute_names[key]:-27}      ${uniques(value):5}'
+	}
+
+	mut show_continuous_attributes := ['', 'Continuous Attributes for Training',
+		' Index  Name                           Min         Max',
+		' _____  __________________________  ______      ______']
+	mut min := 0.0
+	for key, value in ds.useful_continuous_attributes {
+		// to calculate the minimum, strip out missing values (placeholder is -math.max_f32)
+		min = f32_abs(array_min(value.filter(it != -math.max_f32)))
+
+		show_continuous_attributes << '${key:6}  ${ds.attribute_names[key]:-27} ${min:6.3g}      ${array_max(value):6}'
+	}
+
+	mut show_class := ['', 'The Class Attribute: "$ds.Class.class_name"',
+		'Class Value           Cases', '____________________  _____']
+	for key, value in ds.Class.class_counts {
+		show_class << '${key:-20}  ${value:5}'
+	}
+
+	show_dataset << show_attributes
+	show_dataset << show_types
+	show_dataset << show_discrete_attributes
+	show_dataset << show_continuous_attributes
+	show_dataset << show_class
+	print_array(show_dataset)
+}
+
+// show_append prints to the console, information about an extended classifier
+fn show_append(cl Classifier, opts Options) {
+	println(cl.Environment)
+	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
+		'created: $cl.utc_date_time UTC, with hamnn version: $cl.hamnn_version',
+		
+			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
+			' when calculating rank values',
+		'included attributes: $cl.trained_attributes.len',
+		'Name                        Type  Uniques        Min        Max  Bins',
+		'__________________________  ____  _______  _________  _________  ____']
+	mut line := ''
+	for attr, val in cl.trained_attributes {
+		line = '${attr:-27} ${val.attribute_type:-2} ' +
+			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
+		show_classifier_array << line
+	}
+	print_array(show_classifier_array)
+}
+
+// show_cross_validate 
+fn show_cross_validate(result VerifyResult, opts Options) {
+	
+}
+
+// show_explore 
+fn show_explore(result ExploreResult, opts Options) {
+	
+}
+
+// show_make 
+fn show_make(cl Classifier, opts Options) {
+	
+}
+
+// show_rank 
+fn show_rank(result RankingResult, opts Options) {
+	
+}
+
+// show_validate
+fn show_validate(result ValidateResult, opts Options) {
+	
+}
+
+// show_verify 
+fn show_verify(result VerifyResult, opts Options) {
+	
 }
 
 // show_results

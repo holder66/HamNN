@@ -105,18 +105,18 @@ fn test_cross_validate() ? {
 	assert result.wrong_count == 29
 	assert result.total_count == 699
 
-	opts.datafile_path = 'datasets/mnist_test.tab'
-	opts.number_of_attributes = [310]
-	opts.bins = [2, 2]
-	opts.folds = 200
-	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
-	assert result.correct_count == 9420
-	assert result.misses_count == 580
-	assert result.wrong_count == 580
-	assert result.total_count == 10000
+	// opts.datafile_path = 'datasets/mnist_test.tab'
+	// opts.number_of_attributes = [310]
+	// opts.bins = [2, 2]
+	// opts.folds = 200
+	// opts.weighting_flag = false
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
+	// // print_confusion_matrix(result)
+	// assert result.correct_count == 9420
+	// assert result.misses_count == 580
+	// assert result.wrong_count == 580
+	// assert result.total_count == 10000
 }
 
 // test_append_map_values

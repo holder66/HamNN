@@ -41,6 +41,24 @@ fn integer_element_counts(array []int) map[int]int {
 // 	return counts
 // }
 
+// parse_range takes a string like '3,6,8' and returns [3, 6, 8]
+fn parse_range(arg string) []int {
+	mut str := arg
+	mut res := [arg.int()]
+	for _ in 0 .. (arg.len - 1) {
+		str = str[1..]
+		if str[0] == 44 {
+			res << str[1..].int()
+		}
+	}
+	return res
+}
+
+// last returns the last element of a string array
+fn last(array []string) string {
+	return array[array.len - 1]
+}
+
 // print_array
 fn print_array(array []string) {
 	for line in array {
