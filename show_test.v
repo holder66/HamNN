@@ -3,7 +3,7 @@ module hamnn
 
 // import os
 
-// test_show 
+// test_show
 fn test_show() {
 	mut opts := Options{
 		show_flag: true
@@ -21,7 +21,7 @@ fn test_show_analyze() {
 	show_analyze(load_file('datasets/anneal.tab'))
 }
 
-// test_show_append 
+// test_show_append
 fn test_show_append() ? {
 	opts := Options{
 		show_flag: true

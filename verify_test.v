@@ -118,26 +118,26 @@ fn test_verify() ? {
 
 	println('Done with soybean-large-train.tab using saved classifier')
 
-// 	cl = Classifier{}
-// 	ds = Dataset{}
-// 	result = VerifyResult{}
-// 	opts.datafile_path = '../../mnist_train.tab'
-// 	opts.testfile_path = ''
-// 	opts.outputfile_path = 'tempfolder/classifierfile'
-// 	opts.number_of_attributes = [313]
-// 	opts.bins = [2, 2]
-// 	opts.concurrency_flag = true
-// 	opts.weighting_flag = false
-// 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
-// 	opts.testfile_path = 'datasets/mnist_test.tab'
-// 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-// 	assert result.correct_count == 9566
-// 	assert result.wrong_count == 434
+	// 	cl = Classifier{}
+	// 	ds = Dataset{}
+	// 	result = VerifyResult{}
+	// 	opts.datafile_path = '../../mnist_train.tab'
+	// 	opts.testfile_path = ''
+	// 	opts.outputfile_path = 'tempfolder/classifierfile'
+	// 	opts.number_of_attributes = [313]
+	// 	opts.bins = [2, 2]
+	// 	opts.concurrency_flag = true
+	// 	opts.weighting_flag = false
+	// 	ds = load_file(opts.datafile_path)
+	// 	cl = make_classifier(ds, opts)
+	// 	opts.testfile_path = 'datasets/mnist_test.tab'
+	// 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
+	// 	assert result.correct_count == 9566
+	// 	assert result.wrong_count == 434
 
-// 	opts.weighting_flag = true
-// 	cl = make_classifier(ds, opts)
-// 	result = verify(cl, opts)
-// 	assert result.correct_count == 9279
-// 	assert result.wrong_count == 721
+	// 	opts.weighting_flag = true
+	// 	cl = make_classifier(ds, opts)
+	// 	result = verify(cl, opts)
+	// 	assert result.correct_count == 9279
+	// 	assert result.wrong_count == 721
 }

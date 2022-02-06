@@ -39,7 +39,7 @@ fn test_append() ? {
 	opts.testfile_path = 'datasets/test_validate.tab'
 	val_results = validate(cl, opts) ?
 	// now do the append, first from val_results
-	
+
 	tcl = append_instances(cl, val_results, opts)
 	assert tcl.class_counts == {
 		'f': 9
@@ -49,7 +49,7 @@ fn test_append() ? {
 	opts.instancesfile_path = 'tempfolder/instancesfile'
 	opts.classifierfile_path = 'tempfolder/classifierfile'
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
-	stcl := append(opts) ?	
+	stcl := append(opts) ?
 
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'

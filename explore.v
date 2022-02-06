@@ -102,6 +102,6 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 			plot_roc(results, opts)
 		}
 	}
-	
+
 	return results
 }

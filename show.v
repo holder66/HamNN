@@ -5,7 +5,7 @@ module hamnn
 import etienne_napoleone.chalk
 import math
 
-// show 
+// show
 pub fn show<T>(a []T) string {
 	return typeof(a).name
 }
@@ -74,10 +74,10 @@ pub fn show_analyze(ds Dataset) {
 pub fn show_classifier(cl Classifier) {
 	// println(cl.Environment)
 	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-			'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-			' when calculating rank values',
-		'Included attributes: $cl.trained_attributes.len',
-		'Trained on $cl.instances.len instances.'
+		
+		'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
+		' when calculating rank values',
+		'Included attributes: $cl.trained_attributes.len', 'Trained on $cl.instances.len instances.',
 		'Name                        Type  Rank Value  Uniques        Min        Max  Bins',
 		'__________________________  ____  __________  _______  _________  _________  ____']
 	mut line := ''
@@ -95,42 +95,36 @@ pub fn show_classifier(cl Classifier) {
 // show_classifier_history history []HistoryEvent
 fn show_classifier_history(history []HistoryEvent) []string {
 	mut array := ['Classifier History:',
-	'Date & Time (UTC)    Event   From file                            Instances',
-	'_________________    _____   _________                            _________']
+		'Date & Time (UTC)    Event   From file                            Instances',
+		'_________________    _____   _________                            _________']
 	for events in history {
 		array << '${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}'
 	}
 	return array
 }
 
-// show_cross_validate 
+// show_cross_validate
 fn show_cross_validate(result VerifyResult, opts Options) {
-	
 }
 
-// show_explore 
+// show_explore
 fn show_explore(result []VerifyResult, opts Options) {
-	
 }
 
-// show_make 
+// show_make
 fn show_make(cl Classifier, opts Options) {
-	
 }
 
-// show_rank 
+// show_rank
 fn show_rank(result RankingResult, opts Options) {
-	
 }
 
 // show_validate
 fn show_validate(result ValidateResult, opts Options) {
-	
 }
 
-// show_verify 
+// show_verify
 fn show_verify(result VerifyResult, opts Options) {
-	
 }
 
 // show_results
@@ -175,7 +169,6 @@ fn show_results(result VerifyResult, opts Options) {
 		}
 	}
 }
-
 
 // get_show_bins
 fn get_show_bins(bins []int) string {

@@ -1,7 +1,6 @@
 // analyze
 module hamnn
 
-// import tools
 import math
 
 // analyze_dataset returns an array of strings with information about a datafile:

@@ -1,9 +1,6 @@
 // explore_test.v
 module hamnn
 
-// import tools
-// import os
-
 fn test_explore_cross() {
 	mut results := []VerifyResult{}
 	mut opts := Options{

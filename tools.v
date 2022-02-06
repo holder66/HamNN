@@ -66,10 +66,6 @@ fn print_array(array []string) {
 	}
 }
 
-
-
-
-
 // get_map_values returns an array of a map's values (for integer values)
 fn get_map_values(input map[string]int) []int {
 	mut values := []int{}

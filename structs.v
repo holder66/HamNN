@@ -57,7 +57,7 @@ pub mut:
 
 pub struct RankingResult {
 pub mut:
-	array_of_ranked_attributes	[]RankedAttribute
+	array_of_ranked_attributes []RankedAttribute
 }
 
 pub struct TrainedAttribute {
@@ -67,7 +67,7 @@ pub mut:
 	minimum           f32
 	maximum           f32
 	bins              int
-	rank_value f32
+	rank_value        f32
 }
 
 pub struct Classifier {
@@ -79,16 +79,16 @@ pub mut:
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	instances          [][]byte
-	history				[]HistoryEvent
+	history            []HistoryEvent
 }
 
 pub struct HistoryEvent {
 pub mut:
-	event_date       time.Time
-	instances_count 		 int
+	event_date        time.Time
+	instances_count   int
 	event_environment Environment
-	event 				string
-	file_path 			string
+	event             string
+	file_path         string
 }
 
 pub struct Options {
