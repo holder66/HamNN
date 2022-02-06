@@ -67,6 +67,7 @@ pub mut:
 	minimum           f32
 	maximum           f32
 	bins              int
+	rank_value f32
 }
 
 pub struct Classifier {
@@ -161,11 +162,6 @@ pub mut:
 	bin_values       []int
 	attributes_used  int
 	confusion_matrix [][]string
-}
-
-pub struct ExploreResult{
-pub mut:
-	array_of_results	[]VerifyResult
 }
 
 pub struct PlotResult {

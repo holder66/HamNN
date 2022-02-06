@@ -1,17 +1,13 @@
-// trial.v
+// explore.v
 module hamnn
 
-// import tools
-// import make
-// import cross
-// import verify
-import os
+// import os
 
 // explore runs a series of cross-validations, over a range of
 // attributes and a range of binning values.
 // If a second file is given (after the -t option), then explore
 // runs a series of verifies. Type: `v run hamnn.v explore --help`
-pub fn explore(ds Dataset, opts Options) ExploreResult {
+pub fn explore(ds Dataset, opts Options) []VerifyResult {
 	mut ex_opts := opts
 	mut result := VerifyResult{
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
@@ -99,22 +95,13 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		}
 		atts += interval_attr
 	}
-	if opts.graph_flag && opts.command == 'explore' {
+	if opts.graph_flag {
 		plot_explore(results, opts)
 		// println(results)
 		if results[0].class_table.len == 2 {
 			plot_roc(results, opts)
 		}
 	}
-	if opts.outputfile_path != '' && opts.command == 'explore' {
-		outputfile := opts.outputfile_path
-		mut f := os.open_file(outputfile, 'w') or { panic(err.msg) }
-		f.write_struct(opts) or { panic(err.msg) }
-		f.write_struct(results) or { panic(err.msg) }
-		f.close()
-	}
-	explore_result := ExploreResult{
-		array_of_results: results
-	}
-	return explore_result
+	
+	return results
 }

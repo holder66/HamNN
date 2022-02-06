@@ -78,12 +78,12 @@ pub fn show_classifier(cl Classifier) {
 			' when calculating rank values',
 		'Included attributes: $cl.trained_attributes.len',
 		'Trained on $cl.instances.len instances.'
-		'Name                        Type  Uniques        Min        Max  Bins',
-		'__________________________  ____  _______  _________  _________  ____']
+		'Name                        Type  Rank Value  Uniques        Min        Max  Bins',
+		'__________________________  ____  __________  _______  _________  _________  ____']
 	mut line := ''
 	for attr, val in cl.trained_attributes {
-		line = '${attr:-27} ${val.attribute_type:-2} ' +
-			if val.attribute_type == 'C' { '           ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
+		line = '${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
+			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
 		show_classifier_array << line
 	}
 	print_array(show_classifier_array)
@@ -109,7 +109,7 @@ fn show_cross_validate(result VerifyResult, opts Options) {
 }
 
 // show_explore 
-fn show_explore(result ExploreResult, opts Options) {
+fn show_explore(result []VerifyResult, opts Options) {
 	
 }
 

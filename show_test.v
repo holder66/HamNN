@@ -31,7 +31,7 @@ fn test_show_append() ? {
 	mut ext_cl := Classifier{}
 	cl = make_classifier(load_file('datasets/test.tab'), opts)
 	mut instances_to_append := validate(cl, opts) ?
-	show_append(append_instances(cl, instances_to_append, opts), opts)
+	show_classifier(append_instances(cl, instances_to_append, opts))
 }
 
 // test_show_classifier

@@ -67,6 +67,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 				minimum: min
 				maximum: max
 				bins: ra.bins
+				rank_value: ra.rank_value
 			}
 		} else { // ie for discrete attributes
 			attr_string_values = ds.useful_discrete_attributes[ra.attribute_index]
