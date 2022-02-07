@@ -6,7 +6,7 @@ import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
-	cross_opts := opts
+	mut cross_opts := opts
 	mut folds := opts.folds
 	mut fold_result := VerifyResult{}
 	mut cross_result := VerifyResult{

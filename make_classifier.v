@@ -23,17 +23,6 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		Class: ds.Class
 		Options: opts
 	}
-	mut event := HistoryEvent{
-		event: 'make'
-		file_path: ds.path
-	}
-	// if the concurrency flag is set, skip getting the environment
-	// (in macos, getting the environment involves sysctl; this takes time,
-	// and causes segmentation faults when explore is run)
-	if !opts.concurrency_flag {
-		event.event_date = time.utc()
-		event.event_environment = get_environment()
-	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	if opts.weighting_flag {
@@ -85,12 +74,20 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
-	event.instances_count = cl.instances.len
-	cl.history << event
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
+		// create an event
+		mut event := HistoryEvent{
+			event: 'make'
+			file_path: ds.path
+			event_date: time.utc()
+			event_environment: get_environment()
+			instances_count: cl.instances.len
+		}
+		cl.history << event
+
 		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(json.encode(cl)) or { panic(err.msg) }

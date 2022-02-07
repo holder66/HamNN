@@ -208,4 +208,3 @@ fn (mut a Environment) cpu_info(key string) string {
 	a.cached_cpuinfo = a.parse(info.output, ':')
 	return a.cached_cpuinfo[key]
 }
-

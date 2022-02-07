@@ -21,7 +21,7 @@ fn test_explore_cross() {
 	assert results[0].total_count == 150
 
 	opts.uniform_bins = false
-	opts.bins = [10,12]
+	opts.bins = [10, 12]
 	results = explore(ds, opts)
 	assert results.last().correct_count == 141
 	assert results.last().misses_count == 9
