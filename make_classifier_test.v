@@ -1,7 +1,6 @@
 // make_classifier_test
 module hamnn
 
-// import tools
 import os
 
 fn testsuite_begin() ? {

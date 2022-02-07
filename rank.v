@@ -1,7 +1,6 @@
 // rank
 module hamnn
 
-// import tools
 import math
 // import arrays
 

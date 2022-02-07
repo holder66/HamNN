@@ -1,9 +1,6 @@
 // classify.v
 module hamnn
 
-// import tools
-// import arrays
-
 // classify_instance takes a trained classifier and an instance to be
 // classified and returns the inferred class for the instance.
 // The classification algorithm gets Hamming distances between the instance

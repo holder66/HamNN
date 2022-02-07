@@ -1,8 +1,6 @@
 // cross_validate_test.v
 module hamnn
 
-// import tools
-
 // test_cross_validate
 fn test_cross_validate() ? {
 	mut ds := Dataset{}

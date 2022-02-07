@@ -1,10 +1,6 @@
 // append_test.v
 module hamnn
 
-// import tools
-// import make
-// import validate
-// import verify
 import os
 
 fn testsuite_begin() ? {

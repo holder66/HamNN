@@ -4,9 +4,6 @@
 // actually, more fruitful might be just to use the u8 type, since it is unlikely that there would be more than 255 values for discrete attributes. And in this situation, compression is unnecessary, since we do not need bitstrings to get Hamming distances when only positive integers are involved.
 module hamnn
 
-// import tools
-// import rank
-// import arrays
 import math
 import time
 import os
@@ -27,10 +24,15 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		Options: opts
 	}
 	mut event := HistoryEvent{
-		event_date: time.utc()
-		event_environment: get_environment()
 		event: 'make'
 		file_path: ds.path
+	}
+	// if the concurrency flag is set, skip getting the environment
+	// (in macos, getting the environment involves sysctl; this takes time,
+	// and causes segmentation faults when explore is run)
+	if !opts.concurrency_flag {
+		event.event_date = time.utc()
+		event.event_environment = get_environment()
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set

@@ -1,15 +1,10 @@
 // cross_validate.v
 module hamnn
 
-// import tools
-// import partition
-// import make
-// import verify
 import strconv
 import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
-// Type: `v run hamnn.v cross --help`
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	cross_opts := opts
 	mut folds := opts.folds

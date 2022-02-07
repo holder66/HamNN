@@ -1,8 +1,6 @@
 // query.v
 module hamnn
 
-// import tools
-// import classify
 import readline
 import strconv
 import json

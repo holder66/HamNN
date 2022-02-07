@@ -5,8 +5,6 @@ Given a classifier and a verification dataset, classifies each instance
   comparing the predicted classes to the assigned classes.*/
 module hamnn
 
-// import tools
-// import classify
 import runtime
 
 // verify classifies each instance of a verification datafile against

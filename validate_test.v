@@ -1,8 +1,6 @@
 // validate_test.v
 module hamnn
 
-// import tools
-// import make
 import os
 
 fn testsuite_begin() ? {

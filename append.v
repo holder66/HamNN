@@ -1,7 +1,6 @@
 // append.v
 module hamnn
 
-// import tools
 import json
 import os
 import time

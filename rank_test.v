@@ -1,8 +1,6 @@
 // rank_test.v
 module hamnn
 
-// import tools
-
 // test_rank_attributes
 fn test_rank_attributes() {
 	mut opts := Options{

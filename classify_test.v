@@ -1,9 +1,6 @@
 // classify_test.v
 module hamnn
 
-// import tools
-// import make
-
 // test_classify_instance
 fn test_classify_instance() {
 	mut opts := Options{

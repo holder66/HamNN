@@ -1,8 +1,6 @@
 // partition.v
 module hamnn
 
-// import tools
-
 // partition splits a dataset into a fold set of instances, and the remainder
 // of the dataset (ie with the fold instances taken out). Type: `v run hamnn.v partition --help`
 /*

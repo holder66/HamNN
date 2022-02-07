@@ -1,9 +1,6 @@
 // query_test.v
 module hamnn
 
-// import tools
-// import make
-
 // test_query
 fn test_query() ? {
 	mut opts := Options{
