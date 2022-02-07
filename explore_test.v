@@ -2,6 +2,7 @@
 module hamnn
 
 fn test_explore_cross() {
+	println(get_environment())
 	mut results := []VerifyResult{}
 	mut opts := Options{
 		verbose_flag: false

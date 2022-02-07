@@ -7,6 +7,18 @@ import v.util.version
 import runtime
 import v.vmod
 
+// get_environment collects and returns information about the
+// computer, the operating system and its version,
+// the version and build of V, the version of HamNN,
+// and the date and time.
+pub fn get_environment() Environment {
+	mut env := Environment{}
+	env.collect_info()
+	// vmod := vmod.from_file('v.mod') ?
+	env.hamnn_version = get_package_version()
+	return env
+}
+
 // get_package_version
 fn get_package_version() string {
 	vmod := vmod.from_file('v.mod') or { panic(err.msg) }
@@ -109,7 +121,7 @@ struct CmdConfig {
 }
 
 fn (mut a Environment) cmd(c CmdConfig) string {
-	x := os.execute(c.command)
+	// x := os.execute(c.command)
 	if x.exit_code < 0 {
 		return 'N/A'
 	}
@@ -197,14 +209,3 @@ fn (mut a Environment) cpu_info(key string) string {
 	return a.cached_cpuinfo[key]
 }
 
-// get_environment collects and returns information about the
-// computer, the operating system and its version,
-// the version and build of V, the version of HamNN,
-// and the date and time.
-pub fn get_environment() Environment {
-	mut env := Environment{}
-	env.collect_info()
-	// vmod := vmod.from_file('v.mod') ?
-	env.hamnn_version = get_package_version()
-	return env
-}
