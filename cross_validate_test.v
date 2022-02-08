@@ -14,36 +14,36 @@ fn test_cross_validate() ? {
 	mut result := VerifyResult{}
 
 	opts.datafile_path = 'datasets/anneal.tab'
-	opts.number_of_attributes = [28]
-	opts.bins = [21, 21]
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
-	assert result.correct_count == 881
-	assert result.misses_count == 17
-	assert result.wrong_count == 17
-	assert result.total_count == 898
+	// opts.number_of_attributes = [28]
+	// opts.bins = [21, 21]
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
+	// // print_confusion_matrix(result)
+	// assert result.correct_count == 881
+	// assert result.misses_count == 17
+	// assert result.wrong_count == 17
+	// assert result.total_count == 898
 
-	opts.weighting_flag = true
-	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
-	assert result.correct_count == 876
-	assert result.misses_count == 22
-	assert result.wrong_count == 22
-	assert result.total_count == 898
+	// opts.weighting_flag = true
+	// result = cross_validate(ds, opts)
+	// // print_confusion_matrix(result)
+	// assert result.correct_count == 876
+	// assert result.misses_count == 22
+	// assert result.wrong_count == 22
+	// assert result.total_count == 898
 
-	opts.datafile_path = 'datasets/developer.tab'
-	opts.number_of_attributes = [2]
-	opts.bins = [3, 3]
-	opts.folds = 0
-	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
-	assert result.correct_count == 9
-	assert result.misses_count == 4
-	assert result.wrong_count == 4
-	assert result.total_count == 13
+	// opts.datafile_path = 'datasets/developer.tab'
+	// opts.number_of_attributes = [2]
+	// opts.bins = [3, 3]
+	// opts.folds = 0
+	// opts.weighting_flag = false
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
+	// print_confusion_matrix(result)
+	// assert result.correct_count == 9
+	// assert result.misses_count == 4
+	// assert result.wrong_count == 4
+	// assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -123,20 +123,20 @@ fn test_cross_validate() ? {
 }
 
 // test_append_map_values
-fn test_append_map_values() {
-	mut a := {
-		'm': 3
-		'f': 0
-		'X': 1
-	}
-	b := {
-		'm': 4
-		'f': 5
-		'X': 0
-	}
-	assert append_map_values(mut a, b) == {
-		'm': 7
-		'f': 5
-		'X': 1
-	}
-}
+// fn test_append_map_values() {
+// 	mut a := {
+// 		'm': 3
+// 		'f': 0
+// 		'X': 1
+// 	}
+// 	b := {
+// 		'm': 4
+// 		'f': 5
+// 		'X': 0
+// 	}
+// 	assert append_map_values(mut a, b) == {
+// 		'm': 7
+// 		'f': 5
+// 		'X': 1
+// 	}
+// }
