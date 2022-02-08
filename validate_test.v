@@ -56,8 +56,7 @@ fn test_validate() ? {
 	cl = make_classifier(ds, opts)
 	result = validate(cl, opts) ?
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
-	assert result.counts == [[1, 0], [1, 0], [1, 0], [0, 1], [0, 1],
-		[0, 1], [1, 0], [1, 0], [0, 1], [3, 0]]
+	assert result.counts == [[1, 0], [2, 0], [2, 0], [0, 1], [0, 2], [0, 2], [2, 0], [2, 0], [1, 2], [3, 0]]
 
 	println('Done test.tab')
 
