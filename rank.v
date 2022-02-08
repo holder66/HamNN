@@ -131,9 +131,12 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		}
 	}
 	// ascending sort on bins
+	println('before sort: $ranked_atts')
 	ranked_atts.sort(a.bins < b.bins)
+	println('after sort on bins: $ranked_atts')
 	// descending sort on rank value
 	ranked_atts.sort(a.rank_value > b.rank_value)
+	println('after sort on rank_value: $ranked_atts')
 	if opts.show_flag && opts.command == 'rank' {
 		mut exclude_phrase := 'including missing values'
 		if opts.exclude_flag {
