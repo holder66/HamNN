@@ -1,6 +1,8 @@
 // classify.v
 module hamnn
 
+import arrays
+
 // classify_instance takes a trained classifier and an instance to be
 // classified and returns the inferred class for the instance.
 // The classification algorithm gets Hamming distances between the instance
@@ -14,7 +16,6 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	// if opts.weighting_flag {
 	// 	lcm_class_counts = i64(lcm(get_map_values(cl.class_counts)))
 	// }
-	mut results := [][]int{len: 10000, init: []int{len: cl.class_counts.len}}
 	// mut results := [][]int{}
 
 	mut hamming_dist_array := []int{}
@@ -34,15 +35,20 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	// println('counts: $counts')
 
 	mut distances := get_integer_keys(counts)
+	// println('distances: $distances')
 	distances.sort()
 
-	// println('distances: $distances')
+	// println('distances after sort: $distances')
 
 	// println(cl.class_values)
 	// for each distance in distances, get the classes for instances this
 	// distance away
 	// first, get an array of unique class values
 	classes := get_string_keys(string_element_counts(cl.class_values))
+	// println('classes: $classes')
+	// println('length to be: ${arrays.max(distances)}')
+	max_distance := arrays.max(distances) or {255}
+		mut results := [][]int{len: (max_distance + 1), init: []int{len: cl.class_counts.len}}
 	for i, dist in distances {
 		for j, instance_dist in hamming_dist_array {
 			for k, class in classes {
@@ -53,6 +59,8 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 				}
 			}
 		}
+		// println('results: $results')
+
 		// if the weighting_flag is set, multiply each value in the results
 		// row by the least common multiple (lcm) of the prevalences of the
 		// classes, and then

@@ -40,10 +40,10 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	print_confusion_matrix(result)
-	// assert result.correct_count == 9
-	// assert result.misses_count == 4
-	// assert result.wrong_count == 4
-	// assert result.total_count == 13
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
+	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -51,11 +51,14 @@ fn test_cross_validate() ? {
 	opts.folds = 2
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
+	// println(result)
+	println(ds.class_values)
+	println(result.labeled_classes)
 	print_confusion_matrix(result)
-	// assert result.correct_count == 9
-	// assert result.misses_count == 4
-	// assert result.wrong_count == 4
-	// assert result.total_count == 13
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
+	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -64,10 +67,10 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	print_confusion_matrix(result)
-	// assert result.correct_count == 10
-	// assert result.misses_count == 3
-	// assert result.wrong_count == 3
-	// assert result.total_count == 13
+	assert result.correct_count == 10
+	assert result.misses_count == 3
+	assert result.wrong_count == 3
+	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -76,10 +79,10 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	print_confusion_matrix(result)
-	// assert result.correct_count in [9, 10]
-	// assert result.misses_count in [3, 4]
-	// assert result.wrong_count in [3, 4]
-	// assert result.total_count == 13
+	assert result.correct_count in [9, 10]
+	assert result.misses_count in [3, 4]
+	assert result.wrong_count in [3, 4]
+	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/iris.tab'
 	opts.number_of_attributes = [2]
