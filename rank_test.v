@@ -56,4 +56,10 @@ result = rank_attributes(ds, opts)
 	for att in result.array_of_ranked_attributes {
 		println(att.attribute_name)
 }
+opts.bins = [4,9]
+opts.weighting_flag = true
+result = rank_attributes(ds, opts)
+	for att in result.array_of_ranked_attributes {
+		println(att.attribute_name)
+}
 }
