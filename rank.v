@@ -130,6 +130,8 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 			rank_value: 100.0 * f32(rank_value) / perfect_rank_value
 		}
 	}
+	// ascending sort on bins
+	ranked_atts.sort(a.bins < b.bins)
 	// descending sort on rank value
 	ranked_atts.sort(a.rank_value > b.rank_value)
 	if opts.show_flag && opts.command == 'rank' {

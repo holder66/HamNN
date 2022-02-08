@@ -40,9 +40,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 10
-	assert result.misses_count == 3
-	assert result.wrong_count == 3
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
@@ -52,9 +52,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 8
-	assert result.misses_count == 5
-	assert result.wrong_count == 5
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
@@ -64,9 +64,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 11
-	assert result.misses_count == 2
-	assert result.wrong_count == 2
+	assert result.correct_count == 10
+	assert result.misses_count == 3
+	assert result.wrong_count == 3
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
