@@ -15,8 +15,9 @@ fn test_explore_cross() {
 	}
 	mut ds := load_file(opts.datafile_path)
 	results = explore(ds, opts)
-	assert results[0].correct_count == 100
-	assert results[0].misses_count == 50
+	println(rank_attributes(ds, opts))
+	assert results[0].correct_count == 99
+	assert results[0].misses_count == 51
 	assert results[0].wrong_count == 50
 	assert results[0].total_count == 150
 
