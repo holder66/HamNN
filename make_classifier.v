@@ -33,6 +33,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	// number_of_attributes is 0)
 	// println(rank_attributes(ds, opts))
 	mut ranked_attributes := rank_attributes(ds, opts).array_of_ranked_attributes
+	// println('ranked_attributes: $ranked_attributes')
 	if opts.number_of_attributes[0] != 0 {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}
@@ -94,6 +95,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		f.write_string(json.encode(cl)) or { panic(err.msg) }
 		f.close()
 	}
+	println('cl.attribute_ordering: $cl.attribute_ordering')
 	return cl
 }
 
