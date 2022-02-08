@@ -9,7 +9,7 @@ fn test_cross_validate() ? {
 		exclude_flag: false
 		verbose_flag: false
 		show_flag: false
-		concurrency_flag: true
+		concurrency_flag: false
 	}
 	mut result := VerifyResult{}
 
@@ -49,62 +49,64 @@ fn test_cross_validate() ? {
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]
 	opts.folds = 2
+	opts.weighting_flag = true
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	// println(result)
-	println(ds.class_values)
-	println(result.labeled_classes)
+	println(result)
+	// println(ds.class_values)
+	// println(result.labeled_classes)
 	print_confusion_matrix(result)
 	assert result.correct_count == 9
 	assert result.misses_count == 4
 	assert result.wrong_count == 4
 	assert result.total_count == 13
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'], ['X', '0', '0', '0']]
 
-	opts.datafile_path = 'datasets/developer.tab'
-	opts.number_of_attributes = [2]
-	opts.bins = [3, 3]
-	opts.folds = 3
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
-	assert result.correct_count == 10
-	assert result.misses_count == 3
-	assert result.wrong_count == 3
-	assert result.total_count == 13
-
-	opts.datafile_path = 'datasets/developer.tab'
-	opts.number_of_attributes = [2]
-	opts.bins = [3, 3]
-	opts.folds = 4
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
-	assert result.correct_count in [9, 10]
-	assert result.misses_count in [3, 4]
-	assert result.wrong_count in [3, 4]
-	assert result.total_count == 13
-
-	opts.datafile_path = 'datasets/iris.tab'
-	opts.number_of_attributes = [2]
-	opts.bins = [3, 3]
-	opts.folds = 0
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	// opts.datafile_path = 'datasets/developer.tab'
+	// opts.number_of_attributes = [2]
+	// opts.bins = [3, 3]
+	// opts.folds = 3
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 147
-	assert result.misses_count == 3
-	assert result.wrong_count == 3
-	assert result.total_count == 150
+	// assert result.correct_count == 10
+	// assert result.misses_count == 3
+	// assert result.wrong_count == 3
+	// assert result.total_count == 13
 
-	opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
-	opts.number_of_attributes = [9]
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	// opts.datafile_path = 'datasets/developer.tab'
+	// opts.number_of_attributes = [2]
+	// opts.bins = [3, 3]
+	// opts.folds = 4
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 670
-	assert result.misses_count == 29
-	assert result.wrong_count == 29
-	assert result.total_count == 699
+	// assert result.correct_count in [9, 10]
+	// assert result.misses_count in [3, 4]
+	// assert result.wrong_count in [3, 4]
+	// assert result.total_count == 13
+
+	// opts.datafile_path = 'datasets/iris.tab'
+	// opts.number_of_attributes = [2]
+	// opts.bins = [3, 3]
+	// opts.folds = 0
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
+	// // print_confusion_matrix(result)
+	// assert result.correct_count == 147
+	// assert result.misses_count == 3
+	// assert result.wrong_count == 3
+	// assert result.total_count == 150
+
+	// opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
+	// opts.number_of_attributes = [9]
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts)
+	// // print_confusion_matrix(result)
+	// assert result.correct_count == 670
+	// assert result.misses_count == 29
+	// assert result.wrong_count == 29
+	// assert result.total_count == 699
 
 	// opts.datafile_path = 'datasets/mnist_test.tab'
 	// opts.number_of_attributes = [310]
