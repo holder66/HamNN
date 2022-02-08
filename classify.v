@@ -28,19 +28,19 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	}
 	// hamming_dist_array gives the hamming distance for each instance 
 	// in the classifier, to the instance to be classified
-	println('hamming_dist_array: $hamming_dist_array')
+	// println('hamming_dist_array: $hamming_dist_array')
 	// get counts of unique hamming distance values and sort
 	counts := integer_element_counts(hamming_dist_array)
 
-	println('counts: $counts')
+	// println('counts: $counts')
 
 	mut distances := get_integer_keys(counts)
-	println('distances: $distances')
+	// println('distances: $distances')
 	distances.sort()
 	// we now have in distances, the unique hamming distance values between
 	// the classifier instances and the instance to be classified, sorted
 	// by ascending hamming distance (ie, minimum hamming distance is first)
-	println('distances after sort: $distances')
+	// println('distances after sort: $distances')
 
 	// println(cl.class_values)
 	// for each distance in distances, get the classes for instances this
@@ -48,7 +48,7 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	// we cannot get a unique class
 	// first, get an array of unique class values
 	classes := get_string_keys(string_element_counts(cl.class_values))
-	println('classes: $classes')
+	// println('classes: $classes')
 	// println('length to be: ${arrays.max(distances)}')
 	max_distance := arrays.max(distances) or {255}
 	mut results := [][]int{len: (max_distance + 1), init: []int{len: cl.class_counts.len}}
@@ -56,7 +56,7 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	for i, dist in distances {
 		for j, instance_dist in hamming_dist_array {
 			for k, class in classes {
-				println('j, k: $j $k')
+				// println('j, k: $j $k')
 				if dist == instance_dist && class == cl.class_values[j] {
 					// println('j, k: $j $k')
 					results[i][k] += 1
@@ -81,7 +81,7 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 		}
 		// look for a single maximum; if found, return its class
 		index, max_count := idx_count_max(results[i])
-		println('i, results[i], index, max_count: $i ${results[i]} $index $max_count')
+		// println('i, results[i], index, max_count: $i ${results[i]} $index $max_count')
 		if max_count == 1 {
 			classify_result = ClassifyResult{
 				inferred_class: classes[index]
