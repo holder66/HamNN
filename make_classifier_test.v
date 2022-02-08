@@ -37,69 +37,69 @@ fn test_make_classifier() ? {
 }
 
 // test_make_translation_table
-// fn test_make_translation_table() {
-// 	mut array := ['Montreal', 'Ottawa', 'Markham', 'Oakville', 'Oakville', 'Laval', 'Laval', 'Laval',
-// 		'Laval', 'Laval', 'Laval', 'Laval', 'Laval']
-// 	assert make_translation_table(array) == {
-// 		'Montreal': 1
-// 		'Ottawa':   2
-// 		'Markham':  3
-// 		'Oakville': 4
-// 		'Laval':    5
-// 	}
-// 	array = ['4', '5', '3', '?', '2', '4', '2', '4', '2', '4', '4', '3', '3']
-// 	assert make_translation_table(array) == {
-// 		'4': 1
-// 		'5': 2
-// 		'3': 3
-// 		'?': 0
-// 		'2': 4
-// 	}
-// }
+fn test_make_translation_table() {
+	mut array := ['Montreal', 'Ottawa', 'Markham', 'Oakville', 'Oakville', 'Laval', 'Laval', 'Laval',
+		'Laval', 'Laval', 'Laval', 'Laval', 'Laval']
+	assert make_translation_table(array) == {
+		'Montreal': 1
+		'Ottawa':   2
+		'Markham':  3
+		'Oakville': 4
+		'Laval':    5
+	}
+	array = ['4', '5', '3', '?', '2', '4', '2', '4', '2', '4', '4', '3', '3']
+	assert make_translation_table(array) == {
+		'4': 1
+		'5': 2
+		'3': 3
+		'?': 0
+		'2': 4
+	}
+}
 
 // test_save_classifier
-// fn test_save_classifier() ? {
-// 	mut ds := Dataset{}
-// 	mut cl := Classifier{}
-// 	mut tcl := Classifier{}
-// 	mut opts := Options{
-// 		bins: [2, 12]
-// 		exclude_flag: false
-// 		verbose_flag: false
-// 		command: 'make'
-// 		number_of_attributes: [6]
-// 		show_flag: true
-// 		weighting_flag: true
-// 		outputfile_path: 'tempfolder/classifierfile'
-// 	}
-// 	opts.classifierfile_path = opts.outputfile_path
+fn test_save_classifier() ? {
+	mut ds := Dataset{}
+	mut cl := Classifier{}
+	mut tcl := Classifier{}
+	mut opts := Options{
+		bins: [2, 12]
+		exclude_flag: false
+		verbose_flag: false
+		command: 'make'
+		number_of_attributes: [6]
+		show_flag: true
+		weighting_flag: true
+		outputfile_path: 'tempfolder/classifierfile'
+	}
+	opts.classifierfile_path = opts.outputfile_path
 
-// 	ds = load_file('datasets/developer.tab')
-// 	cl = make_classifier(ds, opts)
+	ds = load_file('datasets/developer.tab')
+	cl = make_classifier(ds, opts)
 
-// 	tcl = load_classifier_file(opts.classifierfile_path) ?
-// 	assert tcl.trained_attributes == cl.trained_attributes
-// 	assert tcl.instances == cl.instances
+	tcl = load_classifier_file(opts.classifierfile_path) ?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
 
-// 	ds = load_file('datasets/anneal.tab')
-// 	cl = make_classifier(ds, opts)
+	ds = load_file('datasets/anneal.tab')
+	cl = make_classifier(ds, opts)
 
-// 	tcl = load_classifier_file(opts.classifierfile_path) ?
-// 	assert tcl.trained_attributes == cl.trained_attributes
-// 	assert tcl.instances == cl.instances
+	tcl = load_classifier_file(opts.classifierfile_path) ?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
 
-// 	ds = load_file('datasets/soybean-large-train.tab')
-// 	cl = make_classifier(ds, opts)
+	ds = load_file('datasets/soybean-large-train.tab')
+	cl = make_classifier(ds, opts)
 
-// 	tcl = load_classifier_file(opts.classifierfile_path) ?
-// 	assert tcl.trained_attributes == cl.trained_attributes
-// 	assert tcl.instances == cl.instances
-	// path := '../../mnist_train.tab'
-	// println('$path ${file_type(path)}')
-	// ds = load_file(path)
-	// cl = make_classifier(ds, opts)
+	tcl = load_classifier_file(opts.classifierfile_path) ?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
+	path := '../../mnist_train.tab'
+	println('$path ${file_type(path)}')
+	ds = load_file(path)
+	cl = make_classifier(ds, opts)
 
-	// tcl = load_classifier_file(opts.classifierfile_path) ?
-	// assert tcl.trained_attributes == cl.trained_attributes
-	// assert tcl.instances == cl.instances
-// }
+	tcl = load_classifier_file(opts.classifierfile_path) ?
+	assert tcl.trained_attributes == cl.trained_attributes
+	assert tcl.instances == cl.instances
+}
