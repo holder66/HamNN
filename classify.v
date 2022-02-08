@@ -97,16 +97,16 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 // when both left and right are values which can be represented by a single
 // bit if a bitstring were created
 fn get_hamming_distance<T>(left T, right T) int {
-	mut dist := 0
 	if left == right {
-		dist = 0
-	} else if left == byte(0) || right == byte(0) {
-		dist = 1
-	} else {
-		dist = 2
+		return 0
+	} 
+	if left == byte(0) || right == byte(0) {
+		return 1
 	}
-	return dist
+	return 2
 }
+
+
 
 // idx_count_max returns the index of the first maximum and the count
 // of that maximum
