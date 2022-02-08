@@ -76,15 +76,16 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 		labeled_classes: fold.class_values
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
-	// println('part_cl: $part_cl')
+	println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
 		j := fold.attribute_names.index(attr)
+		// println('attr, j, fold.data[j]: $attr $j ${fold.data[j]}')
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
-	println('byte_values_array: $byte_values_array')
+	// println('byte_values_array: $byte_values_array')
 	fold_instances := transpose(byte_values_array)
 
 	// println('fold_instances: $fold_instances')
@@ -108,7 +109,7 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 
 // process_fold_data
 fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
-	println('fold_data: $fold_data')
+	// println('fold_data: $fold_data')
 	mut byte_vals := []byte{cap: fold_data.len}
 
 	// for a continuous attribute
