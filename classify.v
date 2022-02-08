@@ -12,7 +12,7 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
-	println('instance to be classified in classify_instance(): $instance_to_be_classified')
+	// println('instance to be classified in classify_instance(): $instance_to_be_classified')
 	mut hamming_dist_array := []int{}
 	mut hamming_dist := 0
 	mut classify_result := ClassifyResult{}

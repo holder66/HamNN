@@ -83,7 +83,9 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
+	println('byte_values_array: $byte_values_array')
 	fold_instances := transpose(byte_values_array)
+	println('fold_instances: $fold_instances')
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
