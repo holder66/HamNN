@@ -76,9 +76,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 9
-	assert result.misses_count == 4
-	assert result.wrong_count == 4
+	assert result.correct_count in [9, 10]
+	assert result.misses_count in [3, 4]
+	assert result.wrong_count in [3, 4]
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/iris.tab'
