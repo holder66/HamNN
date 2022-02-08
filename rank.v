@@ -130,13 +130,30 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 			rank_value: 100.0 * f32(rank_value) / perfect_rank_value
 		}
 	}
+	custom_sort_fn := fn (a &RankedAttribute, b &RankedAttribute) int {
+		if a.rank_value > b.rank_value {
+			return -1
+		}
+		if a.rank_value < b.rank_value {
+			return 1
+		}
+		if a.rank_value == b.rank_value {
+			if a.bins > b.bins {return 1}
+			if a.bins < b.bins {return -1}
+			return 0
+		}
+		
+		return 0
+	}
+
 	// ascending sort on bins
 	println('before sort: $ranked_atts')
-	ranked_atts.sort(a.bins < b.bins)
-	println('after sort on bins: $ranked_atts')
+	ranked_atts.sort_with_compare(custom_sort_fn)
+	// ranked_atts.sort(a.bins < b.bins).sort(a.rank_value > b.rank_value)
+	// println('after sort on bins: $ranked_atts')
 	// descending sort on rank value
-	ranked_atts.sort(a.rank_value > b.rank_value)
-	println('after sort on rank_value: $ranked_atts')
+	// ranked_atts.sort(a.rank_value > b.rank_value)
+	println('after custom sort: $ranked_atts')
 	if opts.show_flag && opts.command == 'rank' {
 		mut exclude_phrase := 'including missing values'
 		if opts.exclude_flag {
@@ -159,6 +176,8 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		array_of_ranked_attributes: ranked_atts
 	}
 }
+
+
 
 // get_rank_value_for_strings
 fn get_rank_value_for_strings(values []string, class_values []string, class_counts map[string]int, exclude bool) i64 {
