@@ -94,6 +94,8 @@ fn test_save_classifier() ? {
 	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
+
+	if get_environment().arch_details[0] != '4 cpus' {
 	path := '../../mnist_train.tab'
 	println('$path ${file_type(path)}')
 	ds = load_file(path)
@@ -102,4 +104,5 @@ fn test_save_classifier() ? {
 	tcl = load_classifier_file(opts.classifierfile_path) ?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
+}
 }
