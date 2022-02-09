@@ -65,34 +65,6 @@ fn test_verify() ? {
 
 	println('Done with bcw350train using saved classifier')
 
-	if get_environment().arch_details[0] != '4 cpus' {
-
-	opts.datafile_path = 'datasets/mnist_test.tab'
-	opts.testfile_path = 'datasets/mnist_test.tab'
-	opts.classifierfile_path = ''
-	opts.number_of_attributes = [50]
-	opts.bins = [2, 2]
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)
-	assert result.correct_count == 9982
-	assert result.wrong_count == 18
-
-	println('Done with mnist_test.tab')
-
-	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = Classifier{}
-	result = VerifyResult{}
-	cl = make_classifier(ds, opts)
-	cl = Classifier{}
-	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-	assert result.correct_count == 9982
-	assert result.wrong_count == 18
-}
-
-	println('Done with mnist_test.tab using saved classifier')
-
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
 	opts.classifierfile_path = ''
@@ -118,6 +90,38 @@ fn test_verify() ? {
 	assert result.wrong_count == 36
 
 	println('Done with soybean-large-train.tab using saved classifier')
+
+	if get_environment().arch_details[0] != '4 cpus' {
+
+	opts.datafile_path = 'datasets/mnist_test.tab'
+	opts.testfile_path = 'datasets/mnist_test.tab'
+	opts.classifierfile_path = ''
+	opts.number_of_attributes = [50]
+	opts.bins = [2, 2]
+	ds = load_file(opts.datafile_path)
+	cl = make_classifier(ds, opts)
+	result = verify(cl, opts)
+	assert result.correct_count == 9982
+	assert result.wrong_count == 18
+
+	println('Done with mnist_test.tab')
+
+	// now with a saved classifier
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	cl = Classifier{}
+	result = VerifyResult{}
+	cl = make_classifier(ds, opts)
+	cl = Classifier{}
+	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
+	assert result.correct_count == 9982
+	assert result.wrong_count == 18
+
+	println('Done with mnist_test.tab using saved classifier')
+}
+
+	
+
+	
 
 	if get_environment().arch_details[0] != '4 cpus' {
 
