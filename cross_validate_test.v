@@ -9,41 +9,42 @@ fn test_cross_validate() ? {
 		exclude_flag: false
 		verbose_flag: false
 		show_flag: false
-		concurrency_flag: false
+		concurrency_flag: true
 	}
 	mut result := VerifyResult{}
 
 	opts.datafile_path = 'datasets/anneal.tab'
-	// opts.number_of_attributes = [28]
-	// opts.bins = [21, 21]
-	// ds = load_file(opts.datafile_path)
-	// result = cross_validate(ds, opts)
-	// // print_confusion_matrix(result)
-	// assert result.correct_count == 881
-	// assert result.misses_count == 17
-	// assert result.wrong_count == 17
-	// assert result.total_count == 898
-
-	// opts.weighting_flag = true
-	// result = cross_validate(ds, opts)
-	// // print_confusion_matrix(result)
-	// assert result.correct_count == 876
-	// assert result.misses_count == 22
-	// assert result.wrong_count == 22
-	// assert result.total_count == 898
-
-	// opts.datafile_path = 'datasets/developer.tab'
-	// opts.number_of_attributes = [2]
-	// opts.bins = [3, 3]
-	// opts.folds = 0
-	// opts.weighting_flag = false
-	// ds = load_file(opts.datafile_path)
-	// result = cross_validate(ds, opts)
+	opts.number_of_attributes = [28]
+	opts.bins = [21, 21]
+	ds = load_file(opts.datafile_path)
+	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	// assert result.correct_count == 9
-	// assert result.misses_count == 4
-	// assert result.wrong_count == 4
-	// assert result.total_count == 13
+	assert result.correct_count == 881
+	assert result.misses_count == 17
+	assert result.wrong_count == 17
+	assert result.total_count == 898
+
+	opts.weighting_flag = true
+	result = cross_validate(ds, opts)
+	// print_confusion_matrix(result)
+	assert result.correct_count == 876
+	assert result.misses_count == 22
+	assert result.wrong_count == 22
+	assert result.total_count == 898
+
+	opts.datafile_path = 'datasets/developer.tab'
+	opts.number_of_attributes = [2]
+	opts.bins = [3, 3]
+	opts.folds = 0
+	opts.weighting_flag = false
+	ds = load_file(opts.datafile_path)
+	result = cross_validate(ds, opts)
+	print_confusion_matrix(result)
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
+	assert result.total_count == 13
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'], ['X', '1', '1', '0']]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -52,14 +53,10 @@ fn test_cross_validate() ? {
 	opts.weighting_flag = true
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	println(result)
-	// println(ds.class_values)
-	// println(result.labeled_classes)
-	print_confusion_matrix(result)
-	// assert result.correct_count == 9
-	// assert result.misses_count == 4
-	// assert result.wrong_count == 4
-	// assert result.total_count == 13
+	assert result.correct_count == 8
+	assert result.misses_count == 5
+	assert result.wrong_count == 5
+	assert result.total_count == 13
 	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '7', '1', '0'], ['f', '2', '1', '0'], ['X', '0', '0', '0']]
 
 	// opts.datafile_path = 'datasets/developer.tab'

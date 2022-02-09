@@ -95,7 +95,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		f.write_string(json.encode(cl)) or { panic(err.msg) }
 		f.close()
 	}
-	println('cl.attribute_ordering: $cl.attribute_ordering')
+	// println('cl.attribute_ordering: $cl.attribute_ordering')
 	return cl
 }
 

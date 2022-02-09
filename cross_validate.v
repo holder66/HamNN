@@ -76,7 +76,7 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 		labeled_classes: fold.class_values
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
-	println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
+	// println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
