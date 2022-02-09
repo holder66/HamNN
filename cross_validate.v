@@ -6,6 +6,7 @@ import runtime
 
 // cross_validate takes a dataset and performs n-fold cross classification.
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
+	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	mut folds := opts.folds
 	mut fold_result := VerifyResult{}
@@ -75,14 +76,19 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 		labeled_classes: fold.class_values
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
+	// println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
 		j := fold.attribute_names.index(attr)
+		// println('attr, j, fold.data[j]: $attr $j ${fold.data[j]}')
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
+	// println('byte_values_array: $byte_values_array')
 	fold_instances := transpose(byte_values_array)
+
+	// println('fold_instances: $fold_instances')
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
@@ -103,7 +109,9 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Veri
 
 // process_fold_data
 fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
+	// println('fold_data: $fold_data')
 	mut byte_vals := []byte{cap: fold_data.len}
+
 	// for a continuous attribute
 	if part_attr.attribute_type == 'C' {
 		values := fold_data.map(f32(strconv.atof_quick(it)))

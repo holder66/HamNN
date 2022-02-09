@@ -3,6 +3,7 @@ module hamnn
 
 // test_cross_validate
 fn test_cross_validate() ? {
+	println(get_environment())
 	mut ds := Dataset{}
 	mut opts := Options{
 		command: 'cross'
@@ -44,21 +45,20 @@ fn test_cross_validate() ? {
 	assert result.misses_count == 4
 	assert result.wrong_count == 4
 	assert result.total_count == 13
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'], ['X', '1', '1', '0']]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]
 	opts.folds = 2
+	opts.weighting_flag = true
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	// println(result)
-	println(ds.class_values)
-	println(result.labeled_classes)
-	print_confusion_matrix(result)
-	assert result.correct_count == 9
-	assert result.misses_count == 4
-	assert result.wrong_count == 4
+	assert result.correct_count == 8
+	assert result.misses_count == 5
+	assert result.wrong_count == 5
 	assert result.total_count == 13
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '7', '1', '0'], ['f', '2', '1', '0'], ['X', '0', '0', '0']]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -67,9 +67,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	print_confusion_matrix(result)
-	assert result.correct_count == 10
-	assert result.misses_count == 3
-	assert result.wrong_count == 3
+	assert result.correct_count == 12
+	assert result.misses_count == 1
+	assert result.wrong_count == 1
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/developer.tab'
@@ -79,9 +79,9 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	print_confusion_matrix(result)
-	assert result.correct_count in [9, 10]
-	assert result.misses_count in [3, 4]
-	assert result.wrong_count in [3, 4]
+	assert result.correct_count == 9
+	assert result.misses_count == 4
+	assert result.wrong_count == 4
 	assert result.total_count == 13
 
 	opts.datafile_path = 'datasets/iris.tab'
@@ -101,23 +101,26 @@ fn test_cross_validate() ? {
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
 	// print_confusion_matrix(result)
-	assert result.correct_count == 670
-	assert result.misses_count == 29
-	assert result.wrong_count == 29
+	assert result.correct_count == 672
+	assert result.misses_count == 27
+	assert result.wrong_count == 27
 	assert result.total_count == 699
 
-	// opts.datafile_path = 'datasets/mnist_test.tab'
-	// opts.number_of_attributes = [310]
-	// opts.bins = [2, 2]
-	// opts.folds = 200
-	// opts.weighting_flag = false
-	// ds = load_file(opts.datafile_path)
-	// result = cross_validate(ds, opts)
-	// // print_confusion_matrix(result)
-	// assert result.correct_count == 9420
-	// assert result.misses_count == 580
-	// assert result.wrong_count == 580
-	// assert result.total_count == 10000
+	if get_environment().arch_details[0] != '4 cpus' {
+
+	opts.datafile_path = 'datasets/mnist_test.tab'
+	opts.number_of_attributes = [310]
+	opts.bins = [2, 2]
+	opts.folds = 200
+	opts.weighting_flag = false
+	ds = load_file(opts.datafile_path)
+	result = cross_validate(ds, opts)
+	// print_confusion_matrix(result)
+	assert result.correct_count == 9420
+	assert result.misses_count == 580
+	assert result.wrong_count == 580
+	assert result.total_count == 10000
+}
 }
 
 // test_append_map_values

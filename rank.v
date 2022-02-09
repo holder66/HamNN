@@ -140,6 +140,10 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		if a.rank_value == b.rank_value {
 			if a.bins > b.bins {return 1}
 			if a.bins < b.bins {return -1}
+			if a.bins == b.bins {
+				if a.attribute_index < b.attribute_index {return -1}
+				return 1
+			}
 			return 0
 		}
 		

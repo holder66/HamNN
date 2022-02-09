@@ -47,4 +47,5 @@ fn test_get_hamming_distance() {
 	assert get_hamming_distance(0, 1) == 1
 	assert get_hamming_distance(2, 0) == 1
 	assert get_hamming_distance(1, 2) == 2
+	assert get_hamming_distance(16,128) == 2
 }
