@@ -3,6 +3,7 @@ module hamnn
 
 // test_cross_validate
 fn test_cross_validate() ? {
+	println(get_environment())
 	mut ds := Dataset{}
 	mut opts := Options{
 		command: 'cross'
@@ -105,6 +106,8 @@ fn test_cross_validate() ? {
 	assert result.wrong_count == 27
 	assert result.total_count == 699
 
+	if get_environment().arch_details[0] != '4 cpus' {
+
 	opts.datafile_path = 'datasets/mnist_test.tab'
 	opts.number_of_attributes = [310]
 	opts.bins = [2, 2]
@@ -117,6 +120,7 @@ fn test_cross_validate() ? {
 	assert result.misses_count == 580
 	assert result.wrong_count == 580
 	assert result.total_count == 10000
+}
 }
 
 // test_append_map_values
