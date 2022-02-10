@@ -42,6 +42,34 @@ pub fn analyze_dataset(ds Dataset) AnalyzeResult {
 	result.attributes = atts 
 	return result
 }
+
+pub // show_analyze 
+fn show_analyze(result AnalyzeResult) {
+	// println(result)
+	mut show := []string{}
+	show << [
+	'',
+	'Analysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
+	'All Attributes', 'Index  Name                          Count  Uniques  Missing      %  Type',
+	'_____  __________________________  _______  _______  _______  _____  ____'
+	]
+	for attr in result.attributes {
+		show << '${attr.id:5}  ${attr.name:-27}  ${attr.count:6}  ${attr.uniques:7}  ${attr.missing:7}  ${attr.missing * 100 / f32(attr.count):5.1f}  ${attr.att_type:4}'
+		}
+	mut total_count := 0
+	mut total_missings := 0
+	for attr in result.attributes { 
+		total_count += attr.count
+		total_missings += attr.missing
+	}
+	println(total_count)
+	show << [
+	'______                             _______           _______  _____',
+	'Totals (less Class attribute)   ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%'
+	]
+	print_array(show)
+}
+
 pub fn analyze_dataset_old(ds Dataset) []string {
 	cases_count := ds.data[0].len
 	mut show_dataset := ['']
