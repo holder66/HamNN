@@ -3,6 +3,8 @@ module hamnn
 
 // import os
 
+// test_show_analyze has no asserts; the console output needs
+// to be verified visually.
 fn test_show_analyze() {
 	mut opts := Options{
 		show_flag: false
@@ -14,8 +16,7 @@ fn test_show_analyze() {
 
 	ar = analyze_dataset(load_file('datasets/iris.tab'), opts)
 	show_analyze(ar)
-	
-}	
+}
 
 // test_show_append
 fn test_show_append() ? {

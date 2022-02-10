@@ -4,8 +4,8 @@ module hamnn
 import etienne_napoleone.chalk
 // import math
 
-pub // show_analyze 
-fn show_analyze(result AnalyzeResult) {
+// show_analyze 
+pub fn show_analyze(result AnalyzeResult) {
 	// println(result)
 	mut show := []string{}
 	show << [

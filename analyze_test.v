@@ -12,8 +12,11 @@ fn test_analyze_dataset() ? {
 	assert pr.datafile_type == 'orange_newer'
 	assert pr.attributes[2].name == 'age'
 	assert pr.attributes[9].min == -90
-	assert pr.class_counts == {'m': 8, 'f': 3, 'X': 2}
-
+	assert pr.class_counts == {
+		'm': 8
+		'f': 3
+		'X': 2
+	}
 
 	// orange_older file
 	ds = load_file('datasets/iris.tab')
@@ -22,7 +25,9 @@ fn test_analyze_dataset() ? {
 	assert pr.datafile_type == 'orange_older'
 	assert pr.attributes[2].name == 'petal length'
 	assert pr.attributes[3].max == 2.5
-	assert pr.class_counts == {'Iris-setosa': 50, 'Iris-versicolor': 50, 'Iris-virginica': 50}
-
-
+	assert pr.class_counts == {
+		'Iris-setosa':     50
+		'Iris-versicolor': 50
+		'Iris-virginica':  50
+	}
 }
