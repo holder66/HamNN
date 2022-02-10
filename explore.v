@@ -1,12 +1,21 @@
 // explore.v
 module hamnn
 
-// import os
-
-// explore runs a series of cross-validations, over a range of
-// attributes and a range of binning values.
-// If a second file is given (after the -t option), then explore
-// runs a series of verifies. Type: `v run hamnn.v explore --help`
+// explore runs a series of cross-validations or verifications,
+// over a range of attributes and a range of binning values.
+// ```sh
+// Options (also see the Options struct):
+// bins: range for binning or slicing of continuous attributes;
+// uniform_bins: same number of bins for continuous attributes;
+// number_of_attributes: range for attributes to include;
+// exclude_flag: excludes missing values when ranking attributes;
+// weighting_flag: rank attributes and count nearest neighbors accounting
+// 	for class prevalences;
+// folds: number of folds n to use for n-fold cross-validation (default
+// 	is leave-one-out cross-validation);
+// repetitions: number of times to repeat n-fold cross-validations;
+// random-pick: choose instances randomly for n-fold cross-validations.
+// ```
 pub fn explore(ds Dataset, opts Options) []VerifyResult {
 	mut ex_opts := opts
 	mut result := VerifyResult{
@@ -97,11 +106,9 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 	}
 	if opts.graph_flag {
 		plot_explore(results, opts)
-		// println(results)
 		if results[0].class_table.len == 2 {
 			plot_roc(results, opts)
 		}
 	}
-
 	return results
 }

@@ -3,7 +3,8 @@ module hamnn
 
 import math
 
-// analyze_dataset returns an array of strings with information about a datafile:
+// analyze_dataset returns an array of strings with information about a
+// datafile; print to the console with print_array().
 // ```sh
 // 1. a list of attributes, their types, the unique values, and a count of
 // missing values;

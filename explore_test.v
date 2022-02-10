@@ -2,7 +2,6 @@
 module hamnn
 
 fn test_explore_cross() {
-	// println(get_environment())
 	mut results := []VerifyResult{}
 	mut opts := Options{
 		verbose_flag: false
@@ -15,7 +14,6 @@ fn test_explore_cross() {
 	}
 	mut ds := load_file(opts.datafile_path)
 	results = explore(ds, opts)
-	// println(rank_attributes(ds, opts))
 	assert results[0].correct_count == 99
 	assert results[0].misses_count == 51
 	assert results[0].wrong_count == 50

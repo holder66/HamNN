@@ -37,11 +37,9 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	} else if opts.bins.len != 1 {
 		panic('invalid bins $opts.bins')
 	}
-	// println('bins_bins: $lower, $upper with increment: $incr')
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
 	// create an array of the unique class values
-	// mut class_counts_array := get_map_values(ds.class_counts)
 	mut count := 0
 	// mut diff := 0
 	mut rank_value := i64(0)
@@ -70,8 +68,6 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 			rank_value = i64(0)
 
 			binned_values = discretize_attribute(attr_values, min, max, bin_number)
-			// println('attr_values: $attr_values')
-			// println('binned_values: $binned_values')
 			// loop through each possible value for bin in the bins bin_number + 1
 			for bin_value in 0 .. bin_number + 1 {
 				// a bin_value of 0 represents a missing value, so skip
@@ -100,7 +96,6 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 			// for each attribute, find the maximum for the rank_values and
 			// the corresponding number of bins
-			// println('$attr_index ${ds.attribute_names[attr_index]} $rank_value  bins: $bin_number')
 			if rank_value >= maximum_rank_value {
 				maximum_rank_value = rank_value
 				attr_index_for_maximum_rank_value = attr_index
@@ -138,26 +133,29 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 			return 1
 		}
 		if a.rank_value == b.rank_value {
-			if a.bins > b.bins {return 1}
-			if a.bins < b.bins {return -1}
+			if a.bins > b.bins {
+				return 1
+			}
+			if a.bins < b.bins {
+				return -1
+			}
 			if a.bins == b.bins {
-				if a.attribute_index < b.attribute_index {return -1}
+				if a.attribute_index < b.attribute_index {
+					return -1
+				}
 				return 1
 			}
 			return 0
 		}
-		
+
 		return 0
 	}
 
 	// ascending sort on bins
-	// println('before sort: $ranked_atts')
 	ranked_atts.sort_with_compare(custom_sort_fn)
 	// ranked_atts.sort(a.bins < b.bins).sort(a.rank_value > b.rank_value)
-	// println('after sort on bins: $ranked_atts')
 	// descending sort on rank value
 	// ranked_atts.sort(a.rank_value > b.rank_value)
-	// println('after custom sort: $ranked_atts')
 	if opts.show_flag && opts.command == 'rank' {
 		mut exclude_phrase := 'including missing values'
 		if opts.exclude_flag {
@@ -180,8 +178,6 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		array_of_ranked_attributes: ranked_atts
 	}
 }
-
-
 
 // get_rank_value_for_strings
 fn get_rank_value_for_strings(values []string, class_values []string, class_counts map[string]int, exclude bool) i64 {

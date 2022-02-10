@@ -2,10 +2,7 @@
 module hamnn
 
 // partition splits a dataset into a fold set of instances, and the remainder
-// of the dataset (ie with the fold instances taken out). Type: `v run hamnn.v partition --help`
-/*
-Specify in Options
-'fold', the total number of folds and 'current_fold', the fold number for this fold to be returned (the first fold is fold 1; changed to fold 0 on 2021-7-13).*/
+// of the dataset (ie with the fold instances taken out).
 fn partition(current_fold int, folds int, ds Dataset, opts Options) (Dataset, Fold) {
 	// fold will be the fold instance, part_ds will be the rest of the dataset.
 	mut part_ds := ds
@@ -27,7 +24,6 @@ fn partition(current_fold int, folds int, ds Dataset, opts Options) (Dataset, Fo
 	part_ds.useful_discrete_attributes = get_useful_discrete_attributes(part_ds)
 	fold_class_values := ds.Class.class_values[s..e]
 	fold_data := transpose(transpose(ds.data)[s..e])
-	// println('fold_data: $fold_data')
 	mut fold := Fold{
 		fold_number: current_fold
 		attribute_names: ds.attribute_names
@@ -38,7 +34,6 @@ fn partition(current_fold int, folds int, ds Dataset, opts Options) (Dataset, Fo
 		class_values: fold_class_values
 		class_counts: string_element_counts(fold_class_values)
 	}
-	// println('fold: $fold')
 	return part_ds, fold
 }
 
@@ -64,7 +59,6 @@ fn get_partition_indices(total int, n int, curr int) (int, int) {
 		start = curr * fold_size - r
 		end = start + fold_size
 	}
-	// println('$total $n $curr $fold_size $r $start $end')
 	return start, end
 }
 

@@ -37,7 +37,7 @@ pub fn verify(cl Classifier, opts Options) VerifyResult {
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
 	show_results(verify_result, opts)
 	if opts.verbose_flag && opts.command == 'verify' {
-		// println('verify_result.class_table in verify: $verify_result.class_table')
+		println('verify_result.class_table in verify: $verify_result.class_table')
 	}
 	return verify_result
 }
@@ -83,7 +83,6 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyR
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := ClassifyResult{}
-	// println('result in classify_to_verify: $result')
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: runtime.nr_jobs()}
 		mut result_channel := chan ClassifyResult{cap: test_instances.len}
@@ -94,16 +93,13 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyR
 		}
 		for _ in test_instances {
 			classify_result = <-result_channel
-			// println(classify_result)
 			if classify_result.inferred_class == classify_result.labeled_class {
 				result.class_table[classify_result.inferred_class].correct_inferences += 1
 			} else {
 				result.class_table[classify_result.inferred_class].wrong_inferences += 1
 			}
 			// update confusion matrix row
-			// println(result.class_table[classify_result.labeled_class])
 			result.class_table[classify_result.labeled_class].confusion_matrix_row[classify_result.inferred_class] += 1
-			// println(result.class_table)
 		}
 	} else {
 		for i, test_instance in test_instances {

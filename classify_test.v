@@ -6,7 +6,7 @@ fn test_classify_instance() {
 	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
-		verbose_flag: true
+		verbose_flag: false
 		command: 'classify'
 		number_of_attributes: [6]
 		show_flag: false
@@ -47,5 +47,5 @@ fn test_get_hamming_distance() {
 	assert get_hamming_distance(0, 1) == 1
 	assert get_hamming_distance(2, 0) == 1
 	assert get_hamming_distance(1, 2) == 2
-	assert get_hamming_distance(16,128) == 2
+	assert get_hamming_distance(16, 128) == 2
 }

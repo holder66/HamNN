@@ -3,7 +3,6 @@ module hamnn
 
 // test_cross_validate
 fn test_cross_validate() ? {
-	println(get_environment())
 	mut ds := Dataset{}
 	mut opts := Options{
 		command: 'cross'
@@ -19,7 +18,6 @@ fn test_cross_validate() ? {
 	opts.bins = [21, 21]
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
 	assert result.correct_count == 881
 	assert result.misses_count == 17
 	assert result.wrong_count == 17
@@ -27,7 +25,6 @@ fn test_cross_validate() ? {
 
 	opts.weighting_flag = true
 	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
 	assert result.correct_count == 876
 	assert result.misses_count == 22
 	assert result.wrong_count == 22
@@ -40,12 +37,13 @@ fn test_cross_validate() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
 	assert result.correct_count == 9
 	assert result.misses_count == 4
 	assert result.wrong_count == 4
 	assert result.total_count == 13
-	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'], ['X', '1', '1', '0']]
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'],
+		['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'],
+		['X', '1', '1', '0']]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -58,7 +56,9 @@ fn test_cross_validate() ? {
 	assert result.misses_count == 5
 	assert result.wrong_count == 5
 	assert result.total_count == 13
-	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'], ['Actual Classes (rows)'], ['m', '7', '1', '0'], ['f', '2', '1', '0'], ['X', '0', '0', '0']]
+	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'],
+		['Actual Classes (rows)'], ['m', '7', '1', '0'], ['f', '2', '1', '0'],
+		['X', '0', '0', '0']]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -66,7 +66,6 @@ fn test_cross_validate() ? {
 	opts.folds = 3
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
 	assert result.correct_count == 12
 	assert result.misses_count == 1
 	assert result.wrong_count == 1
@@ -78,7 +77,6 @@ fn test_cross_validate() ? {
 	opts.folds = 4
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	print_confusion_matrix(result)
 	assert result.correct_count == 9
 	assert result.misses_count == 4
 	assert result.wrong_count == 4
@@ -90,7 +88,6 @@ fn test_cross_validate() ? {
 	opts.folds = 0
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
 	assert result.correct_count == 147
 	assert result.misses_count == 3
 	assert result.wrong_count == 3
@@ -100,27 +97,24 @@ fn test_cross_validate() ? {
 	opts.number_of_attributes = [9]
 	ds = load_file(opts.datafile_path)
 	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
 	assert result.correct_count == 672
 	assert result.misses_count == 27
 	assert result.wrong_count == 27
 	assert result.total_count == 699
 
 	if get_environment().arch_details[0] != '4 cpus' {
-
-	opts.datafile_path = 'datasets/mnist_test.tab'
-	opts.number_of_attributes = [310]
-	opts.bins = [2, 2]
-	opts.folds = 200
-	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
-	// print_confusion_matrix(result)
-	assert result.correct_count == 9420
-	assert result.misses_count == 580
-	assert result.wrong_count == 580
-	assert result.total_count == 10000
-}
+		opts.datafile_path = 'datasets/mnist_test.tab'
+		opts.number_of_attributes = [310]
+		opts.bins = [2, 2]
+		opts.folds = 200
+		opts.weighting_flag = false
+		ds = load_file(opts.datafile_path)
+		result = cross_validate(ds, opts)
+		assert result.correct_count == 9420
+		assert result.misses_count == 580
+		assert result.wrong_count == 580
+		assert result.total_count == 10000
+	}
 }
 
 // test_append_map_values

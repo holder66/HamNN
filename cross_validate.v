@@ -4,7 +4,20 @@ module hamnn
 import strconv
 import runtime
 
-// cross_validate takes a dataset and performs n-fold cross classification.
+// cross_validate takes a dataset and performs n-fold cross-validation.
+// ```sh
+// Options (also see the Options struct):
+// bins: range for binning or slicing of continuous attributes;
+// uniform_bins: same number of bins for continuous attributes;
+// number_of_attributes: range for attributes to include;
+// exclude_flag: excludes missing values when ranking attributes;
+// weighting_flag: rank attributes and count nearest neighbors accounting
+// for class prevalences;
+// folds: number of folds n to use for n-fold cross-validation (default
+// is leave-one-out cross-validation);
+// repetitions: number of times to repeat n-fold cross-validations;
+// random-pick: choose instances randomly for n-fold cross-validations.
+// ```
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts

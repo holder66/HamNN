@@ -48,7 +48,6 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
 		s := json.encode(validate_result)
-		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(s) or { panic(err.msg) }
 		f.close()

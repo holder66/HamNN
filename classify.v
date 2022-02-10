@@ -8,11 +8,15 @@ import arrays
 // The classification algorithm gets Hamming distances between the instance
 // to be classified and all the instances in the trained classifier, and
 // infers class based on minimum Hamming distance.
+// ```sh
+// Optional (specified in opts):
+// weighting_flag: when true, the nearest neighbor algorithm takes into
+// 		account class prevalences.
+// ```
 pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
-	// println('instance to be classified in classify_instance(): $instance_to_be_classified')
 	mut hamming_dist_array := []int{}
 	mut hamming_dist := 0
 	mut classify_result := ClassifyResult{}
@@ -21,36 +25,28 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 	for instance in cl.instances {
 		hamming_dist = 0
 		for i, byte_value in instance_to_be_classified {
-			// println('i: $i')
 			hamming_dist += get_hamming_distance(byte_value, instance[i])
 		}
 		hamming_dist_array << hamming_dist
 	}
-	// hamming_dist_array gives the hamming distance for each instance 
+	// hamming_dist_array gives the hamming distance for each instance
 	// in the classifier, to the instance to be classified
-	// println('hamming_dist_array: $hamming_dist_array')
 	// get counts of unique hamming distance values and sort
 	counts := integer_element_counts(hamming_dist_array)
 
 	// println('counts: $counts')
 
 	mut distances := get_integer_keys(counts)
-	// println('distances: $distances')
 	distances.sort()
 	// we now have in distances, the unique hamming distance values between
 	// the classifier instances and the instance to be classified, sorted
-	// by ascending hamming distance (ie, minimum hamming distance is first)
-	// println('distances after sort: $distances')
-
-	// println(cl.class_values)
+	// by ascending hamming distance (ie, minimum hamming distance is first).
 	// for each distance in distances, get the classes for instances this
 	// distance away; note that we want to continue in this loop only while
 	// we cannot get a unique class
 	// first, get an array of unique class values
 	classes := get_string_keys(string_element_counts(cl.class_values))
-	// println('classes: $classes')
-	// println('length to be: ${arrays.max(distances)}')
-	max_distance := arrays.max(distances) or {255}
+	max_distance := arrays.max(distances) or { 255 }
 	mut results := [][]int{len: (max_distance + 1), init: []int{len: cl.class_counts.len}}
 	// cycle through the unique hamming distances, starting with the minimm
 	for i, dist in distances {
@@ -63,8 +59,6 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 				}
 			}
 		}
-		// println('results: $results')
-
 		// if the weighting_flag is set, multiply each value in the results
 		// row by the least common multiple (lcm) of the prevalences of the
 		// classes, and then
@@ -81,7 +75,6 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 		}
 		// look for a single maximum; if found, return its class
 		index, max_count := idx_count_max(results[i])
-		// println('i, results[i], index, max_count: $i ${results[i]} $index $max_count')
 		if max_count == 1 {
 			classify_result = ClassifyResult{
 				inferred_class: classes[index]
@@ -104,14 +97,12 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 fn get_hamming_distance<T>(left T, right T) int {
 	if left == right {
 		return 0
-	} 
+	}
 	if left == byte(0) || right == byte(0) {
 		return 1
 	}
 	return 2
 }
-
-
 
 // idx_count_max returns the index of the first maximum and the count
 // of that maximum

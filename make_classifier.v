@@ -12,11 +12,13 @@ import json
 // make_classifier returns a Classifier struct, given a Dataset (as created by
 // load_file).
 // ```sh
-// Options: bins = number of bins or slices for continuous attributes;
-// number_of_attributes = the number of attributes to include in
-// the classifier (chosen from the list of ranked attributes);
-// exclude_flag = true to exclude missing values when ranking attributes;
-// outputfile_path specifies if and where to save the classifier as a file;
+// Options (also see the Options struct):
+// bins: range for binning or slicing of continuous attributes;
+// uniform_bins: same number of bins for continuous attributes;
+// number_of_attributes: range for attributes to include;
+// exclude_flag: excludes missing values when ranking attributes;
+// weighting_flag: rank attributes taking into account class prevalences;
+// outputfile_path: if specified, saves the classifier to this file.
 // ```
 pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut cl := Classifier{
@@ -31,9 +33,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
-	// println(rank_attributes(ds, opts))
 	mut ranked_attributes := rank_attributes(ds, opts).array_of_ranked_attributes
-	// println('ranked_attributes: $ranked_attributes')
 	if opts.number_of_attributes[0] != 0 {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}
@@ -89,13 +89,10 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 			instances_count: cl.instances.len
 		}
 		cl.history << event
-
-		// println('After json encoding, before writing:\n $s')
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(json.encode(cl)) or { panic(err.msg) }
 		f.close()
 	}
-	// println('cl.attribute_ordering: $cl.attribute_ordering')
 	return cl
 }
 

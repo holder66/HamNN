@@ -11,7 +11,6 @@ const (
 
 pub struct Class {
 pub mut:
-	// class_index  int
 	class_name       string
 	class_values     []string
 	class_counts     map[string]int

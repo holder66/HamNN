@@ -22,7 +22,7 @@ fn test_make_classifier() ? {
 		verbose_flag: false
 		command: 'make'
 		number_of_attributes: [6]
-		show_flag: true
+		show_flag: false
 		weighting_flag: true
 	}
 	mut ds := load_file('datasets/developer.tab')
@@ -68,7 +68,7 @@ fn test_save_classifier() ? {
 		verbose_flag: false
 		command: 'make'
 		number_of_attributes: [6]
-		show_flag: true
+		show_flag: false
 		weighting_flag: true
 		outputfile_path: 'tempfolder/classifierfile'
 	}
@@ -96,13 +96,12 @@ fn test_save_classifier() ? {
 	assert tcl.instances == cl.instances
 
 	if get_environment().arch_details[0] != '4 cpus' {
-	path := '../../mnist_train.tab'
-	println('$path ${file_type(path)}')
-	ds = load_file(path)
-	cl = make_classifier(ds, opts)
+		path := 'datasets/mnist_test.tab'
+		ds = load_file(path)
+		cl = make_classifier(ds, opts)
 
-	tcl = load_classifier_file(opts.classifierfile_path) ?
-	assert tcl.trained_attributes == cl.trained_attributes
-	assert tcl.instances == cl.instances
-}
+		tcl = load_classifier_file(opts.classifierfile_path) ?
+		assert tcl.trained_attributes == cl.trained_attributes
+		assert tcl.instances == cl.instances
+	}
 }
