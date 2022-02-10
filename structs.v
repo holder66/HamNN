@@ -128,6 +128,28 @@ pub mut:
 	vflags         string
 }
 
+pub struct Attribute {
+pub mut:
+	id 		int 
+	name 	string
+	count 	int 
+	uniques 	int 
+	missing 	int 
+	att_type 	string 
+	for_training	bool
+	min 	f32
+	max 	f32
+}
+
+pub struct AnalyzeResult {
+	
+pub mut:
+	environment 	Environment
+	datafile_path string
+	datafile_type 	string
+	attributes 	[]Attribute
+}
+
 pub struct ClassifyResult {
 pub mut:
 	inferred_class             string

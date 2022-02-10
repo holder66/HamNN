@@ -13,7 +13,36 @@ import math
 // 4. a list of continuous attributes useful for training a classifier;
 // 5. a breakdown of the class attribute, showing counts for each class.
 // ```
-pub fn analyze_dataset(ds Dataset) []string {
+pub fn analyze_dataset(ds Dataset) AnalyzeResult {
+	mut result := AnalyzeResult{
+		environment: get_environment()
+		datafile_path: ds.path 
+		datafile_type:	file_type(ds.path)
+	}
+	mut missing_vals := ds.data.map(missing_values(it))
+	mut indices_of_useful_attributes := ds.useful_continuous_attributes.keys()
+	indices_of_useful_attributes << ds.useful_discrete_attributes.keys()
+	mut atts := []Attribute{}
+	for i, name in ds.attribute_names {
+		mut att_info := Attribute{
+			id: i 
+			name: name 
+			count: ds.data[i].len 
+			uniques: uniques(ds.data[i])
+			missing: missing_vals[i]
+			att_type: ds.inferred_attribute_types[i]
+			for_training: i in indices_of_useful_attributes
+		}
+		if i in indices_of_useful_attributes && ds.inferred_attribute_types[i] == 'C' {
+			att_info.max = array_max(ds.useful_continuous_attributes[i])
+			att_info.min = f32(array_min(ds.useful_continuous_attributes[i].filter(it != -math.max_f32)))
+			}
+		atts << att_info
+		}
+	result.attributes = atts 
+	return result
+}
+pub fn analyze_dataset_old(ds Dataset) []string {
 	cases_count := ds.data[0].len
 	mut show_dataset := ['']
 	mut missing_vals := ds.data.map(missing_values(it))
