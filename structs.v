@@ -130,24 +130,25 @@ pub mut:
 
 pub struct Attribute {
 pub mut:
-	id 		int 
-	name 	string
-	count 	int 
-	uniques 	int 
-	missing 	int 
-	att_type 	string 
-	for_training	bool
-	min 	f32
-	max 	f32
+	id           int
+	name         string
+	count        int
+	uniques      int
+	missing      int
+	att_type     string
+	for_training bool
+	min          f32
+	max          f32
 }
 
 pub struct AnalyzeResult {
-	
 pub mut:
-	environment 	Environment
+	environment   Environment
 	datafile_path string
-	datafile_type 	string
-	attributes 	[]Attribute
+	datafile_type string
+	class_name    string
+	class_counts  map[string]int
+	attributes    []Attribute
 }
 
 pub struct ClassifyResult {

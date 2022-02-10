@@ -98,7 +98,7 @@ fn test_verify() ? {
 		opts.outputfile_path = ''
 		opts.number_of_attributes = [50]
 		opts.bins = [2, 2]
-		opts.weighting_flag= false
+		opts.weighting_flag = false
 		opts.show_flag = false
 		ds = load_file(opts.datafile_path)
 		cl = make_classifier(ds, opts)
@@ -115,7 +115,7 @@ fn test_verify() ? {
 		cl = make_classifier(ds, opts)
 		cl = Classifier{}
 		result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-		assert result.correct_count == 9982	
+		assert result.correct_count == 9982
 		assert result.wrong_count == 18
 
 		println('Done with mnist_test.tab using saved classifier')

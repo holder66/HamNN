@@ -15,8 +15,10 @@ import math
 pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	mut result := AnalyzeResult{
 		environment: get_environment()
-		datafile_path: ds.path 
-		datafile_type:	file_type(ds.path)
+		datafile_path: ds.path
+		datafile_type: file_type(ds.path)
+		class_name: ds.class_name
+		class_counts: ds.class_counts
 	}
 	mut missing_vals := ds.data.map(missing_values(it))
 	mut indices_of_useful_attributes := ds.useful_continuous_attributes.keys()
@@ -24,9 +26,9 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	mut atts := []Attribute{}
 	for i, name in ds.attribute_names {
 		mut att_info := Attribute{
-			id: i 
-			name: name 
-			count: ds.data[i].len 
+			id: i
+			name: name
+			count: ds.data[i].len
 			uniques: uniques(ds.data[i])
 			missing: missing_vals[i]
 			att_type: ds.inferred_attribute_types[i]
@@ -35,11 +37,13 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 		if i in indices_of_useful_attributes && ds.inferred_attribute_types[i] == 'C' {
 			att_info.max = array_max(ds.useful_continuous_attributes[i])
 			att_info.min = f32(array_min(ds.useful_continuous_attributes[i].filter(it != -math.max_f32)))
-			}
-		atts << att_info
 		}
+		atts << att_info
+	}
 	result.attributes = atts
-	if opts.show_flag { show_analyze(result)}
+	if opts.show_flag {
+		show_analyze(result)
+	}
 	return result
 }
 
@@ -52,4 +56,3 @@ fn uniques(attribute_values []string) int {
 fn missing_values(attribute_values []string) int {
 	return attribute_values.filter(it in missings).len
 }
-

@@ -64,19 +64,16 @@ fn show_analyze(result AnalyzeResult) {
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'C') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.min:10.3g}  ${attr.max:10.3g}'
 	}
-	mut class_name := ''
-	for attr in result.attributes.filter(it.att_type == 'c') {
-		class_name = attr.name
-	}
 	show << [
 	'', 
-	'The Class Attribute: "$class_name"',
+	'The Class Attribute: "$result.class_name"',
 	'Class Value           Cases', 
 	'____________________  _____'
 	]
-	for attr in result.attributes.filter(it.att_type == 'c') {
-		show << '$attr.name'
+	for key, value in result.class_counts {
+		show << '${key:-20}  ${value:5}'
 	}
+	
 	print_array(show)
 }
 
