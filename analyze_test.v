@@ -2,9 +2,12 @@
 module hamnn
 
 fn test_analyze_dataset() ? {
+	opts := Options{
+		show_flag: true
+	}
 	mut ds := load_file('datasets/developer.tab')
-	mut pr := analyze_dataset(ds)
-	show_analyze(pr)
+	mut pr := analyze_dataset(ds, opts)
+	
 
 	// assert pr[2..3] == [
 	// 	'Analysis of Dataset "datasets/developer.tab" (File Type orange_newer)',
@@ -37,8 +40,7 @@ fn test_analyze_dataset() ? {
 	// ]
 
 	ds = load_file('datasets/iris.tab')
-	pr = analyze_dataset(ds)
-	show_analyze(pr)
+	pr = analyze_dataset(ds, opts)
 
 	// assert pr[28..32] == [
 	// 	'     0  sepal length                 4.300       7.900',

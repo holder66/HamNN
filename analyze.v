@@ -13,7 +13,7 @@ import math
 // 4. a list of continuous attributes useful for training a classifier;
 // 5. a breakdown of the class attribute, showing counts for each class.
 // ```
-pub fn analyze_dataset(ds Dataset) AnalyzeResult {
+pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	mut result := AnalyzeResult{
 		environment: get_environment()
 		datafile_path: ds.path 
@@ -39,7 +39,8 @@ pub fn analyze_dataset(ds Dataset) AnalyzeResult {
 			}
 		atts << att_info
 		}
-	result.attributes = atts 
+	result.attributes = atts
+	if opts.show_flag { show_analyze(result)}
 	return result
 }
 
@@ -62,7 +63,6 @@ fn show_analyze(result AnalyzeResult) {
 		total_count += attr.count
 		total_missings += attr.missing
 	}
-	println(total_count)
 	show << [
 	'______                             _______           _______  _____',
 	'Totals (less Class attribute)   ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%'
