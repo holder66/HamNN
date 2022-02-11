@@ -4,33 +4,35 @@ module hamnn
 import etienne_napoleone.chalk
 // import math
 
-// show_analyze 
+// show_analyze
 pub fn show_analyze(result AnalyzeResult) {
 	// println(result)
 	mut show := []string{}
 	show << [
-	'',
-	'Analysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
-	'All Attributes', 'Index  Name                          Count  Uniques  Missing      %  Type',
-	'_____  __________________________  _______  _______  _______  _____  ____'
+		'',
+		'Analysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
+		'All Attributes',
+		'Index  Name                          Count  Uniques  Missing      %  Type',
+		'_____  __________________________  _______  _______  _______  _____  ____',
 	]
 	for attr in result.attributes {
 		show << '${attr.id:5}  ${attr.name:-27}  ${attr.count:6}  ${attr.uniques:7}  ${attr.missing:7}  ${attr.missing * 100 / f32(attr.count):5.1f}  ${attr.att_type:4}'
-		}
+	}
 	mut total_count := 0
 	mut total_missings := 0
-	for attr in result.attributes { 
+	for attr in result.attributes {
 		total_count += attr.count
 		total_missings += attr.missing
 	}
 	show << [
-	'______                             _______           _______  _____',
-	'Totals (less Class attribute)   ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%'
+		'______                             _______           _______  _____',
+		'Totals (less Class attribute)   ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%',
 	]
 	show << [
-	'', 
-	'Counts of Attributes by Type', 
-	'Type        Count', '____        _____'
+		'',
+		'Counts of Attributes by Type',
+		'Type        Count',
+		'____        _____',
 	]
 	mut types := []string{}
 	for attr in result.attributes {
@@ -41,28 +43,28 @@ pub fn show_analyze(result AnalyzeResult) {
 	}
 	show << 'Total:     ${types.len:6}'
 	show << [
-	'', 
-	'Discrete Attributes for Training',
-	' Index  Name                        Uniques',
-	' _____  __________________________  _______'
+		'',
+		'Discrete Attributes for Training',
+		' Index  Name                        Uniques',
+		' _____  __________________________  _______',
 	]
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'D') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.uniques:7}'
 	}
 	show << [
-	'', 
-	'Continuous Attributes for Training',	
-	' Index  Name                               Min         Max',
-	' _____  __________________________  __________  __________'
+		'',
+		'Continuous Attributes for Training',
+		' Index  Name                               Min         Max',
+		' _____  __________________________  __________  __________',
 	]
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'C') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.min:10.3g}  ${attr.max:10.3g}'
 	}
 	show << [
-	'', 
-	'The Class Attribute: "$result.class_name"',
-	'Class Value           Cases', 
-	'____________________  _____'
+		'',
+		'The Class Attribute: "$result.class_name"',
+		'Class Value           Cases',
+		'____________________  _____',
 	]
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
