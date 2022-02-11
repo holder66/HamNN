@@ -17,6 +17,10 @@ import runtime
 // is leave-one-out cross-validation);
 // repetitions: number of times to repeat n-fold cross-validations;
 // random-pick: choose instances randomly for n-fold cross-validations.
+// Output options:
+// show_flag: prints results to the console;
+// expanded_flag: prints additional information to the console, including
+// 		a confusion matrix.
 // ```
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.

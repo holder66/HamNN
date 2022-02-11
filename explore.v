@@ -1,6 +1,9 @@
 // explore.v
 module hamnn
 
+import json
+import os 
+
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
 // ```sh
@@ -109,6 +112,11 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 		if results[0].class_table.len == 2 {
 			plot_roc(results, opts)
 		}
+	}
+	if opts.outputfile_path != '' {
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		f.write_string(json.encode(results)) or { panic(err.msg) }
+		f.close()
 	}
 	return results
 }

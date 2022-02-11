@@ -2,15 +2,20 @@
 module hamnn
 
 import math
+import json
+import os
 
 // analyze_dataset returns a struct with information about a datafile.
-// Optional: if show_flag is true, print to the console (using show_analyze):
+// Optional: 
+// if show_flag is true, print to the console (using show_analyze):
 // 1. a list of attributes, their types, the unique values, and a count of
 // missing values;
 // 2. a table with counts for each type of attribute;
 // 3. a list of discrete attributes useful for training a classifier;
 // 4. a list of continuous attributes useful for training a classifier;
 // 5. a breakdown of the class attribute, showing counts for each class.
+//
+// outputfile_path: if specified, saves the extended classifier as json.
 // ```
 pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	mut result := AnalyzeResult{
@@ -43,6 +48,11 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	result.attributes = atts
 	if opts.show_flag {
 		show_analyze(result)
+	}
+	if opts.outputfile_path != '' {
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		f.write_string(json.encode(result)) or { panic(err.msg) }
+		f.close()
 	}
 	return result
 }
