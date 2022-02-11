@@ -201,18 +201,18 @@ fn show_expanded_result(result VerifyResult, opts Options) {
 // print_confusion_matrix
 fn print_confusion_matrix(result VerifyResult) {
 	// println(result.confusion_matrix)
-	println(chalk.fg(chalk.style('                 Confusion Matrix', 'bold'), 'blue'))
+	println(chalk.fg(chalk.style('Confusion Matrix:', 'underline'), 'blue'))
 	for i, rows in result.confusion_matrix {
 		for j, item in rows {
 			if i == 0 && j == 0 {
 				// print first item in first row, ie 'predicted classes (columns)'
-				print(chalk.fg(chalk.style('$item  ', 'bold'), 'red'))
+				print(chalk.fg('$item  ', 'red'))
 			} else if i == 0 {
 				// print column headers, ie classes
-				print(chalk.fg(chalk.style('${item:20}  ', 'bold'), 'red'))
+				print(chalk.fg('${item:20}  ', 'red'))
 			} else if j == 0 {
 				// print first item in remaining rows, ie classes
-				print(chalk.fg(chalk.style('        ${item:21}', 'bold'), 'green'))
+				print(chalk.fg('        ${item:21}', 'blue'))
 			} else {
 				// print integers for each cell
 				print('${item:20}  ')
@@ -269,18 +269,25 @@ fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
 	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 	exclude_string := if opts.exclude_flag {
-		'excluding missing values'
+		'excluded'
 	} else {
-		'including missing values'
+		'included'
 	}
 	attr_string := if opts.number_of_attributes[0] == 0 {
 		'all'
 	} else {
 		opts.number_of_attributes[0].str()
 	}
-	weight_string := if opts.weighting_flag { '' } else { 'not' }
-
-	println('Cross-validation of "$opts.datafile_path" using $folding_string partitioning,\n$attr_string attributes, $exclude_string,\nbin range for continuous attributes from ${opts.bins[0]} to ${opts.bins[1]},\nand $weight_string weighting the number of nearest neighbor counts by class prevalences.\ncorrect inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len  ${percent:5.2f}%')
+	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'), 'magenta'))
+	results_array := ['Partioning: $folding_string',
+		'Attributes: $attr_string',
+		'Missing values: $exclude_string',
+		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:',
+		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)']
+	print_array(results_array)
 }
 
 // show_explore_header
