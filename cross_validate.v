@@ -79,7 +79,10 @@ pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 		}
 	}
 	cross_result = finalize_cross_result(mut cross_result)
-	show_results(cross_result, cross_opts)
+	// show_results(cross_result, cross_opts)
+	if cross_opts.show_flag || cross_opts.expanded_flag {
+		show_crossvalidation_result(cross_result, cross_opts)
+	}
 	return cross_result
 }
 
