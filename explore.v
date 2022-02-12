@@ -18,11 +18,32 @@ import os
 // 	is leave-one-out cross-validation);
 // repetitions: number of times to repeat n-fold cross-validations;
 // random-pick: choose instances randomly for n-fold cross-validations.
+// Output options:
+// show_flag: print results to the console;
+// expanded_flag: print additional information to the console, including
+// 		a confusion matrix.
+// graph_flag: generate plots of Receiver Operating Characteristics (ROC)
+// 		by attributes used; ROC by bins used, and accuracy by attributes
+//		used.
+// `outputfile_path`, saves the result as json.
 // ```
-pub fn explore(ds Dataset, opts Options) []VerifyResult {
+pub fn explore(ds Dataset, opts Options) ExploreResult {
 	mut ex_opts := opts
+	mut results := ExploreResult{
+		path: opts.datafile_path
+		testfile_path: opts.testfile_path
+		exclude_flag: opts.exclude_flag
+		weighting_flag: opts.weighting_flag
+		bins: opts.bins
+		uniform_bins: opts.uniform_bins
+		number_of_attributes: opts.number_of_attributes
+		folds: opts.folds
+		repetitions: opts.repetitions
+		random_pick: opts.random_pick
+	}
+	pos_neg_classes := get_pos_neg_classes(ds.class_counts)
 	mut result := VerifyResult{
-		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
+		pos_neg_classes: pos_neg_classes
 	}
 	// mut percent := 0.0
 	mut attribute_max := ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len
@@ -68,13 +89,13 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 		start_bin = 0
 		end_bin = 0
 	}
-	if opts.show_flag {
-		show_explore_header(opts)
-	}
-	if opts.expanded_flag {
-		expanded_explore_header(result, opts)
-	}
-
+	// if opts.show_flag {
+	// 	show_explore_header(opts)
+	// }
+	// if opts.expanded_flag {
+	// 	expanded_explore_header(result, opts)
+	// }
+	show_explore_header(pos_neg_classes, opts)
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
 		println('binning: $start_bin $end_bin $interval_bin')
@@ -82,7 +103,7 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 	mut atts := start_attr
 	mut bin := start_bin
 	mut cl := Classifier{}
-	mut results := []VerifyResult{}
+	mut array_of_results := []VerifyResult{}
 	// mut plot_data := [][]PlotResult{}
 
 	for atts <= end_attr {
@@ -102,17 +123,18 @@ pub fn explore(ds Dataset, opts Options) []VerifyResult {
 			}
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
-			results << result
+			array_of_results << result
 			bin += interval_bin
 		}
 		atts += interval_attr
 	}
-	if opts.graph_flag {
-		plot_explore(results, opts)
-		if results[0].class_table.len == 2 {
-			plot_roc(results, opts)
-		}
-	}
+	results.array_of_results = array_of_results
+	// if opts.graph_flag {
+	// 	plot_explore(results, opts)
+	// 	if results[0].class_table.len == 2 {
+	// 		plot_roc(results, opts)
+	// 	}
+	// }
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(json.encode(results)) or { panic(err.msg) }

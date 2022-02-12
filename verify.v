@@ -35,7 +35,7 @@ pub fn verify(cl Classifier, opts Options) VerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	show_results(verify_result, opts)
+	show_verify(verify_result, opts)
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result.class_table in verify: $verify_result.class_table')
 	}

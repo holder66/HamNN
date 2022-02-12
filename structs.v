@@ -191,6 +191,22 @@ pub mut:
 	confusion_matrix [][]string
 }
 
+pub struct ExploreResult {
+	pub mut:
+	path                       string
+	testfile_path	string
+	exclude_flag               bool
+	weighting_flag             bool
+	bins                       []int
+	uniform_bins               bool
+	number_of_attributes []int
+	folds                int
+	repetitions          int
+	random_pick          bool	
+	array_of_results []VerifyResult
+
+}
+
 pub struct PlotResult {
 pub mut:
 	bin             int

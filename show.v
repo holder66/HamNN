@@ -1,4 +1,5 @@
 // show.v
+// in order to establish style consistency, aim to use magenta underline for the first line of each output, and blue underline for table headings.
 module hamnn
 
 import etienne_napoleone.chalk
@@ -80,12 +81,12 @@ fn show_rank_attributes(result RankingResult) {
 	}
 	weight_string := if result.weighting_flag { 'yes' } else { 'no' }
 	println(chalk.fg(chalk.style('\n\nAttributes Sorted by Rank Value, for $result.path',
-		'underline'), 'blue'))
+		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
 	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
 	println('Prevalence weighting of nearest neighbor counts: $weight_string ')
 	println(chalk.fg(chalk.style(' Index  Name                         Type   Rank Value   Bins',
-		'underline'), 'red'))
+		'underline'), 'blue'))
 	mut array_to_print := []string{}
 	for attr in result.array_of_ranked_attributes {
 		array_to_print << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
@@ -146,15 +147,9 @@ fn show_rank(result RankingResult, opts Options) {
 fn show_validate(result ValidateResult, opts Options) {
 }
 
+
 // show_verify
 fn show_verify(result VerifyResult, opts Options) {
-}
-
-// show_results
-// note that in the case of `explore` and the expanded_flag, explore.v
-// initiates the printing of headers to the console, while the printing
-// of each line of the result is initiated in either cross.v or verify.v
-fn show_results(result VerifyResult, opts Options) {
 	if opts.show_flag {
 		match opts.command {
 			'verify' {
@@ -310,24 +305,53 @@ fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 }
 
 // show_explore_header
-fn show_explore_header(opts Options) {
-	println('\nExplore "$opts.datafile_path"')
-	println('Exclude: $opts.exclude_flag; Weighting: $opts.weighting_flag')
-	println('Attributes     Bins  Matches  Nonmatches  Percent')
-	println('__________  _______  _______  __________  _______')
+fn show_explore_header(pos_neg_classes []string, opts Options) {
+	if opts.show_flag || opts.expanded_flag {
+		mut explore_type_string := ''
+		if opts.testfile_path == '' {
+			explore_type_string = if opts.folds == 0 { 'leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validation' + if opts.repetitions > 0 { ' ($opts.repetitions repetitions' + if opts.random_pick { ', with random selection of instances)' } else { ')' }
+			 } else { ''
+			 }
+		} else {
+			explore_type_string = 'verification with "$opts.testfile_path"'
+		}
+		println(chalk.fg(chalk.style('Explore "$opts.datafile_path" using $explore_type_string',
+			'underline'), 'magenta'))
+		if opts.exclude_flag {
+			println('Excluding missing values')
+		}
+		if opts.weighting_flag {
+			println('Weighting attribute rankings and nearest neighbor counts by class prevalences')
+		}
+		if !opts.expanded_flag {
+			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Percent',
+				'underline'), 'blue'))
+		} else {
+			if pos_neg_classes[0] != '' {
+				println('A correct classification to "${pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${pos_neg_classes[1]}" is a True Negative (TN).')
+				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score',
+					'underline'), 'blue'))
+			} else {
+				println(chalk.fg('                                                    Cases in         Correctly        Incorrectly  Wrongly classified',
+					'blue'))
+				println(chalk.fg(chalk.style('Attributes    Bins   Class                          test set          inferred           inferred     into this class',
+					'underline'), 'blue'))
+			}
+		}
+	}
 }
 
 // expanded_explore_header
-fn expanded_explore_header(result VerifyResult, opts Options) {
-	// println('Options: $opts')
-	if result.pos_neg_classes[0] != '' {
-		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
-	} else {
-		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
-		println('                                                    test set          inferred           inferred     into this class')
-	}
-}
+// fn expanded_explore_header(result VerifyResult, opts Options) {
+// 	// println('Options: $opts')
+// 	if result.pos_neg_classes[0] != '' {
+// 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
+// 		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
+// 	} else {
+// 		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
+// 		println('                                                    test set          inferred           inferred     into this class')
+// 	}
+// }
 
 // get_pos_neg_classes
 fn get_pos_neg_classes(class_counts map[string]int) []string {
