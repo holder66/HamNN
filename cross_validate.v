@@ -25,6 +25,7 @@ import runtime
 pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
+	cross_opts.datafile_path = ds.path
 	mut folds := opts.folds
 	mut fold_result := VerifyResult{}
 	mut cross_result := VerifyResult{

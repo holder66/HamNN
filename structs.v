@@ -56,6 +56,11 @@ pub mut:
 
 pub struct RankingResult {
 pub mut:
+	path                       string
+	exclude_flag               bool
+	weighting_flag             bool
+	bins                       []int
+	uniform_bins               bool
 	array_of_ranked_attributes []RankedAttribute
 }
 

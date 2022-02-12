@@ -6,7 +6,7 @@ import json
 import os
 
 // analyze_dataset returns a struct with information about a datafile.
-// Optional: 
+// Optional:
 // if show_flag is true, print to the console (using show_analyze):
 // 1. a list of attributes, their types, the unique values, and a count of
 // missing values;

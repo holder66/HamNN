@@ -2,24 +2,35 @@
 module hamnn
 
 import math
+import json
+import os
 // import arrays
 
 // rank_attributes takes a Dataset and returns a list of all the
 // dataset's usable attributes, ranked in order of each attribute's
 // ability to separate the classes.
 // ```sh
-// Options settings:
+// Options:
 // `bins` specifies the range for binning (slicing) continous attributes;
 // `uniform_bins` the same bin value will be used for all attributes;
 // `exclude_flag` to exclude missing values when calculating rank values;
-// `weighting_flag` calculates rankings taking into account class prevalences;
+// `weighting_flag` calculates rankings taking into account class prevalences.
+// Output options:
 // `show_flag` to print the ranked list to the console;
 // `graph_flag` to generate plots of rank values for each attribute on the
 //     y axis, with number of bins on the x axis.
+// `outputfile_path`, saves the result as json.
 // ```
 pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	// to get the denominator for calculating percentages of rank values,
 	// we get the rank value for the class attribute, which should be 100%
+	mut ranking_result := RankingResult{
+		path: ds.path
+		exclude_flag: opts.exclude_flag
+		weighting_flag: opts.weighting_flag
+		bins: opts.bins
+		uniform_bins: opts.uniform_bins
+	}
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.exclude_flag))
 	if opts.verbose_flag && opts.command == 'rank' {
@@ -150,33 +161,22 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 		return 0
 	}
-
-	// ascending sort on bins
+	ranking_result.array_of_ranked_attributes = ranked_atts
+	// custom sort on descending rank value, then ascending bins, then index
 	ranked_atts.sort_with_compare(custom_sort_fn)
-	// ranked_atts.sort(a.bins < b.bins).sort(a.rank_value > b.rank_value)
-	// descending sort on rank value
-	// ranked_atts.sort(a.rank_value > b.rank_value)
+
 	if opts.show_flag && opts.command == 'rank' {
-		mut exclude_phrase := 'including missing values'
-		if opts.exclude_flag {
-			exclude_phrase = 'excluding missing values'
-		}
-		mut show_ranked_attributes := ['', 'Attributes Sorted by Rank Value, $exclude_phrase',
-			'For datafile: $opts.datafile_path, binning range $opts.bins',
-			' Index  Name                         Type   Rank Value   Bins',
-			' _____  ___________________________  ____   __________   ____']
-		for attr in ranked_atts {
-			show_ranked_attributes << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
-		}
-		print_array(show_ranked_attributes)
+		show_rank_attributes(ranking_result)
 	}
 	if opts.graph_flag && opts.command == 'rank' {
 		plot_rank(ranked_atts, opts)
 	}
-
-	return RankingResult{
-		array_of_ranked_attributes: ranked_atts
+	if opts.outputfile_path != '' {
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		f.write_string(json.encode(ranked_atts)) or { panic(err.msg) }
+		f.close()
 	}
+	return ranking_result
 }
 
 // get_rank_value_for_strings

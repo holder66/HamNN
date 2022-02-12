@@ -72,6 +72,27 @@ pub fn show_analyze(result AnalyzeResult) {
 	print_array(show)
 }
 
+// show_rank_attributes
+fn show_rank_attributes(result RankingResult) {
+	mut exclude_phrase := 'included'
+	if result.exclude_flag {
+		exclude_phrase = 'excluded'
+	}
+	weight_string := if result.weighting_flag { 'yes' } else { 'no' }
+	println(chalk.fg(chalk.style('\n\nAttributes Sorted by Rank Value, for $result.path',
+		'underline'), 'blue'))
+	println('Missing values: $exclude_phrase')
+	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
+	println('Prevalence weighting of nearest neighbor counts: $weight_string ')
+	println(chalk.fg(chalk.style(' Index  Name                         Type   Rank Value   Bins',
+		'underline'), 'red'))
+	mut array_to_print := []string{}
+	for attr in result.array_of_ranked_attributes {
+		array_to_print << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
+	}
+	print_array(array_to_print)
+}
+
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
 	// println(cl.Environment)
@@ -140,9 +161,9 @@ fn show_results(result VerifyResult, opts Options) {
 				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 				println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
 			}
-			'cross' {
-				show_crossvalidation_result(result, opts)
-			}
+			// 'cross' {
+			// 	show_crossvalidation_result(result, opts)
+			// }
 			'explore' {
 				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 				println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
@@ -268,26 +289,24 @@ fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
 fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
 	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
 	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
-	exclude_string := if opts.exclude_flag {
-		'excluded'
-	} else {
-		'included'
-	}
+	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
 	attr_string := if opts.number_of_attributes[0] == 0 {
 		'all'
 	} else {
 		opts.number_of_attributes[0].str()
 	}
 	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'), 'magenta'))
-	results_array := ['Partioning: $folding_string',
-		'Attributes: $attr_string',
+	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
+		'magenta'))
+	results_array := ['Partioning: $folding_string', 'Attributes: $attr_string',
 		'Missing values: $exclude_string',
 		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:',
+		'Prevalence weighting of nearest neighbor counts: $weight_string ', 'Results:',
 		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)']
 	print_array(results_array)
+	if opts.expanded_flag {
+		show_expanded_result(cross_result, opts)
+	}
 }
 
 // show_explore_header
