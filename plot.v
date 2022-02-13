@@ -140,7 +140,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 		x: (array_max(x) + array_min(x)) / 2
 		y: 10
 		text: explore_type_string
-		align: 'right'
+		align: 'left'
 	}
 	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
 	plt.set_layout(
@@ -300,17 +300,22 @@ fn massage_roc_traces(mut traces []ROCTrace) []ROCTrace {
 	return traces
 }
 
+// round_two_decimals 
+fn round_two_decimals(a f64) f64 {
+	return math.ceil(a * 100.0) / 100.0
+}
+
 // make_roc_plot_traces
 fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable string) {
 	for trace in traces {
 		plt.add_trace(
 			trace_type: .scatter
-			x: trace.x_coordinates
-			y: trace.y_coordinates
+			x: trace.x_coordinates.map(round_two_decimals(it))
+			y: trace.y_coordinates.map(round_two_decimals(it))
 			mode: 'lines+markers'
 			name: '$trace.curve_series_variable_values (AUC=${trace.area_under_curve:3.2})'
 			text: trace.curve_variable_values
-			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}%'
+			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}'
 		)
 	}
 }
