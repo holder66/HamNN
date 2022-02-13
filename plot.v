@@ -47,7 +47,8 @@ fn plot_rank(result RankingResult) {
 			hovertemplate: 'attribute: %{text}<br>bins: %{x}<br>rank: %{y}'
 		)
 	}
-	rank_annotation_string := 'Missing Values ' + if result.exclude_flag {'excluded'} else {'included'}
+	rank_annotation_string := 'Missing Values ' +
+		if result.exclude_flag { 'excluded' } else { 'included' }
 	annotation1 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 5

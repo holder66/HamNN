@@ -164,7 +164,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'rank' {
 		show_rank_attributes(ranking_result)
 	}
-	if opts.graph_flag  && opts.command == 'rank' {
+	if opts.graph_flag && opts.command == 'rank' {
 		plot_rank(ranking_result)
 	}
 	if opts.outputfile_path != '' {

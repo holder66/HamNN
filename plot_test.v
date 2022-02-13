@@ -17,9 +17,9 @@ fn test_area_under_curve() {
 	assert area_under_curve(x, y) == 0.06
 }
 
-// test_rank_attributes_plot 
+// test_rank_attributes_plot
 fn test_rank_attributes_plot() {
-	mut result := RankingResult {}
+	mut result := RankingResult{}
 	mut opts := Options{
 		datafile_path: 'datasets/developer.tab'
 		graph_flag: true
@@ -75,5 +75,3 @@ fn test_explore_plot() {
 
 	results = explore(load_file(opts.datafile_path), opts)
 }
-
-
