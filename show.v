@@ -1,8 +1,10 @@
 // show.v
 // in order to establish style consistency, aim to use magenta underline
 // for the first line of each output, and blue underline for table headings.
+// use bold green for subheadings
 // ie, println(chalk.fg(chalk.style('\nfirst line', 'underline'), 'magenta'))
 // println(chalk.fg(chalk.style('table header','underline'), 'blue'))
+// println(chalk.fg(chalk.style('subheading','bold'), 'green'))
 
 module hamnn
 
@@ -11,17 +13,13 @@ import etienne_napoleone.chalk
 
 // show_analyze
 pub fn show_analyze(result AnalyzeResult) {
-	// println(result)
 	mut show := []string{}
-	show << [
-		'',
-		'Analysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
-		'All Attributes',
-		'Index  Name                          Count  Uniques  Missing      %  Type',
-		'_____  __________________________  _______  _______  _______  _____  ____',
-	]
+	println(chalk.fg(chalk.style('\nAnalysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)', 'underline'), 'magenta'))
+	println(chalk.fg(chalk.style('All Attributes','bold'), 'green'))
+	println(chalk.fg(chalk.style(' Index  Name                          Count  Uniques  Missing      %  Type','underline'), 'blue'))
+		
 	for attr in result.attributes {
-		show << '${attr.id:5}  ${attr.name:-27}  ${attr.count:6}  ${attr.uniques:7}  ${attr.missing:7}  ${attr.missing * 100 / f32(attr.count):5.1f}  ${attr.att_type:4}'
+		show << '${attr.id:6}  ${attr.name:-27}  ${attr.count:6}  ${attr.uniques:7}  ${attr.missing:7}  ${attr.missing * 100 / f32(attr.count):5.1f}  ${attr.att_type:4}'
 	}
 	mut total_count := 0
 	mut total_missings := 0
@@ -30,15 +28,13 @@ pub fn show_analyze(result AnalyzeResult) {
 		total_missings += attr.missing
 	}
 	show << [
-		'______                             _______           _______  _____',
-		'Totals (less Class attribute)   ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%',
+		'_______                             _______           _______  _____',
+		'Totals (less Class attribute)    ${total_count:10}        ${total_missings:10}  ${total_missings * 100 / f32(total_count):5.2f}%',
 	]
-	show << [
-		'',
-		'Counts of Attributes by Type',
-		'Type        Count',
-		'____        _____',
-	]
+	print_array(show)
+	show = []
+	println(chalk.fg(chalk.style('Counts of Attributes by Type','bold'), 'green'))
+	println(chalk.fg(chalk.style('Type        Count','underline'), 'blue'))
 	mut types := []string{}
 	for attr in result.attributes {
 		types << attr.att_type
@@ -47,30 +43,25 @@ pub fn show_analyze(result AnalyzeResult) {
 		show << '$key          ${value:6}'
 	}
 	show << 'Total:     ${types.len:6}'
-	show << [
-		'',
-		'Discrete Attributes for Training',
-		' Index  Name                        Uniques',
-		' _____  __________________________  _______',
-	]
+	print_array(show)
+	show = []
+	println(chalk.fg(chalk.style('Discrete Attributes for Training','bold'), 'green'))
+	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'), 'blue'))
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'D') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.uniques:7}'
 	}
-	show << [
-		'',
-		'Continuous Attributes for Training',
-		' Index  Name                               Min         Max',
-		' _____  __________________________  __________  __________',
-	]
+	print_array(show)
+	show = []
+	println(chalk.fg(chalk.style('Continuous Attributes for Training','bold'), 'green'))
+	
+	println(chalk.fg(chalk.style(' Index  Name                               Min         Max', 'underline'),'blue'))
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'C') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.min:10.3g}  ${attr.max:10.3g}'
 	}
-	show << [
-		'',
-		'The Class Attribute: "$result.class_name"',
-		'Class Value           Cases',
-		'____________________  _____',
-	]
+	print_array(show)
+	show = []
+	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"','bold'), 'green'))
+	println(chalk.fg(chalk.style('Class Value           Cases', 'underline'), 'blue'))
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
 	}
