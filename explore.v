@@ -121,6 +121,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 				cl = make_classifier(ds, ex_opts)
 				result = verify(cl, ex_opts)
 			}
+			show_explore_line(result, ex_opts)
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
 			array_of_results << result

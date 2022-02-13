@@ -1,5 +1,9 @@
 // show.v
-// in order to establish style consistency, aim to use magenta underline for the first line of each output, and blue underline for table headings.
+// in order to establish style consistency, aim to use magenta underline
+// for the first line of each output, and blue underline for table headings.
+// ie, println(chalk.fg(chalk.style('\nfirst line', 'underline'), 'magenta'))
+// println(chalk.fg(chalk.style('table header','underline'), 'blue'))
+
 module hamnn
 
 import etienne_napoleone.chalk
@@ -147,43 +151,14 @@ fn show_rank(result RankingResult, opts Options) {
 fn show_validate(result ValidateResult, opts Options) {
 }
 
-
 // show_verify
 fn show_verify(result VerifyResult, opts Options) {
-	if opts.show_flag {
-		match opts.command {
-			'verify' {
-				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-				println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
-			}
-			// 'cross' {
-			// 	show_crossvalidation_result(result, opts)
-			// }
-			'explore' {
-				percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-				println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
-			}
-			else {
-				println('Nothing to show!')
-			}
-		}
-	}
-	if opts.expanded_flag {
-		match opts.command {
-			'verify' {
-				println('opts: $opts')
-				show_expanded_result(result, opts)
-			}
-			'cross' {
-				println('opts: $opts')
-				show_expanded_result(result, opts)
-			}
-			'explore' {
-				show_expanded_explore_result(result, opts)
-			}
-			else {
-				println('Nothing to expand on!')
-			}
+	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
+		if !opts.expanded_flag {
+			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+		} else {
+			show_expanded_result(result, opts)
 		}
 	}
 }
@@ -341,17 +316,23 @@ fn show_explore_header(pos_neg_classes []string, opts Options) {
 	}
 }
 
-// expanded_explore_header
-// fn expanded_explore_header(result VerifyResult, opts Options) {
-// 	// println('Options: $opts')
-// 	if result.pos_neg_classes[0] != '' {
-// 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-// 		println('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
-// 	} else {
-// 		println('Attributes    Bins   Class                          Cases in         Correctly        Incorrectly  Wrongly classified')
-// 		println('                                                    test set          inferred           inferred     into this class')
-// 	}
-// }
+// show_explore_line
+fn show_explore_line(result VerifyResult, opts Options) {
+	if opts.show_flag || opts.expanded_flag {
+		if !opts.expanded_flag {
+			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
+		} else {
+			if result.pos_neg_classes[0] != '' {
+				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
+			} else {
+				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
+				show_multiple_classes_stats(result, 21)
+			}
+		}
+	}
+}
+
 
 // get_pos_neg_classes
 fn get_pos_neg_classes(class_counts map[string]int) []string {

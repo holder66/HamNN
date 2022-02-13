@@ -9,7 +9,7 @@ fn test_explore_cross() {
 		number_of_attributes: [1, 4]
 		bins: [2, 7]
 		show_flag: true
-		// expanded_flag: true
+		expanded_flag: true
 		weighting_flag: true
 		exclude_flag: true
 		concurrency_flag: true
