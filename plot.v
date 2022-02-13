@@ -122,21 +122,36 @@ fn plot_explore(result ExploreResult, opts Options) {
 			hovertemplate: '%{text}<br>attributes: %{x}<br>accuracy: %{y}%'
 		)
 	}
-	annotation := plot.Annotation{
+	annotation1 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 5
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
 	}
+	mut explore_type_string := ''
+		if opts.testfile_path == '' {
+			explore_type_string = if opts.folds == 0 { 'Leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validations' + if opts.repetitions > 0 { ' ($opts.repetitions repetitions' + if opts.random_pick { ', random selection)' } else { ')' }
+			 } else { ''
+			 }
+		} else {
+			explore_type_string = 'Verifications with "$opts.testfile_path"'
+		}
+	annotation2 := plot.Annotation{
+		x: (array_max(x) + array_min(x)) / 2
+		y: 10
+		text: explore_type_string
+		align: 'right'
+	}
+	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
 	plt.set_layout(
-		title: 'Accuracy (%) by Attributes Used for $opts.datafile_path'
+		title: title_string
 		width: 800
 		xaxis: plot.Axis{
 			title: plot.AxisTitle{
 				text: 'Number of Attributes Used'
 			}
 		}
-		annotations: [annotation]
+		annotations: [annotation1,annotation2]
 		autosize: false
 	)
 	plt.show() or { panic(err) }
@@ -154,9 +169,7 @@ mut:
 	x_coordinates    []f64
 	y_coordinates    []f64
 	area_under_curve f64
-	// curve_series_variable string
 	curve_series_variable_values string
-	// curve_variable string
 	curve_variable_values []string
 }
 
