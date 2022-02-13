@@ -17,10 +17,25 @@ fn test_area_under_curve() {
 	assert area_under_curve(x, y) == 0.06
 }
 
+// test_rank_attributes_plot 
+fn test_rank_attributes_plot() {
+	mut result := RankingResult {}
+	mut opts := Options{
+		datafile_path: 'datasets/developer.tab'
+		graph_flag: true
+	}
+	result = rank_attributes(load_file(opts.datafile_path), opts)
+	opts.exclude_flag = true
+	result = rank_attributes(load_file(opts.datafile_path), opts)
+	opts.exclude_flag = false
+	opts.datafile_path = 'datasets/anneal.tab'
+	result = rank_attributes(load_file(opts.datafile_path), opts)
+	opts.exclude_flag = true
+	result = rank_attributes(load_file(opts.datafile_path), opts)
+}
 
-
-// test_explore_cross
-fn test_explore_cross() {
+// test_explore_plot
+fn test_explore_plot() {
 	mut results := ExploreResult{}
 	mut opts := Options{
 		number_of_attributes: [2, 7]
@@ -38,6 +53,8 @@ fn test_explore_cross() {
 		datafile_path: 'datasets/2_class_developer.tab'
 	}
 	// cross with 2 classes (generates ROC plots)
+	mut ds := load_file(opts.datafile_path)
+	results = explore(ds, opts)
 	results = explore(load_file(opts.datafile_path), opts)
 
 	// test for cross with more than 2 classes
@@ -58,3 +75,5 @@ fn test_explore_cross() {
 
 	results = explore(load_file(opts.datafile_path), opts)
 }
+
+

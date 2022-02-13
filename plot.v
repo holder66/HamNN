@@ -14,11 +14,12 @@ mut:
 
 // plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
-fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
+fn plot_rank(result RankingResult) {
+	mut ranked_atts := result.array_of_ranked_attributes
 	mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
 	mut x := []f64{}
-	for i in opts.bins[0] .. opts.bins[1] + 1 {
+	for i in result.bins[0] .. result.bins[1] + 1 {
 		x << i
 	}
 	for attr in ranked_atts.filter(it.inferred_attribute_type == 'C') {
@@ -27,7 +28,7 @@ fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 			rank_values: attr.rank_value_array.map(f64(it)).reverse()
 			maximum_rank_value: array_max(attr.rank_value_array)
 			// the tooltip for each point shows the attribute name
-			hover_text: ['$attr.attribute_name'].repeat(opts.bins[1] + 1)
+			hover_text: ['$attr.attribute_name'].repeat(result.bins[1] + 1)
 		}
 	}
 	// sort in descending order of maximum_rank_value
@@ -39,15 +40,28 @@ fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 		plt.add_trace(
 			trace_type: .scatter
 			x: x
-			y: value.rank_values
+			y: value.rank_values.map(round_two_decimals(it))
 			text: value.hover_text
 			mode: 'lines+markers'
 			name: value.label
 			hovertemplate: 'attribute: %{text}<br>bins: %{x}<br>rank: %{y}'
 		)
 	}
+	rank_annotation_string := 'Missing Values ' + if result.exclude_flag {'excluded'} else {'included'}
+	annotation1 := plot.Annotation{
+		x: (array_max(x) + array_min(x)) / 2
+		y: 5
+		text: 'Hover your cursor over a marker to view details.'
+		align: 'center'
+	}
+	annotation2 := plot.Annotation{
+		x: (array_max(x) + array_min(x)) / 2
+		y: 10
+		text: rank_annotation_string
+		align: 'center'
+	}
 	plt.set_layout(
-		title: 'Rank Values for Continuous Attributes for $opts.datafile_path'
+		title: 'Rank Values for Continuous Attributes for "$result.path"'
 		autosize: false
 		width: 800
 		xaxis: plot.Axis{
@@ -61,6 +75,7 @@ fn plot_rank(ranked_atts []RankedAttribute, opts Options) {
 			}
 			range: [0.0, 100]
 		}
+		annotations: [annotation1, annotation2]
 	)
 	plt.show() or { panic(err) }
 }

@@ -58,9 +58,7 @@ pub struct RankingResult {
 pub mut:
 	path                       string
 	exclude_flag               bool
-	weighting_flag             bool
 	bins                       []int
-	uniform_bins               bool
 	array_of_ranked_attributes []RankedAttribute
 }
 
@@ -192,18 +190,19 @@ pub mut:
 }
 
 pub struct ExploreResult {
-pub mut:
-	path                 string
-	testfile_path        string
-	exclude_flag         bool
-	weighting_flag       bool
-	bins                 []int
-	uniform_bins         bool
+	pub mut:
+	path                       string
+	testfile_path	string
+	exclude_flag               bool
+	weighting_flag             bool
+	bins                       []int
+	uniform_bins               bool
 	number_of_attributes []int
 	folds                int
 	repetitions          int
-	random_pick          bool
-	array_of_results     []CrossVerifyResult
+	random_pick          bool	
+	array_of_results []CrossVerifyResult
+
 }
 
 pub struct PlotResult {

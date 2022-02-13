@@ -12,9 +12,7 @@ import os
 // ```sh
 // Options:
 // `bins` specifies the range for binning (slicing) continous attributes;
-// `uniform_bins` the same bin value will be used for all attributes;
 // `exclude_flag` to exclude missing values when calculating rank values;
-// `weighting_flag` calculates rankings taking into account class prevalences.
 // Output options:
 // `show_flag` to print the ranked list to the console;
 // `graph_flag` to generate plots of rank values for each attribute on the
@@ -27,9 +25,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	mut ranking_result := RankingResult{
 		path: ds.path
 		exclude_flag: opts.exclude_flag
-		weighting_flag: opts.weighting_flag
 		bins: opts.bins
-		uniform_bins: opts.uniform_bins
 	}
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.exclude_flag))
@@ -165,15 +161,15 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	// custom sort on descending rank value, then ascending bins, then index
 	ranked_atts.sort_with_compare(custom_sort_fn)
 
-	if opts.show_flag && opts.command == 'rank' {
+	if (opts.show_flag || opts.expanded_flag) && opts.command == 'rank' {
 		show_rank_attributes(ranking_result)
 	}
-	if opts.graph_flag && opts.command == 'rank' {
-		plot_rank(ranked_atts, opts)
+	if opts.graph_flag  && opts.command == 'rank' {
+		plot_rank(ranking_result)
 	}
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(ranked_atts)) or { panic(err.msg) }
+		f.write_string(json.encode(ranking_result)) or { panic(err.msg) }
 		f.close()
 	}
 	return ranking_result

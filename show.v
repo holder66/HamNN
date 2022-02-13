@@ -79,12 +79,10 @@ fn show_rank_attributes(result RankingResult) {
 	if result.exclude_flag {
 		exclude_phrase = 'excluded'
 	}
-	weight_string := if result.weighting_flag { 'yes' } else { 'no' }
 	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for $result.path',
 		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
 	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
-	println('Prevalence weighting of nearest neighbor counts: $weight_string ')
 	println(chalk.fg(chalk.style(' Index  Name                         Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}
