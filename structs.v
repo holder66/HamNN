@@ -192,19 +192,18 @@ pub mut:
 }
 
 pub struct ExploreResult {
-	pub mut:
-	path                       string
-	testfile_path	string
-	exclude_flag               bool
-	weighting_flag             bool
-	bins                       []int
-	uniform_bins               bool
+pub mut:
+	path                 string
+	testfile_path        string
+	exclude_flag         bool
+	weighting_flag       bool
+	bins                 []int
+	uniform_bins         bool
 	number_of_attributes []int
 	folds                int
 	repetitions          int
-	random_pick          bool	
-	array_of_results []VerifyResult
-
+	random_pick          bool
+	array_of_results     []VerifyResult
 }
 
 pub struct PlotResult {

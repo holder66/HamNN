@@ -62,7 +62,7 @@ fn test_show_crossvalidation_result() ? {
 
 	println('\n\niris.tab')
 	opts.expanded_flag = false
-	opts.bins = [3,6]
+	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
 	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
 	println('\n\niris.tab with expanded results')
@@ -70,13 +70,13 @@ fn test_show_crossvalidation_result() ? {
 	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
 }
 
-// test_explore_cross 
+// test_explore_cross
 fn test_explore_cross() {
 	mut results := ExploreResult{}
 	mut opts := Options{
 		verbose_flag: false
 		number_of_attributes: [2, 4]
-		bins: [2,5]
+		bins: [2, 5]
 		show_flag: true
 		expanded_flag: false
 		weighting_flag: true
@@ -86,13 +86,13 @@ fn test_explore_cross() {
 		folds: 10
 		repetitions: 50
 		random_pick: true
-		datafile_path: 'datasets/developer.tab'		
+		datafile_path: 'datasets/developer.tab'
 	}
 	results = explore(load_file(opts.datafile_path), opts)
 
 	opts.expanded_flag = true
-	opts.bins = [3,4]
-	opts.number_of_attributes = [2,3]
+	opts.bins = [3, 4]
+	opts.number_of_attributes = [2, 3]
 	results = explore(load_file(opts.datafile_path), opts)
 
 	opts.datafile_path = 'datasets/bcw350train'
