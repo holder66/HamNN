@@ -14,10 +14,12 @@ import etienne_napoleone.chalk
 // show_analyze
 pub fn show_analyze(result AnalyzeResult) {
 	mut show := []string{}
-	println(chalk.fg(chalk.style('\nAnalysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)', 'underline'), 'magenta'))
-	println(chalk.fg(chalk.style('All Attributes','bold'), 'green'))
-	println(chalk.fg(chalk.style(' Index  Name                          Count  Uniques  Missing      %  Type','underline'), 'blue'))
-		
+	println(chalk.fg(chalk.style('\nAnalysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
+		'underline'), 'magenta'))
+	println(chalk.fg(chalk.style('All Attributes', 'bold'), 'green'))
+	println(chalk.fg(chalk.style(' Index  Name                          Count  Uniques  Missing      %  Type',
+		'underline'), 'blue'))
+
 	for attr in result.attributes {
 		show << '${attr.id:6}  ${attr.name:-27}  ${attr.count:6}  ${attr.uniques:7}  ${attr.missing:7}  ${attr.missing * 100 / f32(attr.count):5.1f}  ${attr.att_type:4}'
 	}
@@ -33,8 +35,8 @@ pub fn show_analyze(result AnalyzeResult) {
 	]
 	print_array(show)
 	show = []
-	println(chalk.fg(chalk.style('Counts of Attributes by Type','bold'), 'green'))
-	println(chalk.fg(chalk.style('Type        Count','underline'), 'blue'))
+	println(chalk.fg(chalk.style('Counts of Attributes by Type', 'bold'), 'green'))
+	println(chalk.fg(chalk.style('Type        Count', 'underline'), 'blue'))
 	mut types := []string{}
 	for attr in result.attributes {
 		types << attr.att_type
@@ -45,22 +47,25 @@ pub fn show_analyze(result AnalyzeResult) {
 	show << 'Total:     ${types.len:6}'
 	print_array(show)
 	show = []
-	println(chalk.fg(chalk.style('Discrete Attributes for Training','bold'), 'green'))
-	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'), 'blue'))
+	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green'))
+	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'),
+		'blue'))
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'D') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.uniques:7}'
 	}
 	print_array(show)
 	show = []
-	println(chalk.fg(chalk.style('Continuous Attributes for Training','bold'), 'green'))
-	
-	println(chalk.fg(chalk.style(' Index  Name                               Min         Max', 'underline'),'blue'))
+	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green'))
+
+	println(chalk.fg(chalk.style(' Index  Name                               Min         Max',
+		'underline'), 'blue'))
 	for attr in result.attributes.filter(it.for_training && it.att_type == 'C') {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.min:10.3g}  ${attr.max:10.3g}'
 	}
 	print_array(show)
 	show = []
-	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"','bold'), 'green'))
+	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"', 'bold'),
+		'green'))
 	println(chalk.fg(chalk.style('Class Value           Cases', 'underline'), 'blue'))
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
@@ -75,7 +80,7 @@ fn show_rank_attributes(result RankingResult) {
 		exclude_phrase = 'excluded'
 	}
 	weight_string := if result.weighting_flag { 'yes' } else { 'no' }
-	println(chalk.fg(chalk.style('\n\nAttributes Sorted by Rank Value, for $result.path',
+	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for $result.path',
 		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
 	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
@@ -281,7 +286,7 @@ fn show_explore_header(pos_neg_classes []string, opts Options) {
 		} else {
 			explore_type_string = 'verification with "$opts.testfile_path"'
 		}
-		println(chalk.fg(chalk.style('Explore "$opts.datafile_path" using $explore_type_string',
+		println(chalk.fg(chalk.style('\nExplore "$opts.datafile_path" using $explore_type_string',
 			'underline'), 'magenta'))
 		if opts.exclude_flag {
 			println('Excluding missing values')
@@ -323,7 +328,6 @@ fn show_explore_line(result VerifyResult, opts Options) {
 		}
 	}
 }
-
 
 // get_pos_neg_classes
 fn get_pos_neg_classes(class_counts map[string]int) []string {
