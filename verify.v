@@ -10,11 +10,11 @@ import runtime
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
-pub fn verify(cl Classifier, opts Options) VerifyResult {
+pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	// instantiate a struct for the result
-	mut verify_result := VerifyResult{
+	mut verify_result := CrossVerifyResult{
 		labeled_classes: test_ds.Class.class_values
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 	}
@@ -79,7 +79,7 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 
 // classify_to_verify classifies each instance in an array, and
 // returns the results of the classification.
-fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyResult, opts Options) VerifyResult {
+fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := ClassifyResult{}
@@ -121,7 +121,7 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result VerifyR
 }
 
 // summarize_results
-fn summarize_results(mut result VerifyResult) VerifyResult {
+fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 	for _, mut value in result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		result.correct_count += value.correct_inferences

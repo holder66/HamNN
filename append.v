@@ -13,7 +13,7 @@ import time
 // instancesfile_path: file with labeled instances to be added (typically
 //     produced by a validation or query operation);
 // Optional:
-// outputfile_path: if specified, saves the extended classifier to this file.
+// outputfile_path: if specified, saves the extended classifier as json.
 // ```
 pub fn append(opts Options) ?Classifier {
 	mut cl := load_classifier_file(opts.classifierfile_path) ?

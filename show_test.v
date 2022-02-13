@@ -40,7 +40,7 @@ fn test_show_classifier() {
 
 // test_show_crossvalidation_result
 fn test_show_crossvalidation_result() ? {
-	mut cvr := VerifyResult{}
+	mut cvr := CrossVerifyResult{}
 	mut opts := Options{
 		show_flag: true
 		concurrency_flag: true

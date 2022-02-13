@@ -22,7 +22,7 @@ fn test_verify() ? {
 		concurrency_flag: true
 	}
 
-	mut result := VerifyResult{}
+	mut result := CrossVerifyResult{}
 	mut ds := Dataset{}
 	mut cl := Classifier{}
 	mut saved_cl := Classifier{}
@@ -56,7 +56,7 @@ fn test_verify() ? {
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
 	cl = Classifier{}
-	result = VerifyResult{}
+	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
 	cl = Classifier{}
 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
@@ -82,7 +82,7 @@ fn test_verify() ? {
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
 	cl = Classifier{}
-	result = VerifyResult{}
+	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
 	cl = Classifier{}
 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
@@ -111,7 +111,7 @@ fn test_verify() ? {
 		// now with a saved classifier
 		opts.outputfile_path = 'tempfolder/classifierfile'
 		cl = Classifier{}
-		result = VerifyResult{}
+		result = CrossVerifyResult{}
 		cl = make_classifier(ds, opts)
 		cl = Classifier{}
 		result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
@@ -125,7 +125,7 @@ fn test_verify() ? {
 
 	// 	cl = Classifier{}
 	// 	ds = Dataset{}
-	// 	result = VerifyResult{}
+	// 	result = CrossVerifyResult{}
 	// 	opts.datafile_path = '../../mnist_train.tab'
 	// 	opts.testfile_path = ''
 	// 	opts.outputfile_path = 'tempfolder/classifierfile'

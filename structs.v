@@ -174,7 +174,7 @@ pub mut:
 	confusion_matrix_row map[string]int
 }
 
-pub struct VerifyResult {
+pub struct CrossVerifyResult {
 pub mut:
 	// inferred_classes []string
 	labeled_classes []string
@@ -203,7 +203,7 @@ pub mut:
 	folds                int
 	repetitions          int
 	random_pick          bool
-	array_of_results     []VerifyResult
+	array_of_results     []CrossVerifyResult
 }
 
 pub struct PlotResult {

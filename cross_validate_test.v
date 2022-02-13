@@ -11,7 +11,7 @@ fn test_cross_validate() ? {
 		show_flag: false
 		concurrency_flag: true
 	}
-	mut result := VerifyResult{}
+	mut result := CrossVerifyResult{}
 
 	opts.datafile_path = 'datasets/anneal.tab'
 	opts.number_of_attributes = [28]

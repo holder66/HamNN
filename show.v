@@ -128,11 +128,11 @@ fn show_classifier_history(history []HistoryEvent) []string {
 }
 
 // show_cross_validate
-fn show_cross_validate(result VerifyResult, opts Options) {
+fn show_cross_validate(result CrossVerifyResult, opts Options) {
 }
 
 // show_explore
-fn show_explore(result []VerifyResult, opts Options) {
+fn show_explore(result []CrossVerifyResult, opts Options) {
 }
 
 // show_make
@@ -148,7 +148,7 @@ fn show_validate(result ValidateResult, opts Options) {
 }
 
 // show_verify
-fn show_verify(result VerifyResult, opts Options) {
+fn show_verify(result CrossVerifyResult, opts Options) {
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
@@ -171,7 +171,7 @@ fn get_show_bins(bins []int) string {
 }
 
 // show_expanded_result
-fn show_expanded_result(result VerifyResult, opts Options) {
+fn show_expanded_result(result CrossVerifyResult, opts Options) {
 	println(chalk.fg('Class                          Cases in         Correctly        Incorrectly  Wrongly classified\n                               test set          inferred           inferred     into this class',
 		'green'))
 
@@ -186,7 +186,7 @@ fn show_expanded_result(result VerifyResult, opts Options) {
 }
 
 // print_confusion_matrix
-fn print_confusion_matrix(result VerifyResult) {
+fn print_confusion_matrix(result CrossVerifyResult) {
 	// println(result.confusion_matrix)
 	println(chalk.fg(chalk.style('Confusion Matrix:', 'underline'), 'blue'))
 	for i, rows in result.confusion_matrix {
@@ -211,7 +211,7 @@ fn print_confusion_matrix(result VerifyResult) {
 }
 
 // get_binary_stats
-fn get_binary_stats(result VerifyResult) string {
+fn get_binary_stats(result CrossVerifyResult) string {
 	pos_class := result.pos_neg_classes[0]
 	neg_class := result.pos_neg_classes[1]
 	t_p := result.class_table[pos_class].correct_inferences
@@ -228,7 +228,7 @@ fn get_binary_stats(result VerifyResult) string {
 }
 
 // show_expanded_explore_result
-fn show_expanded_explore_result(result VerifyResult, opts Options) {
+fn show_expanded_explore_result(result CrossVerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
@@ -238,7 +238,7 @@ fn show_expanded_explore_result(result VerifyResult, opts Options) {
 }
 
 // show_multiple_classes_stats
-fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
+fn show_multiple_classes_stats(result CrossVerifyResult, spacer_size int) {
 	mut spacer := ''
 	for _ in 0 .. spacer_size {
 		spacer += ' '
@@ -252,7 +252,7 @@ fn show_multiple_classes_stats(result VerifyResult, spacer_size int) {
 }
 
 // show_crossvalidation_result
-fn show_crossvalidation_result(cross_result VerifyResult, opts Options) {
+fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
 	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
@@ -313,7 +313,7 @@ fn show_explore_header(pos_neg_classes []string, opts Options) {
 }
 
 // show_explore_line
-fn show_explore_line(result VerifyResult, opts Options) {
+fn show_explore_line(result CrossVerifyResult, opts Options) {
 	if opts.show_flag || opts.expanded_flag {
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)

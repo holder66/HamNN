@@ -76,7 +76,7 @@ mut:
 
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
-fn plot_explore(results []VerifyResult, opts Options) {
+fn plot_explore(result ExploreResult, opts Options) {
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}
@@ -85,15 +85,15 @@ fn plot_explore(results []VerifyResult, opts Options) {
 	mut y_value := 1.0
 	mut percents := []f64{}
 	mut max_percents := 0.0
-	for result in results {
-		y_value = (f32(result.correct_count) * 100 / result.total_count)
-		x << f64(result.attributes_used)
+	for res in result.array_of_results {
+		y_value = (f32(res.correct_count) * 100 / res.total_count)
+		x << f64(res.attributes_used)
 		y << y_value
 		// create strings that can be used for filtering
-		if result.bin_values.len == 1 {
-			bin_values << '${result.bin_values[0]} bins'
+		if res.bin_values.len == 1 {
+			bin_values << '${res.bin_values[0]} bins'
 		} else {
-			bin_values << 'bins ${result.bin_values[0]} - ${result.bin_values[1]}'
+			bin_values << 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
 		}
 	}
 	// get the unique bin_values, each one will generate a separate trace
@@ -161,7 +161,7 @@ mut:
 }
 
 // plot_roc generates plots of receiver operating characteristic curves.
-fn plot_roc(results []VerifyResult, opts Options) {
+fn plot_roc(result ExploreResult, opts Options) {
 	mut roc_results := []ROCResult{}
 	mut plt := plot.new_plot()
 	mut traces := []ROCTrace{}
@@ -170,28 +170,28 @@ fn plot_roc(results []VerifyResult, opts Options) {
 	mut bin_range_values := []string{}
 	mut attributes_used_values := []string{}
 	mut bin_range := ''
-	mut pos_class := results[0].pos_neg_classes[0]
-	mut neg_class := results[0].pos_neg_classes[1]
+	mut pos_class := result.array_of_results[0].pos_neg_classes[0]
+	mut neg_class := result.array_of_results[0].pos_neg_classes[1]
 
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
 
-	for result in results {
+	for res in result.array_of_results {
 		// create strings that can be used for filtering
-		if result.bin_values.len == 1 {
-			bin_range = '${result.bin_values[0]} bins'
+		if res.bin_values.len == 1 {
+			bin_range = '${res.bin_values[0]} bins'
 		} else {
-			bin_range = 'bins ${result.bin_values[0]} - ${result.bin_values[1]}'
+			bin_range = 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
 		}
 		roc_results << ROCResult{
-			sensitivity: result.class_table[pos_class].correct_inferences / f64(
-				result.class_table[pos_class].correct_inferences +
-				result.class_table[neg_class].missed_inferences)
-			one_minus_specificity: 1.0 - (result.class_table[neg_class].correct_inferences / f64(
-				result.class_table[neg_class].correct_inferences +
-				result.class_table[pos_class].missed_inferences))
+			sensitivity: res.class_table[pos_class].correct_inferences / f64(
+				res.class_table[pos_class].correct_inferences +
+				res.class_table[neg_class].missed_inferences)
+			one_minus_specificity: 1.0 - (res.class_table[neg_class].correct_inferences / f64(
+				res.class_table[neg_class].correct_inferences +
+				res.class_table[pos_class].missed_inferences))
 			bin_range: bin_range
-			attributes_used: '$result.attributes_used'
+			attributes_used: '$res.attributes_used'
 		}
 	}
 	// println('roc_results: $roc_results')

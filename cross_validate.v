@@ -22,13 +22,13 @@ import runtime
 // expanded_flag: prints additional information to the console, including
 // 		a confusion matrix.
 // ```
-pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
+pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
 	mut folds := opts.folds
-	mut fold_result := VerifyResult{}
-	mut cross_result := VerifyResult{
+	mut fold_result := CrossVerifyResult{}
+	mut cross_result := CrossVerifyResult{
 		labeled_classes: ds.Class.class_values
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 	}
@@ -51,7 +51,7 @@ pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 	}
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
-		mut result_channel := chan VerifyResult{cap: folds}
+		mut result_channel := chan CrossVerifyResult{cap: folds}
 		// queue all work + the sentinel values:
 		jobs := runtime.nr_jobs()
 		mut work_channel := chan int{cap: folds + jobs}
@@ -88,12 +88,12 @@ pub fn cross_validate(ds Dataset, opts Options) VerifyResult {
 }
 
 // do_one_fold
-fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) VerifyResult {
+fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(current_fold, folds, ds, cross_opts)
 	// println('fold: $fold')
-	mut fold_result := VerifyResult{
+	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
@@ -144,7 +144,7 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 }
 
 // update_cross_result
-fn update_cross_result(fold_result VerifyResult, mut cross_result VerifyResult) VerifyResult {
+fn update_cross_result(fold_result CrossVerifyResult, mut cross_result CrossVerifyResult) CrossVerifyResult {
 	// for each class, add the fold counts to the cross_result counts
 	for key, mut value in cross_result.class_table {
 		value.correct_inferences += fold_result.class_table[key].correct_inferences
@@ -164,7 +164,7 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 }
 
 // finalize_cross_result
-fn finalize_cross_result(mut cross_result VerifyResult) VerifyResult {
+fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
 	for _, mut value in cross_result.class_table {
 		value.missed_inferences = value.labeled_instances - value.correct_inferences
 		cross_result.correct_count += value.correct_inferences
@@ -189,7 +189,7 @@ fn finalize_cross_result(mut cross_result VerifyResult) VerifyResult {
 }
 
 // option_worker
-fn option_worker(work_channel chan int, result_channel chan VerifyResult, folds int, ds Dataset, opts Options) {
+fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, folds int, ds Dataset, opts Options) {
 	for {
 		mut current_fold := <-work_channel
 		if current_fold < 0 {

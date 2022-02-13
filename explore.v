@@ -42,7 +42,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		random_pick: opts.random_pick
 	}
 	pos_neg_classes := get_pos_neg_classes(ds.class_counts)
-	mut result := VerifyResult{
+	mut result := CrossVerifyResult{
 		pos_neg_classes: pos_neg_classes
 	}
 	// mut percent := 0.0
@@ -89,12 +89,6 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		start_bin = 0
 		end_bin = 0
 	}
-	// if opts.show_flag {
-	// 	show_explore_header(opts)
-	// }
-	// if opts.expanded_flag {
-	// 	expanded_explore_header(result, opts)
-	// }
 	show_explore_header(pos_neg_classes, opts)
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
@@ -103,7 +97,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	mut atts := start_attr
 	mut bin := start_bin
 	mut cl := Classifier{}
-	mut array_of_results := []VerifyResult{}
+	mut array_of_results := []CrossVerifyResult{}
 	// mut plot_data := [][]PlotResult{}
 
 	for atts <= end_attr {
@@ -130,12 +124,12 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		atts += interval_attr
 	}
 	results.array_of_results = array_of_results
-	// if opts.graph_flag {
-	// 	plot_explore(results, opts)
-	// 	if results[0].class_table.len == 2 {
-	// 		plot_roc(results, opts)
-	// 	}
-	// }
+	if opts.graph_flag {
+		plot_explore(results, opts)
+		if array_of_results[0].class_table.len == 2 {
+			plot_roc(results, opts)
+		}
+	}
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(json.encode(results)) or { panic(err.msg) }
