@@ -248,7 +248,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 		text: explore_type_string(opts)
 		align: 'left'
 	}
-	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation, annotation2])
+	make_roc_plot_layout(mut plt, 'Attributes Used', opts.datafile_path, [annotation, annotation2])
 
 	plt.show() or { panic(err) }
 
@@ -265,7 +265,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 	}
 	traces = massage_roc_traces(mut traces)
 	make_roc_plot_traces(traces, mut plt, 'binning')
-	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation, annotation2])
+	make_roc_plot_layout(mut plt, 'Attributes Used', opts.datafile_path, [annotation, annotation2])
 
 	plt.show() or { panic(err) }
 }
@@ -336,9 +336,9 @@ fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable str
 }
 
 // make_roc_plot_layout
-fn make_roc_plot_layout(mut plt plot.Plot, curve_series string, annotations []plot.Annotation) {
+fn make_roc_plot_layout(mut plt plot.Plot, curve_series string, path string, annotations []plot.Annotation) {
 	plt.set_layout(
-		title: 'Receiver Operating Characteristic Curves by $curve_series'
+		title: 'ROC Curves by $curve_series for "$path"'
 		width: 800
 		height: 800
 		xaxis: plot.Axis{
