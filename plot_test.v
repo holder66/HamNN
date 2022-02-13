@@ -35,7 +35,7 @@ fn test_explore_cross() {
 		random_pick: true
 		datafile_path: 'datasets/developer.tab'
 	}
-	// results = explore(load_file(opts.datafile_path), opts)
+	results = explore(load_file(opts.datafile_path), opts)
 
 	// opts.bins = [3, 4]
 	// opts.number_of_attributes = [2, 3]

@@ -128,18 +128,10 @@ fn plot_explore(result ExploreResult, opts Options) {
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
 	}
-	mut explore_type_string := ''
-		if opts.testfile_path == '' {
-			explore_type_string = if opts.folds == 0 { 'Leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validations' + if opts.repetitions > 0 { ' ($opts.repetitions repetitions' + if opts.random_pick { ', random selection)' } else { ')' }
-			 } else { ''
-			 }
-		} else {
-			explore_type_string = 'Verifications with "$opts.testfile_path"'
-		}
 	annotation2 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 10
-		text: explore_type_string
+		text: explore_type_string(opts)
 		align: 'left'
 	}
 	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
@@ -151,10 +143,27 @@ fn plot_explore(result ExploreResult, opts Options) {
 				text: 'Number of Attributes Used'
 			}
 		}
-		annotations: [annotation1,annotation2]
+		annotations: [annotation1, annotation2]
 		autosize: false
 	)
 	plt.show() or { panic(err) }
+}
+
+// explore_type_string
+fn explore_type_string(opts Options) string {
+	// mut explore_type_string := ''
+	if opts.testfile_path == '' {
+		return if opts.folds == 0 { 'Leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validations' + if opts.repetitions > 0 {
+			' ($opts.repetitions repetitions' + if opts.random_pick {
+				', random selection)'
+			} else {
+				')'
+			}
+		} else {
+			''
+		}
+	}
+	return 'Verifications with "$opts.testfile_path"'
 }
 
 struct ROCResult {
@@ -166,11 +175,11 @@ struct ROCResult {
 
 struct ROCTrace {
 mut:
-	x_coordinates    []f64
-	y_coordinates    []f64
-	area_under_curve f64
+	x_coordinates                []f64
+	y_coordinates                []f64
+	area_under_curve             f64
 	curve_series_variable_values string
-	curve_variable_values []string
+	curve_variable_values        []string
 }
 
 // plot_roc generates plots of receiver operating characteristic curves.
@@ -233,7 +242,13 @@ fn plot_roc(result ExploreResult, opts Options) {
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
 	}
-	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation])
+	annotation2 := plot.Annotation{
+		x: 0.5
+		y: -0.02
+		text: explore_type_string(opts)
+		align: 'left'
+	}
+	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation, annotation2])
 
 	plt.show() or { panic(err) }
 
@@ -250,7 +265,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 	}
 	traces = massage_roc_traces(mut traces)
 	make_roc_plot_traces(traces, mut plt, 'binning')
-	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation])
+	make_roc_plot_layout(mut plt, 'Attributes Used', [annotation, annotation2])
 
 	plt.show() or { panic(err) }
 }
@@ -300,9 +315,9 @@ fn massage_roc_traces(mut traces []ROCTrace) []ROCTrace {
 	return traces
 }
 
-// round_two_decimals 
+// round_two_decimals
 fn round_two_decimals(a f64) f64 {
-	return math.ceil(a * 100.0) / 100.0
+	return math.round(a * 100.0) / 100.0
 }
 
 // make_roc_plot_traces

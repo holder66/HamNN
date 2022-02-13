@@ -30,6 +30,5 @@ fn test_explore_cross() {
 	// opts.testfile_path = 'datasets/bcw174test'
 	// opts.number_of_attributes = [0]
 
-
 	results = explore(load_file(opts.datafile_path), opts)
 }
