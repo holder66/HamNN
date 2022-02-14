@@ -142,8 +142,7 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 		// 	percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		// 	println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
 		// } else {
-			show_expanded_result(result, opts)
-		}
+		show_expanded_result(result, opts)
 	}
 }
 
