@@ -15,23 +15,17 @@ import time
 // Optional:
 // outputfile_path: if specified, saves the extended classifier as json.
 // ```
-pub fn append(opts Options) ?Classifier {
-	mut cl := load_classifier_file(opts.classifierfile_path) ?
-	mut instances_to_append := load_instances_file(opts.instancesfile_path) ?
-	mut ext_cl := append_instances(cl, instances_to_append, opts)
-	mut last_event := ext_cl.history.pop()
-	last_event.file_path = opts.instancesfile_path
-	ext_cl.history << last_event
-	if opts.show_flag || opts.expanded_flag {
-		show_classifier(ext_cl)
-	}
-	if opts.outputfile_path != '' {
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(ext_cl)) or { panic(err.msg) }
-		f.close()
-	}
-	return ext_cl
-}
+// pub fn append(opts Options) ?Classifier {
+// 	mut cl := load_classifier_file(opts.classifierfile_path) ?
+// 	mut instances_to_append := load_instances_file(opts.instancesfile_path) ?
+// 	mut ext_cl := append_instances(cl, instances_to_append, opts)
+// 	// mut last_event := ext_cl.history.pop()
+// 	// last_event.file_path = opts.instancesfile_path
+// 	// ext_cl.history << last_event
+// 	ext_cl.history.last().file_path = opts.instancesfile_path
+// 	// println(ext_cl.history)
+// 	return ext_cl
+// }
 
 // append_instances appends instances to a classifier.
 // It returns the extended classifier struct.
@@ -43,12 +37,14 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 		println('$cl\n$instances_to_append')
 	}
 	mut ext_cl := cl
-	mut event := HistoryEvent{
+	event := HistoryEvent{
 		instances_count: instances_to_append.inferred_classes.len
 		event_date: time.utc()
 		event_environment: get_environment()
 		event: 'append'
+		file_path: instances_to_append.path
 	}
+	// println(event)
 	ext_cl.history << event
 	ext_cl.instances << instances_to_append.instances
 	ext_cl.class_values << instances_to_append.inferred_classes
@@ -57,6 +53,13 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 	if opts.weighting_flag {
 		ext_cl.lcm_class_counts = i64(lcm(get_map_values(ext_cl.class_counts)))
 	}
-
+	if opts.show_flag || opts.expanded_flag {
+		show_classifier(ext_cl)
+	}
+	if opts.outputfile_path != '' {
+		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		f.write_string(json.encode(ext_cl)) or { panic(err.msg) }
+		f.close()
+	}
 	return ext_cl
 }

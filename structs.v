@@ -215,6 +215,7 @@ pub mut:
 pub struct ValidateResult {
 	Class
 pub mut:
+	path string
 	inferred_classes []string
 	counts           [][]int
 	instances        [][]byte

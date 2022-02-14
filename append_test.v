@@ -34,22 +34,22 @@ fn test_append() ? {
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/test_validate.tab'
 	val_results = validate(cl, opts) ?
-	// now do the append, first from val_results
-
+	// now do the append, first from val_results, and
+	// saving the extended classifier
+	opts.outputfile_path = 'tempfolder/extclassifierfile'
 	tcl = append_instances(cl, val_results, opts)
 	assert tcl.class_counts == {
 		'f': 9
 		'm': 7
 	}
 	// repeat the append, this time with the saved files
-	opts.instancesfile_path = 'tempfolder/instancesfile'
-	opts.classifierfile_path = 'tempfolder/classifierfile'
-	opts.outputfile_path = 'tempfolder/extended_classifierfile'
-	stcl := append(opts) ?
+	stcl := append_instances(load_classifier_file('tempfolder/extclassifierfile') ?, load_instances_file('tempfolder/instancesfile') ?, opts)
+	assert stcl.instances.len == 26
+	assert stcl.history.len == 3
 
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'
-	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
+	opts.classifierfile_path = 'tempfolder/extclassifierfile'
 	mut result := verify(load_classifier_file(opts.classifierfile_path) ?, opts)
 	assert result.correct_count == 10
 	assert result.wrong_count == 0
@@ -63,10 +63,9 @@ fn test_append() ? {
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
 	val_results = validate(cl, opts) ?
 	// now do the append
-	opts.instancesfile_path = 'tempfolder/instancesfile'
-	opts.classifierfile_path = 'tempfolder/classifierfile'
+
 	opts.outputfile_path = 'tempfolder/extended_classifierfile'
-	tcl = append(opts) ?
+	tcl = append_instances(cl, val_results, opts)
 	assert tcl.class_counts == {
 		'diaporthe-stem-canker':       20
 		'charcoal-rot':                20

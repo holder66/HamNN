@@ -24,6 +24,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut cl := Classifier{
 		Class: ds.Class
 		Options: opts
+		datafile_path: ds.path
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
@@ -70,25 +71,28 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 			cl.trained_attributes[ra.attribute_name] = TrainedAttribute{
 				attribute_type: ra.inferred_attribute_type
 				translation_table: translation_table
+				rank_value: ra.rank_value
 			}
 		}
 		attr_binned_values << binned_values.map(byte(it))
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
+	// create an event
+	if opts.command == 'make' || opts.command == 'append' {
+	mut event := HistoryEvent{
+		event: 'make'
+		file_path: ds.path
+		event_date: time.utc()
+		event_environment: get_environment()
+		instances_count: cl.instances.len
+	}
+	cl.history << event
+}
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
-		// create an event
-		mut event := HistoryEvent{
-			event: 'make'
-			file_path: ds.path
-			event_date: time.utc()
-			event_environment: get_environment()
-			instances_count: cl.instances.len
-		}
-		cl.history << event
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
 		f.write_string(json.encode(cl)) or { panic(err.msg) }
 		f.close()

@@ -94,35 +94,22 @@ fn show_rank_attributes(result RankingResult) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	// println(cl.Environment)
-	mut show_classifier_array := ['\nClassifier for "$cl.Options.datafile_path"',
-		
-		'options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-		' when calculating rank values',
-		'Included attributes: $cl.trained_attributes.len', 'Trained on $cl.instances.len instances.',
-		'Name                        Type  Rank Value  Uniques        Min        Max  Bins',
-		'__________________________  ____  __________  _______  _________  _________  ____']
-	mut line := ''
+	// println(cl.trained_attributes)
+	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'), 'magenta'))
+	println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
+		' when calculating rank values')
+	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
+	println('Bin range for continuous attributes: $cl.bins')
+	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value  Uniques        Min        Max  Bins','underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
-		line = '${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
-			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' }
-		show_classifier_array << line
+		println('${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
+			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' })
 	}
-	print_array(show_classifier_array)
-	println('')
-	print_array(show_classifier_history(cl.history))
-	println('\n\n')
-}
-
-// show_classifier_history
-fn show_classifier_history(history []HistoryEvent) []string {
-	mut array := ['Classifier History:',
-		'Date & Time (UTC)    Event   From file                            Instances',
-		'_________________    _____   _________                            _________']
-	for events in history {
-		array << '${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}'
+	println(chalk.fg(chalk.style('\nClassifier History:','bold'), 'green'))
+	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                            Instances','underline'), 'blue'))
+	for events in cl.history {
+		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}')
 	}
-	return array
 }
 
 // show_cross_validate

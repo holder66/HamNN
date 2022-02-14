@@ -18,6 +18,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	// instantiate a struct for the result
 	mut validate_result := ValidateResult{
 		inferred_classes: []string{}
+		path: opts.testfile_path
 	}
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
