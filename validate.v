@@ -44,7 +44,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
 	if opts.show_flag && opts.command == 'validate' {
-		println('validate_result: $validate_result')
+		println('Inferred classes ($validate_result.inferred_classes.len): $validate_result.inferred_classes')
 	}
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
