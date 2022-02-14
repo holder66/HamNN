@@ -25,7 +25,7 @@ import os
 // graph_flag: generate plots of Receiver Operating Characteristics (ROC)
 // 		by attributes used; ROC by bins used, and accuracy by attributes
 //		used.
-// `outputfile_path`, saves the result as json.
+// outputfile_path, saves the result as json.
 // ```
 pub fn explore(ds Dataset, opts Options) ExploreResult {
 	mut ex_opts := opts

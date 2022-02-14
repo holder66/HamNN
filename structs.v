@@ -17,7 +17,7 @@ pub mut:
 	lcm_class_counts i64
 }
 
-pub struct ContinuousAttribute {
+struct ContinuousAttribute {
 	values  []f32
 	minimum f32
 	maximum f32
@@ -36,9 +36,9 @@ pub mut:
 	useful_discrete_attributes   map[int][]string
 }
 
-pub struct Fold {
+struct Fold {
 	Class
-pub mut:
+mut:
 	fold_number     int
 	attribute_names []string
 	data            [][]string
@@ -84,7 +84,7 @@ pub mut:
 	history            []HistoryEvent
 }
 
-pub struct HistoryEvent {
+struct HistoryEvent {
 pub mut:
 	event_date        time.Time
 	instances_count   int
@@ -93,6 +93,9 @@ pub mut:
 	file_path         string
 }
 
+// Options struct: can be used as the last parameter in a
+// function's parameter list, to enable
+// default values to be passed to functions.
 pub struct Options {
 pub mut:
 	args                 []string
@@ -172,6 +175,7 @@ pub mut:
 	confusion_matrix_row map[string]int
 }
 
+// Returned by cross_validate() and verify()
 pub struct CrossVerifyResult {
 pub mut:
 	// inferred_classes []string

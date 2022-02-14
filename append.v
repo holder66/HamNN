@@ -5,28 +5,6 @@ import json
 import os
 import time
 
-// append extends an existing classifier with additional labeled instances
-// and returns the extended classifier.
-// ```sh
-// Requires to be specified in opts:
-// classifierfile_path: the classifier to be extended;
-// instancesfile_path: file with labeled instances to be added (typically
-//     produced by a validation or query operation);
-// Optional:
-// outputfile_path: if specified, saves the extended classifier as json.
-// ```
-// pub fn append(opts Options) ?Classifier {
-// 	mut cl := load_classifier_file(opts.classifierfile_path) ?
-// 	mut instances_to_append := load_instances_file(opts.instancesfile_path) ?
-// 	mut ext_cl := append_instances(cl, instances_to_append, opts)
-// 	// mut last_event := ext_cl.history.pop()
-// 	// last_event.file_path = opts.instancesfile_path
-// 	// ext_cl.history << last_event
-// 	ext_cl.history.last().file_path = opts.instancesfile_path
-// 	// println(ext_cl.history)
-// 	return ext_cl
-// }
-
 // append_instances appends instances to a classifier.
 // It returns the extended classifier struct.
 pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts Options) Classifier {
@@ -44,7 +22,6 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 		event: 'append'
 		file_path: instances_to_append.path
 	}
-	// println(event)
 	ext_cl.history << event
 	ext_cl.instances << instances_to_append.instances
 	ext_cl.class_values << instances_to_append.inferred_classes
