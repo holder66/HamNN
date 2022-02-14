@@ -1,9 +1,23 @@
 // show_test.v
 module hamnn
 
+import os
+
+fn testsuite_begin() ? {
+	if os.is_dir('tempfolder') {
+		os.rmdir_all('tempfolder') ?
+	}
+	os.mkdir_all('tempfolder') ?
+}
+
+fn testsuite_end() ? {
+	os.rmdir_all('tempfolder') ?
+}
+
 // test_show_analyze has no asserts; the console output needs
 // to be verified visually.
 fn test_show_analyze() {
+	println('test_show_analyze should print out dataset analyses for developer.tab and for iris.tab')
 	mut opts := Options{
 		show_flag: false
 	}
@@ -18,24 +32,67 @@ fn test_show_analyze() {
 
 // test_show_append
 fn test_show_append() ? {
-	opts := Options{
+	println('test_show_append should print out a test.tab classifier, with 6 instances, followed by a test.tab classifier with 16 instances, and then a test.tab classifier with 26 instances and 3 history events. Then 3 classifiers based on soybean-large-train.tab.')
+	mut opts := Options{
+		verbose_flag: false
 		show_flag: true
-		testfile_path: 'datasets/test_validate.tab'
+		concurrency_flag: false
+		weighting_flag: true
 	}
+
 	mut cl := Classifier{}
-	mut ext_cl := Classifier{}
+	mut tcl := Classifier{}
+	mut val_results := ValidateResult{}
+	// create the classifier file and save it
+	opts.command = 'make'
+	opts.outputfile_path = 'tempfolder/classifierfile'
 	cl = make_classifier(load_file('datasets/test.tab'), opts)
-	mut instances_to_append := validate(cl, opts) ?
-	show_classifier(append_instances(cl, instances_to_append, opts))
+	// do a validation and save the result
+	opts.outputfile_path = 'tempfolder/instancesfile'
+	opts.testfile_path = 'datasets/test_validate.tab'
+	val_results = validate(cl, opts) ?
+	// now do the append, first from val_results, and
+	// saving the extended classifier
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.command = 'append'
+	tcl = append_instances(cl, val_results, opts)
+
+	// now do it again but from the saved validate result,
+	// appending to the previously extended classifier
+	tcl = append_instances(load_classifier_file('tempfolder/classifierfile') ?, load_instances_file('tempfolder/instancesfile') ?,
+		opts)
+
+	// repeat with soybean
+	opts.command = 'make'
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	cl = make_classifier(load_file('datasets/soybean-large-train.tab'), opts)
+	// do a validation and save the result
+	opts.outputfile_path = 'tempfolder/instancesfile'
+	opts.testfile_path = 'datasets/soybean-large-validate.tab'
+	val_results = validate(cl, opts) ?
+	// now do the append, first from val_results, and
+	// saving the extended classifier
+	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.command = 'append'
+	tcl = append_instances(cl, val_results, opts)
+
+	// now do it again but from the saved validate result,
+	// appending to the previously extended classifier
+	tcl = append_instances(load_classifier_file('tempfolder/classifierfile') ?, load_instances_file('tempfolder/instancesfile') ?,
+		opts)
 }
 
-// test_show_classifier
+// fn test_show_classifier
 fn test_show_classifier() {
+	println('test_show_classifier prints out classifiers for iris.tab and for anneal.tab')
 	mut opts := Options{
 		show_flag: true
+		command: 'make'
+		bins: [3, 10]
 	}
-	mut ds := load_file('datasets/iris.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(load_file('datasets/iris.tab'), opts)
+	opts.number_of_attributes = [8]
+	cl = make_classifier(load_file('datasets/anneal.tab'), opts)
 }
 
 // test_show_crossvalidation_result

@@ -95,18 +95,21 @@ fn show_rank_attributes(result RankingResult) {
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
 	// println(cl.trained_attributes)
-	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'), 'magenta'))
+	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'),
+		'magenta'))
 	println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 		' when calculating rank values')
 	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
 	println('Bin range for continuous attributes: $cl.bins')
-	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value  Uniques        Min        Max  Bins','underline'), 'blue'))
+	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value  Uniques        Min        Max  Bins',
+		'underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
 		println('${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
 			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' })
 	}
-	println(chalk.fg(chalk.style('\nClassifier History:','bold'), 'green'))
-	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                            Instances','underline'), 'blue'))
+	println(chalk.fg(chalk.style('\nClassifier History:', 'bold'), 'green'))
+	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                            Instances',
+		'underline'), 'blue'))
 	for events in cl.history {
 		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}')
 	}

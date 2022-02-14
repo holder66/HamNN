@@ -80,15 +80,15 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	cl.attribute_ordering = attr_names
 	// create an event
 	if opts.command == 'make' || opts.command == 'append' {
-	mut event := HistoryEvent{
-		event: 'make'
-		file_path: ds.path
-		event_date: time.utc()
-		event_environment: get_environment()
-		instances_count: cl.instances.len
+		mut event := HistoryEvent{
+			event: 'make'
+			file_path: ds.path
+			event_date: time.utc()
+			event_environment: get_environment()
+			instances_count: cl.instances.len
+		}
+		cl.history << event
 	}
-	cl.history << event
-}
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
 	}

@@ -64,6 +64,7 @@ fn test_load_classifier_file() ? {
 	mut tcl := Classifier{}
 	mut opts := Options{
 		outputfile_path: 'tempfolder/classifierfile'
+		command: 'make' // the make command is necessary to create a proper file
 	}
 	opts.bins = [2, 4]
 	opts.number_of_attributes = [4]

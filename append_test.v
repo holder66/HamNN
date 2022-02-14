@@ -43,7 +43,8 @@ fn test_append() ? {
 		'm': 7
 	}
 	// repeat the append, this time with the saved files
-	stcl := append_instances(load_classifier_file('tempfolder/extclassifierfile') ?, load_instances_file('tempfolder/instancesfile') ?, opts)
+	stcl := append_instances(load_classifier_file('tempfolder/extclassifierfile') ?, load_instances_file('tempfolder/instancesfile') ?,
+		opts)
 	assert stcl.instances.len == 26
 	assert stcl.history.len == 3
 
