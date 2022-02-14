@@ -138,10 +138,10 @@ fn show_validate(result ValidateResult, opts Options) {
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) {
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		if !opts.expanded_flag {
-			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
-		} else {
+		// if !opts.expanded_flag {
+		// 	percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+		// 	println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+		// } else {
 			show_expanded_result(result, opts)
 		}
 	}
