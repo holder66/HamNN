@@ -16,6 +16,10 @@ The Command Line Interface (CLI) app, `vhamnn` (see below) provides a command `o
 ### What it can do
 - classify static patterns (eg images, microarray data, medical symptoms and test results, demographic data, survey results, etc.)
 - classify serial (time-based) patterns (eg speech, movies, real-time sensor data, radar information, etc.) (under development)
+- works with multiple classes
+- handles missing data gracefully
+- easily and accurately deals with situations where classes are not [linearly separable](https://en.wikipedia.org/wiki/Linear_separability). This applies to 
+many cases in physiology, biology,  and medicine (see [hormesis.](https://en.wikipedia.org/wiki/Hormesis))
 
 ### What makes it special
 - one-trial learning - learns in a single pass
@@ -55,9 +59,10 @@ import holder66.hamnn
 import os
 
 fn main() {
+    opts := hamnn.Options{}
     datafile_path := os.home_dir() + '/.vmodules/holder66/hamnn/datasets/iris.tab'
     ds := hamnn.load_file(datafile_path)
-    result := hamnn.analyze_dataset(ds)
+    result := hamnn.analyze_dataset(ds, opts)
     for line in result {println(line)}
 }
 ```
@@ -70,7 +75,7 @@ cd v
 make
 sudo ./v symlink	# add v to your PATH
 ```
-Clone this github repository, and run the algorithms:
+Clone the github repository for holder66/vhamnn, and run the algorithms:
 ```sh
 git clone https://github.com/holder66/vhamnn
 cd vhamnn
@@ -81,15 +86,12 @@ v .                     # compiles all the files in the folder
 ```
 ## Memory leak problem:
 
-At the present time, the best way to prevent a memory leak (which may eventually
- cause the program to be "killed" by the OS when the available memory is exceeded) is to compile with the gc flag, eg:
+At the present time, if your code using the hamnn library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
 
  ```sh
  v -gc boehm .
  ```
 You may need to install the libgc or libgc-dev library, using "brew" or "apt".
-
-
 
 ## Glossary of terms
 **instances:** synonyms: cases; records; examples

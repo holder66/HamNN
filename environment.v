@@ -21,7 +21,7 @@ pub fn get_environment() Environment {
 
 // get_package_version
 fn get_package_version() string {
-	vmod := vmod.from_file('v.mod') or { panic(err.msg) }
+	vmod := vmod.from_file(os.home_dir() + '/.vmodules/holder66/hamnn/v.mod') or { panic((err.msg) }
 	// println(vmod)
 	return vmod.version
 }
