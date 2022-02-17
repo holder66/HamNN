@@ -59,11 +59,15 @@ import holder66.hamnn
 import os
 
 fn main() {
-    opts := hamnn.Options{}
+    opts := hamnn.Options{
+        show_flag: true
+    }
     datafile_path := os.home_dir() + '/.vmodules/holder66/hamnn/datasets/iris.tab'
+    println(datafile_path)
+
     ds := hamnn.load_file(datafile_path)
     result := hamnn.analyze_dataset(ds, opts)
-    for line in result {println(line)}
+    println(result)
 }
 ```
 
