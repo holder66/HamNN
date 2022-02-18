@@ -43,15 +43,6 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 	}
-	// mut cross_result := CrossVerifyResult{
-	// 	// labeled_classes: ds.Class.class_values
-	// 	pos_neg_classes: get_pos_neg_classes(ds.class_counts)
-	// }
-	// // instantiate a confusion_matrix_row
-	// mut confusion_matrix_row := map[string]int{}
-	// for key, _ in ds.class_counts {
-	// 	confusion_matrix_row[key] = 0
-	// }
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
 		folds = ds.class_values.len
@@ -129,12 +120,6 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Cros
 	for key, _ in ds.Class.class_counts {
 		confusion_matrix_row[key] = 0
 	}
-	// for key, value in part_cl.Class.class_counts {
-	// 	fold_result.class_table[key] = ResultForClass{
-	// 		labeled_instances: value
-	// 		confusion_matrix_row: confusion_matrix_row.clone()
-	// 	}
-	// }
 	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result, cross_opts)
 	// println('fold_result: $fold_result')
 	return fold_result
