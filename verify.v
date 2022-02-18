@@ -131,8 +131,8 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 			result.correct_inferences[actual] += 1
 			result.correct_count += 1
 		} else {
-			result.wrong_inferences[actual] += 1
-			result.incorrect_inferences[inferred] += 1
+			result.wrong_inferences[inferred] += 1
+			result.incorrect_inferences[actual] += 1
 			result.incorrects_count += 1
 			result.wrong_count += 1
 		}

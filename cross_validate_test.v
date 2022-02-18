@@ -10,7 +10,7 @@ fn test_cross_validate() ? {
 		verbose_flag: false
 		show_flag: true
 		expanded_flag: true
-		concurrency_flag: true
+		concurrency_flag: false
 	}
 	mut result := CrossVerifyResult{}
 
@@ -42,9 +42,13 @@ fn test_cross_validate() ? {
 	assert result.incorrects_count == 4
 	assert result.wrong_count == 4
 	assert result.total_count == 13
-	// // assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'],
-	// 	['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'],
-	// 	['X', '1', '1', '0']]
+	assert result.confusion_matrix == [
+		['Predicted Classes (columns)', 'm', 'f', 'X'],
+		['Actual Classes (rows)'], 
+		['m', '8', '0', '0'], 
+		['f', '2', '1', '0'],
+		['X', '1', '1', '0']
+	]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -57,9 +61,13 @@ fn test_cross_validate() ? {
 	assert result.incorrects_count == 5
 	assert result.wrong_count == 5
 	assert result.total_count == 13
-	// assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'],
-	// 	['Actual Classes (rows)'], ['m', '7', '1', '0'], ['f', '2', '1', '0'],
-	// 	['X', '0', '0', '0']]
+	assert result.confusion_matrix == [
+		['Predicted Classes (columns)', 'm', 'f', 'X'],
+		['Actual Classes (rows)'], 
+		['m', '7', '1', '0'], 
+		['f', '2', '1', '0'],
+		['X', '1', '1', '0']
+	]
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
@@ -115,24 +123,5 @@ fn test_cross_validate() ? {
 		assert result.incorrects_count == 580
 		assert result.wrong_count == 580
 		assert result.total_count == 10000
-	}
-}
-
-// test_append_map_values
-fn test_append_map_values() {
-	mut a := {
-		'm': 3
-		'f': 0
-		'X': 1
-	}
-	b := {
-		'm': 4
-		'f': 5
-		'X': 0
-	}
-	assert append_map_values(mut a, b) == {
-		'm': 7
-		'f': 5
-		'X': 1
 	}
 }

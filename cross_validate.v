@@ -153,24 +153,6 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 	return byte_vals
 }
 
-// update_cross_result
-fn update_cross_result(fold_result CrossVerifyResult, mut cross_result CrossVerifyResult) CrossVerifyResult {
-	cross_result.inferred_classes << fold_result.inferred_classes
-
-
-	// println('fold_result: $fold_result')
-	// println('cross_result: $cross_result')
-	// for each class, add the fold counts to the cross_result counts
-	// for key, mut value in cross_result.class_counts {
-	// 	value.correct_inferences += fold_result.class_table[key].correct_inferences
-	// 	value.wrong_inferences += fold_result.class_table[key].wrong_inferences
-	// 	value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
-	// 		fold_result.class_table[key].confusion_matrix_row)
-	// }
-
-	return cross_result
-}
-
 // append_map_values appends values from b to a
 fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 	for key, mut value in a {
@@ -178,31 +160,6 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 	}
 	return a
 }
-
-// finalize_cross_result
-// fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
-	// for _, mut value in cross_result.class_table {
-	// 	value.incorrect_inferences = value.labeled_instances - value.correct_inferences
-	// 	cross_result.correct_count += value.correct_inferences
-	// 	cross_result.incorrects_count += value.incorrect_inferences
-	// 	cross_result.wrong_count += value.wrong_inferences
-	// 	cross_result.total_count += value.labeled_instances
-	// }
-	// collect confusion matrix rows into a matrix
-	// mut header_row := ['Predicted Classes (columns)']
-	// mut data_row := []string{}
-	// for key, value in cross_result.class_table {
-	// 	header_row << key
-	// 	data_row = [key]
-	// 	for _, value2 in value.confusion_matrix_row {
-	// 		data_row << '$value2'
-	// 	}
-	// 	cross_result.confusion_matrix << data_row
-	// }
-// 	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
-// 	cross_result.confusion_matrix.prepend(header_row)
-// 	return cross_result
-// }
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, folds int, ds Dataset, opts Options) {

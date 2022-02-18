@@ -103,7 +103,7 @@ pub mut:
 	command              string
 	bins                 []int = [2, 16]
 	uniform_bins         bool
-	concurrency_flag     bool = true
+	concurrency_flag     bool
 	exclude_flag         bool
 	graph_flag           bool
 	verbose_flag         bool
