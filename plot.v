@@ -208,29 +208,30 @@ fn plot_roc(result ExploreResult, opts Options) {
 	mut bin_range_values := []string{}
 	mut attributes_used_values := []string{}
 	mut bin_range := ''
-	// mut pos_class := result.array_of_results[0].pos_neg_classes[0]
-	// mut neg_class := result.array_of_results[0].pos_neg_classes[1]
+	mut pos_class := result.array_of_results[0].pos_neg_classes[0]
+	mut neg_class := result.array_of_results[0].pos_neg_classes[1]
 
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
 
 	for res in result.array_of_results {
+		println('res: $res')
 		// create strings that can be used for filtering
 		if res.bin_values.len == 1 {
 			bin_range = '${res.bin_values[0]} bins'
 		} else {
 			bin_range = 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
 		}
-		// roc_results << ROCResult{
-		// 	sensitivity: res.class_table[pos_class].correct_inferences / f64(
-		// 		res.class_table[pos_class].correct_inferences +
-		// 		res.class_table[neg_class].incorrect_inferences)
-		// 	one_minus_specificity: 1.0 - (res.class_table[neg_class].correct_inferences / f64(
-		// 		res.class_table[neg_class].correct_inferences +
-		// 		res.class_table[pos_class].incorrect_inferences))
-		// 	bin_range: bin_range
-		// 	attributes_used: '$res.attributes_used'
-		// }
+		roc_results << ROCResult{
+			sensitivity: res.correct_inferences[pos_class] / f64(
+				res.correct_inferences[pos_class] +
+				res.incorrect_inferences[neg_class])
+			one_minus_specificity: 1.0 - (res.correct_inferences[neg_class] / f64(
+				res.correct_inferences[neg_class] +
+				res.incorrect_inferences[pos_class]))
+			bin_range: bin_range
+			attributes_used: '$res.attributes_used'
+		}
 	}
 	// println('roc_results: $roc_results')
 	// sort on the x axis value, ie one_minus_specificity

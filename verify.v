@@ -13,7 +13,7 @@ import runtime
 pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
-		mut confusion_matrix_map := map[string]map[string]int{}
+	mut confusion_matrix_map := map[string]map[string]int{}
 	// for each class, instantiate an entry in the confusion matrix map
 	for key1, _ in test_ds.class_counts {
 		for key2, _ in test_ds.class_counts {
@@ -29,7 +29,7 @@ pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	}
 
 	// println(confusion_matrix_map)
-	
+
 	// massage each instance in the test dataset according to the
 	// attribute parameters in the classifier
 	test_instances := generate_test_instances_array(cl, test_ds)
@@ -145,6 +145,6 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 	}
 	result.confusion_matrix.prepend(['Actual Classes (rows)'])
 	result.confusion_matrix.prepend(header_row)
-	
+
 	return result
 }

@@ -120,7 +120,7 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Cros
 	for key, _ in ds.Class.class_counts {
 		confusion_matrix_row[key] = 0
 	}
-	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result, cross_opts)
+	fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
 	// println('fold_result: $fold_result')
 	return fold_result
 }
@@ -149,4 +149,24 @@ fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, f
 		}
 		result_channel <- do_one_fold(current_fold, folds, ds, opts)
 	}
+}
+
+// classify_in_cross classifies each instance in an array, and
+// returns the results of the classification.
+fn classify_in_cross(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+	// for each instance in the test data, perform a classification
+	mut inferred_class := ''
+	for i, test_instance in test_instances {
+		inferred_class = classify_instance(i, cl, test_instance, opts).inferred_class
+		result.inferred_classes << inferred_class
+		result.actual_classes << result.labeled_classes[i]
+	}
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('result in classify_to_verify(): $result')
+	}
+	result = summarize_results(mut result)
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('summarize_result: $result')
+	}
+	return result
 }

@@ -8,8 +8,8 @@ fn test_cross_validate() ? {
 		command: 'cross'
 		exclude_flag: false
 		verbose_flag: false
-		show_flag: true
-		expanded_flag: true
+		show_flag: false
+		expanded_flag: false
 		concurrency_flag: true
 	}
 	mut result := CrossVerifyResult{}
@@ -44,10 +44,10 @@ fn test_cross_validate() ? {
 	assert result.total_count == 13
 	assert result.confusion_matrix == [
 		['Predicted Classes (columns)', 'm', 'f', 'X'],
-		['Actual Classes (rows)'], 
-		['m', '8', '0', '0'], 
+		['Actual Classes (rows)'],
+		['m', '8', '0', '0'],
 		['f', '2', '1', '0'],
-		['X', '1', '1', '0']
+		['X', '1', '1', '0'],
 	]
 
 	opts.concurrency_flag = false
@@ -65,10 +65,10 @@ fn test_cross_validate() ? {
 	assert result.total_count == 13
 	assert result.confusion_matrix == [
 		['Predicted Classes (columns)', 'm', 'f', 'X'],
-		['Actual Classes (rows)'], 
-		['m', '7', '1', '0'], 
+		['Actual Classes (rows)'],
+		['m', '7', '1', '0'],
 		['f', '2', '1', '0'],
-		['X', '1', '1', '0']
+		['X', '1', '1', '0'],
 	]
 
 	opts.datafile_path = 'datasets/developer.tab'
@@ -116,7 +116,7 @@ fn test_cross_validate() ? {
 	assert result.total_count == 699
 
 	if get_environment().arch_details[0] != '4 cpus' {
-		opts.concurrency_flag = false
+		opts.concurrency_flag = true
 		opts.datafile_path = 'datasets/mnist_test.tab'
 		opts.number_of_attributes = [310]
 		opts.bins = [2, 2]

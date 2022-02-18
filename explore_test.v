@@ -16,7 +16,7 @@ fn test_explore_cross() {
 	result = explore(ds, opts)
 	assert result.array_of_results[0].correct_count == 99
 	assert result.array_of_results[0].incorrects_count == 51
-	assert result.array_of_results[0].wrong_count == 50
+	assert result.array_of_results[0].wrong_count == 51
 	assert result.array_of_results[0].total_count == 150
 
 	opts.uniform_bins = false
