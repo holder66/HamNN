@@ -78,6 +78,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
 			cross_result.inferred_classes << fold_result.inferred_classes
+			cross_result.actual_classes << fold_result.labeled_classes
 			// cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	} else {
@@ -85,6 +86,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
 			cross_result.inferred_classes << fold_result.inferred_classes
+			cross_result.actual_classes << fold_result.labeled_classes
 			// cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
@@ -151,14 +153,6 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 		byte_vals << fold_data.map(byte(part_attr.translation_table[it]))
 	}
 	return byte_vals
-}
-
-// append_map_values appends values from b to a
-fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
-	for key, mut value in a {
-		value += b[key]
-	}
-	return a
 }
 
 // option_worker

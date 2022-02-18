@@ -10,7 +10,7 @@ fn test_cross_validate() ? {
 		verbose_flag: false
 		show_flag: true
 		expanded_flag: true
-		concurrency_flag: false
+		concurrency_flag: true
 	}
 	mut result := CrossVerifyResult{}
 
@@ -50,6 +50,8 @@ fn test_cross_validate() ? {
 		['X', '1', '1', '0']
 	]
 
+	opts.concurrency_flag = false
+
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
 	opts.bins = [3, 3]
@@ -79,6 +81,8 @@ fn test_cross_validate() ? {
 	assert result.incorrects_count == 1
 	assert result.wrong_count == 1
 	assert result.total_count == 13
+
+	opts.concurrency_flag = true
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]

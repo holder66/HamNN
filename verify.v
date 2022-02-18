@@ -122,7 +122,7 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVe
 // summarize_results
 fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 	mut inferred := ''
-	for i, actual in result.labeled_classes {
+	for i, actual in result.actual_classes {
 		inferred = result.inferred_classes[i]
 		result.labeled_instances[actual] += 1
 		result.total_count += 1

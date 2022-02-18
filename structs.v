@@ -180,6 +180,7 @@ pub mut:
 pub struct CrossVerifyResult {
 pub mut:
 	labeled_classes []string
+	actual_classes []string
 	inferred_classes 	[]string
 	class_counts map[string]int
 	labeled_instances map[string]int 
