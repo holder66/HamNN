@@ -116,6 +116,7 @@ fn test_cross_validate() ? {
 	assert result.total_count == 699
 
 	if get_environment().arch_details[0] != '4 cpus' {
+		opts.concurrency_flag = false
 		opts.datafile_path = 'datasets/mnist_test.tab'
 		opts.number_of_attributes = [310]
 		opts.bins = [2, 2]

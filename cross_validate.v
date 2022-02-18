@@ -62,7 +62,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		// start a thread pool to do the work:
 		mut tpool := []thread{}
 		for _ in 0 .. jobs {
-			tpool << go option_worker(work_channel, result_channel, folds, ds, opts)
+			tpool << go option_worker(work_channel, result_channel, folds, ds, cross_opts)
 		}
 		tpool.wait()
 		//
