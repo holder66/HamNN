@@ -206,8 +206,8 @@ fn get_binary_stats(result CrossVerifyResult) string {
 	neg_class := result.pos_neg_classes[1]
 	t_p := result.correct_inferences[pos_class]
 	t_n := result.correct_inferences[neg_class]
-	f_p := result.missed_inferences[pos_class]
-	f_n := result.missed_inferences[neg_class]
+	f_p := result.incorrect_inferences[pos_class]
+	f_n := result.incorrect_inferences[neg_class]
 	sens := t_p / f64(t_p + f_n)
 	spec := t_n / f64(t_n + f_p)
 	ppv := t_p / f64(t_p + f_p)
@@ -235,9 +235,9 @@ fn show_multiple_classes_stats(result CrossVerifyResult, spacer_size int) {
 	}
 	mut show_result := []string{}
 	for class, _ in result.class_counts {
-		show_result << '$spacer${class:-27}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)    ${result.missed_inferences[class]:5} (${f32(result.missed_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)     ${result.wrong_inferences[class]:5} (${f32(result.wrong_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)'
+		show_result << '$spacer${class:-27}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)    ${result.incorrect_inferences[class]:5} (${f32(result.incorrect_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)     ${result.wrong_inferences[class]:5} (${f32(result.wrong_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)'
 	}
-	show_result << '$spacer   Totals                         ${result.total_count:5}   ${result.correct_count:5} (${f32(result.correct_count) * 100 / result.total_count:6.2f}%)    ${result.misses_count:5} (${f32(result.misses_count) * 100 / result.total_count:6.2f}%)     ${result.wrong_count:5} (${f32(result.wrong_count) * 100 / result.total_count:6.2f}%)'
+	show_result << '$spacer   Totals                         ${result.total_count:5}   ${result.correct_count:5} (${f32(result.correct_count) * 100 / result.total_count:6.2f}%)    ${result.incorrects_count:5} (${f32(result.incorrects_count) * 100 / result.total_count:6.2f}%)     ${result.wrong_count:5} (${f32(result.wrong_count) * 100 / result.total_count:6.2f}%)'
 	print_array(show_result)
 }
 

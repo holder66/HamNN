@@ -28,27 +28,34 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	cross_opts.datafile_path = ds.path
 	mut folds := opts.folds
 	mut fold_result := CrossVerifyResult{}
+
+	// for each class, instantiate an entry in the confusion matrix map
+	mut confusion_matrix_map := map[string]map[string]int{}
+	for key1, _ in ds.class_counts {
+		for key2, _ in ds.class_counts {
+			confusion_matrix_map[key2][key1] = 0
+		}
+	}
+	// instantiate a struct for the result
 	mut cross_result := CrossVerifyResult{
-		// labeled_classes: ds.Class.class_values
+		labeled_classes: ds.class_values
+		class_counts: ds.class_counts
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
+		confusion_matrix_map: confusion_matrix_map
 	}
-	// instantiate a confusion_matrix_row
-	mut confusion_matrix_row := map[string]int{}
-	for key, _ in ds.class_counts {
-		confusion_matrix_row[key] = 0
-	}
+	// mut cross_result := CrossVerifyResult{
+	// 	// labeled_classes: ds.Class.class_values
+	// 	pos_neg_classes: get_pos_neg_classes(ds.class_counts)
+	// }
+	// // instantiate a confusion_matrix_row
+	// mut confusion_matrix_row := map[string]int{}
+	// for key, _ in ds.class_counts {
+	// 	confusion_matrix_row[key] = 0
+	// }
 	// test if leave-one-out crossvalidation is requested
 	if opts.folds == 0 {
 		folds = ds.class_values.len
 	}
-
-	// instantiate an entry for each class in the cross_result class_table
-	// for key, value in ds.Class.class_counts {
-	// 	cross_result.class_table[key] = ResultForClass{
-	// 		labeled_instances: value
-	// 		confusion_matrix_row: confusion_matrix_row.clone()
-	// 	}
-	// }
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
 		mut result_channel := chan CrossVerifyResult{cap: folds}
@@ -70,16 +77,18 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		//
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
-			cross_result = update_cross_result(fold_result, mut cross_result)
+			cross_result.inferred_classes << fold_result.inferred_classes
+			// cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
-			cross_result = update_cross_result(fold_result, mut cross_result)
+			cross_result.inferred_classes << fold_result.inferred_classes
+			// cross_result = update_cross_result(fold_result, mut cross_result)
 		}
 	}
-	cross_result = finalize_cross_result(mut cross_result)
+	cross_result = summarize_results(mut cross_result)
 	// show_results(cross_result, cross_opts)
 	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
 		show_crossvalidation_result(cross_result, cross_opts)
@@ -125,7 +134,7 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Cros
 	// 	}
 	// }
 	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result, cross_opts)
-	println('fold_result: $fold_result')
+	// println('fold_result: $fold_result')
 	return fold_result
 }
 
@@ -146,13 +155,19 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 
 // update_cross_result
 fn update_cross_result(fold_result CrossVerifyResult, mut cross_result CrossVerifyResult) CrossVerifyResult {
+	cross_result.inferred_classes << fold_result.inferred_classes
+
+
+	// println('fold_result: $fold_result')
+	// println('cross_result: $cross_result')
 	// for each class, add the fold counts to the cross_result counts
-	// for key, mut value in cross_result.class_table {
+	// for key, mut value in cross_result.class_counts {
 	// 	value.correct_inferences += fold_result.class_table[key].correct_inferences
 	// 	value.wrong_inferences += fold_result.class_table[key].wrong_inferences
 	// 	value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
 	// 		fold_result.class_table[key].confusion_matrix_row)
 	// }
+
 	return cross_result
 }
 
@@ -165,17 +180,17 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 }
 
 // finalize_cross_result
-fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
+// fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
 	// for _, mut value in cross_result.class_table {
-	// 	value.missed_inferences = value.labeled_instances - value.correct_inferences
+	// 	value.incorrect_inferences = value.labeled_instances - value.correct_inferences
 	// 	cross_result.correct_count += value.correct_inferences
-	// 	cross_result.misses_count += value.missed_inferences
+	// 	cross_result.incorrects_count += value.incorrect_inferences
 	// 	cross_result.wrong_count += value.wrong_inferences
 	// 	cross_result.total_count += value.labeled_instances
 	// }
 	// collect confusion matrix rows into a matrix
-	mut header_row := ['Predicted Classes (columns)']
-	mut data_row := []string{}
+	// mut header_row := ['Predicted Classes (columns)']
+	// mut data_row := []string{}
 	// for key, value in cross_result.class_table {
 	// 	header_row << key
 	// 	data_row = [key]
@@ -184,10 +199,10 @@ fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
 	// 	}
 	// 	cross_result.confusion_matrix << data_row
 	// }
-	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
-	cross_result.confusion_matrix.prepend(header_row)
-	return cross_result
-}
+// 	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
+// 	cross_result.confusion_matrix.prepend(header_row)
+// 	return cross_result
+// }
 
 // option_worker
 fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, folds int, ds Dataset, opts Options) {

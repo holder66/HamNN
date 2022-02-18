@@ -15,7 +15,7 @@ fn test_explore_cross() {
 	mut ds := load_file(opts.datafile_path)
 	result = explore(ds, opts)
 	assert result.array_of_results[0].correct_count == 99
-	assert result.array_of_results[0].misses_count == 51
+	assert result.array_of_results[0].incorrects_count == 51
 	assert result.array_of_results[0].wrong_count == 50
 	assert result.array_of_results[0].total_count == 150
 
@@ -23,7 +23,7 @@ fn test_explore_cross() {
 	opts.bins = [10, 12]
 	result = explore(ds, opts)
 	assert result.array_of_results.last().correct_count == 141
-	assert result.array_of_results.last().misses_count == 9
+	assert result.array_of_results.last().incorrects_count == 9
 	assert result.array_of_results.last().wrong_count == 9
 	assert result.array_of_results.last().total_count == 150
 
@@ -38,14 +38,14 @@ fn test_explore_cross() {
 	ds = load_file(opts.datafile_path)
 	result = explore(ds, opts)
 	assert result.array_of_results[1].correct_count == 875
-	assert result.array_of_results[1].misses_count == 23
+	assert result.array_of_results[1].incorrects_count == 23
 	assert result.array_of_results[1].wrong_count == 23
 	assert result.array_of_results[1].total_count == 898
 
 	opts.uniform_bins = false
 	result = explore(ds, opts)
 	assert result.array_of_results[1].correct_count == 878
-	assert result.array_of_results[1].misses_count == 20
+	assert result.array_of_results[1].incorrects_count == 20
 	assert result.array_of_results[1].wrong_count == 20
 	assert result.array_of_results[1].total_count == 898
 

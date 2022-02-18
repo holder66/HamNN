@@ -124,7 +124,7 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 	mut inferred := ''
 	for i, actual in result.labeled_classes {
 		inferred = result.inferred_classes[i]
-		result.labeled_instances[inferred] += 1
+		result.labeled_instances[actual] += 1
 		result.total_count += 1
 		result.confusion_matrix_map[actual][inferred] += 1
 		if actual == inferred {
@@ -132,8 +132,8 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 			result.correct_count += 1
 		} else {
 			result.wrong_inferences[actual] += 1
-			result.missed_inferences[inferred] += 1
-			result.misses_count += 1
+			result.incorrect_inferences[inferred] += 1
+			result.incorrects_count += 1
 			result.wrong_count += 1
 		}
 	}

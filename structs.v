@@ -171,7 +171,7 @@ pub struct ResultForClass {
 pub mut:
 	labeled_instances    int
 	correct_inferences   int
-	missed_inferences    int
+	incorrect_inferences    int
 	wrong_inferences     int
 	confusion_matrix_row map[string]int
 }
@@ -184,13 +184,13 @@ pub mut:
 	class_counts map[string]int
 	labeled_instances map[string]int 
 	correct_inferences   map[string]int 
-	missed_inferences    map[string]int 
+	incorrect_inferences    map[string]int 
 	wrong_inferences     map[string]int 
 	// outer key: actual class; inner key: predicted class
 	confusion_matrix_map map[string]map[string]int
 	pos_neg_classes  []string
 	correct_count    int
-	misses_count     int
+	incorrects_count     int
 	wrong_count      int
 	total_count      int
 	bin_values       []int
