@@ -5,7 +5,7 @@ Given a classifier and a verification dataset, classifies each instance
   comparing the predicted classes to the assigned classes.*/
 module hamnn
 
-import runtime
+// import runtime
 
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
@@ -82,7 +82,7 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
-	mut classify_result := ClassifyResult{}
+	// mut classify_result := ClassifyResult{}
 	// if opts.concurrency_flag {
 	// 	mut work_channel := chan int{cap: runtime.nr_jobs()}
 	// 	mut result_channel := chan ClassifyResult{cap: test_instances.len}
@@ -124,6 +124,7 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 	mut inferred := ''
 	for i, actual in result.labeled_classes {
 		inferred = result.inferred_classes[i]
+		result.labeled_instances[inferred] += 1
 		result.total_count += 1
 		result.confusion_matrix_map[actual][inferred] += 1
 		if actual == inferred {
@@ -131,17 +132,19 @@ fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
 			result.correct_count += 1
 		} else {
 			result.wrong_inferences[actual] += 1
+			result.missed_inferences[inferred] += 1
+			result.misses_count += 1
 			result.wrong_count += 1
 		}
 	}
 	// collect confusion matrix rows into a matrix
 	mut header_row := ['Predicted Classes (columns)']
 	mut data_row := []string{}
-	for key, value in result.confusion_matrix_map {
+	for key, _ in result.confusion_matrix_map {
 		header_row << key
 		data_row = [key]
-		for _, value2 in result.confusion_matrix_map[key] {
-			data_row << '$value2'
+		for _, value in result.confusion_matrix_map[key] {
+			data_row << '$value'
 		}
 		result.confusion_matrix << data_row
 	}

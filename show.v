@@ -140,11 +140,12 @@ fn show_validate(result ValidateResult, opts Options) {
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) {
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		// if !opts.expanded_flag {
-		// 	percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		// 	println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
-		// } else {
+		if !opts.expanded_flag {
+			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+		} else {
 		show_expanded_result(result, opts)
+		}
 	}
 }
 
@@ -165,11 +166,11 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) {
 		'green'))
 
 	show_multiple_classes_stats(result, 0)
-	// if result.class_table.len == 2 {
-	// 	println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-	// 	println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
-	// 	println('${get_binary_stats(result)}')
-	// }
+	if result.class_counts.len == 2 {
+		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
+		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
+		println('${get_binary_stats(result)}')
+	}
 	// confusion matrix
 	print_confusion_matrix(result)
 }
@@ -200,26 +201,26 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 }
 
 // get_binary_stats
-// fn get_binary_stats(result CrossVerifyResult) string {
-// 	pos_class := result.pos_neg_classes[0]
-// 	neg_class := result.pos_neg_classes[1]
-// 	// t_p := result.class_table[pos_class].correct_inferences
-// 	// t_n := result.class_table[neg_class].correct_inferences
-// 	// f_p := result.class_table[pos_class].missed_inferences
-// 	// f_n := result.class_table[neg_class].missed_inferences
-// 	sens := t_p / f64(t_p + f_n)
-// 	spec := t_n / f64(t_n + f_p)
-// 	ppv := t_p / f64(t_p + f_p)
-// 	npv := t_n / f64(t_n + f_n)
-// 	ba := (sens + spec) / 2
-// 	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
-// 	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f} ${ba:18.3f} ${f1_score:10.3f}'
-// }
+fn get_binary_stats(result CrossVerifyResult) string {
+	pos_class := result.pos_neg_classes[0]
+	neg_class := result.pos_neg_classes[1]
+	t_p := result.correct_inferences[pos_class]
+	t_n := result.correct_inferences[neg_class]
+	f_p := result.missed_inferences[pos_class]
+	f_n := result.missed_inferences[neg_class]
+	sens := t_p / f64(t_p + f_n)
+	spec := t_n / f64(t_n + f_p)
+	ppv := t_p / f64(t_p + f_p)
+	npv := t_n / f64(t_n + f_n)
+	ba := (sens + spec) / 2
+	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
+	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f} ${ba:18.3f} ${f1_score:10.3f}'
+}
 
 // show_expanded_explore_result
 fn show_expanded_explore_result(result CrossVerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
-		// println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
+		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
 		show_multiple_classes_stats(result, 21)
@@ -233,9 +234,9 @@ fn show_multiple_classes_stats(result CrossVerifyResult, spacer_size int) {
 		spacer += ' '
 	}
 	mut show_result := []string{}
-	// for class, value in result.class_table {
-	// 	show_result << '$spacer${class:-27}       ${value.labeled_instances:5}   ${value.correct_inferences:5} (${f32(value.correct_inferences) * 100 / value.labeled_instances:6.2f}%)    ${value.missed_inferences:5} (${f32(value.missed_inferences) * 100 / value.labeled_instances:6.2f}%)     ${value.wrong_inferences:5} (${f32(value.wrong_inferences) * 100 / value.labeled_instances:6.2f}%)'
-	// }
+	for class, _ in result.class_counts {
+		show_result << '$spacer${class:-27}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)    ${result.missed_inferences[class]:5} (${f32(result.missed_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)     ${result.wrong_inferences[class]:5} (${f32(result.wrong_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)'
+	}
 	show_result << '$spacer   Totals                         ${result.total_count:5}   ${result.correct_count:5} (${f32(result.correct_count) * 100 / result.total_count:6.2f}%)    ${result.misses_count:5} (${f32(result.misses_count) * 100 / result.total_count:6.2f}%)     ${result.wrong_count:5} (${f32(result.wrong_count) * 100 / result.total_count:6.2f}%)'
 	print_array(show_result)
 }

@@ -208,8 +208,8 @@ fn plot_roc(result ExploreResult, opts Options) {
 	mut bin_range_values := []string{}
 	mut attributes_used_values := []string{}
 	mut bin_range := ''
-	mut pos_class := result.array_of_results[0].pos_neg_classes[0]
-	mut neg_class := result.array_of_results[0].pos_neg_classes[1]
+	// mut pos_class := result.array_of_results[0].pos_neg_classes[0]
+	// mut neg_class := result.array_of_results[0].pos_neg_classes[1]
 
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
