@@ -83,31 +83,31 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVe
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	mut classify_result := ClassifyResult{}
-	if opts.concurrency_flag {
-		mut work_channel := chan int{cap: runtime.nr_jobs()}
-		mut result_channel := chan ClassifyResult{cap: test_instances.len}
-		for i, _ in test_instances {
-			work_channel <- i
-			go option_worker_verify(work_channel, result_channel, cl, test_instances,
-				result.labeled_classes, opts)
-		}
-		for _ in test_instances {
-			classify_result = <-result_channel
-			println(classify_result)
-			result.inferred_classes << classify_result.inferred_class
-			// if classify_result.inferred_class == classify_result.labeled_class {
-			// 	result.correct_inferences[classify_result.inferred_class] += 1
-			// } else {
-			// 	result.wrong_inferences[classify_result.inferred_class] += 1
-			// }
-			// // update confusion matrix row
-			// result.confusion_matrix_map[classify_result.inferred_class][classify_result.inferred_class] += 1
-		}
-	} else {
+	// if opts.concurrency_flag {
+	// 	mut work_channel := chan int{cap: runtime.nr_jobs()}
+	// 	mut result_channel := chan ClassifyResult{cap: test_instances.len}
+	// 	for i, _ in test_instances {
+	// 		work_channel <- i
+	// 		go option_worker_verify(work_channel, result_channel, cl, test_instances,
+	// 			result.labeled_classes, opts)
+	// 	}
+	// 	for _ in test_instances {
+	// 		classify_result = <-result_channel
+	// 		println(classify_result)
+	// 		result.inferred_classes << classify_result.inferred_class
+	// 		// if classify_result.inferred_class == classify_result.labeled_class {
+	// 		// 	result.correct_inferences[classify_result.inferred_class] += 1
+	// 		// } else {
+	// 		// 	result.wrong_inferences[classify_result.inferred_class] += 1
+	// 		// }
+	// 		// // update confusion matrix row
+	// 		// result.confusion_matrix_map[classify_result.inferred_class][classify_result.inferred_class] += 1
+	// 	}
+	// } else {
 		for i, test_instance in test_instances {
 			inferred_class = classify_instance(i, cl, test_instance, opts).inferred_class
 			result.inferred_classes << inferred_class
-		}
+		// }
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): $result')
