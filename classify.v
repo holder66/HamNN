@@ -13,13 +13,15 @@ import arrays
 // weighting_flag: when true, the nearest neighbor algorithm takes into
 // 		account class prevalences.
 // ```
-pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
+pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
 	mut hamming_dist_array := []int{}
 	mut hamming_dist := 0
-	mut classify_result := ClassifyResult{}
+	mut classify_result := ClassifyResult{
+		index: index
+	}
 	// get the hamming distance for each of the corresponding byte_values
 	// in each classifier instance and the instance to be classified
 	for instance in cl.instances {
@@ -74,10 +76,10 @@ pub fn classify_instance(cl Classifier, instance_to_be_classified []byte, opts O
 			}
 		}
 		// look for a single maximum; if found, return its class
-		index, max_count := idx_count_max(results[i])
+		indx, max_count := idx_count_max(results[i])
 		if max_count == 1 {
 			classify_result = ClassifyResult{
-				inferred_class: classes[index]
+				inferred_class: classes[indx]
 				nearest_neighbors_by_class: results[i]
 				classes: cl.class_counts.keys()
 				weighting_flag: opts.weighting_flag

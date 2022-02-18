@@ -159,6 +159,7 @@ pub mut:
 
 pub struct ClassifyResult {
 pub mut:
+	index 	int 
 	inferred_class             string
 	labeled_class              string
 	nearest_neighbors_by_class []int
@@ -178,11 +179,15 @@ pub mut:
 // Returned by cross_validate() and verify()
 pub struct CrossVerifyResult {
 pub mut:
-	// inferred_classes []string
 	labeled_classes []string
-	// matches          []int
-	// counts           map[int]int
-	class_table      map[string]ResultForClass
+	inferred_classes 	[]string
+	class_counts map[string]int
+	labeled_instances map[string]int 
+	correct_inferences   map[string]int 
+	missed_inferences    map[string]int 
+	wrong_inferences     map[string]int 
+	// outer key: actual class; inner key: predicted class
+	confusion_matrix_map map[string]map[string]int
 	pos_neg_classes  []string
 	correct_count    int
 	misses_count     int

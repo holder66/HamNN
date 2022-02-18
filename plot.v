@@ -221,16 +221,16 @@ fn plot_roc(result ExploreResult, opts Options) {
 		} else {
 			bin_range = 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
 		}
-		roc_results << ROCResult{
-			sensitivity: res.class_table[pos_class].correct_inferences / f64(
-				res.class_table[pos_class].correct_inferences +
-				res.class_table[neg_class].missed_inferences)
-			one_minus_specificity: 1.0 - (res.class_table[neg_class].correct_inferences / f64(
-				res.class_table[neg_class].correct_inferences +
-				res.class_table[pos_class].missed_inferences))
-			bin_range: bin_range
-			attributes_used: '$res.attributes_used'
-		}
+		// roc_results << ROCResult{
+		// 	sensitivity: res.class_table[pos_class].correct_inferences / f64(
+		// 		res.class_table[pos_class].correct_inferences +
+		// 		res.class_table[neg_class].missed_inferences)
+		// 	one_minus_specificity: 1.0 - (res.class_table[neg_class].correct_inferences / f64(
+		// 		res.class_table[neg_class].correct_inferences +
+		// 		res.class_table[pos_class].missed_inferences))
+		// 	bin_range: bin_range
+		// 	attributes_used: '$res.attributes_used'
+		// }
 	}
 	// println('roc_results: $roc_results')
 	// sort on the x axis value, ie one_minus_specificity

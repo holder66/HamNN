@@ -29,7 +29,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	mut folds := opts.folds
 	mut fold_result := CrossVerifyResult{}
 	mut cross_result := CrossVerifyResult{
-		labeled_classes: ds.Class.class_values
+		// labeled_classes: ds.Class.class_values
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 	}
 	// instantiate a confusion_matrix_row
@@ -43,12 +43,12 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	}
 
 	// instantiate an entry for each class in the cross_result class_table
-	for key, value in ds.Class.class_counts {
-		cross_result.class_table[key] = ResultForClass{
-			labeled_instances: value
-			confusion_matrix_row: confusion_matrix_row.clone()
-		}
-	}
+	// for key, value in ds.Class.class_counts {
+	// 	cross_result.class_table[key] = ResultForClass{
+	// 		labeled_instances: value
+	// 		confusion_matrix_row: confusion_matrix_row.clone()
+	// 	}
+	// }
 	// if the concurrency flag is set
 	if opts.concurrency_flag {
 		mut result_channel := chan CrossVerifyResult{cap: folds}
@@ -118,13 +118,14 @@ fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) Cros
 	for key, _ in ds.Class.class_counts {
 		confusion_matrix_row[key] = 0
 	}
-	for key, value in part_cl.Class.class_counts {
-		fold_result.class_table[key] = ResultForClass{
-			labeled_instances: value
-			confusion_matrix_row: confusion_matrix_row.clone()
-		}
-	}
+	// for key, value in part_cl.Class.class_counts {
+	// 	fold_result.class_table[key] = ResultForClass{
+	// 		labeled_instances: value
+	// 		confusion_matrix_row: confusion_matrix_row.clone()
+	// 	}
+	// }
 	fold_result = classify_to_verify(part_cl, fold_instances, mut fold_result, cross_opts)
+	println('fold_result: $fold_result')
 	return fold_result
 }
 
@@ -146,12 +147,12 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 // update_cross_result
 fn update_cross_result(fold_result CrossVerifyResult, mut cross_result CrossVerifyResult) CrossVerifyResult {
 	// for each class, add the fold counts to the cross_result counts
-	for key, mut value in cross_result.class_table {
-		value.correct_inferences += fold_result.class_table[key].correct_inferences
-		value.wrong_inferences += fold_result.class_table[key].wrong_inferences
-		value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
-			fold_result.class_table[key].confusion_matrix_row)
-	}
+	// for key, mut value in cross_result.class_table {
+	// 	value.correct_inferences += fold_result.class_table[key].correct_inferences
+	// 	value.wrong_inferences += fold_result.class_table[key].wrong_inferences
+	// 	value.confusion_matrix_row = append_map_values(mut value.confusion_matrix_row,
+	// 		fold_result.class_table[key].confusion_matrix_row)
+	// }
 	return cross_result
 }
 
@@ -165,24 +166,24 @@ fn append_map_values(mut a map[string]int, b map[string]int) map[string]int {
 
 // finalize_cross_result
 fn finalize_cross_result(mut cross_result CrossVerifyResult) CrossVerifyResult {
-	for _, mut value in cross_result.class_table {
-		value.missed_inferences = value.labeled_instances - value.correct_inferences
-		cross_result.correct_count += value.correct_inferences
-		cross_result.misses_count += value.missed_inferences
-		cross_result.wrong_count += value.wrong_inferences
-		cross_result.total_count += value.labeled_instances
-	}
+	// for _, mut value in cross_result.class_table {
+	// 	value.missed_inferences = value.labeled_instances - value.correct_inferences
+	// 	cross_result.correct_count += value.correct_inferences
+	// 	cross_result.misses_count += value.missed_inferences
+	// 	cross_result.wrong_count += value.wrong_inferences
+	// 	cross_result.total_count += value.labeled_instances
+	// }
 	// collect confusion matrix rows into a matrix
 	mut header_row := ['Predicted Classes (columns)']
 	mut data_row := []string{}
-	for key, value in cross_result.class_table {
-		header_row << key
-		data_row = [key]
-		for _, value2 in value.confusion_matrix_row {
-			data_row << '$value2'
-		}
-		cross_result.confusion_matrix << data_row
-	}
+	// for key, value in cross_result.class_table {
+	// 	header_row << key
+	// 	data_row = [key]
+	// 	for _, value2 in value.confusion_matrix_row {
+	// 		data_row << '$value2'
+	// 	}
+	// 	cross_result.confusion_matrix << data_row
+	// }
 	cross_result.confusion_matrix.prepend(['Actual Classes (rows)'])
 	cross_result.confusion_matrix.prepend(header_row)
 	return cross_result

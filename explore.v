@@ -126,9 +126,9 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	results.array_of_results = array_of_results
 	if opts.graph_flag {
 		plot_explore(results, opts)
-		if array_of_results[0].class_table.len == 2 {
-			plot_roc(results, opts)
-		}
+		// if array_of_results[0].class_table.len == 2 {
+		// 	plot_roc(results, opts)
+		// }
 	}
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }

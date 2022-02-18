@@ -62,7 +62,7 @@ fn classify_to_validate(cl Classifier, test_instances [][]byte, mut result Valid
 	mut classify_result := ClassifyResult{}
 	// for each instance in the test data, perform a classification
 	for test_instance in test_instances {
-		classify_result = classify_instance(cl, test_instance, opts)
+		classify_result = classify_instance(0, cl, test_instance, opts)
 		result.inferred_classes << classify_result.inferred_class
 		result.counts << classify_result.nearest_neighbors_by_class
 	}
