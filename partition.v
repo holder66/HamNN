@@ -28,12 +28,12 @@ fn partition(pick_list []int, current_fold int, folds int, ds Dataset, opts Opti
 		fold_number: current_fold
 		attribute_names: ds.attribute_names
 		indices: fold_indices
-		data: transpose(transpose(get_index_items(ds.data, fold_indices)))
+		data: transpose(get_index_items(transpose(ds.data), fold_indices))
 		class_name: ds.class_name
 		class_values: fold_class_values
 		class_counts: string_element_counts(fold_class_values)
 	}
-	println(part_ds)
+	// println(part_ds)
 	return part_ds, fold
 }
 
@@ -84,17 +84,3 @@ fn get_index_items<T>(arr []T, indices []int) []T {
 	}
 	return sel
 }
-
-// // get_remainder removes from an array those elements whose indices are
-// // in `indices`
-// fn get_remainder<T>(arr []T, indices []int) []T {
-// 	mut rest := []T{}
-// 	for i, val in arr {
-// 		if i in indices {
-// 			continue
-// 		} else {
-// 			rest << val
-// 		}
-// 	}
-// 	return rest
-// }

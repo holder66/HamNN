@@ -184,6 +184,7 @@ pub mut:
 	labeled_classes      []string
 	actual_classes       []string
 	inferred_classes     []string
+	instance_indices 	[]int 
 	class_counts         map[string]int
 	labeled_instances    map[string]int
 	correct_inferences   map[string]int
