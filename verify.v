@@ -107,44 +107,11 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVe
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): $result')
 	}
-	result = summarize_results(mut result)
+	result = summarize_results(1, mut result)
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('summarize_result: $result')
 	}
 	return result
 }
 
-// summarize_results
-fn summarize_results(mut result CrossVerifyResult) CrossVerifyResult {
-	mut inferred := ''
-	for i, actual in result.actual_classes {
-		inferred = result.inferred_classes[i]
-		result.labeled_instances[actual] += 1
-		result.total_count += 1
-		result.confusion_matrix_map[actual][inferred] += 1
-		if actual == inferred {
-			result.correct_inferences[actual] += 1
-			result.correct_count += 1
-		} else {
-			result.wrong_inferences[inferred] += 1
-			result.incorrect_inferences[actual] += 1
-			result.incorrects_count += 1
-			result.wrong_count += 1
-		}
-	}
-	// collect confusion matrix rows into a matrix
-	mut header_row := ['Predicted Classes (columns)']
-	mut data_row := []string{}
-	for key, _ in result.confusion_matrix_map {
-		header_row << key
-		data_row = [key]
-		for _, value in result.confusion_matrix_map[key] {
-			data_row << '$value'
-		}
-		result.confusion_matrix << data_row
-	}
-	result.confusion_matrix.prepend(['Actual Classes (rows)'])
-	result.confusion_matrix.prepend(header_row)
 
-	return result
-}
