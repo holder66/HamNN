@@ -254,11 +254,17 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
 	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
 		'magenta'))
-	results_array := ['Partioning: $folding_string', 'Attributes: $attr_string',
+	results_array := [
+		'Partitioning: $folding_string' +
+			if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
+			if opts.random_pick { ' with random selection of instances' } else { '' },
+		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
 		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
-		'Prevalence weighting of nearest neighbor counts: $weight_string ', 'Results:',
-		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)']
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:',
+		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)',
+	]
 	print_array(results_array)
 	if opts.expanded_flag {
 		show_expanded_result(cross_result, opts)

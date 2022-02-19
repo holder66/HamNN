@@ -3,6 +3,7 @@ module hamnn
 
 import strconv
 import runtime
+import rand
 
 // cross_validate takes a dataset and performs n-fold cross-validation.
 // ```sh
@@ -26,6 +27,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
+	mut total_instances := ds.Class.class_values.len
 
 	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }
 	// for each class, instantiate an entry in the confusion matrix map
@@ -44,7 +46,24 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	}
 	mut repetition_result := CrossVerifyResult{}
 	for rep in 0 .. repeats {
-		repetition_result = do_repetition(rep, ds, cross_opts)
+		// generate a pick list of indices
+		mut pick_list := []int{}
+		if opts.random_pick {
+			mut n := 0
+			for pick_list.len < total_instances {
+				n = rand.int_in_range(0, total_instances)
+				if n in pick_list {
+					continue
+				}
+				pick_list << n
+			}
+		} else {
+			for i in 0 .. total_instances {
+				pick_list << i
+			}
+		}
+		println(pick_list)
+		repetition_result = do_repetition(pick_list, rep, ds, cross_opts)
 
 		cross_result.inferred_classes << repetition_result.inferred_classes
 		cross_result.actual_classes << repetition_result.actual_classes
@@ -58,7 +77,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 }
 
 // do_repetition
-fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
+fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	println('rep: $rep')
 	mut fold_result := CrossVerifyResult{}
 	// instantiate a struct for the result
@@ -80,7 +99,8 @@ fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 		// start a thread pool to do the work:
 		mut tpool := []thread{}
 		for _ in 0 .. jobs {
-			tpool << go option_worker(work_channel, result_channel, folds, ds, cross_opts)
+			tpool << go option_worker(work_channel, result_channel, pick_list, folds,
+				ds, cross_opts)
 		}
 		tpool.wait()
 		//
@@ -92,7 +112,7 @@ fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
-			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
+			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 		}
@@ -169,11 +189,11 @@ fn div_map(n int, mut m map[string]int) map[string]int {
 }
 
 // do_one_fold
-fn do_one_fold(current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
+fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
-	part_ds, fold := partition(current_fold, folds, ds, cross_opts)
-	// println('fold: $fold')
+	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
+	println('fold: $fold')
 	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 	}
@@ -220,13 +240,13 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
 }
 
 // option_worker
-fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, folds int, ds Dataset, opts Options) {
+fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, pick_list []int, folds int, ds Dataset, opts Options) {
 	for {
 		mut current_fold := <-work_channel
 		if current_fold < 0 {
 			break
 		}
-		result_channel <- do_one_fold(current_fold, folds, ds, opts)
+		result_channel <- do_one_fold(pick_list, current_fold, folds, ds, opts)
 	}
 }
 
