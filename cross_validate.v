@@ -26,9 +26,9 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
-	mut folds := opts.folds
-	mut fold_result := CrossVerifyResult{}
 
+	
+	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }	
 	// for each class, instantiate an entry in the confusion matrix map
 	mut confusion_matrix_map := map[string]map[string]int{}
 	for key1, _ in ds.class_counts {
@@ -43,12 +43,31 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 	}
-	// test if leave-one-out crossvalidation is requested
-	if opts.folds == 0 {
-		folds = ds.class_values.len
+	mut repetition_result := CrossVerifyResult{}
+	for rep in 0..repeats {
+		repetition_result = do_repetition(rep, ds, cross_opts)
+	
+	cross_result.inferred_classes << repetition_result.inferred_classes
+	cross_result.actual_classes << repetition_result.actual_classes
 	}
+	cross_result = summarize_results(mut cross_result)
+	// show_results(cross_result, cross_opts)
+	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
+		show_crossvalidation_result(cross_result, cross_opts)
+	}
+	return cross_result
+}
+
+// do_repetition 
+fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
+	println('rep: $rep')
+	mut fold_result := CrossVerifyResult{}
+	// instantiate a struct for the result
+	mut repetition_result := CrossVerifyResult{}
+	// test if leave-one-out crossvalidation is requested
+	folds := if cross_opts.folds == 0 {ds.class_values.len} else {cross_opts.folds}
 	// if the concurrency flag is set
-	if opts.concurrency_flag {
+	if cross_opts.concurrency_flag {
 		mut result_channel := chan CrossVerifyResult{cap: folds}
 		// queue all work + the sentinel values:
 		jobs := runtime.nr_jobs()
@@ -68,25 +87,18 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		//
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
-			cross_result.inferred_classes << fold_result.inferred_classes
-			cross_result.actual_classes << fold_result.labeled_classes
-			// cross_result = update_cross_result(fold_result, mut cross_result)
+			repetition_result.inferred_classes << fold_result.inferred_classes
+			repetition_result.actual_classes << fold_result.labeled_classes
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
-			cross_result.inferred_classes << fold_result.inferred_classes
-			cross_result.actual_classes << fold_result.labeled_classes
-			// cross_result = update_cross_result(fold_result, mut cross_result)
+			repetition_result.inferred_classes << fold_result.inferred_classes
+			repetition_result.actual_classes << fold_result.labeled_classes
 		}
 	}
-	cross_result = summarize_results(mut cross_result)
-	// show_results(cross_result, cross_opts)
-	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
-		show_crossvalidation_result(cross_result, cross_opts)
-	}
-	return cross_result
+	return repetition_result
 }
 
 // do_one_fold
