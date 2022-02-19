@@ -224,11 +224,9 @@ fn plot_roc(result ExploreResult, opts Options) {
 		}
 		roc_results << ROCResult{
 			sensitivity: res.correct_inferences[pos_class] / f64(
-				res.correct_inferences[pos_class] +
-				res.incorrect_inferences[neg_class])
+				res.correct_inferences[pos_class] + res.incorrect_inferences[neg_class])
 			one_minus_specificity: 1.0 - (res.correct_inferences[neg_class] / f64(
-				res.correct_inferences[neg_class] +
-				res.incorrect_inferences[pos_class]))
+				res.correct_inferences[neg_class] + res.incorrect_inferences[pos_class]))
 			bin_range: bin_range
 			attributes_used: '$res.attributes_used'
 		}

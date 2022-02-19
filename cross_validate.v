@@ -27,8 +27,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
 
-	
-	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }	
+	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }
 	// for each class, instantiate an entry in the confusion matrix map
 	mut confusion_matrix_map := map[string]map[string]int{}
 	for key1, _ in ds.class_counts {
@@ -44,11 +43,11 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		confusion_matrix_map: confusion_matrix_map
 	}
 	mut repetition_result := CrossVerifyResult{}
-	for rep in 0..repeats {
+	for rep in 0 .. repeats {
 		repetition_result = do_repetition(rep, ds, cross_opts)
-	
-	cross_result.inferred_classes << repetition_result.inferred_classes
-	cross_result.actual_classes << repetition_result.actual_classes
+
+		cross_result.inferred_classes << repetition_result.inferred_classes
+		cross_result.actual_classes << repetition_result.actual_classes
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
 	// show_results(cross_result, cross_opts)
@@ -58,14 +57,14 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	return cross_result
 }
 
-// do_repetition 
+// do_repetition
 fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	println('rep: $rep')
 	mut fold_result := CrossVerifyResult{}
 	// instantiate a struct for the result
 	mut repetition_result := CrossVerifyResult{}
 	// test if leave-one-out crossvalidation is requested
-	folds := if cross_opts.folds == 0 {ds.class_values.len} else {cross_opts.folds}
+	folds := if cross_opts.folds == 0 { ds.class_values.len } else { cross_opts.folds }
 	// if the concurrency flag is set
 	if cross_opts.concurrency_flag {
 		mut result_channel := chan CrossVerifyResult{cap: folds}
@@ -100,6 +99,7 @@ fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	}
 	return repetition_result
 }
+
 // summarize_results
 fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResult {
 	mut inferred := ''
@@ -124,13 +124,23 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 		result.wrong_count /= repeats
 		result.total_count /= repeats
 
-		for _, mut v in result.labeled_instances {v /= repeats}
-		for _, mut v in result.correct_inferences {v /= repeats}
-		for _, mut v in result.incorrect_inferences {v /= repeats}
-		for _, mut v in result.wrong_inferences {v /= repeats}
+		for _, mut v in result.labeled_instances {
+			v /= repeats
+		}
+		for _, mut v in result.correct_inferences {
+			v /= repeats
+		}
+		for _, mut v in result.incorrect_inferences {
+			v /= repeats
+		}
+		for _, mut v in result.wrong_inferences {
+			v /= repeats
+		}
 
 		for _, mut m in result.confusion_matrix_map {
-			for _, mut v in m {v /= repeats}
+			for _, mut v in m {
+				v /= repeats
+			}
 		}
 	}
 	// collect confusion matrix rows into a matrix
@@ -150,9 +160,11 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 	return result
 }
 
-// div_map 
+// div_map
 fn div_map(n int, mut m map[string]int) map[string]int {
-	for _, mut a in m {a /= n}
+	for _, mut a in m {
+		a /= n
+	}
 	return m
 }
 

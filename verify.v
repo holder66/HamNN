@@ -113,5 +113,3 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVe
 	}
 	return result
 }
-
-
