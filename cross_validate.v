@@ -26,9 +26,8 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
-	mut folds := opts.folds
-	mut fold_result := CrossVerifyResult{}
 
+	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }
 	// for each class, instantiate an entry in the confusion matrix map
 	mut confusion_matrix_map := map[string]map[string]int{}
 	for key1, _ in ds.class_counts {
@@ -43,12 +42,31 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 	}
-	// test if leave-one-out crossvalidation is requested
-	if opts.folds == 0 {
-		folds = ds.class_values.len
+	mut repetition_result := CrossVerifyResult{}
+	for rep in 0 .. repeats {
+		repetition_result = do_repetition(rep, ds, cross_opts)
+
+		cross_result.inferred_classes << repetition_result.inferred_classes
+		cross_result.actual_classes << repetition_result.actual_classes
 	}
+	cross_result = summarize_results(repeats, mut cross_result)
+	// show_results(cross_result, cross_opts)
+	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
+		show_crossvalidation_result(cross_result, cross_opts)
+	}
+	return cross_result
+}
+
+// do_repetition
+fn do_repetition(rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
+	println('rep: $rep')
+	mut fold_result := CrossVerifyResult{}
+	// instantiate a struct for the result
+	mut repetition_result := CrossVerifyResult{}
+	// test if leave-one-out crossvalidation is requested
+	folds := if cross_opts.folds == 0 { ds.class_values.len } else { cross_opts.folds }
 	// if the concurrency flag is set
-	if opts.concurrency_flag {
+	if cross_opts.concurrency_flag {
 		mut result_channel := chan CrossVerifyResult{cap: folds}
 		// queue all work + the sentinel values:
 		jobs := runtime.nr_jobs()
@@ -68,25 +86,86 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		//
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
-			cross_result.inferred_classes << fold_result.inferred_classes
-			cross_result.actual_classes << fold_result.labeled_classes
-			// cross_result = update_cross_result(fold_result, mut cross_result)
+			repetition_result.inferred_classes << fold_result.inferred_classes
+			repetition_result.actual_classes << fold_result.labeled_classes
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(current_fold, folds, ds, cross_opts)
-			cross_result.inferred_classes << fold_result.inferred_classes
-			cross_result.actual_classes << fold_result.labeled_classes
-			// cross_result = update_cross_result(fold_result, mut cross_result)
+			repetition_result.inferred_classes << fold_result.inferred_classes
+			repetition_result.actual_classes << fold_result.labeled_classes
 		}
 	}
-	cross_result = summarize_results(mut cross_result)
-	// show_results(cross_result, cross_opts)
-	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
-		show_crossvalidation_result(cross_result, cross_opts)
+	return repetition_result
+}
+
+// summarize_results
+fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResult {
+	mut inferred := ''
+	for i, actual in result.actual_classes {
+		inferred = result.inferred_classes[i]
+		result.labeled_instances[actual] += 1
+		result.total_count += 1
+		result.confusion_matrix_map[actual][inferred] += 1
+		if actual == inferred {
+			result.correct_inferences[actual] += 1
+			result.correct_count += 1
+		} else {
+			result.wrong_inferences[inferred] += 1
+			result.incorrect_inferences[actual] += 1
+			result.incorrects_count += 1
+			result.wrong_count += 1
+		}
 	}
-	return cross_result
+	if repeats > 1 {
+		result.correct_count /= repeats
+		result.incorrects_count /= repeats
+		result.wrong_count /= repeats
+		result.total_count /= repeats
+
+		for _, mut v in result.labeled_instances {
+			v /= repeats
+		}
+		for _, mut v in result.correct_inferences {
+			v /= repeats
+		}
+		for _, mut v in result.incorrect_inferences {
+			v /= repeats
+		}
+		for _, mut v in result.wrong_inferences {
+			v /= repeats
+		}
+
+		for _, mut m in result.confusion_matrix_map {
+			for _, mut v in m {
+				v /= repeats
+			}
+		}
+	}
+	// collect confusion matrix rows into a matrix
+	mut header_row := ['Predicted Classes (columns)']
+	mut data_row := []string{}
+	for key, _ in result.confusion_matrix_map {
+		header_row << key
+		data_row = [key]
+		for _, value in result.confusion_matrix_map[key] {
+			data_row << '$value'
+		}
+		result.confusion_matrix << data_row
+	}
+	result.confusion_matrix.prepend(['Actual Classes (rows)'])
+	result.confusion_matrix.prepend(header_row)
+
+	return result
+}
+
+// div_map
+fn div_map(n int, mut m map[string]int) map[string]int {
+	for _, mut a in m {
+		a /= n
+	}
+	return m
 }
 
 // do_one_fold
@@ -164,7 +243,7 @@ fn classify_in_cross(cl Classifier, test_instances [][]byte, mut result CrossVer
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): $result')
 	}
-	result = summarize_results(mut result)
+	result = summarize_results(1, mut result)
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('summarize_result: $result')
 	}
