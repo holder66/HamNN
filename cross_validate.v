@@ -193,7 +193,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
-	println('fold: $fold')
+	// println('fold: $fold')
 	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 	}
