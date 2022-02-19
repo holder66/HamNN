@@ -41,7 +41,7 @@ struct Fold {
 mut:
 	fold_number     int
 	attribute_names []string
-	indices 	[]int
+	indices         []int
 	data            [][]string
 }
 
@@ -81,7 +81,7 @@ pub mut:
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
 	options            []string
-	indices 	[]int 
+	indices            []int
 	instances          [][]byte
 	history            []HistoryEvent
 }
@@ -184,7 +184,7 @@ pub mut:
 	labeled_classes      []string
 	actual_classes       []string
 	inferred_classes     []string
-	instance_indices 	[]int 
+	instance_indices     []int
 	class_counts         map[string]int
 	labeled_instances    map[string]int
 	correct_inferences   map[string]int

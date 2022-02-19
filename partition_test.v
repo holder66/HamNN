@@ -89,11 +89,12 @@ fn test_get_partition_indices() {
 // test_partition
 fn test_partition() {
 	mut opts := Options{}
-	mut part_ds, mut fold := partition(0, 2, load_file('datasets/developer.tab'), opts)
-	assert fold.Class.class_values == ['m', 'm', 'm', 'f', 'f', 'm']
-	assert part_ds.Class.class_counts == {
+	mut part_ds, mut fold := partition([1, 8, 0, 2, 4, 9, 12, 5, 11, 10, 6, 7, 3], 1,
+		4, load_file('datasets/developer.tab'), opts)
+	assert fold.class_values == ['m', 'f', 'm']
+	assert part_ds.class_counts == {
+		'm': 6
+		'f': 2
 		'X': 2
-		'f': 1
-		'm': 4
 	}
 }

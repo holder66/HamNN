@@ -51,6 +51,9 @@ quickly identifies and removes from consideration variables which add noise
 ## To use the hamnn library
 `v install holder66.hamnn`
 
+In your V code:
+`import holder66.hamnn`
+
 Example source code:
 ```v
 module main

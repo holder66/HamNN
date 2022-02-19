@@ -7,15 +7,13 @@ fn partition(pick_list []int, current_fold int, folds int, ds Dataset, opts Opti
 	// fold will be the fold instance, part_ds will be the rest of the dataset.
 	mut part_ds := ds
 	mut total_instances := ds.Class.class_values.len
-	
+
 	// calculate array indices for partitioning
 	mut s, mut e := get_partition_indices(total_instances, folds, current_fold)
 	// println('s: $s e: $e')
 	mut fold_indices := pick_list[s..e]
 	mut part_indices := get_rest_of_array(pick_list, s, e)
 	fold_class_values := get_index_items(ds.class_values, fold_indices)
-	// println('fold_indices, part_indices: $fold_indices $part_indices')
-
 	// update the Class struct for the rest of the dataset
 	part_ds.class_name = ds.class_name // for some reason, this gets emptied
 	part_ds.class_values = get_index_items(ds.class_values, part_indices)
@@ -33,7 +31,6 @@ fn partition(pick_list []int, current_fold int, folds int, ds Dataset, opts Opti
 		class_values: fold_class_values
 		class_counts: string_element_counts(fold_class_values)
 	}
-	// println(part_ds)
 	return part_ds, fold
 }
 
@@ -74,7 +71,7 @@ fn get_rest_of_array<T>(arr []T, s int, e int) []T {
 	return rest
 }
 
-// get_index_items 
+// get_index_items
 fn get_index_items<T>(arr []T, indices []int) []T {
 	mut sel := []T{}
 	for i, val in arr {

@@ -78,7 +78,6 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 
 // do_repetition
 fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
-	println('rep: $rep')
 	mut fold_result := CrossVerifyResult{}
 	// instantiate a struct for the result
 	mut repetition_result := CrossVerifyResult{}
@@ -193,28 +192,19 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
-	// println('fold: $fold')
 	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 		instance_indices: fold.indices
 	}
-	// println(fold_result)
 	part_cl := make_classifier(part_ds, cross_opts)
-	// println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
-		// println(fold.attribute_names.index(attr))
 		j := fold.attribute_names.index(attr)
-
-		// println('attr, j, fold.data[j]: $attr $j ${fold.data[j]}')
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
-	// println('byte_values_array: $byte_values_array')
 	fold_instances := transpose(byte_values_array)
-
-	// println('fold_instances: $fold_instances')
 	// for each class, instantiate an entry in the class table for the result
 	// note that this needs to use the classes in the partition portion, not
 	// the fold, so that wrong inferences get recorded properly.
@@ -224,15 +214,12 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		confusion_matrix_row[key] = 0
 	}
 	fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
-	// println('fold_result: $fold_result')
 	return fold_result
 }
 
 // process_fold_data
 fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
-	// println('fold_data: $fold_data')
 	mut byte_vals := []byte{cap: fold_data.len}
-
 	// for a continuous attribute
 	if part_attr.attribute_type == 'C' {
 		values := fold_data.map(f32(strconv.atof_quick(it)))
