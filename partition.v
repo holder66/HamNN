@@ -14,7 +14,7 @@ fn partition(pick_list []int, current_fold int, folds int, ds Dataset, opts Opti
 	mut fold_indices := pick_list[s..e]
 	mut part_indices := get_rest_of_array(pick_list, s, e)
 	fold_class_values := get_index_items(ds.class_values, fold_indices)
-	println('fold_indices, part_indices: $fold_indices $part_indices')
+	// println('fold_indices, part_indices: $fold_indices $part_indices')
 
 	// update the Class struct for the rest of the dataset
 	part_ds.class_name = ds.class_name // for some reason, this gets emptied

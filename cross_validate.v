@@ -62,7 +62,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 				pick_list << i
 			}
 		}
-		println(pick_list)
+		// println(pick_list)
 		repetition_result = do_repetition(pick_list, rep, ds, cross_opts)
 
 		cross_result.inferred_classes << repetition_result.inferred_classes
@@ -193,21 +193,21 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	mut byte_values_array := [][]byte{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
-	println('fold: $fold')
+	// println('fold: $fold')
 	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 		instance_indices: fold.indices
 	}
-	println(fold_result)
+	// println(fold_result)
 	part_cl := make_classifier(part_ds, cross_opts)
-	println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
+	// println('part_cl.attribute_ordering: $part_cl.attribute_ordering')
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
-		println(fold.attribute_names.index(attr))
+		// println(fold.attribute_names.index(attr))
 		j := fold.attribute_names.index(attr)
 
-		println('attr, j, fold.data[j]: $attr $j ${fold.data[j]}')
+		// println('attr, j, fold.data[j]: $attr $j ${fold.data[j]}')
 		// create byte_values for the fold data
 		byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
 	}
