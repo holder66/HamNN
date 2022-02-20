@@ -222,7 +222,7 @@ fn test_show_validate() ? {
 
 // test_show_verify 
 fn test_show_verify() ? {
-	println('\n\test_show_verify prints out results for verification of bcw350train with bcw174test, and of soybean-large-train.tab with soybean-large-test.tab')
+	// println('\n\ntest_show_verify prints out results for verification of bcw350train with bcw174test, and of soybean-large-train.tab with soybean-large-test.tab')
 	mut opts := Options{
 		verbose_flag: false
 		show_flag: true
@@ -241,7 +241,10 @@ fn test_show_verify() ? {
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
 	result = verify(cl, opts)
+	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
+	cl = make_classifier(ds, opts)
 	result = verify(cl, opts)
+	// println('result two in show_test: $result')
 }

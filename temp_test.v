@@ -13,115 +13,18 @@ fn testsuite_begin() ? {
 fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
-
-// test_temp
-fn test_temp() {
-}
-// test_verify
-fn test_verify() ? {
-	mut opts := Options{
-		verbose_flag: false
-		show_flag: true
-		concurrency_flag: true
-		command: 'verify'
-	}
-
-	mut result := CrossVerifyResult{}
-	mut ds := Dataset{}
-	mut cl := Classifier{}
-	mut saved_cl := Classifier{}
-
-	// test verify with a non-saved classifier
-	// opts.command = 'make'
-	opts.datafile_path = 'datasets/test.tab'
-	opts.testfile_path = 'datasets/test_verify.tab'
-	opts.classifierfile_path = ''
-	opts.bins = [2, 3]
+// test_temp 
+fn test_temp() ? {
+	
+println('\n\niris.tab')
+	mut opts := Options{}
+	opts.show_flag = true
+	opts.command = 'cross'
+	opts.expanded_flag = false
+	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)
-	// assert verify(cl, opts).correct_count == 10
-
-	println('Done with test.tab')
-
-	opts.datafile_path = 'datasets/bcw350train'
-	opts.testfile_path = 'datasets/bcw174test'
-	opts.classifierfile_path = ''
-	opts.number_of_attributes = [4]
-	opts.bins = [2, 4]
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)
-	assert result.correct_count == 171
-	assert result.wrong_count == 3
-
-	// println('Done with bcw350train')
-
-	// // now with a saved classifier
-	// opts.outputfile_path = 'tempfolder/classifierfile'
-	// cl = Classifier{}
-	// result = CrossVerifyResult{}
-	// cl = make_classifier(ds, opts)
-	// cl = Classifier{}
-	// result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-	// assert result.correct_count == 171
-	// assert result.wrong_count == 3
-
-	// println('Done with bcw350train using saved classifier')
-
-	// opts.datafile_path = 'datasets/soybean-large-train.tab'
-	// opts.testfile_path = 'datasets/soybean-large-test.tab'
-	// opts.classifierfile_path = ''
-	// opts.number_of_attributes = [33]
-	// opts.bins = [2, 16]
-	// opts.weighting_flag = true
-	// ds = load_file(opts.datafile_path)
-	// cl = make_classifier(ds, opts)
-	// result = verify(cl, opts)
-	// assert result.correct_count == 340
-	// assert result.wrong_count == 36
-
-	// println('Done with soybean-large-train.tab')
-
-	// // now with a saved classifier
-	// opts.outputfile_path = 'tempfolder/classifierfile'
-	// cl = Classifier{}
-	// result = CrossVerifyResult{}
-	// cl = make_classifier(ds, opts)
-	// cl = Classifier{}
-	// result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-	// assert result.correct_count == 340
-	// assert result.wrong_count == 36
-
-	// println('Done with soybean-large-train.tab using saved classifier')
-
-	// if get_environment().arch_details[0] != '4 cpus' {
-	// 	opts.datafile_path = 'datasets/mnist_test.tab'
-	// 	opts.testfile_path = 'datasets/mnist_test.tab'
-	// 	opts.classifierfile_path = ''
-	// 	opts.outputfile_path = ''
-	// 	opts.number_of_attributes = [50]
-	// 	opts.bins = [2, 2]
-	// 	opts.weighting_flag = false
-	// 	opts.show_flag = false
-	// 	ds = load_file(opts.datafile_path)
-	// 	cl = make_classifier(ds, opts)
-	// 	result = verify(cl, opts)
-	// 	assert result.correct_count == 9982
-	// 	assert result.wrong_count == 18
-
-	// 	println('Done with mnist_test.tab')
-
-	// 	// now with a saved classifier
-	// 	opts.outputfile_path = 'tempfolder/classifierfile'
-	// 	cl = Classifier{}
-	// 	result = CrossVerifyResult{}
-	// 	cl = make_classifier(ds, opts)
-	// 	cl = Classifier{}
-	// 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
-	// 	assert result.correct_count == 9982
-	// 	assert result.wrong_count == 18
-
-	// 	println('Done with mnist_test.tab using saved classifier')
-	}
+	mut cvr := cross_validate(load_file('datasets/iris.tab'), opts)
+	println('\n\niris.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
+}

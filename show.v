@@ -157,6 +157,7 @@ fn show_validate(result ValidateResult, opts Options) {
 
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) {
+	// println(result)
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
 		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"', 'underline'),
 		'magenta'))

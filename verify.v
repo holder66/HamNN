@@ -81,7 +81,6 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 // returns the results of the classification.
 fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// for each instance in the test data, perform a classification
-	mut inferred_class := ''
 	mut classify_result := ClassifyResult{}
 	if opts.concurrency_flag {
 		mut work_channel := chan int{cap: runtime.nr_jobs()}
@@ -99,8 +98,7 @@ fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVe
 		}
 	} else {
 		for i, test_instance in test_instances {
-			inferred_class = classify_instance(i, cl, test_instance, opts).inferred_class
-			result.inferred_classes << inferred_class
+			result.inferred_classes << classify_instance(i, cl, test_instance, opts).inferred_class
 			result.actual_classes << result.labeled_classes[i]
 		}
 	}
