@@ -89,11 +89,11 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		start_bin = 0
 		end_bin = 0
 	}
-	show_explore_header(pos_neg_classes, opts)
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
 		println('binning: $start_bin $end_bin $interval_bin')
 	}
+	show_explore_header(pos_neg_classes, opts)
 	mut atts := start_attr
 	mut bin := start_bin
 	mut cl := Classifier{}
@@ -124,11 +124,9 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		atts += interval_attr
 	}
 	results.array_of_results = array_of_results
+
 	if opts.graph_flag {
 		plot_explore(results, opts)
-		// if array_of_results[0].class_table.len == 2 {
-		// 	plot_roc(results, opts)
-		// }
 	}
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }

@@ -81,7 +81,7 @@ fn show_rank_attributes(result RankingResult) {
 	if result.exclude_flag {
 		exclude_phrase = 'excluded'
 	}
-	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for $result.path',
+	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for "$result.path"',
 		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
 	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
@@ -117,10 +117,6 @@ pub fn show_classifier(cl Classifier) {
 	}
 }
 
-// show_cross_validate
-fn show_cross_validate(result CrossVerifyResult, opts Options) {
-}
-
 // show_explore
 fn show_explore(result []CrossVerifyResult, opts Options) {
 }
@@ -135,11 +131,50 @@ fn show_rank(result RankingResult, opts Options) {
 
 // show_validate
 fn show_validate(result ValidateResult, opts Options) {
+	if opts.command == 'validate' && (opts.show_flag || opts.expanded_flag) {
+		println(chalk.fg(chalk.style('\nValidation of "$opts.testfile_path" using a classifier from "$opts.datafile_path"', 'underline'),
+		'magenta'))
+		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
+	attr_string := if opts.number_of_attributes[0] == 0 {
+		'all'
+	} else {
+		opts.number_of_attributes[0].str()
+	}
+	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+	results_array := [
+		'Attributes: $attr_string',
+		'Missing values: $exclude_string',
+		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:'
+	]
+	print_array(results_array)
+	println('Number of instances: ${result.inferred_classes.len}')
+	println('Inferred classes: $result.inferred_classes')
+	println('For classes: ${result.class_counts.keys()} the nearest neighbor counts are:\n$result.counts')
+	}
 }
 
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) {
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
+		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"', 'underline'),
+		'magenta'))
+		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
+	attr_string := if opts.number_of_attributes[0] == 0 {
+		'all'
+	} else {
+		opts.number_of_attributes[0].str()
+	}
+	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+	results_array := [
+		'Attributes: $attr_string',
+		'Missing values: $exclude_string',
+		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:'
+	]
+	print_array(results_array)
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
@@ -174,19 +209,37 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) {
 	// confusion matrix
 	print_confusion_matrix(result)
 }
+fn spacer(l int) string {
+	mut s := ' '
+	for { s += ' '
+	if s.len >= l {break}
+	}
+	return s
+}
+
+// pf 
+fn pf(s string, l int) string {
+	return '\${$s:$l}'
+}
 
 // print_confusion_matrix
 fn print_confusion_matrix(result CrossVerifyResult) {
+
 	// println(result.confusion_matrix)
+
+	
 	println(chalk.fg(chalk.style('Confusion Matrix:', 'underline'), 'blue'))
 	for i, rows in result.confusion_matrix {
 		for j, item in rows {
+
 			if i == 0 && j == 0 {
 				// print first item in first row, ie 'predicted classes (columns)'
 				print(chalk.fg('$item  ', 'red'))
+				// print(chalk.fg(pf(item, 20), 'red'))
 			} else if i == 0 {
 				// print column headers, ie classes
 				print(chalk.fg('${item:20}  ', 'red'))
+				// print(chalk.fg('${item:20}  ' + spacer(5), 'red'))
 			} else if j == 0 {
 				// print first item in remaining rows, ie classes
 				print(chalk.fg('        ${item:21}', 'blue'))
@@ -288,7 +341,7 @@ fn show_explore_header(pos_neg_classes []string, opts Options) {
 			println('Excluding missing values')
 		}
 		if opts.weighting_flag {
-			println('Weighting attribute rankings and nearest neighbor counts by class prevalences')
+			println('Weighting nearest neighbor counts by class prevalences')
 		}
 		if !opts.expanded_flag {
 			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Percent',
@@ -316,7 +369,7 @@ fn show_explore_line(result CrossVerifyResult, opts Options) {
 			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
-				// println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
+				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 			} else {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
 				show_multiple_classes_stats(result, 21)

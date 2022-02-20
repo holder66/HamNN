@@ -43,9 +43,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	test_instances := transpose(test_attr_binned_values)
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
-	if opts.show_flag && opts.command == 'validate' {
-		println('Inferred classes ($validate_result.inferred_classes.len): $validate_result.inferred_classes')
-	}
+	show_validate(validate_result, opts)
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
 		s := json.encode(validate_result)
