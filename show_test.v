@@ -197,7 +197,7 @@ fn test_show_rank_attributes() {
 	rr = rank_attributes(ds, opts)
 }
 
-// test_show_validate 
+// test_show_validate
 fn test_show_validate() ? {
 	println('\n\ntest_show_validate prints out results for validation of bcw350train with bcw174validate')
 	mut opts := Options{
@@ -220,7 +220,7 @@ fn test_show_validate() ? {
 	result = validate(cl, opts) ?
 }
 
-// test_show_verify 
+// test_show_verify
 fn test_show_verify() ? {
 	// println('\n\ntest_show_verify prints out results for verification of bcw350train with bcw174test, and of soybean-large-train.tab with soybean-large-test.tab')
 	mut opts := Options{

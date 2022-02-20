@@ -13,10 +13,10 @@ fn testsuite_begin() ? {
 fn testsuite_end() ? {
 	os.rmdir_all('tempfolder') ?
 }
-// test_temp 
+
+// test_temp
 fn test_temp() ? {
-	
-println('\n\niris.tab')
+	println('\n\niris.tab')
 	mut opts := Options{}
 	opts.show_flag = true
 	opts.command = 'cross'

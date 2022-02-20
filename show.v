@@ -132,26 +132,26 @@ fn show_rank(result RankingResult, opts Options) {
 // show_validate
 fn show_validate(result ValidateResult, opts Options) {
 	if opts.command == 'validate' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nValidation of "$opts.testfile_path" using a classifier from "$opts.datafile_path"', 'underline'),
-		'magenta'))
+		println(chalk.fg(chalk.style('\nValidation of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
+			'underline'), 'magenta'))
 		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-	attr_string := if opts.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		opts.number_of_attributes[0].str()
-	}
-	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	results_array := [
-		'Attributes: $attr_string',
-		'Missing values: $exclude_string',
-		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:'
-	]
-	print_array(results_array)
-	println('Number of instances: ${result.inferred_classes.len}')
-	println('Inferred classes: $result.inferred_classes')
-	println('For classes: ${result.class_counts.keys()} the nearest neighbor counts are:\n$result.counts')
+		attr_string := if opts.number_of_attributes[0] == 0 {
+			'all'
+		} else {
+			opts.number_of_attributes[0].str()
+		}
+		weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+		results_array := [
+			'Attributes: $attr_string',
+			'Missing values: $exclude_string',
+			'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+			'Prevalence weighting of nearest neighbor counts: $weight_string ',
+			'Results:',
+		]
+		print_array(results_array)
+		println('Number of instances: $result.inferred_classes.len')
+		println('Inferred classes: $result.inferred_classes')
+		println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
 	}
 }
 
@@ -159,23 +159,23 @@ fn show_validate(result ValidateResult, opts Options) {
 fn show_verify(result CrossVerifyResult, opts Options) {
 	// println(result)
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"', 'underline'),
-		'magenta'))
+		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
+			'underline'), 'magenta'))
 		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-	attr_string := if opts.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		opts.number_of_attributes[0].str()
-	}
-	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	results_array := [
-		'Attributes: $attr_string',
-		'Missing values: $exclude_string',
-		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:'
-	]
-	print_array(results_array)
+		attr_string := if opts.number_of_attributes[0] == 0 {
+			'all'
+		} else {
+			opts.number_of_attributes[0].str()
+		}
+		weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+		results_array := [
+			'Attributes: $attr_string',
+			'Missing values: $exclude_string',
+			'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+			'Prevalence weighting of nearest neighbor counts: $weight_string ',
+			'Results:',
+		]
+		print_array(results_array)
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
@@ -210,29 +210,30 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) {
 	// confusion matrix
 	print_confusion_matrix(result)
 }
+
 fn spacer(l int) string {
 	mut s := ' '
-	for { s += ' '
-	if s.len >= l {break}
+	for {
+		s += ' '
+		if s.len >= l {
+			break
+		}
 	}
 	return s
 }
 
-// pf 
+// pf
 fn pf(s string, l int) string {
 	return '\${$s:$l}'
 }
 
 // print_confusion_matrix
 fn print_confusion_matrix(result CrossVerifyResult) {
-
 	// println(result.confusion_matrix)
 
-	
 	println(chalk.fg(chalk.style('Confusion Matrix:', 'underline'), 'blue'))
 	for i, rows in result.confusion_matrix {
 		for j, item in rows {
-
 			if i == 0 && j == 0 {
 				// print first item in first row, ie 'predicted classes (columns)'
 				print(chalk.fg('$item  ', 'red'))
