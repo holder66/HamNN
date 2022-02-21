@@ -54,6 +54,8 @@ fn test_explore_cross() {
 
 fn test_explore_verify() {
 	mut opts := Options{
+		// verbose_flag: true
+		command: 'explore'
 		concurrency_flag: true
 		weighting_flag: true
 		testfile_path: 'datasets/bcw174test'
