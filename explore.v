@@ -3,6 +3,7 @@ module hamnn
 
 import json
 import os
+import math
 
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
@@ -56,20 +57,32 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		ex_opts.bins = [0]
 	}
 	mut start_attr := 1
-	mut end_attr := 2
+	mut end_attr := attribute_max
 	mut interval_attr := 1
 
-	if ex_opts.number_of_attributes == [0] { // ie, range over all attributes
-		end_attr = attribute_max
-	} else if ex_opts.number_of_attributes.len == 1 {
-		end_attr = ex_opts.number_of_attributes[0]
-	} else if ex_opts.number_of_attributes.len >= 2 {
-		start_attr = ex_opts.number_of_attributes[0]
-		end_attr = ex_opts.number_of_attributes[1]
-		if ex_opts.number_of_attributes.len == 3 {
-			interval_attr = ex_opts.number_of_attributes[2]
-		}
+	// if ex_opts.number_of_attributes == [0] { // ie, range over all attributes
+	// 	end_attr = attribute_max
+	// } else if ex_opts.number_of_attributes.len == 1 {
+	// 	end_attr = ex_opts.number_of_attributes[0]
+	// } else if ex_opts.number_of_attributes.len >= 2 {
+	// 	start_attr = ex_opts.number_of_attributes[0]
+	// 	end_attr = ex_opts.number_of_attributes[1]
+	// 	if ex_opts.number_of_attributes.len == 3 {
+	// 		interval_attr = ex_opts.number_of_attributes[2]
+	// 	}
+	// }
+
+	att_range := ex_opts.number_of_attributes
+	if att_range.len == 3 {
+		interval_attr = att_range.last()
+		end_attr = math.min(attribute_max, att_range[1])
 	}
+	else {
+		end_attr = math.min(attribute_max, att_range.last())
+		if att_range.len == 2 {start_attr = math.min(attribute_max, att_range[0])}
+	}
+
+
 	// for uniform binning (ie, the same number of bins
 	// for all continuous attributes)
 	mut start_bin := 2

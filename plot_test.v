@@ -23,6 +23,7 @@ fn test_rank_attributes_plot() {
 	mut opts := Options{
 		datafile_path: 'datasets/developer.tab'
 		graph_flag: true
+		command: 'rank'
 	}
 	result = rank_attributes(load_file(opts.datafile_path), opts)
 	opts.exclude_flag = true
