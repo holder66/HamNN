@@ -74,17 +74,16 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 
 	att_range := ex_opts.number_of_attributes
 	if att_range != [0] {
-	if att_range.len == 3 {
-		interval_attr = att_range.last()
-		end_attr = math.min(attribute_max, att_range[1])
+		if att_range.len == 3 {
+			interval_attr = att_range.last()
+			end_attr = math.min(attribute_max, att_range[1])
+		} else {
+			end_attr = math.min(attribute_max, att_range.last())
+			if att_range.len == 2 {
+				start_attr = math.min(attribute_max, att_range[0])
+			}
+		}
 	}
-	else {
-		end_attr = math.min(attribute_max, att_range.last())
-		if att_range.len == 2 {start_attr = math.min(attribute_max, att_range[0])}
-	}
-}
-
-
 
 	// for uniform binning (ie, the same number of bins
 	// for all continuous attributes)
