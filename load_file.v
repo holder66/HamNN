@@ -61,7 +61,7 @@ fn load_orange_older_file(path string) Dataset {
 		attribute_flags: extract_words(content[2])
 		data: transpose(content[3..].map(extract_words(it)))
 	}
-	attr_count := ds.attribute_names.len 
+	attr_count := ds.attribute_names.len
 	ds.attribute_types = pad_string_array_to_length(mut ds.attribute_types, attr_count)
 	ds.attribute_flags = pad_string_array_to_length(mut ds.attribute_flags, attr_count)
 	ds.inferred_attribute_types = infer_attribute_types_older(ds)
@@ -272,10 +272,14 @@ fn extract_types(word string) []string {
 
 // pad_string_array_to_length adds empty strings to arr to extend to length l
 fn pad_string_array_to_length(mut arr []string, l int) []string {
-	if arr.len >= l {return arr}
+	if arr.len >= l {
+		return arr
+	}
 	for {
 		arr << ['']
-		if arr.len >= l {break}
+		if arr.len >= l {
+			break
+		}
 	}
 	return arr
 }
