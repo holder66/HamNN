@@ -49,6 +49,12 @@ fn test_explore_cross() {
 	assert result.array_of_results[1].wrong_count == 20
 	assert result.array_of_results[1].total_count == 898
 
+	opts.folds = 5
+	opts.repetitions = 50
+	result = explore(ds, opts)
+	assert result.array_of_results[1].correct_count == 874
+	assert result.array_of_results[1].incorrects_count == 24
+
 	println('Done with anneal.tab')
 }
 
