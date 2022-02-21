@@ -55,6 +55,11 @@ fn test_load_file() {
 	assert ds.inferred_attribute_types == ['C', 'C', 'C', 'C', 'c']
 	assert ds.useful_continuous_attributes[1][0] == 3.5
 	assert ds.useful_discrete_attributes == {}
+	
+	// test that header lines get padded out
+	ds = load_file('datasets/wine.tab')
+	assert ds.attribute_flags == ['class', '', '', '', '', '', '', '', '', '', '', '', '', '']
+
 }
 
 // test_load_classifier_file

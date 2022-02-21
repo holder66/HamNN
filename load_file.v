@@ -43,11 +43,11 @@ pub fn load_classifier_file(path string) ?Classifier {
 // or query(), and returns it as a struct, suitable for
 // appending to a classifier.
 pub fn load_instances_file(path string) ?ValidateResult {
-	mut instances := ValidateResult{}
-	mut s := ''
-	s = os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	// mut instances := ValidateResult{}
+	// mut s := ''
+	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	// println(s)
-	instances = json.decode(ValidateResult, s) or { panic('Failed to parse json') }
+	instances := json.decode(ValidateResult, s) or { panic('Failed to parse json') }
 	return instances
 }
 
@@ -61,6 +61,9 @@ fn load_orange_older_file(path string) Dataset {
 		attribute_flags: extract_words(content[2])
 		data: transpose(content[3..].map(extract_words(it)))
 	}
+	attr_count := ds.attribute_names.len 
+	ds.attribute_types = pad_string_array_to_length(mut ds.attribute_types, attr_count)
+	ds.attribute_flags = pad_string_array_to_length(mut ds.attribute_flags, attr_count)
 	ds.inferred_attribute_types = infer_attribute_types_older(ds)
 	ds.Class = set_class_struct(ds)
 
@@ -265,6 +268,16 @@ fn extract_types(word string) []string {
 	} else {
 		return type_att
 	}
+}
+
+// pad_string_array_to_length adds empty strings to arr to extend to length l
+fn pad_string_array_to_length(mut arr []string, l int) []string {
+	if arr.len >= l {return arr}
+	for {
+		arr << ['']
+		if arr.len >= l {break}
+	}
+	return arr
 }
 
 // identify_class_attribute returns the index for the class attribute
