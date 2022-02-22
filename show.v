@@ -84,7 +84,7 @@ fn show_rank_attributes(result RankingResult) {
 	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for "$result.path"',
 		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
-	println('Bin range for continuous attributes: from ${result.bins[0]} to ${result.bins[1]}')
+	println('Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval')
 	println(chalk.fg(chalk.style(' Index  Name                         Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}

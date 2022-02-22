@@ -35,7 +35,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		testfile_path: opts.testfile_path
 		exclude_flag: opts.exclude_flag
 		weighting_flag: opts.weighting_flag
-		bins: opts.bins
+		// bins: opts.bins
 		uniform_bins: opts.uniform_bins
 		number_of_attributes: opts.number_of_attributes
 		folds: opts.folds
@@ -139,8 +139,9 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		atts += interval_attr
 	}
 	results.array_of_results = array_of_results
-
+	println(opts)
 	if opts.graph_flag {
+		println('going to plot_explore!')
 		plot_explore(results, opts)
 	}
 	if opts.outputfile_path != '' {

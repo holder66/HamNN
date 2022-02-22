@@ -55,11 +55,18 @@ pub mut:
 	bins                    int
 }
 
+struct Binning {
+	mut:
+	lower 	int 
+	upper 	int 
+	interval 	int 
+}
+
 pub struct RankingResult {
 pub mut:
 	path                       string
 	exclude_flag               bool
-	bins                       []int
+	binning                    Binning
 	array_of_ranked_attributes []RankedAttribute
 }
 
@@ -208,7 +215,7 @@ pub mut:
 	testfile_path        string
 	exclude_flag         bool
 	weighting_flag       bool
-	bins                 []int
+	binning              Binning
 	uniform_bins         bool
 	number_of_attributes []int
 	folds                int

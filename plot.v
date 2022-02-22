@@ -15,11 +15,12 @@ mut:
 // plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
 fn plot_rank(result RankingResult) {
+	// println('result in plot_rank: $result')
 	mut ranked_atts := result.array_of_ranked_attributes
 	mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
 	mut x := []f64{}
-	for i in result.bins[0] .. result.bins[1] + 1 {
+	for i in result.binning.lower .. result.binning.upper + 1 {
 		x << i
 	}
 	for attr in ranked_atts.filter(it.inferred_attribute_type == 'C') {
@@ -28,7 +29,7 @@ fn plot_rank(result RankingResult) {
 			rank_values: attr.rank_value_array.map(f64(it)).reverse()
 			maximum_rank_value: array_max(attr.rank_value_array)
 			// the tooltip for each point shows the attribute name
-			hover_text: ['$attr.attribute_name'].repeat(result.bins[1] + 1)
+			hover_text: ['$attr.attribute_name'].repeat(result.binning.upper + 1)
 		}
 	}
 	// sort in descending order of maximum_rank_value
@@ -93,6 +94,7 @@ mut:
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
 fn plot_explore(result ExploreResult, opts Options) {
+	println('result in plot_explore: $result')
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}
@@ -150,7 +152,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 		text: explore_type_string(opts)
 		align: 'left'
 	}
-	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
+	title_string := 'Accuracy by Number of Attributes for "$opts.datafile_path"'
 	plt.set_layout(
 		title: title_string
 		width: 800

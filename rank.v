@@ -25,24 +25,23 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	mut ranking_result := RankingResult{
 		path: ds.path
 		exclude_flag: opts.exclude_flag
-		bins: opts.bins
 	}
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.exclude_flag))
 	if opts.verbose_flag && opts.command == 'rank' {
 		println('perfect_rank_value: $perfect_rank_value')
 	}
+
 	mut ranked_atts := []RankedAttribute{}
-	mut lower := opts.bins[0]
-	mut upper := opts.bins[0] + 1
+	mut lower := 2 // since less than 2 bins makes no sense!
+	mut upper := 16 	// ie the default value in the Options struct
 	mut interval := 1
-	if opts.bins.len == 2 {
-		upper = opts.bins[1] + 1
-	} else if opts.bins.len == 3 {
-		upper = opts.bins[1] + 1
+	if opts.bins.len >= 2 {
+		lower = opts.bins[0]
+		upper = opts.bins[1]
+	}
+	if opts.bins.len == 3 {
 		interval = opts.bins[2]
-	} else if opts.bins.len != 1 {
-		panic('invalid bins $opts.bins')
 	}
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
@@ -69,16 +68,27 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		// and upper and using an interval given by interval; go from high to
 		// low, so that the maximum rank value used
 		// is associated with the smallest bin number giving that rank value.
-		// since a normal for loop is exclusive, we start from upper - 1
-		mut bin_number := upper - 1
-		for bin_number >= lower {
+
+		// create an array whose values are the bin numbers we want to use
+		mut bin_numbers := []int{}
+		mut b := lower 
+		println('$lower $upper $interval')
+		for {
+			bin_numbers << b 
+			b += interval  
+			if b > upper {break}
+		}
+		bin_numbers.reverse_in_place()
+
+		// mut bin_number := upper - 1
+		for bin_number in bin_numbers {
 			rank_value = i64(0)
 
 			binned_values = discretize_attribute(attr_values, min, max, bin_number)
 			// loop through each possible value for bin in the bins bin_number + 1
 			for bin_value in 0 .. bin_number + 1 {
 				// a bin_value of 0 represents a missing value, so skip
-				// if the opts.exclude_flag flag is set
+				// if opts.exclude_flag is true
 				if bin_value == 0 && opts.exclude_flag {
 					continue
 				}
@@ -109,7 +119,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 				bin_number_for_maximum_rank_value = bin_number
 			}
 			rank_value_array << f32(rank_value)
-			bin_number -= interval
+			// bin_number -= interval
 		}
 		rank_value_array = rank_value_array.map(100.0 * f32(it) / perfect_rank_value)
 		ranked_atts << RankedAttribute{
@@ -160,6 +170,13 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	ranking_result.array_of_ranked_attributes = ranked_atts
 	// custom sort on descending rank value, then ascending bins, then index
 	ranked_atts.sort_with_compare(custom_sort_fn)
+
+	binning := Binning{
+		lower: lower
+		upper: upper - 1
+		interval: interval
+	}
+	ranking_result.binning = binning
 
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'rank' {
 		show_rank_attributes(ranking_result)
