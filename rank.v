@@ -72,7 +72,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		// create an array whose values are the bin numbers we want to use
 		mut bin_numbers := []int{}
 		mut b := lower 
-		println('$lower $upper $interval')
+		// println('$lower $upper $interval')
 		for {
 			bin_numbers << b 
 			b += interval  
@@ -173,7 +173,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 	binning := Binning{
 		lower: lower
-		upper: upper - 1
+		upper: upper
 		interval: interval
 	}
 	ranking_result.binning = binning

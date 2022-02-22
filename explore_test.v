@@ -14,9 +14,9 @@ fn test_explore_cross() {
 	}
 	mut ds := load_file(opts.datafile_path)
 	result = explore(ds, opts)
-	assert result.array_of_results[0].correct_count == 99
-	assert result.array_of_results[0].incorrects_count == 51
-	assert result.array_of_results[0].wrong_count == 51
+	assert result.array_of_results[0].correct_count == 143
+	assert result.array_of_results[0].incorrects_count == 7
+	assert result.array_of_results[0].wrong_count == 7
 	assert result.array_of_results[0].total_count == 150
 
 	opts.uniform_bins = false
@@ -37,9 +37,9 @@ fn test_explore_cross() {
 	opts.uniform_bins = true
 	ds = load_file(opts.datafile_path)
 	result = explore(ds, opts)
-	assert result.array_of_results[1].correct_count == 875
-	assert result.array_of_results[1].incorrects_count == 23
-	assert result.array_of_results[1].wrong_count == 23
+	assert result.array_of_results[1].correct_count == 874
+	assert result.array_of_results[1].incorrects_count == 24
+	assert result.array_of_results[1].wrong_count == 24
 	assert result.array_of_results[1].total_count == 898
 
 	opts.uniform_bins = false

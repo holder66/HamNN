@@ -89,6 +89,7 @@ pub mut:
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	indices            []int
+	binning				Binning
 	instances          [][]byte
 	history            []HistoryEvent
 }

@@ -139,7 +139,6 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		atts += interval_attr
 	}
 	results.array_of_results = array_of_results
-	println(opts)
 	if opts.graph_flag {
 		println('going to plot_explore!')
 		plot_explore(results, opts)

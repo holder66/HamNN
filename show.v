@@ -77,6 +77,7 @@ pub fn show_analyze(result AnalyzeResult) {
 
 // show_rank_attributes
 fn show_rank_attributes(result RankingResult) {
+	println(result.binning)
 	mut exclude_phrase := 'included'
 	if result.exclude_flag {
 		exclude_phrase = 'excluded'
@@ -102,7 +103,7 @@ pub fn show_classifier(cl Classifier) {
 	println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 		' when calculating rank values')
 	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
-	println('Bin range for continuous attributes: $cl.bins')
+	println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
 	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value  Uniques        Min        Max  Bins',
 		'underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
