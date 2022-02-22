@@ -31,18 +31,8 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	if opts.verbose_flag && opts.command == 'rank' {
 		println('perfect_rank_value: $perfect_rank_value')
 	}
-
 	mut ranked_atts := []RankedAttribute{}
-	mut lower := 2 // since less than 2 bins makes no sense!
-	mut upper := 16 	// ie the default value in the Options struct
-	mut interval := 1
-	if opts.bins.len >= 2 {
-		lower = opts.bins[0]
-		upper = opts.bins[1]
-	}
-	if opts.bins.len == 3 {
-		interval = opts.bins[2]
-	}
+	binning := get_binning(opts.bins)
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
 	// create an array of the unique class values
@@ -71,16 +61,14 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 		// create an array whose values are the bin numbers we want to use
 		mut bin_numbers := []int{}
-		mut b := lower 
+		mut b := binning.lower 
 		// println('$lower $upper $interval')
 		for {
 			bin_numbers << b 
-			b += interval  
-			if b > upper {break}
+			b += binning.interval  
+			if b > binning.upper {break}
 		}
 		bin_numbers.reverse_in_place()
-
-		// mut bin_number := upper - 1
 		for bin_number in bin_numbers {
 			rank_value = i64(0)
 
@@ -170,12 +158,6 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	ranking_result.array_of_ranked_attributes = ranked_atts
 	// custom sort on descending rank value, then ascending bins, then index
 	ranked_atts.sort_with_compare(custom_sort_fn)
-
-	binning := Binning{
-		lower: lower
-		upper: upper
-		interval: interval
-	}
 	ranking_result.binning = binning
 
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'rank' {
@@ -190,6 +172,29 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		f.close()
 	}
 	return ranking_result
+}
+
+// get_binning 
+fn get_binning(bins []int) Binning {
+	mut lower := 2 // since less than 2 bins makes no sense!
+	mut upper := 16 	// ie the default value in the Options struct
+	mut interval := 1
+	if bins.len >= 2 {
+		lower = bins[0]
+		upper = bins[1]
+	}
+	if bins.len == 3 {
+		interval = bins[2]
+	}
+	if bins == [0] {
+		lower = 0
+		upper = 0
+	}
+	return Binning{
+		lower: lower
+		upper: upper
+		interval: interval
+	}
 }
 
 // get_rank_value_for_strings

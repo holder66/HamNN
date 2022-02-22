@@ -130,7 +130,7 @@ fn test_show_crossvalidation_result() ? {
 
 // test_show_explore_cross
 fn test_show_explore_cross() {
-	println('\n\test_show_explore_cross prints out explore results for cross-validation of developer.tab')
+	println('\n\n test_show_explore_cross prints out explore results for cross-validation of developer.tab')
 	mut results := ExploreResult{}
 	mut opts := Options{
 		verbose_flag: false

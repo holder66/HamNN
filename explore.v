@@ -87,42 +87,54 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 
 	// for uniform binning (ie, the same number of bins
 	// for all continuous attributes)
-	mut start_bin := 2
-	mut end_bin := start_bin
-	mut interval_bin := 1
-	if ex_opts.bins.len == 1 || (ex_opts.bins.len == 2 && ex_opts.bins[0] == ex_opts.bins[1]) {
-		start_bin = ex_opts.bins[0]
-		end_bin = start_bin
-	} else if ex_opts.bins.len >= 2 {
-		start_bin = ex_opts.bins[0]
-		end_bin = ex_opts.bins[1]
-		if ex_opts.bins.len == 3 {
-			interval_bin = ex_opts.bins[2]
-		}
-	}
-	if ex_opts.bins == [0] {
-		start_bin = 0
-		end_bin = 0
-	}
+	// mut start_bin := 2
+	// mut end_bin := start_bin
+	// mut interval_bin := 1
+	// if ex_opts.bins.len == 1 || (ex_opts.bins.len == 2 && ex_opts.bins[0] == ex_opts.bins[1]) {
+	// 	start_bin = ex_opts.bins[0]
+	// 	end_bin = start_bin
+	// } else if ex_opts.bins.len >= 2 {
+	// 	start_bin = ex_opts.bins[0]
+	// 	end_bin = ex_opts.bins[1]
+	// 	if ex_opts.bins.len == 3 {
+	// 		interval_bin = ex_opts.bins[2]
+	// 	}
+	// }
+	// if ex_opts.bins == [0] {
+	// 	start_bin = 0
+	// 	end_bin = 0
+	// }
+	// mut lower := 2 // since less than 2 bins makes no sense!
+	// mut upper := 16 	// ie the default value in the Options struct
+	// mut interval := 1
+	// if opts.bins.len >= 2 {
+	// 	lower = opts.bins[0]
+	// 	upper = opts.bins[1]
+	// }
+	// if opts.bins.len == 3 {
+	// 	interval = opts.bins[2]
+	// }
+	binning := get_binning(ex_opts.bins)
+	
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
-		println('binning: $start_bin $end_bin $interval_bin')
+		println('binning: $binning.lower $binning.upper $binning.interval')
 	}
-	show_explore_header(pos_neg_classes, opts)
+	show_explore_header(pos_neg_classes, binning, opts)
 	mut atts := start_attr
-	mut bin := start_bin
+	mut bin := binning.lower
 	mut cl := Classifier{}
 	mut array_of_results := []CrossVerifyResult{}
 	// mut plot_data := [][]PlotResult{}
 
 	for atts <= end_attr {
 		ex_opts.number_of_attributes = [atts]
-		bin = start_bin
-		for bin <= end_bin {
+		bin = binning.lower
+		for bin <= binning.upper {
 			if ex_opts.uniform_bins {
 				ex_opts.bins = [bin]
 			} else {
-				ex_opts.bins = [start_bin, bin]
+				ex_opts.bins = [binning.lower, bin]
 			}
 			if ex_opts.testfile_path == '' {
 				result = cross_validate(ds, ex_opts)
@@ -134,7 +146,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
 			array_of_results << result
-			bin += interval_bin
+			bin += binning.interval
 		}
 		atts += interval_attr
 	}

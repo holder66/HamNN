@@ -26,6 +26,7 @@ pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 		class_counts: test_ds.class_counts
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
+		binning: cl.binning
 	}
 
 	// println(confusion_matrix_map)

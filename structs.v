@@ -206,6 +206,7 @@ pub mut:
 	wrong_count          int
 	total_count          int
 	bin_values           []int
+	binning				 Binning
 	attributes_used      int
 	confusion_matrix     [][]string
 }

@@ -104,7 +104,7 @@ pub fn show_classifier(cl Classifier) {
 		' when calculating rank values')
 	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
 	println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
-	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value  Uniques        Min        Max  Bins',
+	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value   Uniques       Min        Max  Bins',
 		'underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
 		println('${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
@@ -116,10 +116,6 @@ pub fn show_classifier(cl Classifier) {
 	for events in cl.history {
 		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}')
 	}
-}
-
-// show_explore
-fn show_explore(result []CrossVerifyResult, opts Options) {
 }
 
 // show_make
@@ -172,7 +168,7 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 		results_array := [
 			'Attributes: $attr_string',
 			'Missing values: $exclude_string',
-			'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval',
 			'Prevalence weighting of nearest neighbor counts: $weight_string ',
 			'Results:',
 		]
@@ -188,13 +184,9 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 
 // get_show_bins
 fn get_show_bins(bins []int) string {
-	mut show_bins := ''
-	if bins.len == 1 {
-		show_bins = '${bins[0]:7}'
-	} else {
-		show_bins = '${bins[0]:2} - ${bins[1]:-2}'
-	}
-	return show_bins
+	if bins[0] == 0 {return '       '}
+	if bins.len == 1 {return '${bins[0]:7}'}
+	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
 // show_expanded_result
@@ -316,7 +308,8 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 			if opts.random_pick { ' with random selection of instances' } else { '' },
 		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
-		'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
+		if cross_result.binning.lower == 0 {'No continuous attributes, thus no binning'} else 
+		{'Bin range for continuous attributes: from $cross_result.binning.lower to $cross_result.binning.upper with interval $cross_result.binning.interval'},
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 		'Results:',
 		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)',
@@ -328,11 +321,11 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 }
 
 // show_explore_header
-fn show_explore_header(pos_neg_classes []string, opts Options) {
+fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) {
 	if opts.show_flag || opts.expanded_flag {
 		mut explore_type_string := ''
 		if opts.testfile_path == '' {
-			explore_type_string = if opts.folds == 0 { 'leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validation' + if opts.repetitions > 0 { ' ($opts.repetitions repetitions' + if opts.random_pick { ', with random selection of instances)' } else { ')' }
+			explore_type_string = if opts.folds == 0 { 'leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validation' + if opts.repetitions > 0 { '\n ($opts.repetitions repetitions' + if opts.random_pick { ', with random selection of instances)' } else { ')' }
 			 } else { ''
 			 }
 		} else {
@@ -340,6 +333,14 @@ fn show_explore_header(pos_neg_classes []string, opts Options) {
 		}
 		println(chalk.fg(chalk.style('\nExplore "$opts.datafile_path" using $explore_type_string',
 			'underline'), 'magenta'))
+		if binning.lower == 0 {
+			println('No continuous attributes, thus no binning')
+		} else {
+			println('Binning range for continuous attributes: from $binning.lower to $binning.upper with interval $binning.interval')
+		}
+		if opts.uniform_bins {
+			println('(same number of bins for all continous attributes)')
+		}
 		if opts.exclude_flag {
 			println('Excluding missing values')
 		}
