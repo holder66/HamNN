@@ -28,7 +28,7 @@ import math
 //		used.
 // outputfile_path, saves the result as json.
 // ```
-pub fn explore(ds Dataset, opts Options) ExploreResult {
+pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	mut ex_opts := opts
 	mut results := ExploreResult{
 		path: opts.datafile_path
@@ -137,7 +137,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 				ex_opts.bins = [binning.lower, bin]
 			}
 			if ex_opts.testfile_path == '' {
-				result = cross_validate(ds, ex_opts)
+				result = cross_validate(ds, ex_opts) ?
 			} else {
 				cl = make_classifier(ds, ex_opts)
 				result = verify(cl, ex_opts)

@@ -23,7 +23,7 @@ import rand
 // expanded_flag: prints additional information to the console, including
 // 		a confusion matrix.
 // ```
-pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
+pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
@@ -51,7 +51,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		if opts.random_pick {
 			mut n := 0
 			for pick_list.len < total_instances {
-				n = rand.int_in_range(0, total_instances)
+				n = rand.int_in_range(0, total_instances) ?
 				if n in pick_list {
 					continue
 				}
