@@ -56,10 +56,10 @@ pub mut:
 }
 
 struct Binning {
-	mut:
-	lower 	int 
-	upper 	int 
-	interval 	int 
+mut:
+	lower    int
+	upper    int
+	interval int
 }
 
 pub struct RankingResult {
@@ -89,7 +89,7 @@ pub mut:
 	trained_attributes map[string]TrainedAttribute
 	options            []string
 	indices            []int
-	binning				Binning
+	binning            Binning
 	instances          [][]byte
 	history            []HistoryEvent
 }
@@ -206,7 +206,7 @@ pub mut:
 	wrong_count          int
 	total_count          int
 	bin_values           []int
-	binning				 Binning
+	binning              Binning
 	attributes_used      int
 	confusion_matrix     [][]string
 }

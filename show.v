@@ -184,8 +184,12 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 
 // get_show_bins
 fn get_show_bins(bins []int) string {
-	if bins[0] == 0 {return '       '}
-	if bins.len == 1 {return '${bins[0]:7}'}
+	if bins[0] == 0 {
+		return '       '
+	}
+	if bins.len == 1 {
+		return '${bins[0]:7}'
+	}
 	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
@@ -308,8 +312,11 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 			if opts.random_pick { ' with random selection of instances' } else { '' },
 		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
-		if cross_result.binning.lower == 0 {'No continuous attributes, thus no binning'} else 
-		{'Bin range for continuous attributes: from $cross_result.binning.lower to $cross_result.binning.upper with interval $cross_result.binning.interval'},
+		if cross_result.binning.lower == 0 {
+			'No continuous attributes, thus no binning'
+		} else {
+			'Bin range for continuous attributes: from $cross_result.binning.lower to $cross_result.binning.upper with interval $cross_result.binning.interval'
+		},
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 		'Results:',
 		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)',

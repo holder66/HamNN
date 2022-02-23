@@ -115,7 +115,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	// 	interval = opts.bins[2]
 	// }
 	binning := get_binning(ex_opts.bins)
-	
+
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
 		println('binning: $binning.lower $binning.upper $binning.interval')

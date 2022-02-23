@@ -29,19 +29,19 @@ fn test_rank_attributes() {
 	}
 	result = rank_attributes(load_file(opts.datafile_path), opts)
 
-	opts.bins = [2,7]
+	opts.bins = [2, 7]
 	result = rank_attributes(load_file(opts.datafile_path), opts)
-	opts.bins = [2,7,2]
+	opts.bins = [2, 7, 2]
 	result = rank_attributes(load_file(opts.datafile_path), opts)
-	opts.bins = [6,6]
+	opts.bins = [6, 6]
 	result = rank_attributes(load_file(opts.datafile_path), opts)
 	opts.uniform_bins = true
 
 	opts.bins = [7]
-	result = rank_attributes(load_file(opts.datafile_path), opts)	
-	opts.bins = [2,7]
 	result = rank_attributes(load_file(opts.datafile_path), opts)
-	opts.bins = [2,7,2]
+	opts.bins = [2, 7]
+	result = rank_attributes(load_file(opts.datafile_path), opts)
+	opts.bins = [2, 7, 2]
 	result = rank_attributes(load_file(opts.datafile_path), opts)
 
 	println('Done with iris.tab')
@@ -62,23 +62,22 @@ fn test_explore_cross() {
 	}
 	result = explore(load_file(opts.datafile_path), opts)
 
-	opts.bins = [2,7]
+	opts.bins = [2, 7]
 	result = explore(load_file(opts.datafile_path), opts)
-	opts.bins = [2,7,2]
+	opts.bins = [2, 7, 2]
 	result = explore(load_file(opts.datafile_path), opts)
 
-	opts.bins = [6,6]
+	opts.bins = [6, 6]
 	result = explore(load_file(opts.datafile_path), opts)
 
 	opts.uniform_bins = true
 
 	opts.bins = [7]
 	result = explore(load_file(opts.datafile_path), opts)
-	opts.bins = [2,7]
+	opts.bins = [2, 7]
 	result = explore(load_file(opts.datafile_path), opts)
-	opts.bins = [2,7,2]
+	opts.bins = [2, 7, 2]
 	result = explore(load_file(opts.datafile_path), opts)
-
 
 	println('Done with iris.tab')
 }

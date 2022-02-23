@@ -61,12 +61,14 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 		// create an array whose values are the bin numbers we want to use
 		mut bin_numbers := []int{}
-		mut b := binning.lower 
+		mut b := binning.lower
 		// println('$lower $upper $interval')
 		for {
-			bin_numbers << b 
-			b += binning.interval  
-			if b > binning.upper {break}
+			bin_numbers << b
+			b += binning.interval
+			if b > binning.upper {
+				break
+			}
 		}
 		bin_numbers.reverse_in_place()
 		for bin_number in bin_numbers {
@@ -174,10 +176,10 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	return ranking_result
 }
 
-// get_binning 
+// get_binning
 fn get_binning(bins []int) Binning {
 	mut lower := 2 // since less than 2 bins makes no sense!
-	mut upper := 16 	// ie the default value in the Options struct
+	mut upper := 16 // ie the default value in the Options struct
 	mut interval := 1
 	if bins.len >= 2 {
 		lower = bins[0]
