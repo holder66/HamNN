@@ -203,7 +203,6 @@ mut:
 // plot_roc generates plots of receiver operating characteristic curves.
 fn plot_roc(result ExploreResult, opts Options) {
 	mut roc_results := []ROCResult{}
-	mut plt := plot.new_plot()
 	mut traces := []ROCTrace{}
 	mut x_coordinates := []f64{}
 	mut y_coordinates := []f64{}
@@ -212,12 +211,26 @@ fn plot_roc(result ExploreResult, opts Options) {
 	mut bin_range := ''
 	mut pos_class := result.array_of_results[0].pos_neg_classes[0]
 	mut neg_class := result.array_of_results[0].pos_neg_classes[1]
+	annotation1 := plot.Annotation{
+		x: 0.5
+		y: -0.05
+		text: 'Hover your cursor over a marker to view details.'
+		align: 'center'
+	}
+	annotation2 := plot.Annotation{
+		x: 0.5
+		y: -0.02
+		text: explore_type_string(opts)
+		align: 'left'
+	}
 
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
+	// skip this if no binning
+		
 
 	for res in result.array_of_results {
-		println('res: $res')
+		// println('res: $res')
 		// create strings that can be used for filtering
 		if res.bin_values.len == 1 {
 			bin_range = '${res.bin_values[0]} bins'
@@ -251,26 +264,17 @@ fn plot_roc(result ExploreResult, opts Options) {
 			curve_variable_values: filter(key, bin_range_values, attributes_used_values)
 		}
 	}
+	if result.binning.lower != 0 {
+		mut plt_bins := plot.new_plot()
 	traces = massage_roc_traces(mut traces)
-	make_roc_plot_traces(traces, mut plt, 'attributes used')
-	annotation := plot.Annotation{
-		x: 0.5
-		y: -0.05
-		text: 'Hover your cursor over a marker to view details.'
-		align: 'center'
-	}
-	annotation2 := plot.Annotation{
-		x: 0.5
-		y: -0.02
-		text: explore_type_string(opts)
-		align: 'left'
-	}
-	make_roc_plot_layout(mut plt, 'Attributes Used', opts.datafile_path, [annotation, annotation2])
+	make_roc_plot_traces(traces, mut plt_bins, 'attributes used')
+	
+	make_roc_plot_layout(mut plt_bins, 'Binning', opts.datafile_path, [annotation1, annotation2])
 
-	plt.show() or { panic(err) }
-
+	plt_bins.show() or { panic(err) }
+}
 	// now a series of curves, one per attributes_used value
-	plt = plot.new_plot()
+	mut plt_atts := plot.new_plot()
 	traces.clear()
 	for key, _ in string_element_counts(attributes_used_values) {
 		traces << ROCTrace{
@@ -281,10 +285,10 @@ fn plot_roc(result ExploreResult, opts Options) {
 		}
 	}
 	traces = massage_roc_traces(mut traces)
-	make_roc_plot_traces(traces, mut plt, 'binning')
-	make_roc_plot_layout(mut plt, 'Attributes Used', opts.datafile_path, [annotation, annotation2])
+	make_roc_plot_traces(traces, mut plt_atts, 'binning')
+	make_roc_plot_layout(mut plt_atts, 'Attributes Used', opts.datafile_path, [annotation1, annotation2])
 
-	plt.show() or { panic(err) }
+	plt_atts.show() or { panic(err) }
 }
 
 // filter takes two coordinated arrays. It filters array b
