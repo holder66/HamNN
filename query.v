@@ -18,6 +18,7 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 	mut validate_result := ValidateResult{
 		Class: cl.Class
 	}
+	mut possibles := []string{}
 	mut byte_values := []byte{}
 	mut responses := map[string]string{}
 	// for testing, skip the query by putting some values in responses
@@ -31,7 +32,9 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 			// for each attribute in cl, create a prompt and collect responses
 			for attr in cl.attribute_ordering {
 				if cl.trained_attributes[attr].attribute_type == 'D' {
-					println('Possible values for "$attr": $cl.trained_attributes[attr].translation_table.keys()')
+					possibles = cl.trained_attributes[attr].translation_table.keys()
+					possibles.sort()
+					println('Possible values for "$attr": $possibles')
 					responses[attr] = readline.read_line('Please enter one of these values for attribute "$attr": ') or {
 						'error'
 					}.trim_space()
