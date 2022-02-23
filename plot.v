@@ -15,7 +15,6 @@ mut:
 // plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
 fn plot_rank(result RankingResult) {
-	println('result in plot_rank: $result')
 	mut ranked_atts := result.array_of_ranked_attributes
 	mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
@@ -227,7 +226,6 @@ fn plot_roc(result ExploreResult, opts Options) {
 	// first, we'll do a series of curves, one per bin range, thus
 	// with the number of attributes varying
 	// skip this if no binning
-		
 
 	for res in result.array_of_results {
 		// println('res: $res')
@@ -266,13 +264,16 @@ fn plot_roc(result ExploreResult, opts Options) {
 	}
 	if result.binning.lower != 0 {
 		mut plt_bins := plot.new_plot()
-	traces = massage_roc_traces(mut traces)
-	make_roc_plot_traces(traces, mut plt_bins, 'attributes used')
-	
-	make_roc_plot_layout(mut plt_bins, 'Binning', opts.datafile_path, [annotation1, annotation2])
+		traces = massage_roc_traces(mut traces)
+		make_roc_plot_traces(traces, mut plt_bins, 'attributes used')
 
-	plt_bins.show() or { panic(err) }
-}
+		make_roc_plot_layout(mut plt_bins, 'Binning', opts.datafile_path, [
+			annotation1,
+			annotation2,
+		])
+
+		plt_bins.show() or { panic(err) }
+	}
 	// now a series of curves, one per attributes_used value
 	mut plt_atts := plot.new_plot()
 	traces.clear()
@@ -286,7 +287,10 @@ fn plot_roc(result ExploreResult, opts Options) {
 	}
 	traces = massage_roc_traces(mut traces)
 	make_roc_plot_traces(traces, mut plt_atts, 'binning')
-	make_roc_plot_layout(mut plt_atts, 'Attributes Used', opts.datafile_path, [annotation1, annotation2])
+	make_roc_plot_layout(mut plt_atts, 'Attributes Used', opts.datafile_path, [
+		annotation1,
+		annotation2,
+	])
 
 	plt_atts.show() or { panic(err) }
 }

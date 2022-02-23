@@ -154,8 +154,8 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	if opts.graph_flag {
 		plot_explore(results, opts)
 		if ds.Class.class_counts.len == 2 {
- 			plot_roc(results, opts)
-  		}
+			plot_roc(results, opts)
+		}
 	}
 	if opts.outputfile_path != '' {
 		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
