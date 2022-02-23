@@ -178,24 +178,31 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 
 // get_binning
 fn get_binning(bins []int) Binning {
-	mut lower := 2 // since less than 2 bins makes no sense!
-	mut upper := 16 // ie the default value in the Options struct
-	mut interval := 1
-	if bins.len >= 2 {
-		lower = bins[0]
-		upper = bins[1]
-	}
-	if bins.len == 3 {
-		interval = bins[2]
-	}
 	if bins == [0] {
-		lower = 0
-		upper = 0
+		return Binning{
+			lower: 0
+			upper: 0
+			interval: 1
+		}
+	}
+	if bins.len == 1 {
+		return Binning{
+			lower: 2
+			upper: bins[0]
+			interval: 1
+		}
+	}
+	if bins.len == 2 {
+		return Binning{
+			lower: bins[0]
+			upper: bins[1]
+			interval: 1
+		}
 	}
 	return Binning{
-		lower: lower
-		upper: upper
-		interval: interval
+		lower: bins[0]
+		upper: bins[1]
+		interval: bins[2]
 	}
 }
 

@@ -35,7 +35,6 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		testfile_path: opts.testfile_path
 		exclude_flag: opts.exclude_flag
 		weighting_flag: opts.weighting_flag
-		// bins: opts.bins
 		uniform_bins: opts.uniform_bins
 		number_of_attributes: opts.number_of_attributes
 		folds: opts.folds
@@ -56,6 +55,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	if ds.useful_continuous_attributes.len == 0 {
 		ex_opts.bins = [0]
 	}
+	results.binning = get_binning(ex_opts.bins)
 	mut start_attr := 1
 	mut end_attr := attribute_max
 	mut interval_attr := 1
@@ -114,7 +114,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	// if opts.bins.len == 3 {
 	// 	interval = opts.bins[2]
 	// }
-	binning := get_binning(ex_opts.bins)
+	binning := results.binning
 
 	if opts.verbose_flag && opts.command == 'explore' {
 		println('attributing: $start_attr $end_attr $interval_attr')
@@ -152,7 +152,6 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	}
 	results.array_of_results = array_of_results
 	if opts.graph_flag {
-		println('going to plot_explore!')
 		plot_explore(results, opts)
 	}
 	if opts.outputfile_path != '' {

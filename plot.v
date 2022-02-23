@@ -15,7 +15,7 @@ mut:
 // plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
 fn plot_rank(result RankingResult) {
-	// println('result in plot_rank: $result')
+	println('result in plot_rank: $result')
 	mut ranked_atts := result.array_of_ranked_attributes
 	mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
@@ -94,7 +94,7 @@ mut:
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
 fn plot_explore(result ExploreResult, opts Options) {
-	println('result in plot_explore: $result')
+	// println('result in plot_explore: $result')
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}

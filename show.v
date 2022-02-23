@@ -77,7 +77,6 @@ pub fn show_analyze(result AnalyzeResult) {
 
 // show_rank_attributes
 fn show_rank_attributes(result RankingResult) {
-	println(result.binning)
 	mut exclude_phrase := 'included'
 	if result.exclude_flag {
 		exclude_phrase = 'excluded'
@@ -97,7 +96,6 @@ fn show_rank_attributes(result RankingResult) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	// println(cl.trained_attributes)
 	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'),
 		'magenta'))
 	println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
@@ -116,14 +114,6 @@ pub fn show_classifier(cl Classifier) {
 	for events in cl.history {
 		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}')
 	}
-}
-
-// show_make
-fn show_make(cl Classifier, opts Options) {
-}
-
-// show_rank
-fn show_rank(result RankingResult, opts Options) {
 }
 
 // show_validate
