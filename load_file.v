@@ -4,6 +4,7 @@ import os
 import strconv
 import math
 import json
+import encoding.utf8
 // import arrays
 
 // const integer_range_for_discrete = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -11,18 +12,18 @@ import json
 // load_file returns a struct containing the datafile's contents,
 // suitable for generating a classifier
 pub fn load_file(path string) Dataset {
-	mut ds := Dataset{}
-	if file_type(path) == 'orange_newer' {
-		ds = load_orange_newer_file(path)
-	} else {
-		ds = load_orange_older_file(path)
+	return match file_type(path) {
+		'orange_newer' {load_orange_newer_file(path)}
+		'orange_older' {load_orange_older_file(path)}
+		'arff' {load_arff_file(path)}
+		else {panic('unrecognized file type')}
 	}
-	return ds
 }
 
 // file_type returns a string identifying how a dataset is structured or
 // formatted, eg 'orange_newer' or 'orange_older'
 pub fn file_type(path string) string {
+	if os.file_ext(path) == '.arff' { return 'arff' }
 	header := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
 	if header[0].contains('#') {
 		return 'orange_newer'
@@ -49,6 +50,62 @@ pub fn load_instances_file(path string) ?ValidateResult {
 	// println(s)
 	instances := json.decode(ValidateResult, s) or { panic('Failed to parse json') }
 	return instances
+}
+
+// load_arff_file 
+fn load_arff_file(path string) Dataset {
+	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
+	mut ds := Dataset{
+		path: path 
+	}
+	attributes := content.filter(it != '').map(utf8.to_lower(it)).filter(it.starts_with('@attribute'))
+	println(attributes)
+	ds.attribute_names = attributes.map(it.split(' ')[1])
+	ds.attribute_types = attributes.map(it.split(' ')[2])
+	ds.inferred_attribute_types = infer_attribute_types_arff(ds)
+	mut start_data := 0
+	for i, line in content {
+		if line.starts_with('@data') {
+			start_data = i + 1
+			break 
+		}
+	}
+	ds.data = transpose(content[start_data..].map(it.split(',')))
+	ds.Class = set_class_struct(ds)
+
+	ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
+	ds.useful_discrete_attributes = get_useful_discrete_attributes(ds)
+	return ds
+}
+
+fn infer_attribute_types_arff(ds Dataset) []string {
+	mut inferred_attribute_types := []string{}
+	mut attr_type := ''
+	// mut attr_flag := ''
+	mut inferred := ''
+	for i in 0 .. ds.attribute_names.len {
+		attr_type = ds.attribute_types[i]
+
+		if attr_type in ['numeric', 'real', 'integer'] {
+			inferred = 'C'
+		} else if attr_type in ['string'] {
+			inferred = 'D'
+		} else if attr_type in ['date', 'relational'] {
+			inferred = 'i'
+		} else if attr_type in ['class'] { inferred = 'c'}
+		// if the entry contains a list of items separated by commas
+		else if attr_type.contains(',') {
+			inferred = 'D'
+		} else {
+			panic('unrecognized attribute type "$attr_type" for attribute "${ds.attribute_names[i]}"')
+		}
+		inferred_attribute_types << inferred
+	}
+	if 'c' !in inferred_attribute_types {
+		inferred_attribute_types.pop()
+		inferred_attribute_types << ['c']
+	}
+	return inferred_attribute_types
 }
 
 // load_orange_older_file loads from a file into a Dataset struct

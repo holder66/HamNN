@@ -19,6 +19,7 @@ fn testsuite_end() ? {
 fn test_file_type() {
 	assert file_type('datasets/developer.tab') == 'orange_newer'
 	assert file_type('datasets/iris.tab') == 'orange_older'
+	assert file_type('datasets/ESL.arff') == 'arff'
 }
 
 // test_load_file

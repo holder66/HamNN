@@ -91,6 +91,10 @@ v .                     # compiles all the files in the folder
 # and options available. More specific help information
 # is available for each command.
 ```
+
+## Tutorial for using vhamnn:
+In the vhamnn directory:
+`v run . examples go`
 ## Memory leak problem:
 
 At the present time, if your code using the hamnn library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
