@@ -21,11 +21,11 @@ fn test_cross_validate() ? {
 	opts.repetitions = 10
 	opts.random_pick = true
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count >= 878 && result.correct_count <= 883
 
 	opts.weighting_flag = true
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count >= 874 && result.correct_count <= 879
 
 	opts.datafile_path = 'datasets/developer.tab'
@@ -36,7 +36,7 @@ fn test_cross_validate() ? {
 	opts.repetitions = 2
 	opts.random_pick = false
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 10
 	assert result.incorrects_count == 3
 	assert result.wrong_count == 3
@@ -53,7 +53,7 @@ fn test_cross_validate() ? {
 	opts.folds = 2
 	opts.weighting_flag = true
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 8
 	assert result.incorrects_count == 5
 	assert result.wrong_count == 5
@@ -71,7 +71,7 @@ fn test_cross_validate() ? {
 	opts.bins = [3, 3]
 	opts.folds = 3
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 12
 	assert result.incorrects_count == 1
 	assert result.wrong_count == 1
@@ -84,7 +84,7 @@ fn test_cross_validate() ? {
 	opts.bins = [3, 3]
 	opts.folds = 4
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 9
 	assert result.incorrects_count == 4
 	assert result.wrong_count == 4
@@ -95,7 +95,7 @@ fn test_cross_validate() ? {
 	opts.bins = [3, 3]
 	opts.folds = 0
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 147
 	assert result.incorrects_count == 3
 	assert result.wrong_count == 3
@@ -104,7 +104,7 @@ fn test_cross_validate() ? {
 	opts.datafile_path = 'datasets/breast-cancer-wisconsin-disc.tab'
 	opts.number_of_attributes = [9]
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)
+	result = cross_validate(ds, opts) ?
 	assert result.correct_count == 672
 	assert result.incorrects_count == 27
 	assert result.wrong_count == 27
@@ -120,7 +120,7 @@ fn test_cross_validate() ? {
 		opts.random_pick = true
 		opts.weighting_flag = false
 		ds = load_file(opts.datafile_path)
-		result = cross_validate(ds, opts)
+		result = cross_validate(ds, opts) ?
 		assert result.correct_count > 9400
 	}
 }

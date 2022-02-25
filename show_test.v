@@ -105,31 +105,31 @@ fn test_show_crossvalidation_result() ? {
 		command: 'cross'
 	}
 	println('\n\ndeveloper.tab')
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts)
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts) ?
 	println('\ndeveloper.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts)
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts) ?
 
 	println('\n\nbreast-cancer-wisconsin-disc.tab')
 	opts.expanded_flag = false
 	opts.number_of_attributes = [4]
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts) ?
 	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts) ?
 
 	println('\n\niris.tab')
 	opts.expanded_flag = false
 	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts) ?
 	println('\niris.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts) ?
 }
 
 // test_show_explore_cross
-fn test_show_explore_cross() {
+fn test_show_explore_cross() ? {
 	println('\n\n test_show_explore_cross prints out explore results for cross-validation of developer.tab')
 	mut results := ExploreResult{}
 	mut opts := Options{
@@ -147,11 +147,11 @@ fn test_show_explore_cross() {
 		random_pick: true
 		datafile_path: 'datasets/developer.tab'
 	}
-	results = explore(load_file(opts.datafile_path), opts)
+	results = explore(load_file(opts.datafile_path), opts) ?
 }
 
 // test_show_explore_verify
-fn test_show_explore_verify() {
+fn test_show_explore_verify() ? {
 	println('\n\ntest_show_explore_verify prints out explore results for verification of bcw350train with bcw174test')
 	mut results := ExploreResult{}
 	mut opts := Options{
@@ -166,11 +166,11 @@ fn test_show_explore_verify() {
 		datafile_path: 'datasets/bcw350train'
 		testfile_path: 'datasets/bcw174test'
 	}
-	results = explore(load_file(opts.datafile_path), opts)
+	results = explore(load_file(opts.datafile_path), opts) ?
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	opts.number_of_attributes = [0]
-	results = explore(load_file(opts.datafile_path), opts)
+	results = explore(load_file(opts.datafile_path), opts) ?
 }
 
 // test_show_rank_attributes

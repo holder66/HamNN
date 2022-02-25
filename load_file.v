@@ -10,17 +10,19 @@ import encoding.utf8
 // suitable for generating a classifier
 pub fn load_file(path string) Dataset {
 	return match file_type(path) {
-		'orange_newer' {load_orange_newer_file(path)}
-		'orange_older' {load_orange_older_file(path)}
-		'arff' {load_arff_file(path)}
-		else {panic('unrecognized file type')}
+		'orange_newer' { load_orange_newer_file(path) }
+		'orange_older' { load_orange_older_file(path) }
+		'arff' { load_arff_file(path) }
+		else { panic('unrecognized file type') }
 	}
 }
 
 // file_type returns a string identifying how a dataset is structured or
 // formatted, eg 'orange_newer' or 'orange_older'
 pub fn file_type(path string) string {
-	if os.file_ext(path) == '.arff' { return 'arff' }
+	if os.file_ext(path) == '.arff' {
+		return 'arff'
+	}
 	header := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
 	if header[0].contains('#') {
 		return 'orange_newer'
@@ -49,21 +51,21 @@ pub fn load_instances_file(path string) ?ValidateResult {
 	return instances
 }
 
-// load_arff_file 
+// load_arff_file
 fn load_arff_file(path string) Dataset {
 	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
 	mut ds := Dataset{
-		path: path 
+		path: path
 	}
 	attributes := content.filter(it != '').map(utf8.to_lower(it)).filter(it.starts_with('@attribute'))
 	ds.attribute_names = attributes.map(it.split(' ')[1])
 	ds.attribute_types = attributes.map(it.split(' ')[2])
-	
+
 	mut start_data := 0
 	for i, line in content {
 		if line.starts_with('@data') {
 			start_data = i + 1
-			break 
+			break
 		}
 	}
 	ds.data = transpose(content[start_data..].map(it.split(',')))
@@ -88,13 +90,16 @@ fn infer_attribute_types_arff(ds Dataset) []string {
 		if attr_type in ['numeric', 'real', 'integer'] {
 			if ds.data[i].all(it in should_be_discrete) {
 				inferred = 'D'
-				} else
-			{inferred = 'C'}
-		} else if attr_type in ['string'] {
+			} else {
+				inferred = 'C'
+			}
+		} else if attr_type == 'string' {
 			inferred = 'D'
 		} else if attr_type in ['date', 'relational'] {
 			inferred = 'i'
-		} else if attr_type in ['class'] { inferred = 'c'}
+		} else if attr_type == 'class' {
+			inferred = 'c'
+		}
 		// if the entry contains a list of items separated by commas
 		else if attr_type.contains(',') {
 			inferred = 'D'

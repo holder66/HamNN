@@ -85,8 +85,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut fold_result := CrossVerifyResult{}
 	// instantiate a struct for the result
-	mut repetition_result := CrossVerifyResult{
-	}
+	mut repetition_result := CrossVerifyResult{}
 	// test if leave-one-out crossvalidation is requested
 	folds := if cross_opts.folds == 0 { ds.class_values.len } else { cross_opts.folds }
 	// if the concurrency flag is set
@@ -115,7 +114,6 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
 		}
-
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
