@@ -44,6 +44,10 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 	}
+	// if there are no useful continuous attributes, set binning to 0
+	if ds.useful_continuous_attributes.len == 0 {
+		cross_opts.bins = [0]
+	}
 	mut repetition_result := CrossVerifyResult{}
 	for rep in 0 .. repeats {
 		// generate a pick list of indices

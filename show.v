@@ -296,7 +296,6 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
 	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
 		'magenta'))
-			println(cross_result.binning)
 	results_array := [
 		'Partitioning: $folding_string' +
 			if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
