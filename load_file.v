@@ -5,9 +5,6 @@ import strconv
 import math
 import json
 import encoding.utf8
-// import arrays
-
-// const integer_range_for_discrete = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 // load_file returns a struct containing the datafile's contents,
 // suitable for generating a classifier
@@ -59,10 +56,9 @@ fn load_arff_file(path string) Dataset {
 		path: path 
 	}
 	attributes := content.filter(it != '').map(utf8.to_lower(it)).filter(it.starts_with('@attribute'))
-	println(attributes)
 	ds.attribute_names = attributes.map(it.split(' ')[1])
 	ds.attribute_types = attributes.map(it.split(' ')[2])
-	ds.inferred_attribute_types = infer_attribute_types_arff(ds)
+	
 	mut start_data := 0
 	for i, line in content {
 		if line.starts_with('@data') {
@@ -71,8 +67,9 @@ fn load_arff_file(path string) Dataset {
 		}
 	}
 	ds.data = transpose(content[start_data..].map(it.split(',')))
-	ds.Class = set_class_struct(ds)
 
+	ds.inferred_attribute_types = infer_attribute_types_arff(ds)
+	ds.Class = set_class_struct(ds)
 	ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
 	ds.useful_discrete_attributes = get_useful_discrete_attributes(ds)
 	return ds
@@ -83,11 +80,16 @@ fn infer_attribute_types_arff(ds Dataset) []string {
 	mut attr_type := ''
 	// mut attr_flag := ''
 	mut inferred := ''
+	should_be_discrete := integer_range_for_discrete.map(it.str())
 	for i in 0 .. ds.attribute_names.len {
 		attr_type = ds.attribute_types[i]
-
+		println(integer_range_for_discrete)
+		println(ds.data[i].all(it in should_be_discrete))
 		if attr_type in ['numeric', 'real', 'integer'] {
-			inferred = 'C'
+			if ds.data[i].all(it in should_be_discrete) {
+				inferred = 'D'
+				} else
+			{inferred = 'C'}
 		} else if attr_type in ['string'] {
 			inferred = 'D'
 		} else if attr_type in ['date', 'relational'] {

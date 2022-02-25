@@ -67,6 +67,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 
 		cross_result.inferred_classes << repetition_result.inferred_classes
 		cross_result.actual_classes << repetition_result.actual_classes
+		cross_result.binning = repetition_result.binning
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
 	// show_results(cross_result, cross_opts)
@@ -80,7 +81,8 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut fold_result := CrossVerifyResult{}
 	// instantiate a struct for the result
-	mut repetition_result := CrossVerifyResult{}
+	mut repetition_result := CrossVerifyResult{
+	}
 	// test if leave-one-out crossvalidation is requested
 	folds := if cross_opts.folds == 0 { ds.class_values.len } else { cross_opts.folds }
 	// if the concurrency flag is set
@@ -107,15 +109,19 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 			fold_result = <-result_channel
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
+			repetition_result.binning = fold_result.binning
 		}
+
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
+			repetition_result.binning = fold_result.binning
 		}
 	}
+	// println('repetition_result.binning in do_repetition: $repetition_result.binning')
 	return repetition_result
 }
 
@@ -197,6 +203,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		instance_indices: fold.indices
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
+	fold_result.binning = part_cl.binning
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
@@ -213,7 +220,9 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	for key, _ in ds.Class.class_counts {
 		confusion_matrix_row[key] = 0
 	}
+	// println('part_cl.binning in do_one_fold: $part_cl.binning')
 	fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
+	// println('fold_result.binning in do_one_fold: $fold_result.binning')
 	return fold_result
 }
 
@@ -251,12 +260,12 @@ fn classify_in_cross(cl Classifier, test_instances [][]byte, mut result CrossVer
 		result.inferred_classes << inferred_class
 		result.actual_classes << result.labeled_classes[i]
 	}
-	if opts.verbose_flag && opts.command == 'verify' {
-		println('result in classify_to_verify(): $result')
-	}
-	result = summarize_results(1, mut result)
-	if opts.verbose_flag && opts.command == 'verify' {
-		println('summarize_result: $result')
-	}
+	// if opts.verbose_flag && opts.command == 'verify' {
+	// 	println('result in classify_to_verify(): $result')
+	// }
+	// result = summarize_results(1, mut result)
+	// if opts.verbose_flag && opts.command == 'verify' {
+	// 	println('summarize_result: $result')
+	// }
 	return result
 }
