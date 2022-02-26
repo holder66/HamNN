@@ -5,7 +5,7 @@ A machine learning (ML) library for classification using a nearest neighbor algo
 There is an associated Command Line Interface app, `vhamnn`, which facilitates 
 using the hamnn library.
 
-You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These datasets are in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html) (see [Orange Data Mining](https://orangedatamining.com)), a useful way to specify information about feature types and relevance. 
+You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These files are either in [ARFF (Attribute-Relation File Format)](https://waikato.github.io/weka-wiki/formats_and_processing/arff_stable/) or in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html).
 The Command Line Interface (CLI) app, `vhamnn` (see below) provides a command `orange` to quickly review Orange file format.
 ## Description
 
