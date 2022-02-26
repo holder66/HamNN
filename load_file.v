@@ -58,17 +58,29 @@ fn load_arff_file(path string) Dataset {
 		path: path
 	}
 	attributes := content.filter(it != '').map(utf8.to_lower(it)).filter(it.starts_with('@attribute'))
-	ds.attribute_names = attributes.map(it.split(' ')[1])
-	ds.attribute_types = attributes.map(it.split(' ')[2])
-
+	for line in attributes {
+		if line.ends_with('}') {
+			ds.attribute_names << line.split('{')[0].split(' ')[1].trim_space()
+			ds.attribute_types << 'string'
+			ds.attribute_flags << [line.split_any('{}')[1]]
+		} else {
+			ds.attribute_names << [line.split_any(' \t')[1]]
+			// println(ds.attribute_names)
+			ds.attribute_types << [line.split_any(' \t').last()]
+			// println(ds.attribute_types)
+			ds.attribute_flags << ['']
+		}
+	}
+	// println('$ds.attribute_names $ds.attribute_types $ds.attribute_flags')
 	mut start_data := 0
 	for i, line in content {
-		if line.starts_with('@data') {
+		if line.to_lower().starts_with('@data') {
 			start_data = i + 1
 			break
 		}
 	}
-	ds.data = transpose(content[start_data..].map(it.split(',')))
+	// println(content[start_data..].filter(!it.starts_with('%')).filter(it != '').map(it.split(',')))
+	ds.data = transpose(content[start_data..].filter(!it.starts_with('%')).filter(it != '').map(it.split(',')))
 
 	ds.inferred_attribute_types = infer_attribute_types_arff(ds)
 	ds.Class = set_class_struct(ds)
@@ -77,6 +89,7 @@ fn load_arff_file(path string) Dataset {
 	return ds
 }
 
+// infer_attribute_types_arff
 fn infer_attribute_types_arff(ds Dataset) []string {
 	mut inferred_attribute_types := []string{}
 	mut attr_type := ''
@@ -84,9 +97,9 @@ fn infer_attribute_types_arff(ds Dataset) []string {
 	mut inferred := ''
 	should_be_discrete := integer_range_for_discrete.map(it.str())
 	for i in 0 .. ds.attribute_names.len {
-		attr_type = ds.attribute_types[i]
-		println(integer_range_for_discrete)
-		println(ds.data[i].all(it in should_be_discrete))
+		attr_type = ds.attribute_types[i].to_lower()
+		// println(integer_range_for_discrete)
+		// println(ds.data[i].all(it in should_be_discrete))
 		if attr_type in ['numeric', 'real', 'integer'] {
 			if ds.data[i].all(it in should_be_discrete) {
 				inferred = 'D'
