@@ -50,6 +50,10 @@ quickly identifies and removes from consideration variables which add noise
 ## To use the hamnn library
 `v install holder66.hamnn`
 
+And libraries needed by hamnn:
+`v install vsl`
+`v install etienne_napoleone.chalk`
+
 In your V code:
 `import holder66.hamnn`
 
@@ -102,6 +106,13 @@ At the present time, if your code using the hamnn library (especially memory-int
  v -gc boehm .
  ```
 You may need to install the libgc or libgc-dev library, using "brew" or "apt".
+
+## Getting help:
+The V lang community meets on [Discord](https://discord.gg/vlang)
+
+For issues with vhamnn or hamnn, please raise an issue on github:
+[vhamnn](https://github.com/holder66/vhamnn)
+[hamnn](https://github.com/holder66/hamnn)
 
 ## Glossary of terms
 **instances:** synonyms: cases; records; examples
