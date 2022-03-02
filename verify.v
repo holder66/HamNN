@@ -13,7 +13,7 @@ import runtime
 pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
-	mut confusion_matrix_map := map[string]map[string]int{}
+	mut confusion_matrix_map := map[string]map[string]f64{}
 	// for each class, instantiate an entry in the confusion matrix map
 	for key1, _ in test_ds.class_counts {
 		for key2, _ in test_ds.class_counts {

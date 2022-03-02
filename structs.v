@@ -198,8 +198,12 @@ pub mut:
 	correct_inferences   map[string]int
 	incorrect_inferences map[string]int
 	wrong_inferences     map[string]int
+	true_positives       map[string]int
+	false_positives      map[string]int
+	true_negatives       map[string]int
+	false_negatives      map[string]int
 	// outer key: actual class; inner key: predicted class
-	confusion_matrix_map map[string]map[string]int
+	confusion_matrix_map map[string]map[string]f64
 	pos_neg_classes      []string
 	correct_count        int
 	incorrects_count     int
@@ -208,6 +212,7 @@ pub mut:
 	bin_values           []int
 	binning              Binning
 	attributes_used      int
+	repetitions          int
 	confusion_matrix     [][]string
 }
 

@@ -48,6 +48,7 @@ quickly identifies and removes from consideration variables which add noise
 - neural prosthetic devices, to enhance our senses, processing capacity and speed, memory
 
 ## To use the hamnn library
+
 `v install holder66.hamnn`
 
 And libraries needed by hamnn:

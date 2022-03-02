@@ -31,7 +31,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 
 	repeats := if opts.repetitions == 0 { 1 } else { opts.repetitions }
 	// for each class, instantiate an entry in the confusion matrix map
-	mut confusion_matrix_map := map[string]map[string]int{}
+	mut confusion_matrix_map := map[string]map[string]f64{}
 	for key1, _ in ds.class_counts {
 		for key2, _ in ds.class_counts {
 			confusion_matrix_map[key2][key1] = 0
@@ -43,6 +43,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		class_counts: ds.class_counts
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
+		repetitions: repeats
 	}
 	// if there are no useful continuous attributes, set binning to 0
 	if ds.useful_continuous_attributes.len == 0 {
@@ -138,9 +139,12 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 		if actual == inferred {
 			result.correct_inferences[actual] += 1
 			result.correct_count += 1
+			result.true_positives[actual] += 1
 		} else {
 			result.wrong_inferences[inferred] += 1
+			result.false_positives[inferred] += 1
 			result.incorrect_inferences[actual] += 1
+			result.false_negatives[actual] += 1
 			result.incorrects_count += 1
 			result.wrong_count += 1
 		}
@@ -152,21 +156,30 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 		result.total_count /= repeats
 
 		for _, mut v in result.labeled_instances {
-			v /= repeats
+			v /= f64(repeats)
 		}
 		for _, mut v in result.correct_inferences {
-			v /= repeats
+			v /= f64(repeats)
 		}
 		for _, mut v in result.incorrect_inferences {
-			v /= repeats
+			v /= f64(repeats)
 		}
 		for _, mut v in result.wrong_inferences {
-			v /= repeats
+			v /= f64(repeats)
+		}
+		for _, mut v in result.true_positives {
+			v /= f64(repeats)
+		}
+		for _, mut v in result.false_positives {
+			v /= f64(repeats)
+		}
+		for _, mut v in result.false_negatives {
+			v /= f64(repeats)
 		}
 
 		for _, mut m in result.confusion_matrix_map {
 			for _, mut v in m {
-				v /= repeats
+				v /= f64(repeats)
 			}
 		}
 	}
@@ -177,7 +190,7 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 		header_row << key
 		data_row = [key]
 		for _, value in result.confusion_matrix_map[key] {
-			data_row << '$value'
+			data_row << '${value:10.1g}'
 		}
 		result.confusion_matrix << data_row
 	}
