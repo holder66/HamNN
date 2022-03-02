@@ -174,6 +174,7 @@ fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
 
 // show_cross_or_verify_result 
 fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
+	// println('result in show_cross_or_verify_result: $result')
 	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
 	attr_string := if opts.number_of_attributes[0] == 0 {
 		'all'
@@ -470,18 +471,23 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 			println('Weighting nearest neighbor counts by class prevalences')
 		}
 		if !opts.expanded_flag {
-			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Percent',
+			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
 				'underline'), 'blue'))
 		} else {
 			if pos_neg_classes[0] != '' {
 				println('A correct classification to "${pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${pos_neg_classes[1]}" is a True Negative (TN).')
-				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score',
+				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV    F1 Score',
 					'underline'), 'blue'))
 			} else {
-				println(chalk.fg('                                                    Cases in         Correctly        Incorrectly  Wrongly classified',
-					'blue'))
-				println(chalk.fg(chalk.style('Attributes    Bins   Class                          test set          inferred           inferred     into this class',
-					'underline'), 'blue'))
+				// println(chalk.fg('                                                    Cases in         Correctly        Incorrectly  Wrongly classified',
+				// 	'blue'))
+				// println(chalk.fg(chalk.style('Attributes    Bins   Class                          test set          inferred           inferred     into this class',
+				// 	'underline'), 'blue'))
+
+				println(chalk.fg('Attributes     Bins',
+		'green'))
+				println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
+		'green'))
 			}
 		}
 	}
@@ -490,9 +496,10 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 // show_explore_line
 fn show_explore_line(result CrossVerifyResult, opts Options) ? {
 	if opts.show_flag || opts.expanded_flag {
+		metrics := get_metrics(result)?
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}  ${percent:7.2f}')
+			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
