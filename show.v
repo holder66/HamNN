@@ -5,6 +5,9 @@
 // ie, println(chalk.fg(chalk.style('\nfirst line', 'underline'), 'magenta'))
 // println(chalk.fg(chalk.style('table header','underline'), 'blue'))
 // println(chalk.fg(chalk.style('subheading','bold'), 'green'))
+//
+// this website https://towardsdatascience.com/multi-class-metrics-made-simple-part-ii-the-f1-score-ebe8b2c2ca1 gives the 
+// best explanation of multiclass metrics and how they're calculated
 
 module hamnn
 
@@ -214,6 +217,7 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 	print_array(results_array)
 	if opts.expanded_flag {
 		show_expanded_result(cross_result, opts)
+		print_confusion_matrix(cross_result)
 	}
 }
 
@@ -227,18 +231,26 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) {
 		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
 		println('${get_binary_stats(result)}')
 	}
-	// confusion matrix
-	print_confusion_matrix(result)
+}
+
+struct Metrics {
+	mut:
+	precision []f64
+	recall []f64
+	f1_score []f64
+	class_counts  map[string]int
 }
 
 // show_multiple_classes_stats
 fn show_multiple_classes_stats(result CrossVerifyResult) {
 	mut show_result := []string{}
+
 	for class in result.class_counts.keys() {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%)'
+	show_result << 'macro average'
 	print_array(show_result)
 }
 
@@ -253,16 +265,45 @@ fn pad(l int) string {
 
 // print_confusion_matrix
 fn print_confusion_matrix(result CrossVerifyResult) {
-	// println(result.confusion_matrix)
+	// collect confusion matrix rows into a matrix
+	mut confusion_matrix := [][]f64{}
+	mut data_row := []f64{}
+	for key, _ in result.confusion_matrix_map {
+		data_row = []
+		for _, value in result.confusion_matrix_map[key] {
+			data_row << value
+		}
+		confusion_matrix << data_row
+	}
+	mut header_row := []string{}
+	for key, _ in result.confusion_matrix_map {
+		header_row << key
+	}
+	mut display_confusion_matrix := [][]string{}
+	mut display_row := []string{}
+	for row in confusion_matrix {
+		display_row = []
+		for col in row {
+			display_row << '${col:10.1g}'
+		}
+		display_confusion_matrix << display_row
+	}
+	for i, class in header_row {
+		display_confusion_matrix[i].prepend(class)
+	}
+	header_row.prepend('Predicted Classes (columns)')
+	display_confusion_matrix.prepend(['Actual Classes (rows)'])
+	display_confusion_matrix.prepend(header_row)
+
 	// get the length of the longest class name
 	mut l := result.class_counts.keys().map(it.len)
-	l << 9
+	l << 9	// to make sure that the minimum length covers up to 5 digits
 	l_max := array_max(l)
 	println(chalk.fg(chalk.style('Confusion Matrix' +
 		if result.repetitions > 1 { ' (values averaged over $result.repetitions repetitions):' } else { ':' },
 		'underline'), 'blue'))
 	mut padded_item := ''
-	for i, rows in result.confusion_matrix {
+	for i, rows in display_confusion_matrix {
 		for j, item in rows {
 			match true {
 				i == 0 && j == 0 { // print first item in first row, ie 'predicted classes (columns)'

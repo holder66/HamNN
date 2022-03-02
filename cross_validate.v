@@ -183,20 +183,6 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 			}
 		}
 	}
-	// collect confusion matrix rows into a matrix
-	mut header_row := ['Predicted Classes (columns)']
-	mut data_row := []string{}
-	for key, _ in result.confusion_matrix_map {
-		header_row << key
-		data_row = [key]
-		for _, value in result.confusion_matrix_map[key] {
-			data_row << '${value:10.1g}'
-		}
-		result.confusion_matrix << data_row
-	}
-	result.confusion_matrix.prepend(['Actual Classes (rows)'])
-	result.confusion_matrix.prepend(header_row)
-
 	return result
 }
 
