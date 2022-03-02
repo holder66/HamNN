@@ -146,8 +146,34 @@ fn show_validate(result ValidateResult, opts Options) {
 	}
 }
 
-// show_description 
-fn show_description(result CrossVerifyResult, opts Options) {
+
+
+// show_verify
+fn show_verify(result CrossVerifyResult, opts Options) ? {
+	// println(result)
+	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
+		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
+			'underline'), 'magenta'))
+		show_cross_or_verify_result(result, opts) ?
+	}
+}
+
+// show_crossvalidation
+fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
+	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
+		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),'magenta'))
+		folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
+		mut results_array := [
+			'Partitioning: $folding_string' +
+				if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
+				if opts.random_pick { ' with random selection of instances' } else { '' }]
+				print_array(results_array)
+		show_cross_or_verify_result(result, opts) ?
+	}
+}
+
+// show_cross_or_verify_result 
+fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
 	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
 	attr_string := if opts.number_of_attributes[0] == 0 {
 		'all'
@@ -155,7 +181,6 @@ fn show_description(result CrossVerifyResult, opts Options) {
 		opts.number_of_attributes[0].str()
 	}
 	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	println(result.binning)
 	results_array := [
 		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
@@ -168,71 +193,14 @@ fn show_description(result CrossVerifyResult, opts Options) {
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 		'Results:',
 	]
-	print_array(results_array)
-}
-
-// show_verify
-fn show_verify(result CrossVerifyResult, opts Options) ? {
-	// println(result)
-	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
-			'underline'), 'magenta'))
-		show_description(result, opts)
-		if !opts.expanded_flag {
+		print_array(results_array)
+	if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
 		} else {
 			show_expanded_result(result, opts) ?
-		}
-	}
-}
-
-// show_crossvalidation
-fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
-	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),'magenta'))
-		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
-		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-		attr_string := if opts.number_of_attributes[0] == 0 {
-			'all'
-		} else {
-			opts.number_of_attributes[0].str()
-		}
-		weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-
-		results_array := [
-			'Partitioning: $folding_string' +
-				if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
-				if opts.random_pick { ' with random selection of instances' } else { '' },
-			'Attributes: $attr_string',
-			'Missing values: $exclude_string',
-			if result.binning.lower == 0 {
-				'No continuous attributes, thus no binning'
-			} else {
-				'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
-			},
-			'Prevalence weighting of nearest neighbor counts: $weight_string ',
-			'Results:',
-			'correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)',
-		]
-		print_array(results_array)
-		if opts.expanded_flag {
-			show_expanded_result(result, opts) ?
 			print_confusion_matrix(result)
 		}
-	}
-}
-
-// get_show_bins
-fn get_show_bins(bins []int) string {
-	if bins[0] == 0 {
-		return '       '
-	}
-	if bins.len == 1 {
-		return '${bins[0]:7}'
-	}
-	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
 // show_expanded_result
@@ -246,6 +214,36 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
 		println('${get_binary_stats(result)}')
 	}
 }
+
+// show_multiple_classes_stats
+fn show_multiple_classes_stats(result CrossVerifyResult) ? {
+	mut show_result := []string{}
+	mut metrics := Metrics{
+		class_counts: get_map_values(result.class_counts)
+	}
+	metrics = get_metrics(result) ?
+	for i, class in result.class_counts.keys() {
+		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${metrics.precision[i]:5.3f}     ${metrics.recall[i]:5.3f}       ${metrics.f1_score[i]:5.3f}'
+	}
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%; balanced accuracy: ${metrics.balanced_accuracy * 100:6.2f}%)'
+	for i, avg_type in metrics.avg_type {
+		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
+	}
+	print_array(show_result)
+}
+
+
+// get_show_bins
+fn get_show_bins(bins []int) string {
+	if bins[0] == 0 {
+		return '       '
+	}
+	if bins.len == 1 {
+		return '${bins[0]:7}'
+	}
+	return '${bins[0]:2} - ${bins[1]:-2}'
+}
+
 
 struct Metrics {
 mut:
@@ -296,24 +294,20 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	return m
 }
 
-// show_multiple_classes_stats
-fn show_multiple_classes_stats(result CrossVerifyResult) ? {
-	mut show_result := []string{}
+// get_metrics 
+fn get_metrics(result CrossVerifyResult) ?Metrics {
 	mut metrics := Metrics{
 		class_counts: get_map_values(result.class_counts)
 	}
 	for class in result.class_counts.keys() {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
-		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
-	metrics.avg_metrics() ?
-	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%; balanced accuracy: ${metrics.balanced_accuracy * 100:6.2f}%)'
-	for i, avg_type in metrics.avg_type {
-		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
-	}
-	print_array(show_result)
+	metrics.avg_metrics()?
+	return metrics
 }
+
+
 
 // pad
 fn pad(l int) string {

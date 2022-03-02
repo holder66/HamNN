@@ -37,7 +37,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	ranking_result := rank_attributes(ds, opts)
 	mut ranked_attributes := ranking_result.array_of_ranked_attributes
 	cl.binning = ranking_result.binning
-	println('binning in make_classifier: $cl.binning')
+	// println('binning in make_classifier: $cl.binning')
 	if opts.number_of_attributes[0] != 0 && opts.number_of_attributes[0] < ranked_attributes.len {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}
