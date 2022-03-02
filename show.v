@@ -229,7 +229,7 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
 	show_multiple_classes_stats(result) ?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
+		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV    F1 Score')
 		println('${get_binary_stats(result)}')
 	}
 }
@@ -243,6 +243,7 @@ mut:
 	avg_recall    []f64
 	avg_f1_score  []f64
 	avg_type      []string
+	balanced_accuracy f64
 	class_counts  []int
 }
 
@@ -270,6 +271,8 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	m.avg_recall << arrays.sum(m.recall) ? / count
 	m.avg_f1_score << arrays.sum(m.f1_score) ? / count
 	m.avg_type << 'macro'
+	// multiclass balanced accuracy is the arithmetic mean of the recalls
+	m.balanced_accuracy = m.avg_recall[0]
 	// tot := arrays.sum(m.class_counts) ?
 
 	m.avg_precision << wt_avg(m.precision, m.class_counts) ?
@@ -292,7 +295,7 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
 	metrics.avg_metrics() ?
-	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%)'
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%; balanced accuracy: ${metrics.balanced_accuracy * 100:6.2f}%)'
 	for i, avg_type in metrics.avg_type {
 		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
 	}
@@ -389,9 +392,8 @@ fn get_binary_stats(result CrossVerifyResult) string {
 	spec := t_n / f64(t_n + f_p)
 	ppv := t_p / f64(t_p + f_p)
 	npv := t_n / f64(t_n + f_n)
-	ba := (sens + spec) / 2
 	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
-	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f} ${ba:18.3f} ${f1_score:10.3f}'
+	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f}  ${f1_score:10.3f}'
 }
 
 // show_expanded_explore_result
