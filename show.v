@@ -288,17 +288,16 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 	mut metrics := Metrics{
 		class_counts: get_map_values(result.class_counts)
 	}
-
 	for class in result.class_counts.keys() {
-		
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
-	println(metrics)
-	println(metrics.avg_metrics()?)
+	metrics.avg_metrics()?
 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%)'
-	show_result << 'macro average'
+	for i, avg_type in metrics.avg_type {
+		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}' 
+	}
 	print_array(show_result)
 }
 
