@@ -194,20 +194,21 @@ fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
 		'Results:',
 	]
 		print_array(results_array)
+		mut metrics := get_metrics(result) ?
 	if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: ${percent:5.2f}% raw, ${metrics.balanced_accuracy * 100:5.2f}% balanced)')
 		} else {
-			show_expanded_result(result, opts) ?
+			show_expanded_result(metrics, result, opts) ?
 			print_confusion_matrix(result)
 		}
 }
 
 // show_expanded_result
-fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
+fn show_expanded_result(metrics Metrics, result CrossVerifyResult, opts Options) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
-	show_multiple_classes_stats(result) ?
+	show_multiple_classes_stats(metrics, result) ?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV    F1 Score')
@@ -216,12 +217,12 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
 }
 
 // show_multiple_classes_stats
-fn show_multiple_classes_stats(result CrossVerifyResult) ? {
+fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
 	mut show_result := []string{}
-	mut metrics := Metrics{
-		class_counts: get_map_values(result.class_counts)
-	}
-	metrics = get_metrics(result) ?
+	// mut metrics := Metrics{
+	// 	class_counts: get_map_values(result.class_counts)
+	// }
+	// mut metrics := get_metrics(result) ?
 	for i, class in result.class_counts.keys() {
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${metrics.precision[i]:5.3f}     ${metrics.recall[i]:5.3f}       ${metrics.f1_score[i]:5.3f}'
 	}
@@ -409,7 +410,7 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(result) ?
+		show_multiple_classes_stats(get_metrics(result)?, result) ?
 	}
 }
 
@@ -497,7 +498,7 @@ fn show_explore_line(result CrossVerifyResult, opts Options) ? {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 			} else {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-				show_multiple_classes_stats(result) ?
+				show_multiple_classes_stats(get_metrics(result)?, result) ?
 			}
 		}
 	}
