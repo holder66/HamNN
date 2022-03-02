@@ -140,9 +140,9 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 				result = cross_validate(ds, ex_opts) ?
 			} else {
 				cl = make_classifier(ds, ex_opts)
-				result = verify(cl, ex_opts)
+				result = verify(cl, ex_opts) ?
 			}
-			show_explore_line(result, ex_opts)
+			show_explore_line(result, ex_opts) ?
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
 			array_of_results << result

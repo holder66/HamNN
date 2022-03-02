@@ -10,7 +10,7 @@ import runtime
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
-pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
+pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	mut confusion_matrix_map := map[string]map[string]f64{}
@@ -36,7 +36,7 @@ pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	show_verify(verify_result, opts)
+	show_verify(verify_result, opts) ?
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')
 	}

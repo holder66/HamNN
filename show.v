@@ -12,6 +12,7 @@
 module hamnn
 
 import etienne_napoleone.chalk
+import arrays
 // import math
 
 // show_analyze prints out to the console, a series of tables detailing a
@@ -146,7 +147,7 @@ fn show_validate(result ValidateResult, opts Options) {
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult, opts Options) {
+fn show_verify(result CrossVerifyResult, opts Options) ? {
 	// println(result)
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
 		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
@@ -170,7 +171,7 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
 		} else {
-			show_expanded_result(result, opts)
+			show_expanded_result(result, opts) ?
 		}
 	}
 }
@@ -187,7 +188,7 @@ fn get_show_bins(bins []int) string {
 }
 
 // show_crossvalidation_result
-fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
+fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) ? {
 	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
 	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
@@ -216,16 +217,16 @@ fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) {
 	]
 	print_array(results_array)
 	if opts.expanded_flag {
-		show_expanded_result(cross_result, opts)
+		show_expanded_result(cross_result, opts) ?
 		print_confusion_matrix(cross_result)
 	}
 }
 
 // show_expanded_result
-fn show_expanded_result(result CrossVerifyResult, opts Options) {
+fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
-	show_multiple_classes_stats(result)
+	show_multiple_classes_stats(result) ?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV  Balanced Accuracy   F1 Score')
@@ -238,17 +239,64 @@ struct Metrics {
 	precision []f64
 	recall []f64
 	f1_score []f64
-	class_counts  map[string]int
+	avg_precision []f64
+	avg_recall []f64
+	avg_f1_score []f64
+	avg_type []string
+	class_counts  []int 
+}
+
+// append_metric
+fn (mut m Metrics) append_metric (p f64, r f64, f1 f64) Metrics {
+	m.precision << p 
+	m.recall << r 
+	m.f1_score << f1 
+	return m
+}
+
+ fn wt_avg(a []f64, wts []int) ?f64 {
+			mut wp := 0.0
+			for i, wt in wts {
+				wp += a[i] * wt
+			}
+		return wp / arrays.sum(wts)?
+		}
+
+// avg_metrics 
+fn (mut m Metrics) avg_metrics() ?Metrics {
+	count := m.precision.len
+
+		m.avg_precision << arrays.sum(m.precision)? / count
+		m.avg_recall << arrays.sum(m.recall)? / count
+		m.avg_f1_score << arrays.sum(m.f1_score)? / count
+		m.avg_type << 'macro'
+		// tot := arrays.sum(m.class_counts) ?
+		
+		m.avg_precision << wt_avg(m.precision, m.class_counts)?
+		m.avg_recall << wt_avg(m.recall, m.class_counts)?
+		m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
+		m.avg_type << 'weighted'
+
+	
+	
+	return m
 }
 
 // show_multiple_classes_stats
-fn show_multiple_classes_stats(result CrossVerifyResult) {
+fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 	mut show_result := []string{}
+	mut metrics := Metrics{
+		class_counts: get_map_values(result.class_counts)
+	}
 
 	for class in result.class_counts.keys() {
+		
 		precision, recall, f1_score := get_multiclass_stats(class, result)
+		metrics.append_metric(precision, recall, f1_score)
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
+	println(metrics)
+	println(metrics.avg_metrics()?)
 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%)'
 	show_result << 'macro average'
 	print_array(show_result)
@@ -350,12 +398,12 @@ fn get_binary_stats(result CrossVerifyResult) string {
 }
 
 // show_expanded_explore_result
-fn show_expanded_explore_result(result CrossVerifyResult, opts Options) {
+fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(result)
+		show_multiple_classes_stats(result) ?
 	}
 }
 
@@ -433,7 +481,7 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 }
 
 // show_explore_line
-fn show_explore_line(result CrossVerifyResult, opts Options) {
+fn show_explore_line(result CrossVerifyResult, opts Options) ? {
 	if opts.show_flag || opts.expanded_flag {
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
@@ -443,7 +491,7 @@ fn show_explore_line(result CrossVerifyResult, opts Options) {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 			} else {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-				show_multiple_classes_stats(result)
+				show_multiple_classes_stats(result) ?
 			}
 		}
 	}
