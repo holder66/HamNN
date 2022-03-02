@@ -95,9 +95,9 @@ fn test_show_classifier() {
 	cl = make_classifier(load_file('datasets/anneal.tab'), opts)
 }
 
-// test_show_crossvalidation_result
-fn test_show_crossvalidation_result() ? {
-	println('test_show_crossvalidation_result prints out cross-validation results for developer.tab, breast-cancer-wisconsin-disc.tab, and iris.tab')
+// test_show_crossvalidation
+fn test_show_crossvalidation() ? {
+	println('test_show_crossvalidation prints out cross-validation results for developer.tab, breast-cancer-wisconsin-disc.tab, and iris.tab')
 	mut cvr := CrossVerifyResult{}
 	mut opts := Options{
 		show_flag: true

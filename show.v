@@ -146,12 +146,53 @@ fn show_validate(result ValidateResult, opts Options) {
 	}
 }
 
+// show_description 
+fn show_description(result CrossVerifyResult, opts Options) {
+	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
+	attr_string := if opts.number_of_attributes[0] == 0 {
+		'all'
+	} else {
+		opts.number_of_attributes[0].str()
+	}
+	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+	println(result.binning)
+	results_array := [
+		'Attributes: $attr_string',
+		'Missing values: $exclude_string',
+
+		if result.binning.lower == 0 {
+			'No continuous attributes, thus no binning'
+		} else {
+			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
+		},
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:',
+	]
+	print_array(results_array)
+}
+
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) ? {
 	// println(result)
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
 		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
 			'underline'), 'magenta'))
+		show_description(result, opts)
+		if !opts.expanded_flag {
+			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
+		} else {
+			show_expanded_result(result, opts) ?
+		}
+	}
+}
+
+// show_crossvalidation
+fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
+	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
+		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),'magenta'))
+		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+		folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
 		attr_string := if opts.number_of_attributes[0] == 0 {
 			'all'
@@ -159,19 +200,26 @@ fn show_verify(result CrossVerifyResult, opts Options) ? {
 			opts.number_of_attributes[0].str()
 		}
 		weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
+
 		results_array := [
+			'Partitioning: $folding_string' +
+				if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
+				if opts.random_pick { ' with random selection of instances' } else { '' },
 			'Attributes: $attr_string',
 			'Missing values: $exclude_string',
-			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval',
+			if result.binning.lower == 0 {
+				'No continuous attributes, thus no binning'
+			} else {
+				'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
+			},
 			'Prevalence weighting of nearest neighbor counts: $weight_string ',
 			'Results:',
+			'correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)',
 		]
 		print_array(results_array)
-		if !opts.expanded_flag {
-			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (${percent:5.2f}%)')
-		} else {
+		if opts.expanded_flag {
 			show_expanded_result(result, opts) ?
+			print_confusion_matrix(result)
 		}
 	}
 }
@@ -185,41 +233,6 @@ fn get_show_bins(bins []int) string {
 		return '${bins[0]:7}'
 	}
 	return '${bins[0]:2} - ${bins[1]:-2}'
-}
-
-// show_crossvalidation_result
-fn show_crossvalidation_result(cross_result CrossVerifyResult, opts Options) ? {
-	percent := (f32(cross_result.correct_count) * 100 / cross_result.labeled_classes.len)
-	folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
-	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-	attr_string := if opts.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		opts.number_of_attributes[0].str()
-	}
-	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
-		'magenta'))
-	results_array := [
-		'Partitioning: $folding_string' +
-			if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
-			if opts.random_pick { ' with random selection of instances' } else { '' },
-		'Attributes: $attr_string',
-		'Missing values: $exclude_string',
-		if cross_result.binning.lower == 0 {
-			'No continuous attributes, thus no binning'
-		} else {
-			'Bin range for continuous attributes: from $cross_result.binning.lower to $cross_result.binning.upper with interval $cross_result.binning.interval'
-		},
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:',
-		'correct inferences: $cross_result.correct_count out of $cross_result.labeled_classes.len (${percent:5.2f}%)',
-	]
-	print_array(results_array)
-	if opts.expanded_flag {
-		show_expanded_result(cross_result, opts) ?
-		print_confusion_matrix(cross_result)
-	}
 }
 
 // show_expanded_result

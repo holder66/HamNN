@@ -76,9 +76,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
 	// show_results(cross_result, cross_opts)
-	if cross_opts.command == 'cross' && (cross_opts.show_flag || cross_opts.expanded_flag) {
-		show_crossvalidation_result(cross_result, cross_opts) ?
-	}
+	show_crossvalidation(cross_result, cross_opts) ?
 	return cross_result
 }
 
