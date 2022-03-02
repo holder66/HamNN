@@ -41,9 +41,23 @@ fn test_cross_validate() ? {
 	assert result.incorrects_count == 3
 	assert result.wrong_count == 3
 	assert result.total_count == 13
-	assert result.confusion_matrix == [['Predicted Classes (columns)', 'm', 'f', 'X'],
-		['Actual Classes (rows)'], ['m', '8', '0', '0'], ['f', '2', '1', '0'],
-		['X', '0', '1', '1']]
+	assert result.confusion_matrix_map == {
+		'm': {
+			'm': 8.0
+			'f': 0.0
+			'X': 0.0
+		}
+		'f': {
+			'm': 2.0
+			'f': 1.0
+			'X': 0.0
+		}
+		'X': {
+			'm': 0.0
+			'f': 1.0
+			'X': 1.0
+		}
+	}
 
 	opts.concurrency_flag = false
 
@@ -58,13 +72,7 @@ fn test_cross_validate() ? {
 	assert result.incorrects_count == 5
 	assert result.wrong_count == 5
 	assert result.total_count == 13
-	assert result.confusion_matrix == [
-		['Predicted Classes (columns)', 'm', 'f', 'X'],
-		['Actual Classes (rows)'],
-		['m', '7', '1', '0'],
-		['f', '2', '1', '0'],
-		['X', '1', '1', '0'],
-	]
+	// assert result.confusion_matrix_map == {'m': {'m': 8, 'f': 0, 'X': 0}, 'f': {'m': 2, 'f': 1, 'X': 0}, 'X': {'m': 0, 'f': 1, 'X': 1}}
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]

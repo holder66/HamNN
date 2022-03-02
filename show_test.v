@@ -240,11 +240,11 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)
+	result = verify(cl, opts) ?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)
+	result = verify(cl, opts) ?
 	// println('result two in show_test: $result')
 }

@@ -51,7 +51,7 @@ fn test_append() ? {
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/test_verify.tab'
 	opts.classifierfile_path = 'tempfolder/extclassifierfile'
-	mut result := verify(load_classifier_file(opts.classifierfile_path) ?, opts)
+	mut result := verify(load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 10
 	assert result.wrong_count == 0
 
@@ -92,7 +92,7 @@ fn test_append() ? {
 	// test if the appended classifier works as a classifier
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
 	opts.classifierfile_path = 'tempfolder/extended_classifierfile'
-	result = verify(load_classifier_file(opts.classifierfile_path) ?, opts)
+	result = verify(load_classifier_file(opts.classifierfile_path) ?, opts) ?
 	assert result.correct_count == 333
 	assert result.wrong_count == 43
 }

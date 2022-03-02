@@ -6,7 +6,7 @@
 // println(chalk.fg(chalk.style('table header','underline'), 'blue'))
 // println(chalk.fg(chalk.style('subheading','bold'), 'green'))
 //
-// this website https://towardsdatascience.com/multi-class-metrics-made-simple-part-ii-the-f1-score-ebe8b2c2ca1 gives the 
+// this website https://towardsdatascience.com/multi-class-metrics-made-simple-part-ii-the-f1-score-ebe8b2c2ca1 gives the
 // best explanation of multiclass metrics and how they're calculated
 
 module hamnn
@@ -235,50 +235,48 @@ fn show_expanded_result(result CrossVerifyResult, opts Options) ? {
 }
 
 struct Metrics {
-	mut:
-	precision []f64
-	recall []f64
-	f1_score []f64
+mut:
+	precision     []f64
+	recall        []f64
+	f1_score      []f64
 	avg_precision []f64
-	avg_recall []f64
-	avg_f1_score []f64
-	avg_type []string
-	class_counts  []int 
+	avg_recall    []f64
+	avg_f1_score  []f64
+	avg_type      []string
+	class_counts  []int
 }
 
 // append_metric
-fn (mut m Metrics) append_metric (p f64, r f64, f1 f64) Metrics {
-	m.precision << p 
-	m.recall << r 
-	m.f1_score << f1 
+fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
+	m.precision << p
+	m.recall << r
+	m.f1_score << f1
 	return m
 }
 
- fn wt_avg(a []f64, wts []int) ?f64 {
-			mut wp := 0.0
-			for i, wt in wts {
-				wp += a[i] * wt
-			}
-		return wp / arrays.sum(wts)?
-		}
+fn wt_avg(a []f64, wts []int) ?f64 {
+	mut wp := 0.0
+	for i, wt in wts {
+		wp += a[i] * wt
+	}
+	return wp / arrays.sum(wts) ?
+}
 
-// avg_metrics 
+// avg_metrics
 fn (mut m Metrics) avg_metrics() ?Metrics {
 	count := m.precision.len
 
-		m.avg_precision << arrays.sum(m.precision)? / count
-		m.avg_recall << arrays.sum(m.recall)? / count
-		m.avg_f1_score << arrays.sum(m.f1_score)? / count
-		m.avg_type << 'macro'
-		// tot := arrays.sum(m.class_counts) ?
-		
-		m.avg_precision << wt_avg(m.precision, m.class_counts)?
-		m.avg_recall << wt_avg(m.recall, m.class_counts)?
-		m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
-		m.avg_type << 'weighted'
+	m.avg_precision << arrays.sum(m.precision) ? / count
+	m.avg_recall << arrays.sum(m.recall) ? / count
+	m.avg_f1_score << arrays.sum(m.f1_score) ? / count
+	m.avg_type << 'macro'
+	// tot := arrays.sum(m.class_counts) ?
 
-	
-	
+	m.avg_precision << wt_avg(m.precision, m.class_counts) ?
+	m.avg_recall << wt_avg(m.recall, m.class_counts) ?
+	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts) ?
+	m.avg_type << 'weighted'
+
 	return m
 }
 
@@ -293,10 +291,10 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 		metrics.append_metric(precision, recall, f1_score)
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${precision:5.3f}     ${recall:5.3f}       ${f1_score:5.3f}'
 	}
-	metrics.avg_metrics()?
+	metrics.avg_metrics() ?
 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%)'
 	for i, avg_type in metrics.avg_type {
-		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}' 
+		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
 	}
 	print_array(show_result)
 }
@@ -344,7 +342,7 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 
 	// get the length of the longest class name
 	mut l := result.class_counts.keys().map(it.len)
-	l << 9	// to make sure that the minimum length covers up to 5 digits
+	l << 9 // to make sure that the minimum length covers up to 5 digits
 	l_max := array_max(l)
 	println(chalk.fg(chalk.style('Confusion Matrix' +
 		if result.repetitions > 1 { ' (values averaged over $result.repetitions repetitions):' } else { ':' },
