@@ -196,14 +196,14 @@ fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
 		} else {
 			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
 		},
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:',
+		'Prevalence weighting of nearest neighbor counts: $weight_string '
 	]
 		print_array(results_array)
+		println(chalk.fg(chalk.style('Results:','bold'), 'green'))
 		mut metrics := get_metrics(result) ?
 	if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: ${percent:5.2f}% raw, ${metrics.balanced_accuracy * 100:5.2f}% balanced)')
+			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
 		} else {
 			show_expanded_result(metrics, result, opts) ?
 			print_confusion_matrix(result)
@@ -217,7 +217,8 @@ fn show_expanded_result(metrics Metrics, result CrossVerifyResult, opts Options)
 	show_multiple_classes_stats(metrics, result) ?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
-		println('   TP    FP    TN    FN Sensitivity Specificity    PPV    NPV    F1 Score')
+		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
+		println('   TP    FP    TN    FN  Sens\'y Spec\'y PPV    NPV    F1 Score  Raw Acc\'y  Bal\'d')
 		println('${get_binary_stats(result)}')
 	}
 }
@@ -225,14 +226,10 @@ fn show_expanded_result(metrics Metrics, result CrossVerifyResult, opts Options)
 // show_multiple_classes_stats
 fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
 	mut show_result := []string{}
-	// mut metrics := Metrics{
-	// 	class_counts: get_map_values(result.class_counts)
-	// }
-	// mut metrics := get_metrics(result) ?
 	for i, class in result.class_counts.keys() {
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${metrics.precision[i]:5.3f}     ${metrics.recall[i]:5.3f}       ${metrics.f1_score[i]:5.3f}'
 	}
-	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (raw accuracy: ${f32(result.correct_count) * 100 / result.total_count:6.2f}%; balanced accuracy: ${metrics.balanced_accuracy * 100:6.2f}%)'
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)'
 	for i, avg_type in metrics.avg_type {
 		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
 	}
@@ -289,15 +286,13 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	m.avg_recall << arrays.sum(m.recall) ? / count
 	m.avg_f1_score << arrays.sum(m.f1_score) ? / count
 	m.avg_type << 'macro'
-	// multiclass balanced accuracy is the arithmetic mean of the recalls
-	m.balanced_accuracy = m.avg_recall[0]
-	// tot := arrays.sum(m.class_counts) ?
-
+	
 	m.avg_precision << wt_avg(m.precision, m.class_counts) ?
 	m.avg_recall << wt_avg(m.recall, m.class_counts) ?
 	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts) ?
 	m.avg_type << 'weighted'
-
+	// multiclass balanced accuracy is the arithmetic mean of the recalls
+	m.balanced_accuracy = m.avg_recall[0]
 	return m
 }
 
@@ -390,21 +385,7 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 	}
 }
 
-// get_binary_stats
-fn get_binary_stats(result CrossVerifyResult) string {
-	pos_class := result.pos_neg_classes[0]
-	neg_class := result.pos_neg_classes[1]
-	t_p := result.correct_inferences[pos_class]
-	t_n := result.correct_inferences[neg_class]
-	f_p := result.incorrect_inferences[pos_class]
-	f_n := result.incorrect_inferences[neg_class]
-	sens := t_p / f64(t_p + f_n)
-	spec := t_n / f64(t_n + f_p)
-	ppv := t_p / f64(t_p + f_p)
-	npv := t_n / f64(t_n + f_n)
-	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
-	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5} ${sens:11.3f} ${spec:11.3f} ${ppv:6.3f} ${npv:6.3f}  ${f1_score:10.3f}'
-}
+
 
 // show_expanded_explore_result
 fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
@@ -477,14 +458,10 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 		} else {
 			if pos_neg_classes[0] != '' {
 				println('A correct classification to "${pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${pos_neg_classes[1]}" is a True Negative (TN).')
-				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN Sensitivity Specificity    PPV    NPV    F1 Score',
+				println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
+				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN  Sens\'y Spec\'y PPV    NPV    F1 Score  Raw Acc\'y  Bal\'d',
 					'underline'), 'blue'))
 			} else {
-				// println(chalk.fg('                                                    Cases in         Correctly        Incorrectly  Wrongly classified',
-				// 	'blue'))
-				// println(chalk.fg(chalk.style('Attributes    Bins   Class                          test set          inferred           inferred     into this class',
-				// 	'underline'), 'blue'))
-
 				println(chalk.fg('Attributes     Bins',
 		'green'))
 				println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
@@ -494,12 +471,15 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 	}
 }
 
-// show_explore_line
+// show_explore_line displays on the console the results of each 
+// cross-validation or verification during an explore session.
 fn show_explore_line(result CrossVerifyResult, opts Options) ? {
+	// do nothing if neither the -s or the -e flag was set
 	if opts.show_flag || opts.expanded_flag {
-		metrics := get_metrics(result)?
+		
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			metrics := get_metrics(result)?
 			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
@@ -510,6 +490,23 @@ fn show_explore_line(result CrossVerifyResult, opts Options) ? {
 			}
 		}
 	}
+}
+// get_binary_stats
+fn get_binary_stats(result CrossVerifyResult) string {
+	pos_class := result.pos_neg_classes[0]
+	neg_class := result.pos_neg_classes[1]
+	t_p := result.correct_inferences[pos_class]
+	t_n := result.correct_inferences[neg_class]
+	f_p := result.incorrect_inferences[pos_class]
+	f_n := result.incorrect_inferences[neg_class]
+	raw_acc := result.correct_count * 100 / f64(result.total_count)
+	sens := t_p / f64(t_p + f_n)
+	spec := t_n / f64(t_n + f_p)
+	ppv := t_p / f64(t_p + f_p)
+	npv := t_n / f64(t_n + f_n)
+	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
+	bal_acc := (sens + spec) * 50
+	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5}  ${sens:5.3f}  ${spec:5.3f}  ${ppv:5.3f}  ${npv:5.3f}  ${f1_score:5.3f}     ${raw_acc:6.2f}%  ${bal_acc:6.2f}%'
 }
 
 // get_pos_neg_classes

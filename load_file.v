@@ -56,7 +56,7 @@ fn extract_words(line string) []string {
 	for tab_splitted in line.split('\t') {
 		splitted << tab_splitted
 	}
-	println('splitted: $splitted')
+	// println('splitted: $splitted')
 	return splitted
 }
 
