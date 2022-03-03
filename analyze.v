@@ -27,6 +27,7 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 		class_counts: ds.class_counts
 	}
 	mut missing_vals := ds.data.map(missing_values(it))
+	println('missing_values in analyze_dataset: $missing_vals')
 	mut indices_of_useful_attributes := ds.useful_continuous_attributes.keys()
 	indices_of_useful_attributes << ds.useful_discrete_attributes.keys()
 	mut atts := []Attribute{}

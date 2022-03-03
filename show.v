@@ -13,6 +13,7 @@ module hamnn
 
 import etienne_napoleone.chalk
 import arrays
+import strings
 // import math
 
 // show_analyze prints out to the console, a series of tables detailing a
@@ -301,11 +302,12 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 
 // pad
 fn pad(l int) string {
-	mut s := ' '
-	for _ in 1 .. l {
-		s += ' '
-	}
-	return s
+	// mut s := ' '
+	// for _ in 1 .. l {
+	// 	s += ' '
+	// }
+	// return s
+	return strings.repeat(' '[0], l)
 }
 
 // print_confusion_matrix
