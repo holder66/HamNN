@@ -54,25 +54,29 @@ pub fn show_analyze(result AnalyzeResult) {
 	show << 'Total:     ${types.len:6}'
 	print_array(show)
 	show = []
-	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green'))
+	disc_atts := result.attributes.filter(it.for_training && it.att_type == 'D')
+	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green') + ' ($disc_atts.len attributes)')
 	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'),
 		'blue'))
-	for attr in result.attributes.filter(it.for_training && it.att_type == 'D') {
+	for attr in disc_atts {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.uniques:7}'
 	}
 	print_array(show)
+
 	show = []
-	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green'))
+	cont_atts := result.attributes.filter(it.for_training && it.att_type == 'C')
+	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green') + ' ($cont_atts.len attributes)')
 
 	println(chalk.fg(chalk.style(' Index  Name                               Min         Max',
 		'underline'), 'blue'))
-	for attr in result.attributes.filter(it.for_training && it.att_type == 'C') {
+	for attr in cont_atts {
 		show << '${attr.id:6}  ${attr.name:-27} ${attr.min:10.3g}  ${attr.max:10.3g}'
 	}
 	print_array(show)
+
 	show = []
 	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"', 'bold'),
-		'green'))
+		'green') + ' ($result.class_counts.len classes)')
 	println(chalk.fg(chalk.style('Class Value           Cases', 'underline'), 'blue'))
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
@@ -302,11 +306,6 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 
 // pad
 fn pad(l int) string {
-	// mut s := ' '
-	// for _ in 1 .. l {
-	// 	s += ' '
-	// }
-	// return s
 	return strings.repeat(' '[0], l)
 }
 
