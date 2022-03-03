@@ -342,7 +342,6 @@ fn set_class_struct(ds Dataset) Class {
 	return cl
 }
 
-
 fn extract_types(word string) []string {
 	type_att := word.split('#')
 	if type_att.len == 1 {

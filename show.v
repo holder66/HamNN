@@ -55,7 +55,8 @@ pub fn show_analyze(result AnalyzeResult) {
 	print_array(show)
 	show = []
 	disc_atts := result.attributes.filter(it.for_training && it.att_type == 'D')
-	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green') + ' ($disc_atts.len attributes)')
+	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green') +
+		' ($disc_atts.len attributes)')
 	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'),
 		'blue'))
 	for attr in disc_atts {
@@ -65,7 +66,8 @@ pub fn show_analyze(result AnalyzeResult) {
 
 	show = []
 	cont_atts := result.attributes.filter(it.for_training && it.att_type == 'C')
-	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green') + ' ($cont_atts.len attributes)')
+	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green') +
+		' ($cont_atts.len attributes)')
 
 	println(chalk.fg(chalk.style(' Index  Name                               Min         Max',
 		'underline'), 'blue'))
@@ -75,8 +77,8 @@ pub fn show_analyze(result AnalyzeResult) {
 	print_array(show)
 
 	show = []
-	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"', 'bold'),
-		'green') + ' ($result.class_counts.len classes)')
+	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"', 'bold'), 'green') +
+		' ($result.class_counts.len classes)')
 	println(chalk.fg(chalk.style('Class Value           Cases', 'underline'), 'blue'))
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
@@ -151,8 +153,6 @@ fn show_validate(result ValidateResult, opts Options) {
 	}
 }
 
-
-
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) ? {
 	// println(result)
@@ -166,18 +166,20 @@ fn show_verify(result CrossVerifyResult, opts Options) ? {
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),'magenta'))
+		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
+			'magenta'))
 		folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
 		mut results_array := [
 			'Partitioning: $folding_string' +
 				if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
-				if opts.random_pick { ' with random selection of instances' } else { '' }]
-				print_array(results_array)
+				if opts.random_pick { ' with random selection of instances' } else { '' },
+		]
+		print_array(results_array)
 		show_cross_or_verify_result(result, opts) ?
 	}
 }
 
-// show_cross_or_verify_result 
+// show_cross_or_verify_result
 fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
 	// println('result in show_cross_or_verify_result: $result')
 	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
@@ -190,24 +192,23 @@ fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
 	results_array := [
 		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
-
 		if result.binning.lower == 0 {
 			'No continuous attributes, thus no binning'
 		} else {
 			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
 		},
-		'Prevalence weighting of nearest neighbor counts: $weight_string '
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 	]
-		print_array(results_array)
-		println(chalk.fg(chalk.style('Results:','bold'), 'green'))
-		mut metrics := get_metrics(result) ?
+	print_array(results_array)
+	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
+	mut metrics := get_metrics(result) ?
 	if !opts.expanded_flag {
-			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
-		} else {
-			show_expanded_result(metrics, result, opts) ?
-			print_confusion_matrix(result)
-		}
+		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
+	} else {
+		show_expanded_result(metrics, result, opts) ?
+		print_confusion_matrix(result)
+	}
 }
 
 // show_expanded_result
@@ -218,7 +219,7 @@ fn show_expanded_result(metrics Metrics, result CrossVerifyResult, opts Options)
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-		println('   TP    FP    TN    FN  Sens\'y Spec\'y PPV    NPV    F1 Score  Raw Acc\'y  Bal\'d')
+		println("   TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd")
 		println('${get_binary_stats(result)}')
 	}
 }
@@ -236,7 +237,6 @@ fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
 	print_array(show_result)
 }
 
-
 // get_show_bins
 fn get_show_bins(bins []int) string {
 	if bins[0] == 0 {
@@ -248,18 +248,17 @@ fn get_show_bins(bins []int) string {
 	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
-
 struct Metrics {
 mut:
-	precision     []f64
-	recall        []f64
-	f1_score      []f64
-	avg_precision []f64
-	avg_recall    []f64
-	avg_f1_score  []f64
-	avg_type      []string
+	precision         []f64
+	recall            []f64
+	f1_score          []f64
+	avg_precision     []f64
+	avg_recall        []f64
+	avg_f1_score      []f64
+	avg_type          []string
 	balanced_accuracy f64
-	class_counts  []int
+	class_counts      []int
 }
 
 // append_metric
@@ -286,7 +285,7 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	m.avg_recall << arrays.sum(m.recall) ? / count
 	m.avg_f1_score << arrays.sum(m.f1_score) ? / count
 	m.avg_type << 'macro'
-	
+
 	m.avg_precision << wt_avg(m.precision, m.class_counts) ?
 	m.avg_recall << wt_avg(m.recall, m.class_counts) ?
 	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts) ?
@@ -296,7 +295,7 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	return m
 }
 
-// get_metrics 
+// get_metrics
 fn get_metrics(result CrossVerifyResult) ?Metrics {
 	mut metrics := Metrics{
 		class_counts: get_map_values(result.class_counts)
@@ -305,11 +304,9 @@ fn get_metrics(result CrossVerifyResult) ?Metrics {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
 	}
-	metrics.avg_metrics()?
+	metrics.avg_metrics() ?
 	return metrics
 }
-
-
 
 // pad
 fn pad(l int) string {
@@ -385,15 +382,13 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 	}
 }
 
-
-
 // show_expanded_explore_result
 fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(get_metrics(result)?, result) ?
+		show_multiple_classes_stats(get_metrics(result) ?, result) ?
 	}
 }
 
@@ -459,38 +454,37 @@ fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) 
 			if pos_neg_classes[0] != '' {
 				println('A correct classification to "${pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${pos_neg_classes[1]}" is a True Negative (TN).')
 				println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-				println(chalk.fg(chalk.style('Attributes    Bins     TP    FP    TN    FN  Sens\'y Spec\'y PPV    NPV    F1 Score  Raw Acc\'y  Bal\'d',
+				println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 					'underline'), 'blue'))
 			} else {
-				println(chalk.fg('Attributes     Bins',
-		'green'))
+				println(chalk.fg('Attributes     Bins', 'green'))
 				println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
-		'green'))
+					'green'))
 			}
 		}
 	}
 }
 
-// show_explore_line displays on the console the results of each 
+// show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
 fn show_explore_line(result CrossVerifyResult, opts Options) ? {
 	// do nothing if neither the -s or the -e flag was set
 	if opts.show_flag || opts.expanded_flag {
-		
 		if !opts.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			metrics := get_metrics(result)?
+			metrics := get_metrics(result) ?
 			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 			} else {
 				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-				show_multiple_classes_stats(get_metrics(result)?, result) ?
+				show_multiple_classes_stats(get_metrics(result) ?, result) ?
 			}
 		}
 	}
 }
+
 // get_binary_stats
 fn get_binary_stats(result CrossVerifyResult) string {
 	pos_class := result.pos_neg_classes[0]

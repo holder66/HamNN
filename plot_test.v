@@ -41,8 +41,8 @@ fn test_explore_plot() ? {
 	mut opts := Options{
 		number_of_attributes: [2, 7]
 		bins: [2, 8]
-		show_flag: true
-		expanded_flag: true
+		// show_flag: true
+		// expanded_flag: true
 		graph_flag: true
 		weighting_flag: true
 		exclude_flag: true

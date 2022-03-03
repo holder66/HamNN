@@ -36,7 +36,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	if ds.useful_continuous_attributes.len != 0 {
 		binning = get_binning(opts.bins)
 	}
-	
+
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
 	// create an array of the unique class values
