@@ -51,6 +51,22 @@ pub fn load_instances_file(path string) ?ValidateResult {
 	return instances
 }
 
+fn extract_words(line string) []string {
+	mut splitted := []string{}
+	for tab_splitted in line.split('\t') {
+		splitted << tab_splitted
+	}
+	println('splitted: $splitted')
+	return splitted
+}
+
+fn strip(s string) string {
+	if s.starts_with("'") && s.ends_with("'") {
+		return s[1..s.len - 1]
+	}
+	return s
+}
+
 // load_arff_file
 fn load_arff_file(path string) Dataset {
 	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
@@ -60,14 +76,12 @@ fn load_arff_file(path string) Dataset {
 	attributes := content.filter(it != '').map(utf8.to_lower(it)).filter(it.starts_with('@attribute'))
 	for line in attributes {
 		if line.ends_with('}') {
-			ds.attribute_names << line.split('{')[0].split(' ')[1].trim_space()
+			ds.attribute_names << strip(line.split('{')[0].split(' ')[1].trim_space())
 			ds.attribute_types << 'string'
 			ds.attribute_flags << [line.split_any('{}')[1]]
 		} else {
-			ds.attribute_names << [line.split_any(' \t')[1]]
-			// println(ds.attribute_names)
+			ds.attribute_names << [strip(line.split_any(' \t')[1])]
 			ds.attribute_types << [line.split_any(' \t').last()]
-			// println(ds.attribute_types)
 			ds.attribute_flags << ['']
 		}
 	}
@@ -79,9 +93,8 @@ fn load_arff_file(path string) Dataset {
 			break
 		}
 	}
-	// println(content[start_data..].filter(!it.starts_with('%')).filter(it != '').map(it.split(',')))
-	ds.data = transpose(content[start_data..].filter(!it.starts_with('%')).filter(it != '').map(it.split(',')))
-
+	data := transpose(content[start_data..].filter(!it.starts_with('%')).filter(it != '').map(it.split(',')))
+	ds.data = data.map(it.map(strip(it)))
 	ds.inferred_attribute_types = infer_attribute_types_arff(ds)
 	ds.Class = set_class_struct(ds)
 	ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
@@ -329,14 +342,6 @@ fn set_class_struct(ds Dataset) Class {
 	return cl
 }
 
-fn extract_words(line string) []string {
-	mut splitted := []string{}
-	for tab_splitted in line.split('\t') {
-		splitted << tab_splitted
-	}
-	// println('splitted: $splitted')
-	return splitted
-}
 
 fn extract_types(word string) []string {
 	type_att := word.split('#')
