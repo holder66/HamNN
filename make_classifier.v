@@ -25,6 +25,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		Class: ds.Class
 		Options: opts
 		datafile_path: ds.path
+		struct_type: '.Classifier'
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set

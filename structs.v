@@ -26,6 +26,7 @@ struct ContinuousAttribute {
 pub struct Dataset {
 	Class
 pub mut:
+struct_type string = '.Dataset'
 	path                         string
 	attribute_names              []string
 	attribute_flags              []string
@@ -64,6 +65,7 @@ mut:
 
 pub struct RankingResult {
 pub mut:
+	struct_type string = '.RankingResult'
 	path                       string
 	exclude_flag               bool
 	binning                    Binning
@@ -85,6 +87,7 @@ pub struct Classifier {
 	Options
 	Class
 pub mut:
+ 	struct_type 	string = '.Classifier'
 	datafile_path      string
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
@@ -109,6 +112,7 @@ pub mut:
 // default values to be passed to functions.
 pub struct Options {
 pub mut:
+	struct_type 	string = '.Options'
 	args                 []string
 	non_options          []string
 	command              string
@@ -160,6 +164,7 @@ pub mut:
 
 pub struct AnalyzeResult {
 pub mut:
+	struct_type 	string = '.AnalyzeResult'
 	environment   Environment
 	datafile_path string
 	datafile_type string
@@ -170,6 +175,7 @@ pub mut:
 
 pub struct ClassifyResult {
 pub mut:
+	struct_type 	string = '.ClassifyResult'
 	index                      int
 	inferred_class             string
 	labeled_class              string
@@ -190,6 +196,7 @@ pub mut:
 // Returned by cross_validate() and verify()
 pub struct CrossVerifyResult {
 pub mut:
+	struct_type 	string = '.CrossVerifyResult'
 	labeled_classes      []string
 	actual_classes       []string
 	inferred_classes     []string
@@ -219,6 +226,7 @@ pub mut:
 
 pub struct ExploreResult {
 pub mut:
+	struct_type 	string = '.ExploreResult'
 	path                 string
 	testfile_path        string
 	exclude_flag         bool
@@ -243,6 +251,7 @@ pub mut:
 pub struct ValidateResult {
 	Class
 pub mut:
+	struct_type 	string = '.ValidateResult'
 	path             string
 	inferred_classes []string
 	counts           [][]int
