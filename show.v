@@ -113,10 +113,10 @@ pub fn show_classifier(cl Classifier) {
 		' when calculating rank values')
 	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
 	println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
-	println(chalk.fg(chalk.style('Attribute                   Type  Rank Value   Uniques       Min        Max  Bins',
+	println(chalk.fg(chalk.style('Index  Attribute                   Type  Rank Value   Uniques       Min        Max  Bins',
 		'underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
-		println('${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
+		println('${val.index:5}  ${attr:-27} ${val.attribute_type:-4}  ${val.rank_value:10.2f}' +
 			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' })
 	}
 	println(chalk.fg(chalk.style('\nClassifier History:', 'bold'), 'green'))

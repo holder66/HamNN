@@ -78,6 +78,7 @@ pub mut:
 	maximum           f32
 	bins              int
 	rank_value        f32
+	index             int
 }
 
 pub struct Classifier {

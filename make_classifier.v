@@ -65,6 +65,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 				maximum: max
 				bins: ra.bins
 				rank_value: ra.rank_value
+				index: ra.attribute_index
 			}
 		} else { // ie for discrete attributes
 			attr_string_values = ds.useful_discrete_attributes[ra.attribute_index]
@@ -75,6 +76,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 				attribute_type: ra.inferred_attribute_type
 				translation_table: translation_table
 				rank_value: ra.rank_value
+				index: ra.attribute_index
 			}
 		}
 		attr_binned_values << binned_values.map(byte(it))
