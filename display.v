@@ -19,10 +19,10 @@ pub fn display_file(opts Options) ? {
 			saved_rr := json.decode(RankingResult, s) or { panic('Failed to parse json') }
 		show_rank_attributes(saved_rr)
 		}
-		// s.contains('"struct_type":".Classifier"') {
-		// 	saved_cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
-		// show_classifier(saved_cl)
-		// }
+		s.contains('"struct_type":".AnalyzeResult"') {
+			saved_ar := json.decode(AnalyzeResult, s) or { panic('Failed to parse json') }
+		show_analyze(saved_ar)
+		}
 		// s.contains('"struct_type":".Classifier"') {
 		// 	saved_cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
 		// show_classifier(saved_cl)
