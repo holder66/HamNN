@@ -412,64 +412,61 @@ fn get_multiclass_stats(class string, result CrossVerifyResult) (f64, f64, f64) 
 }
 
 // show_explore_header
-fn show_explore_header(pos_neg_classes []string, binning Binning, opts Options) {
-	if opts.show_flag || opts.expanded_flag {
+fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 		mut explore_type_string := ''
-		if opts.testfile_path == '' {
-			explore_type_string = if opts.folds == 0 { 'leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validation' + if opts.repetitions > 0 { '\n ($opts.repetitions repetitions' + if opts.random_pick { ', with random selection of instances)' } else { ')' }
+		if results.testfile_path == '' {
+			explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
 			 } else { ''
 			 }
 		} else {
-			explore_type_string = 'verification with "$opts.testfile_path"'
+			explore_type_string = 'verification with "$results.testfile_path"'
 		}
-		println(chalk.fg(chalk.style('\nExplore "$opts.datafile_path" using $explore_type_string',
+		println(chalk.fg(chalk.style('\nExplore "$results.path" using $explore_type_string',
 			'underline'), 'magenta'))
-		if binning.lower == 0 {
+		if results.binning.lower == 0 {
 			println('No continuous attributes, thus no binning')
 		} else {
-			println('Binning range for continuous attributes: from $binning.lower to $binning.upper with interval $binning.interval')
+			println('Binning range for continuous attributes: from $results.binning.lower to $results.binning.upper with interval $results.binning.interval')
 		}
-		if opts.uniform_bins {
+		if results.uniform_bins {
 			println('(same number of bins for all continous attributes)')
 		}
-		if opts.exclude_flag {
-			println('Excluding missing values')
-		}
-		if opts.weighting_flag {
-			println('Weighting nearest neighbor counts by class prevalences')
-		}
-		if !opts.expanded_flag {
+		println('Missing values: ' + if results.exclude_flag {'excluded'} else {'included'})
+		println(if results.weighting_flag {'Weighting'} else {'Not weighting'} + ' nearest neighbor counts by class prevalences')
+		println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
+		if !settings.expanded_flag {
 			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
 				'underline'), 'blue'))
 		} else {
-			if pos_neg_classes[0] != '' {
-				println('A correct classification to "${pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${pos_neg_classes[1]}" is a True Negative (TN).')
+			if results.pos_neg_classes[0] != '' {
+				println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 				println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
 				println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 					'underline'), 'blue'))
 			} else {
-				println(chalk.fg('Attributes     Bins', 'green'))
-				println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
-					'green'))
+				println(chalk.fg(chalk.style('Attributes     Bins','underline'), 'blue'))
+				println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score','underline'), 'blue'))
 			}
 		}
-	}
+	
 }
+
+
 
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
-fn show_explore_line(result CrossVerifyResult, opts Options) ? {
+fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 	// do nothing if neither the -s or the -e flag was set
-	if opts.show_flag || opts.expanded_flag {
-		if !opts.expanded_flag {
+	if settings.show_flag || settings.expanded_flag {
+		if !settings.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			metrics := get_metrics(result) ?
-			println('${opts.number_of_attributes[0]:10}  ${get_show_bins(opts.bins)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
-				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
 			} else {
-				println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}')
 				show_multiple_classes_stats(get_metrics(result) ?, result) ?
 			}
 		}

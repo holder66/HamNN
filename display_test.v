@@ -44,21 +44,21 @@ fn testsuite_begin() ? {
 // 	display_file(opts.outputfile_path)?
 // }
 
-fn test_display_ranking_result()? {
-	// rank a dataset file, save the result, then display
-	mut opts := Options{
-		command: 'rank'
-		outputfile_path: 'tempfolder/rank_result'
-	}
-	_ = rank_attributes(load_file('datasets/UCI/anneal.arff'), opts)
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
-	display_file(opts.outputfile_path, settings)?
-	// repeat for displaying a plot
-	settings.graph_flag = true
-	display_file(opts.outputfile_path, settings)?
-}
+// fn test_display_ranking_result()? {
+// 	// rank a dataset file, save the result, then display
+// 	mut opts := Options{
+// 		command: 'rank'
+// 		outputfile_path: 'tempfolder/rank_result'
+// 	}
+// 	_ = rank_attributes(load_file('datasets/UCI/anneal.arff'), opts)
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
+// 	display_file(opts.outputfile_path, settings)?
+// 	// repeat for displaying a plot
+// 	settings.graph_flag = true
+// 	display_file(opts.outputfile_path, settings)?
+// }
 
 // fn test_display_validate_result()? {
 // 	// validate a dataset file, save the result, then display
@@ -83,3 +83,56 @@ fn test_display_ranking_result()? {
 // 	_ = verify(cl, opts)?
 // 	display_file(opts.outputfile_path)?
 // }
+
+// fn test_display_explore_result_cross()? {
+// 	mut opts := Options{
+// 		command: 'explore'
+// 		datafile_path: 'datasets/UCI/iris.arff'
+// 		bins: [2,6]
+// 		concurrency_flag: true
+// 		outputfile_path: 'tempfolder/explore_result'
+// 		// show_flag: true
+// 	}
+// 	_ = explore(load_file(opts.datafile_path), opts) ?
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
+// 	display_file(opts.outputfile_path, settings)?
+// 	settings.expanded_flag = true
+// 	display_file(opts.outputfile_path, settings)?
+
+// 	// repeat for a binary class dataset
+// 	opts.datafile_path = 'datasets/bcw174test'
+// 	_ = explore(load_file(opts.datafile_path), opts) ?
+// 	settings.expanded_flag = false
+// 	display_file(opts.outputfile_path, settings)?
+// 	settings.expanded_flag = true
+// 	display_file(opts.outputfile_path, settings)?
+// }
+
+fn test_display_explore_result_verify()? {
+	mut opts := Options{
+		command: 'explore'
+		datafile_path: 'datasets/soybean-large-train.tab'
+		testfile_path: 'datasets/soybean-large-test.tab'
+		bins: [2,6]
+		concurrency_flag: true
+		outputfile_path: 'tempfolder/explore_result'
+	}
+	_ = explore(load_file(opts.datafile_path), opts) ?
+	mut settings := DisplaySettings{
+		show_flag: true
+	}
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
+
+	// repeat for a binary class dataset
+	opts.datafile_path = 'datasets/bcw350train'
+	opts.testfile_path = 'datasets/bcw174test'
+	_ = explore(load_file(opts.datafile_path), opts) ?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
+}

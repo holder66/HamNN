@@ -245,13 +245,22 @@ pub mut:
 	confusion_matrix     [][]string
 }
 
+pub struct AttributeRange {
+pub mut:
+	start int
+	end int
+	att_interval int
+}
+
 pub struct ExploreResult {
 	Parameters
+	AttributeRange
 	DisplaySettings
 pub mut:
 	struct_type 	string = '.ExploreResult'
 	path                 string
 	testfile_path        string
+	pos_neg_classes []string
 	folds                int
 	repetitions          int
 	random_pick          bool

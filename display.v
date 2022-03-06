@@ -7,11 +7,18 @@ import json
 // display_file 
 pub fn display_file(path string, settings DisplaySettings) ? {
 	// determine what kind of file, then call the appropriate functions in show and plot
-	// path := opts.datafile_path
-	// println(opts)
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
-	// println(s.contains('"struct_type":".Classifier"'))
 	match true {
+		s.contains('"struct_type":".ExploreResult"') {
+			saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
+			show_explore_header(saved_er, settings)
+			for result in saved_er.array_of_results {
+			show_explore_line(result, settings) ?
+		}
+			if settings.graph_flag { 
+				// plot_explore(saved_er)}
+			}
+		}
 		s.contains('"struct_type":".Classifier"') {
 			saved_cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
 		show_classifier(saved_cl)
@@ -35,6 +42,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
 		show_verify(saved_vr)?
 		}
+
 		else { println('File type not recognized!') }
 	}
 	

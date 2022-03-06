@@ -3,7 +3,7 @@ module hamnn
 
 import json
 import os
-import math
+// import math
 
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
@@ -33,19 +33,18 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	mut results := ExploreResult{
 		path: opts.datafile_path
 		testfile_path: opts.testfile_path
-		exclude_flag: opts.exclude_flag
-		weighting_flag: opts.weighting_flag
-		uniform_bins: opts.uniform_bins
-		number_of_attributes: opts.number_of_attributes
+		Parameters: opts.Parameters
+		DisplaySettings: opts.DisplaySettings
+		AttributeRange: get_attribute_range(opts.number_of_attributes, ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len)
 		folds: opts.folds
 		repetitions: opts.repetitions
 		random_pick: opts.random_pick
-	}
-	pos_neg_classes := get_pos_neg_classes(ds.class_counts)
+		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
+
+	}	
 	mut result := CrossVerifyResult{
-		pos_neg_classes: pos_neg_classes
+		pos_neg_classes: results.pos_neg_classes
 	}
-	// mut percent := 0.0
 	mut attribute_max := ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len
 	if ex_opts.verbose_flag && opts.command == 'explore' {
 		println('ex_opts in explore: $ex_opts')
@@ -56,78 +55,24 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		ex_opts.bins = [0]
 	}
 	results.binning = get_binning(ex_opts.bins)
-	mut start_attr := 1
-	mut end_attr := attribute_max
-	mut interval_attr := 1
-
-	// if ex_opts.number_of_attributes == [0] { // ie, range over all attributes
-	// 	end_attr = attribute_max
-	// } else if ex_opts.number_of_attributes.len == 1 {
-	// 	end_attr = ex_opts.number_of_attributes[0]
-	// } else if ex_opts.number_of_attributes.len >= 2 {
-	// 	start_attr = ex_opts.number_of_attributes[0]
-	// 	end_attr = ex_opts.number_of_attributes[1]
-	// 	if ex_opts.number_of_attributes.len == 3 {
-	// 		interval_attr = ex_opts.number_of_attributes[2]
-	// 	}
-	// }
-
-	att_range := ex_opts.number_of_attributes
-	if att_range != [0] {
-		if att_range.len == 3 {
-			interval_attr = att_range.last()
-			end_attr = math.min(attribute_max, att_range[1])
-		} else {
-			end_attr = math.min(attribute_max, att_range.last())
-			if att_range.len == 2 {
-				start_attr = math.min(attribute_max, att_range[0])
-			}
-		}
-	}
-
-	// for uniform binning (ie, the same number of bins
-	// for all continuous attributes)
-	// mut start_bin := 2
-	// mut end_bin := start_bin
-	// mut interval_bin := 1
-	// if ex_opts.bins.len == 1 || (ex_opts.bins.len == 2 && ex_opts.bins[0] == ex_opts.bins[1]) {
-	// 	start_bin = ex_opts.bins[0]
-	// 	end_bin = start_bin
-	// } else if ex_opts.bins.len >= 2 {
-	// 	start_bin = ex_opts.bins[0]
-	// 	end_bin = ex_opts.bins[1]
-	// 	if ex_opts.bins.len == 3 {
-	// 		interval_bin = ex_opts.bins[2]
-	// 	}
-	// }
-	// if ex_opts.bins == [0] {
-	// 	start_bin = 0
-	// 	end_bin = 0
-	// }
-	// mut lower := 2 // since less than 2 bins makes no sense!
-	// mut upper := 16 	// ie the default value in the Options struct
-	// mut interval := 1
-	// if opts.bins.len >= 2 {
-	// 	lower = opts.bins[0]
-	// 	upper = opts.bins[1]
-	// }
-	// if opts.bins.len == 3 {
-	// 	interval = opts.bins[2]
-	// }
+	
 	binning := results.binning
 
 	if opts.verbose_flag && opts.command == 'explore' {
-		println('attributing: $start_attr $end_attr $interval_attr')
-		println('binning: $binning.lower $binning.upper $binning.interval')
+		println('attributing: $results.AttributeRange')
+		println('binning: $results.binning')
 	}
-	show_explore_header(pos_neg_classes, binning, opts)
-	mut atts := start_attr
+	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
+	// show_explore_header(pos_neg_classes, binning, opts)
+	show_explore_header(results, results.DisplaySettings)
+}
+	mut atts := results.start
 	mut bin := binning.lower
 	mut cl := Classifier{}
 	mut array_of_results := []CrossVerifyResult{}
 	// mut plot_data := [][]PlotResult{}
 
-	for atts <= end_attr {
+	for atts <= results.end {
 		ex_opts.number_of_attributes = [atts]
 		bin = binning.lower
 		for bin <= binning.upper {
@@ -142,13 +87,13 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 				cl = make_classifier(ds, ex_opts)
 				result = verify(cl, ex_opts) ?
 			}
-			show_explore_line(result, ex_opts) ?
+			show_explore_line(result, results.DisplaySettings) ?
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
 			array_of_results << result
 			bin += binning.interval
 		}
-		atts += interval_attr
+		atts += results.att_interval
 	}
 	results.array_of_results = array_of_results
 	if opts.graph_flag {
@@ -164,3 +109,34 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	}
 	return results
 }
+
+// get_attribute_range 
+fn get_attribute_range(atts []int, max int) AttributeRange {
+	if atts == [0] {
+		return AttributeRange{
+			start: 1
+			end: max
+			att_interval: 1
+		}
+	}
+	if atts.len == 1 {
+		return AttributeRange{
+			start: 1
+			end: atts[0]
+			att_interval: 1
+		}
+	}
+	if atts.len == 2 {
+		return AttributeRange{
+			start: atts[0]
+			end: atts[1]
+			att_interval: 1
+		}
+	}
+	return AttributeRange{
+		start: atts[0]
+		end: atts[1]
+		att_interval: atts[2]
+	}
+}
+
