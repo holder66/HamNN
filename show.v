@@ -109,10 +109,11 @@ fn show_rank_attributes(result RankingResult) {
 pub fn show_classifier(cl Classifier) {
 	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'),
 		'magenta'))
-	println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-		' when calculating rank values')
-	println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
-	println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
+	// println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
+	// 	' when calculating rank values')
+	// println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
+	// println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
+	show_parameters(cl.Parameters)
 	println(chalk.fg(chalk.style('Index  Attribute                   Type  Rank Value   Uniques       Min        Max  Bins',
 		'underline'), 'blue'))
 	for attr, val in cl.trained_attributes {
@@ -127,40 +128,49 @@ pub fn show_classifier(cl Classifier) {
 	}
 }
 
-// show_validate
-fn show_validate(result ValidateResult, opts Options) {
-	if opts.command == 'validate' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nValidation of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
-			'underline'), 'magenta'))
-		exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-		attr_string := if opts.number_of_attributes[0] == 0 {
-			'all'
-		} else {
-			opts.number_of_attributes[0].str()
-		}
-		weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-		results_array := [
-			'Attributes: $attr_string',
-			'Missing values: $exclude_string',
-			'Bin range for continuous attributes: from ${opts.bins[0]} to ${opts.bins[1]}',
-			'Prevalence weighting of nearest neighbor counts: $weight_string ',
-			'Results:',
-		]
-		print_array(results_array)
-		println('Number of instances: $result.inferred_classes.len')
-		println('Inferred classes: $result.inferred_classes')
-		println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
+// show_parameters 
+fn show_parameters(p Parameters) {
+	exclude_string := if p.exclude_flag { 'excluded' } else { 'included' }
+	attr_string := if p.number_of_attributes[0] == 0 {
+		'all'
+	} else {
+		p.number_of_attributes[0].str()
 	}
+	weight_string := if p.weighting_flag { 'yes' } else { 'no' }
+	results_array := [
+		'Attributes: $attr_string',
+		'Missing values: $exclude_string',
+		if p.binning.lower == 0 {
+		'No continuous attributes, thus no binning'
+	} else {
+		'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
+	},
+		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Results:',
+	]
+	print_array(results_array)
+	
+}
+
+// show_validate
+fn show_validate(result ValidateResult) {
+	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
+		'underline'), 'magenta'))
+	show_parameters(result.Parameters)
+	println('Number of instances validated: $result.inferred_classes.len')
+	println('Inferred classes: $result.inferred_classes')
+	println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
+	
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult, opts Options) ? {
+fn show_verify(result CrossVerifyResult) ? {
 	// println(result)
-	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nVerification of "$opts.testfile_path" using a classifier from "$opts.datafile_path"',
-			'underline'), 'magenta'))
-		show_cross_or_verify_result(result, opts) ?
-	}
+	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
+		'underline'), 'magenta'))
+	show_parameters(result.Parameters)
+	show_cross_or_verify_result(result) ?
+	
 }
 
 // show_crossvalidation
@@ -175,44 +185,25 @@ fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
 				if opts.random_pick { ' with random selection of instances' } else { '' },
 		]
 		print_array(results_array)
-		show_cross_or_verify_result(result, opts) ?
+		show_cross_or_verify_result(result) ?
 	}
 }
 
 // show_cross_or_verify_result
-fn show_cross_or_verify_result(result CrossVerifyResult, opts Options) ? {
-	// println('result in show_cross_or_verify_result: $result')
-	exclude_string := if opts.exclude_flag { 'excluded' } else { 'included' }
-	attr_string := if opts.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		opts.number_of_attributes[0].str()
-	}
-	weight_string := if opts.weighting_flag { 'yes' } else { 'no' }
-	results_array := [
-		'Attributes: $attr_string',
-		'Missing values: $exclude_string',
-		if result.binning.lower == 0 {
-			'No continuous attributes, thus no binning'
-		} else {
-			'Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval'
-		},
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-	]
-	print_array(results_array)
+fn show_cross_or_verify_result(result CrossVerifyResult) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
 	mut metrics := get_metrics(result) ?
-	if !opts.expanded_flag {
+	if !result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
 	} else {
-		show_expanded_result(metrics, result, opts) ?
+		show_expanded_result(metrics, result) ?
 		print_confusion_matrix(result)
 	}
 }
 
 // show_expanded_result
-fn show_expanded_result(metrics Metrics, result CrossVerifyResult, opts Options) ? {
+fn show_expanded_result(metrics Metrics, result CrossVerifyResult) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
 	show_multiple_classes_stats(metrics, result) ?

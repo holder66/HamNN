@@ -22,6 +22,8 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	}
 	// instantiate a struct for the result
 	mut verify_result := CrossVerifyResult{
+			classifier_path: cl.datafile_path
+	testfile_path: opts.testfile_path
 		labeled_classes: test_ds.class_values
 		class_counts: test_ds.class_counts
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
@@ -36,9 +38,17 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	show_verify(verify_result, opts) ?
+	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag)
+	{show_verify(verify_result) ?}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')
+	}
+	if opts.outputfile_path != '' {
+		// s := json.encode(verify_result)
+		// mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
+		// f.write_string(s) or { panic(err.msg) }
+		// f.close()
+		save_json_file(verify_result, opts.outputfile_path)
 	}
 	return verify_result
 }

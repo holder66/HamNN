@@ -17,8 +17,14 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	mut test_ds := load_file(opts.testfile_path)
 	// instantiate a struct for the result
 	mut validate_result := ValidateResult{
+		struct_type: '.ValidateResult'
 		inferred_classes: []string{}
-		path: opts.testfile_path
+		validate_file_path: opts.testfile_path
+		classifier_path: opts.datafile_path
+		exclude_flag: opts.exclude_flag
+		weighting_flag: opts.weighting_flag
+		number_of_attributes: opts.number_of_attributes
+		binning: cl.binning
 	}
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
@@ -43,7 +49,9 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	test_instances := transpose(test_attr_binned_values)
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
-	show_validate(validate_result, opts)
+	if opts.command == 'validate' && (opts.show_flag || opts.expanded_flag) {
+	show_validate(validate_result)
+}
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
 		s := json.encode(validate_result)

@@ -20,7 +20,7 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 		event_date: time.utc()
 		event_environment: get_environment()
 		event: 'append'
-		file_path: instances_to_append.path
+		file_path: instances_to_append.validate_file_path
 	}
 	ext_cl.history << event
 	ext_cl.instances << instances_to_append.instances

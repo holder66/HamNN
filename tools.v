@@ -3,6 +3,16 @@ module hamnn
 
 // import arrays
 import math
+import os
+import json
+
+// save_json_file
+fn save_json_file<T>(u T, path string) {
+	s := json.encode(u)
+	mut f := os.open_file(path, 'w') or { panic(err.msg) }
+	f.write_string(s) or { panic(err.msg) }
+	f.close()
+}
 
 // transpose a 2d array
 fn transpose<T>(matrix [][]T) [][]T {

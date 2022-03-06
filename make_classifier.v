@@ -23,9 +23,10 @@ import json
 pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut cl := Classifier{
 		Class: ds.Class
-		Options: opts
+		Parameters: opts.Parameters
 		datafile_path: ds.path
 		struct_type: '.Classifier'
+		binning: get_binning(opts.bins)
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
@@ -39,6 +40,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut ranked_attributes := ranking_result.array_of_ranked_attributes
 	cl.binning = ranking_result.binning
 	// println('binning in make_classifier: $cl.binning')
+	// println('opts.number_of_attributes: $opts.number_of_attributes')
 	if opts.number_of_attributes[0] != 0 && opts.number_of_attributes[0] < ranked_attributes.len {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}
