@@ -134,21 +134,13 @@ pub mut:
 	non_options          []string
 	command              string
 	bins                 []int = [2, 16]
-	// uniform_bins         bool
 	concurrency_flag     bool
-	// exclude_flag         bool
-	// graph_flag           bool
-	// verbose_flag         bool
-	// number_of_attributes []int = [0]
-	// show_flag            bool
-	// expanded_flag        bool
 	datafile_path        string = 'datasets/developer.tab'
 	testfile_path        string
 	outputfile_path      string
 	classifierfile_path  string
 	instancesfile_path   string
 	help_flag            bool
-	// weighting_flag       bool
 	folds                int
 	repetitions          int
 	random_pick          bool
@@ -238,7 +230,7 @@ pub mut:
 	incorrects_count     int
 	wrong_count          int
 	total_count          int
-	bin_values           []int
+	bin_values           []int // used for displaying the binning range for explore
 	binning              Binning
 	attributes_used      int
 	repetitions          int

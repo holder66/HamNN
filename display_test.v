@@ -72,17 +72,23 @@ fn testsuite_begin() ? {
 // 	display_file(opts.outputfile_path)?
 // }
 
-// fn test_display_verify_result()? {
-// 	// verify a dataset file, save the result, then display
-// 	mut opts := Options{
-// 		command: 'make'
-// 	}
-// 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
-// 	opts.outputfile_path = 'tempfolder/verify_result'
-// 	opts.testfile_path = 'datasets/bcw174test'
-// 	_ = verify(cl, opts)?
-// 	display_file(opts.outputfile_path)?
-// }
+fn test_display_verify_result()? {
+	// verify a dataset file, save the result, then display
+	mut opts := Options{
+		command: 'make'
+		number_of_attributes: [5]
+	}
+	mut settings := DisplaySettings{
+		show_flag: true
+	}
+	cl := make_classifier(load_file('datasets/bcw350train'), opts)
+	opts.outputfile_path = 'tempfolder/verify_result'
+	opts.testfile_path = 'datasets/bcw174test'
+	_ = verify(cl, opts)?
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
+}
 
 // fn test_display_explore_result_cross()? {
 // 	mut opts := Options{
@@ -110,29 +116,29 @@ fn testsuite_begin() ? {
 // 	display_file(opts.outputfile_path, settings)?
 // }
 
-fn test_display_explore_result_verify()? {
-	mut opts := Options{
-		command: 'explore'
-		datafile_path: 'datasets/soybean-large-train.tab'
-		testfile_path: 'datasets/soybean-large-test.tab'
-		bins: [2,6]
-		concurrency_flag: true
-		outputfile_path: 'tempfolder/explore_result'
-	}
-	_ = explore(load_file(opts.datafile_path), opts) ?
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
-	display_file(opts.outputfile_path, settings)?
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)?
+// fn test_display_explore_result_verify()? {
+// 	mut opts := Options{
+// 		command: 'explore'
+// 		datafile_path: 'datasets/soybean-large-train.tab'
+// 		testfile_path: 'datasets/soybean-large-test.tab'
+// 		bins: [2,6]
+// 		concurrency_flag: true
+// 		outputfile_path: 'tempfolder/explore_result'
+// 	}
+// 	_ = explore(load_file(opts.datafile_path), opts) ?
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
+// 	display_file(opts.outputfile_path, settings)?
+// 	settings.expanded_flag = true
+// 	display_file(opts.outputfile_path, settings)?
 
-	// repeat for a binary class dataset
-	opts.datafile_path = 'datasets/bcw350train'
-	opts.testfile_path = 'datasets/bcw174test'
-	_ = explore(load_file(opts.datafile_path), opts) ?
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)?
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)?
-}
+// 	// repeat for a binary class dataset
+// 	opts.datafile_path = 'datasets/bcw350train'
+// 	opts.testfile_path = 'datasets/bcw174test'
+// 	_ = explore(load_file(opts.datafile_path), opts) ?
+// 	settings.expanded_flag = false
+// 	display_file(opts.outputfile_path, settings)?
+// 	settings.expanded_flag = true
+// 	display_file(opts.outputfile_path, settings)?
+// }

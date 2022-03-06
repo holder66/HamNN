@@ -40,7 +40,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
-		show_verify(saved_vr)?
+		show_verify(saved_vr, settings)?
 		}
 
 		else { println('File type not recognized!') }

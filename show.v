@@ -164,12 +164,12 @@ fn show_validate(result ValidateResult) {
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult) ? {
+fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 	// println(result)
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
-	show_cross_or_verify_result(result) ?
+	show_cross_or_verify_result(result, settings) ?
 	
 }
 
@@ -185,15 +185,15 @@ fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
 				if opts.random_pick { ' with random selection of instances' } else { '' },
 		]
 		print_array(results_array)
-		show_cross_or_verify_result(result) ?
+		show_cross_or_verify_result(result, opts.DisplaySettings) ?
 	}
 }
 
 // show_cross_or_verify_result
-fn show_cross_or_verify_result(result CrossVerifyResult) ? {
+fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySettings) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
 	mut metrics := get_metrics(result) ?
-	if !result.expanded_flag {
+	if !settings.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
 	} else {
@@ -230,7 +230,7 @@ fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
 
 // get_show_bins
 fn get_show_bins(bins []int) string {
-	if bins[0] == 0 {
+	if bins == [] || bins[0] == 0 {
 		return '       '
 	}
 	if bins.len == 1 {
@@ -419,9 +419,9 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 			 } else { ''
 			 }
 		} else {
-			explore_type_string = 'verification with "$results.testfile_path"'
+			explore_type_string = 'verification of "$results.testfile_path"'
 		}
-		println(chalk.fg(chalk.style('\nExplore "$results.path" using $explore_type_string',
+		println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path',
 			'underline'), 'magenta'))
 		if results.binning.lower == 0 {
 			println('No continuous attributes, thus no binning')
@@ -456,6 +456,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
 fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
+	// println(result)
 	// do nothing if neither the -s or the -e flag was set
 	if settings.show_flag || settings.expanded_flag {
 		if !settings.expanded_flag {
