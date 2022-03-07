@@ -102,16 +102,23 @@ fn test_display_cross_result() ? {
 		command: 'cross'
 		number_of_attributes: [4]
 		bins: [12]
+		folds: 0
+		repetitions: 0
+		random_pick: false
 		concurrency_flag: true
 	}
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	ds := load_file('datasets/UCI/glass.arff')
+	ds := load_file('datasets/UCI/segment.arff')
 	opts.outputfile_path = 'tempfolder/cross_result'
 	_ = cross_validate(ds, opts) ?
 	display_file(opts.outputfile_path, settings) ?
 	settings.expanded_flag = true
+	opts.folds = 20
+	opts.repetitions = 50
+	opts.random_pick = true
+	_ = cross_validate(ds, opts) ?
 	display_file(opts.outputfile_path, settings) ?
 }
 

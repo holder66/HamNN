@@ -136,7 +136,7 @@ pub mut:
 	struct_type         string = '.Options'
 	args                []string
 	non_options         []string
-	command             string
+	// command             string
 	bins                []int = [2, 16]
 	concurrency_flag    bool
 	datafile_path       string = 'datasets/developer.tab'

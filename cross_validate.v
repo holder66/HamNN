@@ -39,12 +39,14 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	}
 	// instantiate a struct for the result
 	mut cross_result := CrossVerifyResult{
+		classifier_path: ds.path
 		labeled_classes: ds.class_values
 		class_counts: ds.class_counts
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
-		repetitions: repeats
-		command: 'cross'
+		repetitions: opts.repetitions
+		Parameters: opts.Parameters
+		DisplaySettings: opts.DisplaySettings
 	}
 	// if there are no useful continuous attributes, set binning to 0
 	if ds.useful_continuous_attributes.len == 0 {

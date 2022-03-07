@@ -174,13 +174,22 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 		println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
 			'magenta'))
-		folding_string := if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' }
-		mut results_array := [
-			'Partitioning: $folding_string' +
-				if result.repetitions > 0 { ', $result.repetitions Repetitions' } else { '' } +
-				if result.random_pick { ' with random selection of instances' } else { '' },
-		]
-		print_array(results_array)
+		println(
+			'Partitioning: ' + if result.folds == 0 {
+			 'leave-one-out' 
+			} else {
+			'$result.folds-fold' + if result.repetitions > 1 {
+				', $result.repetitions repetitions' + if result.random_pick {
+					' with random selection of instances'
+					} else {
+						''
+					}
+				} else {
+					''
+				}
+			}
+		)
+		show_parameters(result.Parameters)
 		show_cross_or_verify_result(result, settings) ?
 }
 
