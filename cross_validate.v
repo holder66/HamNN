@@ -44,6 +44,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		repetitions: repeats
+		command: 'cross'
 	}
 	// if there are no useful continuous attributes, set binning to 0
 	if ds.useful_continuous_attributes.len == 0 {
@@ -75,8 +76,13 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		cross_result.binning = repetition_result.binning
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
+	if opts.outputfile_path != '' {
+		save_json_file(cross_result, opts.outputfile_path)
+	}
 	// show_results(cross_result, cross_opts)
-	show_crossvalidation(cross_result, cross_opts) ?
+	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
+	show_crossvalidation(cross_result, cross_opts.DisplaySettings) ?
+}
 	return cross_result
 }
 

@@ -35,13 +35,13 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		testfile_path: opts.testfile_path
 		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
-		AttributeRange: get_attribute_range(opts.number_of_attributes, ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len)
+		AttributeRange: get_attribute_range(opts.number_of_attributes,
+			ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len)
 		folds: opts.folds
 		repetitions: opts.repetitions
 		random_pick: opts.random_pick
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
-
-	}	
+	}
 	mut result := CrossVerifyResult{
 		pos_neg_classes: results.pos_neg_classes
 	}
@@ -55,7 +55,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		ex_opts.bins = [0]
 	}
 	results.binning = get_binning(ex_opts.bins)
-	
+
 	binning := results.binning
 
 	if opts.verbose_flag && opts.command == 'explore' {
@@ -63,9 +63,9 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		println('binning: $results.binning')
 	}
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
-	// show_explore_header(pos_neg_classes, binning, opts)
-	show_explore_header(results, results.DisplaySettings)
-}
+		// show_explore_header(pos_neg_classes, binning, opts)
+		show_explore_header(results, results.DisplaySettings)
+	}
 	mut atts := results.start
 	mut bin := binning.lower
 	mut cl := Classifier{}
@@ -111,7 +111,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	return results
 }
 
-// get_attribute_range 
+// get_attribute_range
 fn get_attribute_range(atts []int, max int) AttributeRange {
 	if atts == [0] {
 		return AttributeRange{
@@ -140,4 +140,3 @@ fn get_attribute_range(atts []int, max int) AttributeRange {
 		att_interval: atts[2]
 	}
 }
-

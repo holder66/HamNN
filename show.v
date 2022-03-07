@@ -128,7 +128,7 @@ pub fn show_classifier(cl Classifier) {
 	}
 }
 
-// show_parameters 
+// show_parameters
 fn show_parameters(p Parameters) {
 	exclude_string := if p.exclude_flag { 'excluded' } else { 'included' }
 	attr_string := if p.number_of_attributes[0] == 0 {
@@ -141,15 +141,14 @@ fn show_parameters(p Parameters) {
 		'Attributes: $attr_string',
 		'Missing values: $exclude_string',
 		if p.binning.lower == 0 {
-		'No continuous attributes, thus no binning'
-	} else {
-		'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
-	},
+			'No continuous attributes, thus no binning'
+		} else {
+			'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
+		},
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 		'Results:',
 	]
 	print_array(results_array)
-	
 }
 
 // show_validate
@@ -160,7 +159,6 @@ fn show_validate(result ValidateResult) {
 	println('Number of instances validated: $result.inferred_classes.len')
 	println('Inferred classes: $result.inferred_classes')
 	println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
-	
 }
 
 // show_verify
@@ -170,23 +168,20 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	show_cross_or_verify_result(result, settings) ?
-	
 }
 
 // show_crossvalidation
-fn show_crossvalidation(result CrossVerifyResult, opts Options) ? {
-	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		println(chalk.fg(chalk.style('\nCross-validation of "$opts.datafile_path"', 'underline'),
+fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
+		println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
 			'magenta'))
-		folding_string := if opts.folds == 0 { 'leave-one-out' } else { '$opts.folds-fold' }
+		folding_string := if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' }
 		mut results_array := [
 			'Partitioning: $folding_string' +
-				if opts.repetitions > 0 { ', $opts.repetitions Repetitions' } else { '' } +
-				if opts.random_pick { ' with random selection of instances' } else { '' },
+				if result.repetitions > 0 { ', $result.repetitions Repetitions' } else { '' } +
+				if result.random_pick { ' with random selection of instances' } else { '' },
 		]
 		print_array(results_array)
-		show_cross_or_verify_result(result, opts.DisplaySettings) ?
-	}
+		show_cross_or_verify_result(result, settings) ?
 }
 
 // show_cross_or_verify_result
@@ -413,45 +408,44 @@ fn get_multiclass_stats(class string, result CrossVerifyResult) (f64, f64, f64) 
 
 // show_explore_header
 fn show_explore_header(results ExploreResult, settings DisplaySettings) {
-		mut explore_type_string := ''
-		if results.testfile_path == '' {
-			explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
-			 } else { ''
-			 }
-		} else {
-			explore_type_string = 'verification of "$results.testfile_path"'
-		}
-		println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path',
-			'underline'), 'magenta'))
-		if results.binning.lower == 0 {
-			println('No continuous attributes, thus no binning')
-		} else {
-			println('Binning range for continuous attributes: from $results.binning.lower to $results.binning.upper with interval $results.binning.interval')
-		}
-		if results.uniform_bins {
-			println('(same number of bins for all continous attributes)')
-		}
-		println('Missing values: ' + if results.exclude_flag {'excluded'} else {'included'})
-		println(if results.weighting_flag {'Weighting'} else {'Not weighting'} + ' nearest neighbor counts by class prevalences')
-		println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
-		if !settings.expanded_flag {
-			println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
+	mut explore_type_string := ''
+	if results.testfile_path == '' {
+		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
+		 } else { ''
+		 }
+	} else {
+		explore_type_string = 'verification of "$results.testfile_path"'
+	}
+	println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path',
+		'underline'), 'magenta'))
+	if results.binning.lower == 0 {
+		println('No continuous attributes, thus no binning')
+	} else {
+		println('Binning range for continuous attributes: from $results.binning.lower to $results.binning.upper with interval $results.binning.interval')
+	}
+	if results.uniform_bins {
+		println('(same number of bins for all continous attributes)')
+	}
+	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
+	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
+		' nearest neighbor counts by class prevalences')
+	println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
+	if !settings.expanded_flag {
+		println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
+			'underline'), 'blue'))
+	} else {
+		if results.pos_neg_classes[0] != '' {
+			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
+			println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
+			println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 				'underline'), 'blue'))
 		} else {
-			if results.pos_neg_classes[0] != '' {
-				println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
-				println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-				println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
-					'underline'), 'blue'))
-			} else {
-				println(chalk.fg(chalk.style('Attributes     Bins','underline'), 'blue'))
-				println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score','underline'), 'blue'))
-			}
+			println(chalk.fg(chalk.style('Attributes     Bins', 'underline'), 'blue'))
+			println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
+				'underline'), 'blue'))
 		}
-	
+	}
 }
-
-
 
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.

@@ -50,8 +50,8 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	// for each instance in the test data, perform a classification and compile the results
 	validate_result = classify_to_validate(cl, test_instances, mut validate_result, opts)
 	if opts.command == 'validate' && (opts.show_flag || opts.expanded_flag) {
-	show_validate(validate_result)
-}
+		show_validate(validate_result)
+	}
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
 		s := json.encode(validate_result)

@@ -9,14 +9,14 @@ import os
 // 		os.rmdir_all('tempfolder') ?
 // 	}
 fn testsuite_begin() ? {
- 	os.mkdir_all('tempfolder') ?
-	}
+	os.mkdir_all('tempfolder') ?
+}
 
 // fn testsuite_end() ? {
 // 	os.rmdir_all('tempfolder') ?
 // }
 
-// fn test_display_classifier() ?{
+// fn test_display_classifier() ? {
 // 	// make a classifier and save it, then display the saved classifier file
 // 	mut opts := Options{
 // 		show_flag: false
@@ -31,20 +31,23 @@ fn testsuite_begin() ? {
 // 	mut settings := DisplaySettings{
 // 		show_flag: true
 // 	}
-// 	display_file(path, settings)?
+// 	display_file(path, settings) ?
 // }
 
-// fn test_display_analyze_result()? {
+// fn test_display_analyze_result() ? {
 // 	// analyze a dataset file, save the result, then display
 // 	mut opts := Options{
 // 		command: 'analyze'
 // 		outputfile_path: 'tempfolder/analyze_result'
 // 	}
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
 // 	analyze_dataset(load_file('datasets/UCI/anneal.arff'), opts)
-// 	display_file(opts.outputfile_path)?
+// 	display_file(opts.outputfile_path, settings) ?
 // }
 
-// fn test_display_ranking_result()? {
+// fn test_display_ranking_result() ? {
 // 	// rank a dataset file, save the result, then display
 // 	mut opts := Options{
 // 		command: 'rank'
@@ -54,40 +57,62 @@ fn testsuite_begin() ? {
 // 	mut settings := DisplaySettings{
 // 		show_flag: true
 // 	}
-// 	display_file(opts.outputfile_path, settings)?
+// 	display_file(opts.outputfile_path, settings) ?
 // 	// repeat for displaying a plot
 // 	settings.graph_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+// 	display_file(opts.outputfile_path, settings) ?
 // }
 
-// fn test_display_validate_result()? {
+// fn test_display_validate_result() ? {
 // 	// validate a dataset file, save the result, then display
 // 	mut opts := Options{
 // 		command: 'make'
 // 	}
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
 // 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
 // 	opts.outputfile_path = 'tempfolder/validate_result'
 // 	opts.testfile_path = 'datasets/bcw174validate'
-// 	_ = validate(cl, opts)?
-// 	display_file(opts.outputfile_path)?
+// 	_ = validate(cl, opts) ?
+// 	display_file(opts.outputfile_path, settings) ?
 // }
 
-fn test_display_verify_result()? {
-	// verify a dataset file, save the result, then display
+// fn test_display_verify_result() ? {
+// 	// verify a dataset file, save the result, then display
+// 	mut opts := Options{
+// 		command: 'make'
+// 		number_of_attributes: [5]
+// 	}
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
+// 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
+// 	opts.outputfile_path = 'tempfolder/verify_result'
+// 	opts.testfile_path = 'datasets/bcw174test'
+// 	_ = verify(cl, opts) ?
+// 	display_file(opts.outputfile_path, settings) ?
+// 	settings.expanded_flag = true
+// 	display_file(opts.outputfile_path, settings) ?
+// }
+
+fn test_display_cross_result() ? {
+	// cross-validate a dataset file, save the result, then display
 	mut opts := Options{
-		command: 'make'
-		number_of_attributes: [5]
+		command: 'cross'
+		number_of_attributes: [4]
+		bins: [12]
+		concurrency_flag: true
 	}
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	cl := make_classifier(load_file('datasets/bcw350train'), opts)
-	opts.outputfile_path = 'tempfolder/verify_result'
-	opts.testfile_path = 'datasets/bcw174test'
-	_ = verify(cl, opts)?
-	display_file(opts.outputfile_path, settings)?
+	ds := load_file('datasets/UCI/glass.arff')
+	opts.outputfile_path = 'tempfolder/cross_result'
+	_ = cross_validate(ds, opts) ?
+	display_file(opts.outputfile_path, settings) ?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)?
+	display_file(opts.outputfile_path, settings) ?
 }
 
 // fn test_display_explore_result_cross()? {

@@ -26,7 +26,7 @@ struct ContinuousAttribute {
 pub struct Dataset {
 	Class
 pub mut:
-struct_type string = '.Dataset'
+	struct_type                  string = '.Dataset'
 	path                         string
 	attribute_names              []string
 	attribute_flags              []string
@@ -65,7 +65,7 @@ mut:
 
 pub struct RankingResult {
 pub mut:
-	struct_type string = '.RankingResult'
+	struct_type                string = '.RankingResult'
 	path                       string
 	exclude_flag               bool
 	binning                    Binning
@@ -87,7 +87,7 @@ pub struct Classifier {
 	Parameters
 	Class
 pub mut:
- 	struct_type 	string = '.Classifier'
+	struct_type        string = '.Classifier'
 	datafile_path      string
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
@@ -107,19 +107,23 @@ pub mut:
 
 struct Parameters {
 pub mut:
-	binning	Binning
+	binning              Binning
 	number_of_attributes []int = [0]
-	uniform_bins bool
-	exclude_flag bool
-	weighting_flag bool
+	uniform_bins         bool
+	exclude_flag         bool
+	weighting_flag       bool
+	folds int
+	repetitions int
+	random_pick bool
+	command string
 }
 
 struct DisplaySettings {
 pub mut:
-	show_flag bool
+	show_flag     bool
 	expanded_flag bool
-	graph_flag bool
-	verbose_flag bool
+	graph_flag    bool
+	verbose_flag  bool
 }
 
 // Options struct: can be used as the last parameter in a
@@ -129,21 +133,21 @@ pub struct Options {
 	Parameters
 	DisplaySettings
 pub mut:
-	struct_type 	string = '.Options'
-	args                 []string
-	non_options          []string
-	command              string
-	bins                 []int = [2, 16]
-	concurrency_flag     bool
-	datafile_path        string = 'datasets/developer.tab'
-	testfile_path        string
-	outputfile_path      string
-	classifierfile_path  string
-	instancesfile_path   string
-	help_flag            bool
-	folds                int
-	repetitions          int
-	random_pick          bool
+	struct_type         string = '.Options'
+	args                []string
+	non_options         []string
+	command             string
+	bins                []int = [2, 16]
+	concurrency_flag    bool
+	datafile_path       string = 'datasets/developer.tab'
+	testfile_path       string
+	outputfile_path     string
+	classifierfile_path string
+	instancesfile_path  string
+	help_flag           bool
+	// folds               int
+	// repetitions         int
+	// random_pick         bool
 }
 
 pub struct Environment {
@@ -173,7 +177,7 @@ pub mut:
 
 pub struct AnalyzeResult {
 pub mut:
-	struct_type 	string = '.AnalyzeResult'
+	struct_type   string = '.AnalyzeResult'
 	environment   Environment
 	datafile_path string
 	datafile_type string
@@ -184,7 +188,7 @@ pub mut:
 
 pub struct ClassifyResult {
 pub mut:
-	struct_type 	string = '.ClassifyResult'
+	struct_type                string = '.ClassifyResult'
 	index                      int
 	inferred_class             string
 	labeled_class              string
@@ -207,9 +211,9 @@ pub struct CrossVerifyResult {
 	Parameters
 	DisplaySettings
 pub mut:
-	struct_type 	string = '.CrossVerifyResult'
-	classifier_path string
-	testfile_path string
+	struct_type          string = '.CrossVerifyResult'
+	classifier_path      string
+	testfile_path        string
 	labeled_classes      []string
 	actual_classes       []string
 	inferred_classes     []string
@@ -239,8 +243,8 @@ pub mut:
 
 pub struct AttributeRange {
 pub mut:
-	start int
-	end int
+	start        int
+	end          int
 	att_interval int
 }
 
@@ -249,14 +253,14 @@ pub struct ExploreResult {
 	AttributeRange
 	DisplaySettings
 pub mut:
-	struct_type 	string = '.ExploreResult'
-	path                 string
-	testfile_path        string
-	pos_neg_classes []string
-	folds                int
-	repetitions          int
-	random_pick          bool
-	array_of_results     []CrossVerifyResult
+	struct_type      string = '.ExploreResult'
+	path             string
+	testfile_path    string
+	pos_neg_classes  []string
+	folds            int
+	repetitions      int
+	random_pick      bool
+	array_of_results []CrossVerifyResult
 }
 
 pub struct PlotResult {
@@ -271,10 +275,10 @@ pub struct ValidateResult {
 	Class
 	Parameters
 pub mut:
-	struct_type 	string = '.ValidateResult'
-	classifier_path             string
-	validate_file_path 	string
-	inferred_classes []string
-	counts           [][]int
-	instances        [][]byte
+	struct_type        string = '.ValidateResult'
+	classifier_path    string
+	validate_file_path string
+	inferred_classes   []string
+	counts             [][]int
+	instances          [][]byte
 }
