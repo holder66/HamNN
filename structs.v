@@ -112,10 +112,10 @@ pub mut:
 	uniform_bins         bool
 	exclude_flag         bool
 	weighting_flag       bool
-	folds int
-	repetitions int
-	random_pick bool
-	command string
+	folds                int
+	repetitions          int
+	random_pick          bool
+	command              string
 }
 
 struct DisplaySettings {
@@ -136,7 +136,6 @@ pub mut:
 	struct_type         string = '.Options'
 	args                []string
 	non_options         []string
-	// command             string
 	bins                []int = [2, 16]
 	concurrency_flag    bool
 	datafile_path       string = 'datasets/developer.tab'
@@ -145,9 +144,6 @@ pub mut:
 	classifierfile_path string
 	instancesfile_path  string
 	help_flag           bool
-	// folds               int
-	// repetitions         int
-	// random_pick         bool
 }
 
 pub struct Environment {
@@ -235,10 +231,10 @@ pub mut:
 	wrong_count          int
 	total_count          int
 	bin_values           []int // used for displaying the binning range for explore
-	binning              Binning
-	attributes_used      int
-	repetitions          int
-	confusion_matrix     [][]string
+	// binning              Binning
+	attributes_used  int
+	repetitions      int
+	confusion_matrix [][]string
 }
 
 pub struct AttributeRange {

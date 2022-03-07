@@ -172,25 +172,14 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
-		println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
-			'magenta'))
-		println(
-			'Partitioning: ' + if result.folds == 0 {
-			 'leave-one-out' 
-			} else {
-			'$result.folds-fold' + if result.repetitions > 1 {
-				', $result.repetitions repetitions' + if result.random_pick {
-					' with random selection of instances'
-					} else {
-						''
-					}
-				} else {
-					''
-				}
-			}
-		)
-		show_parameters(result.Parameters)
-		show_cross_or_verify_result(result, settings) ?
+	println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
+		'magenta'))
+	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' + if result.repetitions > 1 { ', $result.repetitions repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
+		 } else { ''
+		 }
+	 })
+	show_parameters(result.Parameters)
+	show_cross_or_verify_result(result, settings) ?
 }
 
 // show_cross_or_verify_result

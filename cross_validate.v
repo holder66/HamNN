@@ -52,6 +52,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	if ds.useful_continuous_attributes.len == 0 {
 		cross_opts.bins = [0]
 	}
+	cross_result.binning = get_binning(cross_opts.bins)
 	mut repetition_result := CrossVerifyResult{}
 	for rep in 0 .. repeats {
 		// generate a pick list of indices
@@ -83,8 +84,8 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	}
 	// show_results(cross_result, cross_opts)
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-	show_crossvalidation(cross_result, cross_opts.DisplaySettings) ?
-}
+		show_crossvalidation(cross_result, cross_opts.DisplaySettings) ?
+	}
 	return cross_result
 }
 
