@@ -6,6 +6,37 @@ import math
 // rank_attributes takes a Dataset and returns a list of all the
 // dataset's usable attributes, ranked in order of each attribute's
 // ability to separate the classes.
+// ```
+// Algorithm:
+// for each attribute:
+// 	create a matrix with attribute values for row headers, and 
+// 	class values for column headers;
+// 	for each unique value `val` for that attribute:
+// 		for each unique value `class` of the class attribute:
+// 			for each instance:
+// 				accumulate a count for those instances whose class value 
+// 				equals `class`;
+// 				populate the matrix with these accumulated counts;
+// 	for each `val`:
+// 		get the absolute values of the differences between accumulated 
+// 		counts for each pair of `class` values`;
+// 		add those absolute differences;
+// 	total those added absolute differences to get the raw rank value 
+// for that attribute.
+// To obtain rank values weighted by class prevalences, use the same algorithm 
+// except before taking the difference of each pair of accumulated counts,
+// multiply each count of the pair by the class prevalence of the other class.
+// 
+// Obtain a maximum rank value by calculating a rank value for the class  
+// attribute itself.
+// 
+// To obtain normalized rank values:
+// for each attribute:
+// 	divide its raw rank value by the maximum rank value and multiply by 100. 
+// 
+// Sort the attributes by descending rank values.
+// ```
+// 
 // ```sh
 // Options:
 // `bins` specifies the range for binning (slicing) continous attributes;
