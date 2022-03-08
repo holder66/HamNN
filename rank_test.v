@@ -60,7 +60,6 @@ fn test_rank_attribute_sorting() {
 	assert atts == ['height', 'negative', 'number', 'lastname', 'SEC', 'city', 'age', 'weight']
 	atts = []
 	opts.bins = [4, 9]
-	opts.weighting_flag = true
 	result = rank_attributes(ds, opts)
 	for att in result.array_of_ranked_attributes {
 		atts << att.attribute_name

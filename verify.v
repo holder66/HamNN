@@ -7,16 +7,14 @@ module hamnn
 
 import runtime
 
-// verify classifies each instance of a verification datafile against
-// a trained Classifier; returns metrics comparing the inferred classes
-// to the labeled (assigned) classes of the verification datafile.
+// verify classifies all the instances in a verification datafile (specified
+// by `opts.testfile_path`) using a trained Classifier; returns metrics
+// comparing the inferred classes to the labeled (assigned) classes
+// of the verification datafile.
 // ```sh
-// Options (also see the Options struct):
-// bins: range for binning or slicing of continuous attributes;
-// number_of_attributes: range for attributes to include;
-// exclude_flag: excludes missing values when ranking attributes;
-// weighting_flag: count nearest neighbors accounting
-// for class prevalences;
+// Optional (also see `make_classifier()` for options in training a classifier)
+// weighting_flag: nearest neighbor counts are weighted by
+// 	class prevalences.
 // Output options:
 // show_flag: display results on the console;
 // expanded_flag: display additional information on the console, including

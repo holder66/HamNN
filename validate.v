@@ -7,6 +7,7 @@ module hamnn
 // validate classifies each instance of a validation datafile against
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
+// The file to be validated is specified by `opts.testfile_path`.
 // Optionally, saves the instances and their predicted classes in a file.
 // This file can be used to append these instances to the classifier.
 pub fn validate(cl Classifier, opts Options) ?ValidateResult {

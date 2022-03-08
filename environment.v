@@ -10,7 +10,7 @@ import v.vmod
 // get_environment collects and returns information about the
 // computer, the operating system and its version,
 // the version and build of V, the version of HamNN,
-// and the date and time.
+// and the date and time. It returns an Environment struct.
 pub fn get_environment() Environment {
 	mut env := Environment{}
 	env.collect_info()

@@ -6,11 +6,15 @@ import json
 
 // display_file displays on the console, a results file as produced by other
 // hamnn functions.
+//
+// Example:
+// `display_file('path_to_saved_results_file', settings)`
+// ```sh
 // Output options:
 // expanded_flag: display additional information on the console, including
 // 	a confusion matrix for cross-validation or verification operations;
 // graph_flag: generates plots for display in the default web browser.
-// ``
+// ```
 pub fn display_file(path string, settings DisplaySettings) ? {
 	// determine what kind of file, then call the appropriate functions in show and plot
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }

@@ -8,7 +8,7 @@ import encoding.utf8
 
 // load_file returns a struct containing the datafile's contents,
 // suitable for generating a classifier
-
+//
 // Example:
 // `ds := load_file('datasets/iris.tab')`
 pub fn load_file(path string) Dataset {

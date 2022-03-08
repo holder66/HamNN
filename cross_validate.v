@@ -5,7 +5,12 @@ import strconv
 import runtime
 import rand
 
-// cross_validate performs n-fold cross-validation on a dataset.
+// cross_validate performs n-fold cross-validation on a dataset: it
+// partitions the instances in a dataset into a fold, trains
+// a classifier on all the dataset instances not in the fold, and
+// then uses this classifier to classify the fold instances. This
+// process is repeated for each of n folds, and the classification
+// results are summarized.
 // ```sh
 // Options (also see the Options struct):
 // bins: range for binning or slicing of continuous attributes;

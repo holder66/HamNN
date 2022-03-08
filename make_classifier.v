@@ -15,7 +15,6 @@ import time
 // uniform_bins: same number of bins for continuous attributes;
 // number_of_attributes: range for attributes to include;
 // exclude_flag: excludes missing values when ranking attributes;
-// weighting_flag: rank attributes taking into account class prevalences;
 // outputfile_path: if specified, saves the classifier to this file.
 // ```
 pub fn make_classifier(ds Dataset, opts Options) Classifier {
@@ -28,9 +27,8 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
-	if opts.weighting_flag {
-		cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
-	}
+	cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
+
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
