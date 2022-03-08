@@ -1,12 +1,15 @@
 // append.v
 module hamnn
 
-import json
-import os
 import time
 
-// append_instances appends instances to a classifier.
+// append_instances extends a classifier by adding more instances.
 // It returns the extended classifier struct.
+// ```sh
+// Output options:
+// show_flag: display results on the console;
+// outputfile_path: saves the extended classifier to a file.
+// ```
 pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts Options) Classifier {
 	// append needs to append the array of byte values for each new instance
 	// to cl.instances, and append the class value for each new instance
@@ -34,9 +37,7 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 		show_classifier(ext_cl)
 	}
 	if opts.outputfile_path != '' {
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(ext_cl)) or { panic(err.msg) }
-		f.close()
+		save_json_file(ext_cl, opts.outputfile_path)
 	}
 	return ext_cl
 }

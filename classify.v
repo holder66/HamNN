@@ -4,14 +4,17 @@ module hamnn
 import arrays
 
 // classify_instance takes a trained classifier and an instance to be
-// classified and returns the inferred class for the instance.
-// The classification algorithm gets Hamming distances between the instance
-// to be classified and all the instances in the trained classifier, and
-// infers class based on minimum Hamming distance.
+// classified; it returns the inferred class for the instance and the
+// counts of nearest neighbors to all the classes.
+// The classification algorithm calculates Hamming distances between
+// the instance to be classified and all the instances in the trained
+// classifier; for the minimum hamming distance, the class with the
+// most neighbors at that distance is the inferred class. In case of
+// ties, the algorithm moves on to the next minimum hamming distance.
 // ```sh
 // Optional (specified in opts):
-// weighting_flag: when true, the nearest neighbor algorithm takes into
-// 		account class prevalences.
+// weighting_flag: when true, nearest neighbor counts are weighted
+// by class prevalences.
 // ```
 pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
 	// to classify, get Hamming distances between the entered instance and

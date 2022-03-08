@@ -6,8 +6,6 @@ module hamnn
 
 import math
 import time
-import os
-import json
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
 // load_file).
@@ -101,9 +99,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(cl)) or { panic(err.msg) }
-		f.close()
+		save_json_file(cl, opts.outputfile_path)
 	}
 	return cl
 }

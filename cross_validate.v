@@ -5,23 +5,24 @@ import strconv
 import runtime
 import rand
 
-// cross_validate takes a dataset and performs n-fold cross-validation.
+// cross_validate performs n-fold cross-validation on a dataset.
 // ```sh
 // Options (also see the Options struct):
 // bins: range for binning or slicing of continuous attributes;
-// uniform_bins: same number of bins for continuous attributes;
-// number_of_attributes: range for attributes to include;
+// number_of_attributes: the number of attributes to use, in descending
+// 	order of rank value;
 // exclude_flag: excludes missing values when ranking attributes;
-// weighting_flag: rank attributes and count nearest neighbors accounting
-// for class prevalences;
+// weighting_flag: nearest neighbor counts are weighted by
+// 	class prevalences;
 // folds: number of folds n to use for n-fold cross-validation (default
-// is leave-one-out cross-validation);
+// 	is leave-one-out cross-validation);
 // repetitions: number of times to repeat n-fold cross-validations;
 // random-pick: choose instances randomly for n-fold cross-validations.
 // Output options:
 // show_flag: prints results to the console;
 // expanded_flag: prints additional information to the console, including
-// 		a confusion matrix.
+// 	a confusion matrix.
+// outputfile_path: saves the result as a json file.
 // ```
 pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.

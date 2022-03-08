@@ -231,10 +231,9 @@ pub mut:
 	wrong_count          int
 	total_count          int
 	bin_values           []int // used for displaying the binning range for explore
-	// binning              Binning
-	attributes_used  int
-	repetitions      int
-	confusion_matrix [][]string
+	attributes_used      int
+	repetitions          int
+	confusion_matrix     [][]string
 }
 
 pub struct AttributeRange {

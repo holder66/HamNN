@@ -1,32 +1,28 @@
 // explore.v
 module hamnn
 
-import json
-import os
-// import math
-
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
 // ```sh
 // Options (also see the Options struct):
 // bins: range for binning or slicing of continuous attributes;
-// uniform_bins: same number of bins for continuous attributes;
+// uniform_bins: same number of bins for all continuous attributes;
 // number_of_attributes: range for attributes to include;
 // exclude_flag: excludes missing values when ranking attributes;
-// weighting_flag: rank attributes and count nearest neighbors accounting
-// 	for class prevalences;
+// weighting_flag: nearest neighbor counts are weighted by
+// 	class prevalences;
 // folds: number of folds n to use for n-fold cross-validation (default
 // 	is leave-one-out cross-validation);
 // repetitions: number of times to repeat n-fold cross-validations;
 // random-pick: choose instances randomly for n-fold cross-validations.
 // Output options:
-// show_flag: print results to the console;
-// expanded_flag: print additional information to the console, including
-// 		a confusion matrix.
+// show_flag: display results on the console;
+// expanded_flag: display additional information on the console, including
+// 	a confusion matrix for each explore step;
 // graph_flag: generate plots of Receiver Operating Characteristics (ROC)
-// 		by attributes used; ROC by bins used, and accuracy by attributes
-//		used.
-// outputfile_path, saves the result as json.
+// 	by attributes used; ROC by bins used, and accuracy by attributes
+//	used.
+// outputfile_path: saves the result to a file.
 // ```
 pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	mut ex_opts := opts
@@ -104,9 +100,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		}
 	}
 	if opts.outputfile_path != '' {
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(results)) or { panic(err.msg) }
-		f.close()
+		save_json_file(results, opts.outputfile_path)
 	}
 	return results
 }

@@ -2,9 +2,6 @@
 module hamnn
 
 import math
-import json
-import os
-// import arrays
 
 // rank_attributes takes a Dataset and returns a list of all the
 // dataset's usable attributes, ranked in order of each attribute's
@@ -173,9 +170,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		plot_rank(ranking_result)
 	}
 	if opts.outputfile_path != '' {
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(json.encode(ranking_result)) or { panic(err.msg) }
-		f.close()
+		save_json_file(ranking_result, opts.outputfile_path)
 	}
 	return ranking_result
 }

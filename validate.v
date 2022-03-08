@@ -4,9 +4,6 @@ Given a classifier and a validation dataset, classifies each instance
   of the validation_set on the trained classifier; returns the predicted classes for each instance of the validation_set.*/
 module hamnn
 
-import json
-import os
-
 // validate classifies each instance of a validation datafile against
 // a trained Classifier; returns the predicted classes for each instance
 // of the validation_set.
@@ -54,10 +51,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	}
 	if opts.outputfile_path != '' {
 		validate_result.instances = test_instances
-		s := json.encode(validate_result)
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(s) or { panic(err.msg) }
-		f.close()
+		save_json_file(validate_result, opts.outputfile_path)
 	}
 	return validate_result
 }

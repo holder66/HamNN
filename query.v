@@ -3,8 +3,6 @@ module hamnn
 
 import readline
 import strconv
-import json
-import os
 
 // query takes a trained classifier and performs an interactive session
 // with the user at the console, asking the user to input a value for each
@@ -72,11 +70,7 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 		validate_result.instances = [byte_values]
 		validate_result.inferred_classes = [classify_result.inferred_class]
 		validate_result.counts = [classify_result.nearest_neighbors_by_class]
-		s := json.encode(validate_result)
-		// println('After json encoding, before writing:\n $s')
-		mut f := os.open_file(opts.outputfile_path, 'w') or { panic(err.msg) }
-		f.write_string(s) or { panic(err.msg) }
-		f.close()
+		save_json_file(validate_result, opts.outputfile_path)
 	}
 	return classify_result
 }

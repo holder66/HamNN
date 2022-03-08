@@ -10,6 +10,19 @@ import runtime
 // verify classifies each instance of a verification datafile against
 // a trained Classifier; returns metrics comparing the inferred classes
 // to the labeled (assigned) classes of the verification datafile.
+// ```sh
+// Options (also see the Options struct):
+// bins: range for binning or slicing of continuous attributes;
+// number_of_attributes: range for attributes to include;
+// exclude_flag: excludes missing values when ranking attributes;
+// weighting_flag: count nearest neighbors accounting
+// for class prevalences;
+// Output options:
+// show_flag: display results on the console;
+// expanded_flag: display additional information on the console, including
+// 		a confusion matrix.
+// outputfile_path: saves the result as a json file
+// ```
 pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
@@ -29,13 +42,10 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		binning: cl.binning
-		command: 'verify'
 		Parameters: cl.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
-
-	// println(confusion_matrix_map)
-
+	verify_result.command = 'verify' // override the 'make' command from cl.Parameters
 	// massage each instance in the test dataset according to the
 	// attribute parameters in the classifier
 	test_instances := generate_test_instances_array(cl, test_ds)
