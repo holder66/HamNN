@@ -26,6 +26,7 @@ import math
 // To obtain rank values weighted by class prevalences, use the same algorithm 
 // except before taking the difference of each pair of accumulated counts,
 // multiply each count of the pair by the class prevalence of the other class.
+// (Note: rank_attributes always uses class prevalences as weights)
 // 
 // Obtain a maximum rank value by calculating a rank value for the class  
 // attribute itself.
