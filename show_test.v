@@ -146,6 +146,7 @@ fn test_show_explore_cross() ? {
 		repetitions: 50
 		random_pick: true
 		datafile_path: 'datasets/developer.tab'
+		command: 'explore'
 	}
 	results = explore(load_file(opts.datafile_path), opts) ?
 }

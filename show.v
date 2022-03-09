@@ -223,10 +223,10 @@ fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
 
 // get_show_bins
 fn get_show_bins(bins []int) string {
-	if bins == [] || bins[0] == 0 {
+	if bins == [] || 0 in bins {
 		return '       '
 	}
-	if bins.len == 1 {
+	if bins.len == 1 || bins[0] == bins[1] {
 		return '${bins[0]:7}'
 	}
 	return '${bins[0]:2} - ${bins[1]:-2}'

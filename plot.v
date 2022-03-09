@@ -92,7 +92,7 @@ mut:
 
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
-fn plot_explore(result ExploreResult, opts Options) {
+fn plot_explore(result ExploreResult, opts Options) ?{
 	// println('result in plot_explore: $result')
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
@@ -102,12 +102,15 @@ fn plot_explore(result ExploreResult, opts Options) {
 	mut y_value := 1.0
 	mut percents := []f64{}
 	mut max_percents := 0.0
+	mut metrics := Metrics{}
 	for res in result.array_of_results {
-		y_value = (f32(res.correct_count) * 100 / res.total_count)
+		metrics = get_metrics(res) ?
+		y_value = metrics.balanced_accuracy * 100
+		// y_value = (f32(res.correct_count) * 100 / res.total_count)
 		x << f64(res.attributes_used)
 		y << y_value
 		// create strings that can be used for filtering
-		if res.bin_values.len == 1 {
+		if res.bin_values.len == 1 || res.bin_values[0] == res.bin_values[1] {
 			bin_values << '${res.bin_values[0]} bins'
 		} else {
 			bin_values << 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
@@ -151,11 +154,13 @@ fn plot_explore(result ExploreResult, opts Options) {
 		text: explore_type_string(opts)
 		align: 'left'
 	}
-	title_string := 'Accuracy by Number of Attributes for "$opts.datafile_path"'
+	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
 	plt.set_layout(
 		title: title_string
 		width: 800
 		xaxis: plot.Axis{
+			tickmode: 'array'
+			tickvals: x
 			title: plot.AxisTitle{
 				text: 'Number of Attributes Used'
 			}

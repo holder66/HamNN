@@ -73,9 +73,9 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		bin = binning.lower
 		for bin <= binning.upper {
 			if ex_opts.uniform_bins {
-				ex_opts.bins = [bin]
+				ex_opts.bins = [bin, bin]
 			} else {
-				ex_opts.bins = [binning.lower, bin]
+				ex_opts.bins = [2, bin]
 			}
 			if ex_opts.testfile_path == '' {
 				result = cross_validate(ds, ex_opts) ?
@@ -94,7 +94,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	}
 	results.array_of_results = array_of_results
 	if opts.graph_flag {
-		plot_explore(results, opts)
+		plot_explore(results, opts) ?
 		if ds.Class.class_counts.len == 2 {
 			plot_roc(results, opts)
 		}
