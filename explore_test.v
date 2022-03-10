@@ -3,6 +3,7 @@ module hamnn
 
 fn test_explore_cross() ? {
 	mut result := ExploreResult{}
+	mut metrics := Metrics{}
 	mut opts := Options{
 		verbose_flag: false
 		number_of_attributes: [1, 4]
@@ -18,6 +19,8 @@ fn test_explore_cross() ? {
 	assert result.array_of_results[0].incorrects_count == 51
 	assert result.array_of_results[0].wrong_count == 51
 	assert result.array_of_results[0].total_count == 150
+	metrics = get_metrics(result.array_of_results[0]) ?
+	assert metrics.balanced_accuracy >= 0.66
 
 	opts.uniform_bins = false
 	opts.bins = [10, 12]
@@ -26,7 +29,8 @@ fn test_explore_cross() ? {
 	assert result.array_of_results.last().incorrects_count == 9
 	assert result.array_of_results.last().wrong_count == 9
 	assert result.array_of_results.last().total_count == 150
-
+	metrics = get_metrics(result.array_of_results.last()) ?
+	assert metrics.balanced_accuracy >= 0.94
 	println('Done with iris.tab')
 
 	opts.folds = 10
@@ -37,24 +41,19 @@ fn test_explore_cross() ? {
 	opts.uniform_bins = true
 	ds = load_file(opts.datafile_path)
 	result = explore(ds, opts) ?
-	assert result.array_of_results[1].correct_count == 878
-	assert result.array_of_results[1].incorrects_count == 20
-	assert result.array_of_results[1].wrong_count == 20
-	assert result.array_of_results[1].total_count == 898
+	metrics = get_metrics(result.array_of_results[1]) ?
+	assert metrics.balanced_accuracy >= 0.96
 
 	opts.uniform_bins = false
 	result = explore(ds, opts) ?
-	assert result.array_of_results[1].correct_count == 878
-	assert result.array_of_results[1].incorrects_count == 20
-	assert result.array_of_results[1].wrong_count == 20
-	assert result.array_of_results[1].total_count == 898
+	metrics = get_metrics(result.array_of_results[1]) ?
+	assert metrics.balanced_accuracy >= 0.955
 
 	opts.folds = 5
 	opts.repetitions = 50
 	result = explore(ds, opts) ?
-	assert result.array_of_results[1].correct_count == 874
-	assert result.array_of_results[1].incorrects_count == 24
-
+	metrics = get_metrics(result.array_of_results[1]) ?
+	assert metrics.balanced_accuracy >= 0.945
 	println('Done with anneal.tab')
 }
 

@@ -92,7 +92,7 @@ mut:
 
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
-fn plot_explore(result ExploreResult, opts Options) ?{
+fn plot_explore(result ExploreResult, opts Options) ? {
 	// println('result in plot_explore: $result')
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
