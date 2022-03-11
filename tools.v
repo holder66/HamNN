@@ -236,7 +236,7 @@ fn array_min<T>(a []T) T {
 	return val
 }
 
-// array_max returns the maximum the maximum value in the array
+// array_max returns the maximum value in the array
 fn array_max<T>(a []T) T {
 	// if a.len == 0 {
 	// 	return error('.max called on an empty array')

@@ -6,10 +6,11 @@ fn test_classify_instance() {
 	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
-		verbose_flag: false
+		verbose_flag: true
 		command: 'classify'
 		number_of_attributes: [6]
 		show_flag: false
+		weighting_flag: false
 	}
 	mut ds := load_file('datasets/developer.tab')
 	mut cl := make_classifier(ds, opts)

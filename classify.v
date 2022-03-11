@@ -1,8 +1,6 @@
 // classify.v
 module hamnn
 
-import arrays
-
 // classify_instance takes a trained classifier and an instance to be
 // classified; it returns the inferred class for the instance and the
 // counts of nearest neighbors to all the classes.
@@ -25,6 +23,8 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []b
 	mut classify_result := ClassifyResult{
 		index: index
 	}
+	classes := cl.class_counts.keys()
+	// mut nn_by_radius_by_class := [][]int{}
 	// get the hamming distance for each of the corresponding byte_values
 	// in each classifier instance and the instance to be classified
 	for instance in cl.instances {
@@ -34,62 +34,137 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []b
 		}
 		hamming_dist_array << hamming_dist
 	}
-	// hamming_dist_array gives the hamming distance for each instance
-	// in the classifier, to the instance to be classified
-	// get counts of unique hamming distance values and sort
-	counts := integer_element_counts(hamming_dist_array)
-
-	// println('counts: $counts')
-
-	mut distances := get_integer_keys(counts)
-	distances.sort()
-	// we now have in distances, the unique hamming distance values between
-	// the classifier instances and the instance to be classified, sorted
-	// by ascending hamming distance (ie, minimum hamming distance is first).
-	// for each distance in distances, get the classes for instances this
-	// distance away; note that we want to continue in this loop only while
-	// we cannot get a unique class
-	// first, get an array of unique class values
-	classes := get_string_keys(string_element_counts(cl.class_values))
-	max_distance := arrays.max(distances) or { 255 }
-	mut results := [][]int{len: (max_distance + 1), init: []int{len: cl.class_counts.len}}
-	// cycle through the unique hamming distances, starting with the minimm
-	for i, dist in distances {
-		for j, instance_dist in hamming_dist_array {
-			for k, class in classes {
-				// println('j, k: $j $k')
-				if dist == instance_dist && class == cl.class_values[j] {
-					// println('j, k: $j $k')
-					results[i][k] += 1
+	// get unique values in hamming_dist_array; these are the radii
+	// of the nearest-neighbor "spheres"
+	// println('hamming_dist_array: $hamming_dist_array')
+	mut radii := integer_element_counts(hamming_dist_array).keys()
+	radii.sort()
+	// println('radii: $radii')
+	mut nn_by_radius_by_class := [][]int{len: radii.len, init: []int{len: cl.class_counts.len}}
+	for instance, distance in hamming_dist_array {
+		for sphere_index, radius in radii {
+			for class_index, class in classes {
+				if distance <= radius  && class == cl.class_values[instance] {
+					nn_by_radius_by_class[sphere_index][class_index] += 1
 				}
 			}
 		}
-		// if the weighting_flag is set, multiply each value in the results
-		// row by the least common multiple (lcm) of the prevalences of the
-		// classes, and then
-		// divide by the prevalence of the associated class, in order to
-		// weight the numbers by class prevalences
-		if opts.weighting_flag {
-			if opts.verbose_flag && opts.command == 'classify' {
-				println('nearest neighbors by class unweighted in classify.v: ${results[i]}')
-				println('lcm_class_counts: $cl.lcm_class_counts')
-			}
-			for n, mut val in results[i] {
-				val *= int(cl.lcm_class_counts / cl.class_counts[classes[n]])
+	}
+	// println('nn_by_radius_by_class: $nn_by_radius_by_class')
+	// if the weighting_flag is set, multiply each value in the results
+	// row by the least common multiple (lcm) of the prevalences of the
+	// classes, and then
+	// divide by the prevalence of the associated class, in order to
+	// weight the numbers by class prevalences
+	// if opts.weighting_flag {
+	// 	for class_index, mut row in nn_by_radius_by_class {
+	// 		for sphere_index, mut distance_count in row {
+	// 			distance_count *= int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
+	// 		}
+	// 	}
+	// }
+	if opts.weighting_flag {
+		for _, mut row in nn_by_radius_by_class {
+			for class_index, mut distance_count in row {
+				distance_count *= int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
 			}
 		}
-		// look for a single maximum; if found, return its class
-		indx, max_count := idx_count_max(results[i])
-		if max_count == 1 {
+	}
+	// println('nn_by_radius_by_class: $nn_by_radius_by_class')
+
+	// look for a single maximum; if found, return its class
+	for sphere_index, row in nn_by_radius_by_class {
+		indx, max_count := idx_count_max(row)
+		if max_count ==1 {
 			classify_result = ClassifyResult{
 				inferred_class: classes[indx]
-				nearest_neighbors_by_class: results[i]
-				classes: cl.class_counts.keys()
+				nearest_neighbors_by_class: row 
+				classes: classes
 				weighting_flag: opts.weighting_flag
+				hamming_distance: radii[sphere_index]
+				sphere_index: sphere_index
 			}
 			break
 		}
 	}
+	// indx, max_count := idx_count_max(results[i])
+	// // this next test 
+	// if max_count == 1 {
+	// 	classify_result = ClassifyResult{
+	// 		inferred_class: classes[indx]
+	// 		nearest_neighbors_by_class: results[i]
+	// 		classes: cl.class_counts.keys()
+	// 		weighting_flag: opts.weighting_flag
+	// 	}
+	// 	break
+	// }
+
+
+
+
+	// // hamming_dist_array gives the hamming distance for each instance
+	// // in the classifier, to the instance to be classified
+	// // get counts of unique hamming distance values and sort
+	// counts := integer_element_counts(hamming_dist_array)
+
+	// // println('counts: $counts')
+
+	// mut distances := get_integer_keys(counts)
+	// // println('distances: $distances')
+	// distances.sort()
+	// // we now have in distances, the unique hamming distance values between
+	// // the classifier instances and the instance to be classified, sorted
+	// // by ascending hamming distance (ie, minimum hamming distance is first).
+	// // for each distance in distances, get the classes for instances this
+	// // distance away; note that we want to continue in this loop only while
+	// // we cannot get a unique class
+	// // first, get an array of unique class values
+	// // classes := get_string_keys(string_element_counts(cl.class_values))
+	// // classes := cl.class_counts.keys()
+	// // println('classes: $classes')
+	// max_distance := arrays.max(distances) or { 255 }
+	// // the results array rows are hamming distances; columns are classes
+	// mut results := [][]int{len: (max_distance + 1), init: []int{len: cl.class_counts.len}}
+	// // cycle through the unique hamming distances, starting with the minimm
+	// for i, dist in distances {
+	// 	for j, instance_dist in hamming_dist_array {
+	// 		for k, class in classes {
+	// 			// println('j, k: $j $k') 
+	// 			if dist == instance_dist && class == cl.class_values[j] {
+	// 				// println('iffed j, k: $j $k')
+	// 				results[i][k] += 1
+	// 			}
+	// 		}
+	// 	}
+	// 	// println('results: $results')
+	// 	// if the weighting_flag is set, multiply each value in the results
+	// 	// row by the least common multiple (lcm) of the prevalences of the
+	// 	// classes, and then
+	// 	// divide by the prevalence of the associated class, in order to
+	// 	// weight the numbers by class prevalences
+	// 	if opts.weighting_flag {
+	// 		if opts.verbose_flag && opts.command == 'classify' {
+	// 			println('nearest neighbors by class unweighted in classify.v: ${results[i]}')
+	// 			println('lcm_class_counts: $cl.lcm_class_counts')
+	// 		}
+	// 		for n, mut val in results[i] {
+	// 			val *= int(cl.lcm_class_counts / cl.class_counts[classes[n]])
+	// 		}
+	// 	}
+	// 	// look for a single maximum; if found, return its class
+	// 	indx, max_count := idx_count_max(results[i])
+	// 	// this next test 
+	// 	if max_count == 1 {
+	// 		classify_result = ClassifyResult{
+	// 			inferred_class: classes[indx]
+	// 			nearest_neighbors_by_class: results[i]
+	// 			classes: cl.class_counts.keys()
+	// 			weighting_flag: opts.weighting_flag
+	// 		}
+	// 		break
+	// 		// if we go to an else clause here, we should 
+	// 	}
+	// }
 	if opts.verbose_flag && opts.command == 'classify' {
 		println('ClassifyResult in classify.v: $classify_result')
 	}
