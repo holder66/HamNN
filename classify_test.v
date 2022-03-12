@@ -6,7 +6,7 @@ fn test_classify_instance() {
 	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
-		verbose_flag: true
+		verbose_flag: false
 		command: 'classify'
 		number_of_attributes: [6]
 		show_flag: false
@@ -28,18 +28,6 @@ fn test_classify_instance() {
 		8,
 		0,
 	]
-}
-
-// test_idx_count_max
-fn test_idx_count_max() {
-	mut a, mut b := idx_count_max([12, 8, 12])
-	assert a == 0 && b == 2
-	a, b = idx_count_max([0, 1, 2, 3, 4, 5])
-	assert a == 5 && b == 1
-	a, b = idx_count_max([5])
-	assert a == 0 && b == 1
-	a, b = idx_count_max([0, 0, 0, 0])
-	assert a == 0 && b == 4
 }
 
 // test_get_hamming_distance

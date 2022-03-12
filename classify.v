@@ -40,24 +40,26 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []b
 		// populate the counts by class for this radius
 		for class_index, class in classes {
 			for instance, distance in hamming_dist_array {
-				if distance <= radius  && class == cl.class_values[instance] {
-					radius_row[class_index] += (
-						if !opts.weighting_flag {1} else {
-							int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
-						}
-					)
-				}			
+				if distance <= radius && class == cl.class_values[instance] {
+					radius_row[class_index] += (if !opts.weighting_flag {
+						1
+					} else {
+						int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
+					})
+				}
 			}
 		}
-		if !single_array_maximum(radius_row) {continue}
+		if !single_array_maximum(radius_row) {
+			continue
+		}
 		result.inferred_class = classes[idx_max(radius_row)]
-		result.index = index 
-		result.nearest_neighbors_by_class = radius_row 
+		result.index = index
+		result.nearest_neighbors_by_class = radius_row
 		result.classes = classes
 		result.weighting_flag = opts.weighting_flag
 		result.hamming_distance = radii[sphere_index]
 		result.sphere_index = sphere_index
-		break	
+		break
 	}
 	if opts.verbose_flag && opts.command == 'classify' {
 		println('ClassifyResult in classify.v: $result')
@@ -80,26 +82,35 @@ fn get_hamming_distance<T>(left T, right T) int {
 
 // single_array_maximum returns true if a has only one maximum
 fn single_array_maximum<T>(a []T) bool {
-	if a == [] {panic('single_array_maximum was called on an empty array')}
-	if a.len == 1 {return true}
+	if a == [] {
+		panic('single_array_maximum was called on an empty array')
+	}
+	if a.len == 1 {
+		return true
+	}
 	mut b := a.clone()
-	b.sort(a>b)
-	if b[0] != b[1] {return true}
+	b.sort(a > b)
+	if b[0] != b[1] {
+		return true
+	}
 	return false
 }
 
-// idx_max 
+// idx_max
 fn idx_max<T>(a []T) int {
-	if a == [] {panic('idx_max was called on an empty array')}
-	if a.len == 1 {return 0}
+	if a == [] {
+		panic('idx_max was called on an empty array')
+	}
+	if a.len == 1 {
+		return 0
+	}
 	mut idx := 0
 	mut val := a[0]
 	for i, e in a {
-		if e > val { 
-			val = e 
+		if e > val {
+			val = e
 			idx = i
 		}
 	}
 	return idx
 }
-

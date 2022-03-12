@@ -75,14 +75,14 @@ fn test_append() ? {
 		'brown-stem-rot':              44
 		'powdery-mildew':              20
 		'downy-mildew':                19
-		'brown-spot':                  84
-		'bacterial-blight':            20
+		'brown-spot':                  85
+		'bacterial-blight':            19
 		'bacterial-pustule':           19
 		'purple-seed-stain':           21
 		'anthracnose':                 44
 		'phyllosticta-leaf-spot':      23
-		'alternarialeaf-spot':         94
-		'frog-eye-leaf-spot':          94
+		'alternarialeaf-spot':         93
+		'frog-eye-leaf-spot':          95
 		'diaporthe-pod-&-stem-blight': 15
 		'cyst-nematode':               14
 		'2-4-d-injury':                16
