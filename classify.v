@@ -35,67 +35,33 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []b
 	// of the nearest-neighbor "spheres"
 	mut radii := integer_element_counts(hamming_dist_array).keys()
 	radii.sort()
-	// println('radii: $radii')
-	mut nn_by_radius_by_class := [][]int{len: radii.len, init: []int{len: cl.class_counts.len}}
+	mut radius_row := []int{len: cl.class_counts.len}
 	for sphere_index, radius in radii {
 		// populate the counts by class for this radius
 		for class_index, class in classes {
 			for instance, distance in hamming_dist_array {
 				if distance <= radius  && class == cl.class_values[instance] {
-					nn_by_radius_by_class[sphere_index][class_index] += (
+					radius_row[class_index] += (
 						if !opts.weighting_flag {1} else {
 							int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
-							})
+						}
+					)
 				}			
 			}
 		}
-	
-
-
-
-	// for instance, distance in hamming_dist_array {
-	// 	for sphere_index, radius in radii {
-	// 		for class_index, class in classes {
-	// 			if distance <= radius  && class == cl.class_values[instance] {
-	// 				nn_by_radius_by_class[sphere_index][class_index] += 1
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// if opts.weighting_flag {
-	// 	for _, mut row in nn_by_radius_by_class {
-	// 		for class_index, mut distance_count in row {
-	// 			distance_count *= int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
-	// 		}
-	// 	}
-	// }
-
-	// look for a single maximum; if found, return its class
-	// for sphere_index, row in nn_by_radius_by_class {
-		// if opts.weighting_flag {
-		// 	for class_index, mut distance_count in row {
-		// 		distance_count *= int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
-		// 	}
-		// }
-		// println(nn_by_radius_by_class)
-		mut row := nn_by_radius_by_class[sphere_index]
-		if !single_array_maximum(row) {continue}
-		result.inferred_class = classes[idx_max(row)]
+		if !single_array_maximum(radius_row) {continue}
+		result.inferred_class = classes[idx_max(radius_row)]
 		result.index = index 
-		result.nearest_neighbors_by_class = row 
+		result.nearest_neighbors_by_class = radius_row 
 		result.classes = classes
 		result.weighting_flag = opts.weighting_flag
 		result.hamming_distance = radii[sphere_index]
 		result.sphere_index = sphere_index
-		break
-	
+		break	
 	}
-	
-	
-	// if opts.verbose_flag && opts.command == 'classify' {
-	// 	println('ClassifyResult in classify.v: $classify_result')
-	// }
+	if opts.verbose_flag && opts.command == 'classify' {
+		println('ClassifyResult in classify.v: $result')
+	}
 	return result
 }
 
@@ -137,26 +103,3 @@ fn idx_max<T>(a []T) int {
 	return idx
 }
 
-// idx_count_max returns the index of the first maximum and the count
-// of that maximum
-fn idx_count_max<T>(a []T) (int, int) {
-	if a == [] {
-		panic('.idx_count_max called on an empty array')
-	}
-	mut idx := 0
-	mut val := a[0] // so that val has the right type
-	val = 0
-	mut count := 0
-	for i, e in a {
-		if e > val {
-			val = e
-			idx = i
-		}
-	}
-	for e in a {
-		if e == val {
-			count += 1
-		}
-	}
-	return idx, count
-}

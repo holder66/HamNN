@@ -191,8 +191,8 @@ pub mut:
 	nearest_neighbors_by_class []int
 	classes                    []string
 	weighting_flag             bool
-	hamming_distance int
-				sphere_index int
+	hamming_distance           int
+	sphere_index               int
 }
 
 pub struct ResultForClass {
