@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
           v install vsl
           v install etienne_napoleone.chalk
           v install holder66.hamnn
-          
+
       - name: Build ${{ github.event.repository.name }}
         run: v .
 
