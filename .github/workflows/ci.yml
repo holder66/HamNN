@@ -9,7 +9,7 @@ on:
     - cron: "31 1,12 * * *"
 
   push:
-    branches: [main]
+
 
 jobs:
   build:
@@ -36,7 +36,6 @@ jobs:
         run: |
           v install vsl
           v install etienne_napoleone.chalk
-          v install holder66.hamnn
 
       - name: Install garbage collection library
         run: |
