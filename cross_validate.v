@@ -124,6 +124,7 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 		//
 		for _ in 0 .. folds {
 			fold_result = <-result_channel
+			// println(summarize_results(1, mut fold_result).incorrects_count)
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
@@ -132,6 +133,7 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)
+
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning

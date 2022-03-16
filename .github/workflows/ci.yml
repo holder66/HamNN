@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Install V
+        uses: vlang/setup-v@v1
+        with:
+          check-latest: true
+
+      - name: Checkout ${{ github.event.repository.name }}
+        uses: actions/checkout@v2
+
+      - name: Check if code is formatted
+        run: |
+          v fmt -diff .
+          v fmt -verify .
+      - name: Install dependencies
+        run: |
+          v install vsl
+          v install etienne_napoleone.chalk
+          v install holder66.hamnn
+      - name: Build ${{ github.event.repository.name }}
+        run: v .
+
+      - name: Run Tests
+        run: v test .
