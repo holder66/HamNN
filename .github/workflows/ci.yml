@@ -32,7 +32,7 @@ jobs:
           v install holder66.hamnn
 
       - name: Build ${{ github.event.repository.name }}
-        run: v .
+        run: v -shared .
 
       - name: Run Tests
         run: v -gc boehm test .
