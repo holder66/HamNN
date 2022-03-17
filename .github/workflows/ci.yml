@@ -15,7 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+        os: ["ubuntu-latest", "macos-latest"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -42,6 +42,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          # v tools_test.v
-          # v analyze_test.v
           VTEST_ONLY=tools,analyze,append v test .
