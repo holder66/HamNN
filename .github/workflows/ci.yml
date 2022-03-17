@@ -5,10 +5,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  schedule:
+  # schedule:
 #    - cron: "31 1,12 * * *"
 
-  push:
+  # push:
 
 
 jobs:
@@ -37,12 +37,9 @@ jobs:
           v install vsl
           v install etienne_napoleone.chalk
 
-      - name: Install garbage collection library
-        run: |
-          sudo apt-get install --quiet -y --no-install-recommends libgc-dev
-
       - name: Build ${{ github.event.repository.name }}
         run: v -shared .
 
       - name: Run Tests
-        run: VTEST_ONLY=analyze v -gc boehm test .
+        run: |
+          v tools_test.v
