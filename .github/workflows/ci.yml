@@ -42,4 +42,6 @@ jobs:
 
       - name: Run Tests
         run: |
-          v tools_test.v
+          # v tools_test.v
+          # v analyze_test.v
+          VTEST_ONLY=tools,analyze,append v test .
