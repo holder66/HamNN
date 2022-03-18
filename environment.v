@@ -14,16 +14,15 @@ import v.vmod
 pub fn get_environment() Environment {
 	mut env := Environment{}
 	env.collect_info()
-	// vmod := vmod.from_file('v.mod') ?
 	env.hamnn_version = get_package_version()
+	println(env)
 	return env
 }
 
 // get_package_version
 fn get_package_version() string {
-	vmod := vmod.from_file(os.home_dir() + '/.vmodules/holder66/hamnn/v.mod') or { panic(err.msg) }
-	// println(vmod)
-	return vmod.version
+	vm := vmod.decode(@VMOD_FILE) or { panic(err.msg) }
+	return vm.version
 }
 
 fn (mut a Environment) collect_info() {

@@ -4,5 +4,5 @@ Module {
 	version: '0.2.1'
 	license: 'GPLv3'
 	repo_url: 'https://github.com/holder66/hamnn'
-	dependencies: [,='vsl','etienne-napoleone.chalk']
+	dependencies: ['vsl','etienne-napoleone.chalk']
 }

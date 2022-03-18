@@ -2,9 +2,9 @@
 
 module hamnn
 
-// test_get_vmod
-fn test_get_vmod() {
-	// println('HamNN version: $get_package_version()')
+// test_get_package_version
+fn test_get_package_version() {
+	assert get_package_version() == '0.2.1'
 }
 
 // test_get_environment
