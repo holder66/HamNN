@@ -4,14 +4,14 @@ module hamnn
 import os
 
 fn testsuite_begin() ? {
-	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder') ?
+	if os.is_dir('tempfolder4') {
+		os.rmdir_all('tempfolder4') ?
 	}
-	os.mkdir_all('tempfolder') ?
+	os.mkdir_all('tempfolder4') ?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder') ?
+	os.rmdir_all('tempfolder4') ?
 }
 
 // test_verify
@@ -54,12 +54,12 @@ fn test_verify() ? {
 	println('Done with bcw350train')
 
 	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.outputfile_path = 'tempfolder4/classifierfile'
 	cl = Classifier{}
 	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
 	cl = Classifier{}
-	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts) ?
+	result = verify(load_classifier_file('tempfolder4/classifierfile') ?, opts) ?
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -80,12 +80,12 @@ fn test_verify() ? {
 	println('Done with soybean-large-train.tab')
 
 	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.outputfile_path = 'tempfolder4/classifierfile'
 	cl = Classifier{}
 	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
 	cl = Classifier{}
-	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts) ?
+	result = verify(load_classifier_file('tempfolder4/classifierfile') ?, opts) ?
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
@@ -109,12 +109,12 @@ fn test_verify() ? {
 		println('Done with mnist_test.tab')
 
 		// now with a saved classifier
-		opts.outputfile_path = 'tempfolder/classifierfile'
+		opts.outputfile_path = 'tempfolder4/classifierfile'
 		cl = Classifier{}
 		result = CrossVerifyResult{}
 		cl = make_classifier(ds, opts)
 		cl = Classifier{}
-		result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts) ?
+		result = verify(load_classifier_file('tempfolder4/classifierfile') ?, opts) ?
 		assert result.correct_count == 9982
 		assert result.wrong_count == 18
 
@@ -128,7 +128,7 @@ fn test_verify() ? {
 	// 	result = CrossVerifyResult{}
 	// 	opts.datafile_path = '../../mnist_train.tab'
 	// 	opts.testfile_path = ''
-	// 	opts.outputfile_path = 'tempfolder/classifierfile'
+	// 	opts.outputfile_path = 'tempfolder4/classifierfile'
 	// 	opts.number_of_attributes = [313]
 	// 	opts.bins = [2, 2]
 	// 	opts.concurrency_flag = true
@@ -136,7 +136,7 @@ fn test_verify() ? {
 	// 	ds = load_file(opts.datafile_path)
 	// 	cl = make_classifier(ds, opts)
 	// 	opts.testfile_path = 'datasets/mnist_test.tab'
-	// 	result = verify(load_classifier_file('tempfolder/classifierfile') ?, opts)
+	// 	result = verify(load_classifier_file('tempfolder4/classifierfile') ?, opts)
 	// 	assert result.correct_count == 9566
 	// 	assert result.wrong_count == 434
 

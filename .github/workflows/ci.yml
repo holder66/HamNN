@@ -42,4 +42,4 @@ jobs:
 
       - name: Run Tests
         run: |
-          VTEST_ONLY=tools,analyze,append,environment v test .
+          VTEST_ONLY=analyze,append,classify,cross_validate,environment,explore,load_file,make_classifier,partition,rank,tools,validate,verify v test .

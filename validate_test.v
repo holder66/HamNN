@@ -4,14 +4,14 @@ module hamnn
 import os
 
 fn testsuite_begin() ? {
-	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder') ?
+	if os.is_dir('tempfolder3') {
+		os.rmdir_all('tempfolder3') ?
 	}
-	os.mkdir_all('tempfolder') ?
+	os.mkdir_all('tempfolder3') ?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder') ?
+	os.rmdir_all('tempfolder3') ?
 }
 
 // test_validate_save_result
@@ -21,7 +21,7 @@ fn testsuite_end() ? {
 // 		command: 'validate'
 // 		show_flag: false
 // 		concurrency_flag: true
-// 		outputfile_path: 'tempfolder/instancesfile'
+// 		outputfile_path: 'tempfolder3/instancesfile'
 // 	}
 
 // 	mut result := ValidateResult{}
@@ -183,7 +183,7 @@ fn test_validate() ? {
 	println('Done with bcw350train and weighting')
 
 	// now with a saved classifier
-	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.outputfile_path = 'tempfolder3/classifierfile'
 	opts.weighting_flag = true
 	cl = Classifier{}
 	result = ValidateResult{}
@@ -252,7 +252,7 @@ fn test_validate() ? {
 
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
-	opts.outputfile_path = 'tempfolder/classifierfile'
+	opts.outputfile_path = 'tempfolder3/classifierfile'
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
@@ -265,7 +265,7 @@ fn test_validate() ? {
 	s := result.inferred_classes[0..4]
 	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
 		'diaporthe-stem-canker']
-	tcl := load_classifier_file('tempfolder/classifierfile') ?
+	tcl := load_classifier_file('tempfolder3/classifierfile') ?
 	test_result = validate(tcl, opts) ?
 
 	assert result.inferred_classes == test_result.inferred_classes

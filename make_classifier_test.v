@@ -4,14 +4,14 @@ module hamnn
 import os
 
 fn testsuite_begin() ? {
-	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder') ?
+	if os.is_dir('tempfolder2') {
+		os.rmdir_all('tempfolder2') ?
 	}
-	os.mkdir_all('tempfolder') ?
+	os.mkdir_all('tempfolder2') ?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder') ?
+	os.rmdir_all('tempfolder2') ?
 }
 
 // test_make_classifier
@@ -70,7 +70,7 @@ fn test_save_classifier() ? {
 		number_of_attributes: [6]
 		show_flag: false
 		weighting_flag: true
-		outputfile_path: 'tempfolder/classifierfile'
+		outputfile_path: 'tempfolder2/classifierfile'
 	}
 	opts.classifierfile_path = opts.outputfile_path
 

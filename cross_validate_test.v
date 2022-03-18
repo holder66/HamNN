@@ -92,17 +92,17 @@ fn test_cross_validate() ? {
 	assert result.wrong_count == 27
 	assert result.total_count == 699
 
-	if get_environment().arch_details[0] != '4 cpus' {
-		opts.concurrency_flag = true
-		opts.datafile_path = 'datasets/mnist_test.tab'
-		opts.number_of_attributes = [310]
-		opts.bins = [2, 2]
-		opts.folds = 20
-		opts.repetitions = 5
-		opts.random_pick = true
-		opts.weighting_flag = false
-		ds = load_file(opts.datafile_path)
-		result = cross_validate(ds, opts) ?
-		assert result.correct_count > 9400
-	}
+	// if get_environment().arch_details[0] != '4 cpus' {
+	// 	opts.concurrency_flag = true
+	// 	opts.datafile_path = 'datasets/mnist_test.tab'
+	// 	opts.number_of_attributes = [310]
+	// 	opts.bins = [2, 2]
+	// 	opts.folds = 20
+	// 	opts.repetitions = 5
+	// 	opts.random_pick = true
+	// 	opts.weighting_flag = false
+	// 	ds = load_file(opts.datafile_path)
+	// 	result = cross_validate(ds, opts) ?
+	// 	assert result.correct_count > 9400
+	// }
 }

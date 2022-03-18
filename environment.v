@@ -15,7 +15,6 @@ pub fn get_environment() Environment {
 	mut env := Environment{}
 	env.collect_info()
 	env.hamnn_version = get_package_version()
-	println(env)
 	return env
 }
 
