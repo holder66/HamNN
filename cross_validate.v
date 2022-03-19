@@ -44,6 +44,10 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		}
 	}
 	// instantiate a struct for the result
+	mut inferences_map := map[string]int{}
+	for key, _ in ds.class_counts {
+		inferences_map[key] = 0
+	}
 	mut cross_result := CrossVerifyResult{
 		classifier_path: ds.path
 		labeled_classes: ds.class_values
@@ -51,6 +55,13 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		repetitions: opts.repetitions
+		correct_inferences: inferences_map.clone()
+		incorrect_inferences: inferences_map.clone()
+		wrong_inferences: inferences_map.clone()
+		true_positives: inferences_map.clone()
+		true_negatives: inferences_map.clone()
+		false_positives: inferences_map.clone()
+		false_negatives: inferences_map.clone()
 		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
@@ -77,7 +88,6 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 				pick_list << i
 			}
 		}
-		// println(pick_list)
 		repetition_result = do_repetition(pick_list, rep, ds, cross_opts)
 
 		cross_result.inferred_classes << repetition_result.inferred_classes
@@ -139,7 +149,6 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 			repetition_result.binning = fold_result.binning
 		}
 	}
-	// println('repetition_result.binning in do_repetition: $repetition_result.binning')
 	return repetition_result
 }
 
@@ -148,16 +157,21 @@ fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResul
 	mut inferred := ''
 	for i, actual in result.actual_classes {
 		inferred = result.inferred_classes[i]
+
 		result.labeled_instances[actual] += 1
 		result.total_count += 1
-		result.confusion_matrix_map[actual][inferred] += 1
+		if inferred != '' {
+			result.confusion_matrix_map[actual][inferred] += 1
+		}
 		if actual == inferred {
 			result.correct_inferences[actual] += 1
 			result.correct_count += 1
 			result.true_positives[actual] += 1
 		} else {
-			result.wrong_inferences[inferred] += 1
-			result.false_positives[inferred] += 1
+			if inferred != '' {
+				result.wrong_inferences[inferred] += 1
+				result.false_positives[inferred] += 1
+			}
 			result.incorrect_inferences[actual] += 1
 			result.false_negatives[actual] += 1
 			result.incorrects_count += 1
@@ -239,6 +253,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	// println('part_cl.binning in do_one_fold: $part_cl.binning')
 	fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
 	// println('fold_result.binning in do_one_fold: $fold_result.binning')
+	// println('fold_result at end of do_one_fold: $fold_result')
 	return fold_result
 }
 
@@ -276,12 +291,5 @@ fn classify_in_cross(cl Classifier, test_instances [][]byte, mut result CrossVer
 		result.inferred_classes << inferred_class
 		result.actual_classes << result.labeled_classes[i]
 	}
-	// if opts.verbose_flag && opts.command == 'verify' {
-	// 	println('result in classify_to_verify(): $result')
-	// }
-	// result = summarize_results(1, mut result)
-	// if opts.verbose_flag && opts.command == 'verify' {
-	// 	println('summarize_result: $result')
-	// }
 	return result
 }

@@ -15,60 +15,71 @@ fn testsuite_end() ? {
 }
 
 // fn test_show_classifier
-fn test_show_classifier() {
-	println('test_show_classifier prints out classifiers for iris.tab and for anneal.tab')
-	mut opts := Options{
-		show_flag: true
-		command: 'make'
-		bins: [3, 10]
-	}
-	mut ds := load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
-	// opts.number_of_attributes = [8]
-	// cl = make_classifier(load_file('datasets/anneal.tab'), opts)
-}
-
-// fn test_show_cross_validate() ? {
-// 	mut ds := Dataset{}
+// fn test_show_classifier() {
+// 	println('test_show_classifier prints out classifiers for iris.tab and for anneal.tab')
 // 	mut opts := Options{
-// 		command: 'cross'
-// 		exclude_flag: false
-// 		verbose_flag: false
 // 		show_flag: true
-// 		expanded_flag: false
-// 		concurrency_flag: true
+// 		command: 'make'
+// 		bins: [3, 10]
 // 	}
-// 	mut result := CrossVerifyResult{}
-
-// 	// start with binary classes, cross, -s
-
-// 	opts.datafile_path = 'datasets/UCI/credit-g.arff'
-// 	ds = load_file(opts.datafile_path)
-// 	result = cross_validate(ds, opts) ?
-
-// 	// repeat with -e
-
-// 	opts.expanded_flag = true
-// 	result = cross_validate(ds, opts) ?
-
-// 	// multiclass, cross, -s
-
-// 	opts.expanded_flag = false
-
-// 	opts.datafile_path = 'datasets/UCI/anneal.arff'
-// 	opts.number_of_attributes = [28]
-// 	opts.bins = [21, 21]
-// 	opts.folds = 10
-// 	opts.repetitions = 10
-// 	opts.random_pick = true
-// 	ds = load_file(opts.datafile_path)
-// 	result = cross_validate(ds, opts) ?
-
-// 	// repeat with -e
-
-// 	opts.expanded_flag = true
-// 	result = cross_validate(ds, opts) ?
+// 	mut ds := load_file('datasets/developer.tab')
+// 	mut cl := make_classifier(ds, opts)
+// 	// opts.number_of_attributes = [8]
+// 	// cl = make_classifier(load_file('datasets/anneal.tab'), opts)
 // }
+
+fn test_show_cross_validate() ? {
+	mut ds := Dataset{}
+	mut opts := Options{
+		command: 'cross'
+		exclude_flag: false
+		verbose_flag: false
+		show_flag: true
+		expanded_flag: false
+		concurrency_flag: true
+	}
+	mut result := CrossVerifyResult{}
+
+	// start with binary classes, cross, -s
+
+	opts.datafile_path = 'datasets/UCI/balance-scale.arff'
+	ds = load_file(opts.datafile_path)
+	result = cross_validate(ds, opts) ?
+
+	// repeat with -e
+
+	opts.expanded_flag = true
+	result = cross_validate(ds, opts) ?
+
+	opts.expanded_flag = false
+	opts.weighting_flag = true
+
+	result = cross_validate(ds, opts) ?
+
+	// repeat with -e
+
+	opts.expanded_flag = true
+	result = cross_validate(ds, opts) ?
+	// println(result)
+
+	// multiclass, cross, -s
+
+	// opts.expanded_flag = false
+
+	// opts.datafile_path = 'datasets/UCI/balance-scale.arff'
+	// opts.number_of_attributes = [28]
+	// opts.bins = [21, 21]
+	// opts.folds = 10
+	// opts.repetitions = 10
+	// opts.random_pick = true
+	// ds = load_file(opts.datafile_path)
+	// result = cross_validate(ds, opts) ?
+
+	// repeat with -e
+
+	// opts.expanded_flag = true
+	// result = cross_validate(ds, opts) ?
+}
 
 // fn test_show_verify() ? {
 // 	// now for verify, binary classes, -s
