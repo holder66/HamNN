@@ -8,17 +8,21 @@ There is an associated Command Line Interface app, [VHamNN](https://github.com/h
 You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These files are either in [ARFF (Attribute-Relation File Format)](https://waikato.github.io/weka-wiki/formats_and_processing/arff_stable/) or in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html).
 
 Do we really need another ML library? [Read this!](https://github.com/holder66/vhamnn/blob/master/AI_for_rest_of_us.md)
+
 And have a look here for a more complete [description and potential use cases](https://github.com/holder66/vhamnn/blob/master/description.md). 
 
 ## To use the HamNN library
 
 `v install holder66.hamnn`
 
-And libraries needed by HamNN:
+And (optionally) libraries used by HamNN for generating plots and for colored output on the console:
+
 `v install vsl`
+
 `v install etienne_napoleone.chalk`
 
 In your V code:
+
 `import holder66.hamnn`
 
 Example source code:
@@ -59,9 +63,11 @@ v .                     # compiles all the files in the folder
 # is available for each command.
 ```
 
-## Tutorial for using vhamnn:
+## Tutorial for using VHamNN:
 In the vhamnn directory:
+
 `v run . examples go`
+
 ## Memory leak problem:
 
 At the present time, if your code using the HamNN library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
@@ -75,8 +81,10 @@ You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 The V lang community meets on [Discord](https://discord.gg/vlang)
 
 For bug reports, feature requests, etc., please raise an issue on github:
-[VHamNN](https://github.com/holder66/vhamnn)
-[HamNN](https://github.com/holder66/hamnn)
+
+[for VHamNN](https://github.com/holder66/vhamnn)
+
+[for HamNN](https://github.com/holder66/hamnn)
 
 
 ## Previous versions
