@@ -1,3 +1,4 @@
+[![CI](https://github.com/holder66/hamnn/actions/workflows/ci.yml/badge.svg)](https://github.com/holder66/hamnn/actions/workflows/ci.yml)
 # hamnn
 
 A machine learning (ML) library for classification using a nearest neighbor algorithm based on Hamming distances. [hamnn documentation](https://holder66.github.io)
