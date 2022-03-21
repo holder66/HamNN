@@ -1,4 +1,4 @@
-name: CI
+name: HamNN Continuous Integration
 
 
 on:
