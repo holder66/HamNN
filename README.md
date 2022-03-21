@@ -1,58 +1,20 @@
 [![CI](https://github.com/holder66/hamnn/actions/workflows/ci.yml/badge.svg)](https://github.com/holder66/hamnn/actions/workflows/ci.yml)
-# hamnn
+# HamNN
 
 A machine learning (ML) library for classification using a nearest neighbor algorithm based on Hamming distances. [hamnn documentation](https://holder66.github.io)
 
-There is an associated Command Line Interface app, [vhamnn](https://github.com/holder66/vhamnn), which facilitates using the hamnn library.
+There is an associated Command Line Interface app, [VHamNN](https://github.com/holder66/vhamnn), which facilitates using the hamnn library.
 
 You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These files are either in [ARFF (Attribute-Relation File Format)](https://waikato.github.io/weka-wiki/formats_and_processing/arff_stable/) or in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html).
 
-## Description
+Do we really need another ML library? [Read this!](https://github.com/holder66/vhamnn/blob/master/AI_for_rest_of_us.md)
+And have a look here for a more complete [description and potential use cases](https://github.com/holder66/vhamnn/blob/master/description.md). 
 
-### What it is
-- technology for pattern classification - making sense of what our senses tell us
-- based on the physiology (mimics the functioning) of the central nervous system
-
-### What it can do
-- classify static patterns (eg images, microarray data, medical symptoms and test results, demographic data, survey results, etc.)
-- classify serial (time-based) patterns (eg speech, movies, real-time sensor data, radar information, etc.) (under development)
-- works with multiple classes
-- handles missing data gracefully
-- easily and accurately deals with situations where classes are not [linearly separable](https://en.wikipedia.org/wiki/Linear_separability). This applies to 
-many cases in physiology, biology,  and medicine (see [hormesis.](https://en.wikipedia.org/wiki/Hormesis))
-
-### What makes it special
-- one-trial learning - learns in a single pass
-- robust - accommodates missing information, damage, or noise gracefully
-- easy to convert into hardware - in silicon, possibly optical, molecular, or quantum computing
-- lends itself to parallel computing
-- has an exceptionally tiny footprint in terms of memory and computing resources needed
-
-### What problems can it solve
-#### data reduction
-identifies and uses only those variables which are most likely to contribute to classification accuracy
-#### image preprocessing
-eliminates the need to correct for variations in size, skew, or rotation (under development)
-#### noisy data
-quickly identifies and removes from consideration variables which add noise
-
-### Where it can be applied - potential use cases
-- speech recognition
-- emotion recognition (from facial expression, body language, speech prosody)
-- prediction of weather, earthquakes, traffic patterns
-- aircraft collision avoidance
-- data mining (eg, for targeted advertising)
-- diagnostic aid (medical, equipment maintenance, etc.)
-- risk identification and management (loans, risk calculators for heart disease, etc.)
-- real-time problem detection (bridges, computer networks, automobiles, railroads, aircraft, etc.)
-- robotics
-- neural prosthetic devices, to enhance our senses, processing capacity and speed, memory
-
-## To use the hamnn library
+## To use the HamNN library
 
 `v install holder66.hamnn`
 
-And libraries needed by hamnn:
+And libraries needed by HamNN:
 `v install vsl`
 `v install etienne_napoleone.chalk`
 
@@ -79,7 +41,7 @@ fn main() {
 }
 ```
 
-## Installation of the command line interface app vhamnn:
+## Installation of the command line interface app VHamNN:
 First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
 ```sh
 git clone https://github.com/vlang/v
@@ -102,7 +64,7 @@ In the vhamnn directory:
 `v run . examples go`
 ## Memory leak problem:
 
-At the present time, if your code using the hamnn library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
+At the present time, if your code using the HamNN library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
 
  ```sh
  v -gc boehm .
@@ -112,39 +74,9 @@ You may need to install the libgc or libgc-dev library, using "brew" or "apt".
 ## Getting help:
 The V lang community meets on [Discord](https://discord.gg/vlang)
 
-For issues with vhamnn or hamnn, please raise an issue on github:
-[vhamnn](https://github.com/holder66/vhamnn)
-[hamnn](https://github.com/holder66/hamnn)
-
-## Glossary of terms
-**instances:** synonyms: cases; records; examples
-- instances can be grouped into sets, eg training set, test set, validation set
-- corresponds to a table row in a tabular data base
-
-**dataset:** consists of a number of instances (cases, or examples)
-
-**attributes:** synonyms: variables; fields; features
-- corresponds to a column in a tabular data base. The attribute name is the column header
-- one of the attribute will be the class attribute or class variable (also called the target variable, or class feature)
-- attributes can be combined in various ways, to create new attributes
-
-**attribute ranking:** the process of finding those attributes which provide the best classification performance
-
-**classes:** the set of values that the class attribute can take
-
-**parameters:** eg, the k in k-nearest-neighbors
-- often, the work involved in applying machine learning to a problem is to find appropriate or optimal values for the parameters used by a given ML methodology
-
-**Hamming distance:** (may also be called "overlap metric") the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. For binary strings a and b the Hamming distance is equal to the number of ones (population count) in a XOR b.
-
-**bins:** the number of bins or slices to be applied for a given continuous attribute
-
-**binning:** the process of converting a continuous attribute into a discrete attribute
-
-**discrete:** (as applied to a attribute or variable): nominal or ordinal data
-
-**continuous:** (as applied to a attribute or variable): real-valued
-- ordinal data with a range greater than a certain parameter may also be treated as continous data
+For bug reports, feature requests, etc., please raise an issue on github:
+[VHamNN](https://github.com/holder66/vhamnn)
+[HamNN](https://github.com/holder66/hamnn)
 
 
 ## Previous versions
