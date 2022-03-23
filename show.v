@@ -146,7 +146,6 @@ fn show_parameters(p Parameters) {
 			'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
 		},
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Results:',
 	]
 	print_array(results_array)
 }
@@ -414,7 +413,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	} else {
 		explore_type_string = 'verification of "$results.testfile_path"'
 	}
-	println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path',
+	println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path"',
 		'underline'), 'magenta'))
 	if results.binning.lower == 0 {
 		println('No continuous attributes, thus no binning')
