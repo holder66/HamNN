@@ -1,4 +1,5 @@
 [![HamNN Continuous Integration](https://github.com/holder66/hamnn/actions/workflows/HamNN%20Continuous%20Integration.yml/badge.svg)](https://github.com/holder66/hamnn/actions/workflows/HamNN%20Continuous%20Integration.yml)
+![GitHub](https://img.shields.io/github/license/holder66/HamNN)
 # HamNN
 
 A machine learning (ML) library for classification using a nearest neighbor algorithm based on Hamming distances. [hamnn documentation](https://holder66.github.io)
