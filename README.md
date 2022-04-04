@@ -14,6 +14,8 @@ And have a look here for a more complete [description and potential use cases](h
 
 ## To use the HamNN library
 
+This assumes you already have V installed on your system. If not, please refer to the [VHamNN readme](https://github.com/holder66/vhamnn) for instructions on installing V.
+
 `v install holder66.hamnn`
 
 And (optionally) libraries used by HamNN for generating plots and for colored output on the console:
@@ -46,29 +48,6 @@ fn main() {
 }
 ```
 
-## Installation of the command line interface app VHamNN:
-First, install V, if not already installed. On MacOS, Linux etc. you need `git` and a C compiler (For windows or android environments, see the [v lang documentation](https://github.com/vlang/v/blob/master/doc/docs.md#windows)) In a terminal:
-```sh
-git clone https://github.com/vlang/v
-cd v
-make
-sudo ./v symlink	# add v to your PATH
-```
-Clone the github repository for holder66/vhamnn, and run the algorithms:
-```sh
-git clone https://github.com/holder66/vhamnn
-cd vhamnn
-v .                     # compiles all the files in the folder
-./hamnn --help    # displays help information about the various commands
-# and options available. More specific help information
-# is available for each command.
-```
-
-## Tutorial for using VHamNN:
-In the vhamnn directory:
-
-`v run . examples go`
-
 ## Memory leak problem:
 
 At the present time, if your code using the HamNN library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
@@ -83,13 +62,12 @@ The V lang community meets on [Discord](https://discord.gg/vlang)
 
 For bug reports, feature requests, etc., please raise an issue on github:
 
-[for VHamNN](https://github.com/holder66/vhamnn)
-
 [for HamNN](https://github.com/holder66/hamnn)
 
+[for VHamNN](https://github.com/holder66/vhamnn)
 
 ## Previous versions
-The most recent version (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.
+The most recent version of the HamNN algorithm (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.
 
 The process of development in its early stages is described in [this essay](https://henry.olders.ca/wordpress/?p=731) written in 1989.
 
