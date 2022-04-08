@@ -15,19 +15,18 @@ And have a look here for a more complete [description and potential use cases](h
 ## To use the HamNN library
 
 This assumes you already have V installed on your system. If not, please refer to the [VHamNN readme](https://github.com/holder66/vhamnn) for instructions on installing V.
-
-`v install holder66.hamnn`
-
+```
+v install holder66.hamnn
+```
 And (optionally) libraries used by HamNN for generating plots and for colored output on the console:
-
-`v install vsl`
-
-`v install etienne_napoleone.chalk`
-
+```
+v install vsl
+v install etienne_napoleone.chalk
+```
 In your V code:
-
-`import holder66.hamnn`
-
+```
+import holder66.hamnn
+```
 Example source code:
 ```v
 module main
@@ -51,7 +50,6 @@ fn main() {
 ## Memory leak problem:
 
 At the present time, if your code using the HamNN library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
-
  ```sh
  v -gc boehm .
  ```
@@ -65,6 +63,12 @@ For bug reports, feature requests, etc., please raise an issue on github:
 [for HamNN](https://github.com/holder66/hamnn)
 
 [for VHamNN](https://github.com/holder66/vhamnn)
+
+## MNIST dataset
+The mnist_train.tab file is too large to keep in the repository. If you wish to experiment with it, it can be downloaded by right-clicking on [this link](http://henry.olders.ca/datasets/mnist_train.tab) in a web browser, or downloaded via the command line:
+```sh
+wget http://henry.olders.ca/datasets/mnist_train.tab
+```
 
 ## Previous versions
 The most recent version of the HamNN algorithm (2012) was written in python; one can experiment with it via a [web-based interface](http://hammingnn.olders.ca). I’ve [posted test results](https://henry.olders.ca/wordpress/?p=613) using this classifier with a number of publicly accessible datasets. Here are some [additional test results](https://henry.olders.ca/wordpress/?p=381) with genomics datasets.
