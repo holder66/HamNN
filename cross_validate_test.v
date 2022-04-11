@@ -26,7 +26,7 @@ fn test_cross_validate() ? {
 
 	opts.weighting_flag = true
 	result = cross_validate(ds, opts) ?
-	assert result.correct_count >= 874 && result.correct_count <= 879
+	assert result.correct_count >= 870 && result.correct_count <= 883
 
 	opts.datafile_path = 'datasets/developer.tab'
 	opts.number_of_attributes = [2]
