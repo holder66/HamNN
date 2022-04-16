@@ -32,10 +32,10 @@ jobs:
           v fmt -diff .
           v fmt -verify .
 
-      # - name: Install dependencies
-      #   run: |
-      #     v install vsl
-      #     v install etienne_napoleone.chalk
+      - name: Install dependencies
+        run: |
+          v install vsl
+          v install etienne_napoleone.chalk
 
       - name: Build ${{ github.event.repository.name }}
         run: v -shared .
