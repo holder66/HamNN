@@ -14,7 +14,7 @@ module hamnn
 // weighting_flag: when true, nearest neighbor counts are weighted
 // by class prevalences.
 // ```
-pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []byte, opts Options) ClassifyResult {
+pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u8, opts Options) ClassifyResult {
 	mut result := ClassifyResult{}
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
@@ -74,7 +74,7 @@ fn get_hamming_distance<T>(left T, right T) int {
 	if left == right {
 		return 0
 	}
-	if left == byte(0) || right == byte(0) {
+	if left == u8(0) || right == u8(0) {
 		return 1
 	}
 	return 2

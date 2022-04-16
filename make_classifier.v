@@ -49,7 +49,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	mut max := f32(0.0)
 	mut binned_values := [1]
 	mut translation_table := map[string]int{}
-	mut attr_binned_values := [][]byte{}
+	mut attr_binned_values := [][]u8{}
 	mut attr_names := []string{}
 	for ra in ranked_attributes {
 		attr_names << ra.attribute_name
@@ -78,7 +78,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 				index: ra.attribute_index
 			}
 		}
-		attr_binned_values << binned_values.map(byte(it))
+		attr_binned_values << binned_values.map(u8(it))
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names

@@ -225,7 +225,7 @@ fn div_map(n int, mut m map[string]int) map[string]int {
 
 // do_one_fold
 fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
-	mut byte_values_array := [][]byte{}
+	mut byte_values_array := [][]u8{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
 	mut fold_result := CrossVerifyResult{
@@ -258,14 +258,14 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 }
 
 // process_fold_data
-fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []byte {
-	mut byte_vals := []byte{cap: fold_data.len}
+fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []u8 {
+	mut byte_vals := []u8{cap: fold_data.len}
 	// for a continuous attribute
 	if part_attr.attribute_type == 'C' {
 		values := fold_data.map(f32(strconv.atof_quick(it)))
 		byte_vals << bin_values_array(values, part_attr.minimum, part_attr.maximum, part_attr.bins)
 	} else {
-		byte_vals << fold_data.map(byte(part_attr.translation_table[it]))
+		byte_vals << fold_data.map(u8(part_attr.translation_table[it]))
 	}
 	return byte_vals
 }
@@ -283,7 +283,7 @@ fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, p
 
 // classify_in_cross classifies each instance in an array, and
 // returns the results of the classification.
-fn classify_in_cross(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+fn classify_in_cross(cl Classifier, test_instances [][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// for each instance in the test data, perform a classification
 	mut inferred_class := ''
 	for i, test_instance in test_instances {

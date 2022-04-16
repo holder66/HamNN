@@ -62,10 +62,10 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 }
 
 // generate_test_instances_array
-fn generate_test_instances_array(cl Classifier, test_ds Dataset) [][]byte {
+fn generate_test_instances_array(cl Classifier, test_ds Dataset) [][]u8 {
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
-	mut test_attr_binned_values := [][]byte{}
+	mut test_attr_binned_values := [][]u8{}
 	mut test_index := 0
 	for attr in cl.attribute_ordering {
 		// get an index into this attribute in test_ds
@@ -81,13 +81,13 @@ fn generate_test_instances_array(cl Classifier, test_ds Dataset) [][]byte {
 		} else { // ie for discrete attributes
 			test_binned_values = test_ds.useful_discrete_attributes[test_index].map(cl.trained_attributes[attr].translation_table[it])
 		}
-		test_attr_binned_values << test_binned_values.map(byte(it))
+		test_attr_binned_values << test_binned_values.map(u8(it))
 	}
 	return transpose(test_attr_binned_values)
 }
 
 // option_worker_verify
-fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResult, cl Classifier, test_instances [][]byte, labeled_classes []string, opts Options) {
+fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResult, cl Classifier, test_instances [][]u8, labeled_classes []string, opts Options) {
 	mut index := <-work_channel
 	mut classify_result := classify_instance(index, cl, test_instances[index], opts)
 	classify_result.labeled_class = labeled_classes[index]
@@ -98,7 +98,7 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 
 // classify_to_verify classifies each instance in an array, and
 // returns the results of the classification.
-fn classify_to_verify(cl Classifier, test_instances [][]byte, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// for each instance in the test data, perform a classification
 	mut classify_result := ClassifyResult{}
 	if opts.concurrency_flag {

@@ -26,7 +26,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	}
 	// for each usable attribute in cl, massage the equivalent test_ds attribute
 	mut test_binned_values := []int{}
-	mut test_attr_binned_values := [][]byte{}
+	mut test_attr_binned_values := [][]u8{}
 	mut test_index := 0
 	for attr in cl.attribute_ordering {
 		// get an index into this attribute in test_ds
@@ -42,7 +42,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 		} else { // ie for discrete attributes
 			test_binned_values = test_ds.useful_discrete_attributes[test_index].map(cl.trained_attributes[attr].translation_table[it])
 		}
-		test_attr_binned_values << test_binned_values.map(byte(it))
+		test_attr_binned_values << test_binned_values.map(u8(it))
 	}
 	test_instances := transpose(test_attr_binned_values)
 	// for each instance in the test data, perform a classification and compile the results
@@ -58,7 +58,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 }
 
 // classify_to_validate
-fn classify_to_validate(cl Classifier, test_instances [][]byte, mut result ValidateResult, opts Options) ValidateResult {
+fn classify_to_validate(cl Classifier, test_instances [][]u8, mut result ValidateResult, opts Options) ValidateResult {
 	result.Class = cl.Class
 	mut classify_result := ClassifyResult{}
 	// for each instance in the test data, perform a classification

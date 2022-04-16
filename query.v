@@ -17,7 +17,7 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 		Class: cl.Class
 	}
 	mut possibles := []string{}
-	mut byte_values := []byte{}
+	mut byte_values := []u8{}
 	mut responses := map[string]string{}
 	// for testing, skip the query by putting some values in responses
 	// and run with -a 2
@@ -76,15 +76,15 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 }
 
 // get_byte_values
-fn get_byte_values(cl Classifier, responses map[string]string) []byte {
-	mut byte_values := []byte{}
+fn get_byte_values(cl Classifier, responses map[string]string) []u8 {
+	mut byte_values := []u8{}
 	for attr in cl.attribute_ordering {
 		// if discrete, use translation table to get a "binned value" equivalent
 		if cl.trained_attributes[attr].attribute_type == 'D' {
-			byte_values << byte(cl.trained_attributes[attr].translation_table[responses[attr]])
+			byte_values << u8(cl.trained_attributes[attr].translation_table[responses[attr]])
 		} else {
 			if responses[attr] == '' {
-				byte_values << byte(0)
+				byte_values << u8(0)
 			} else {
 				byte_values << bin_single_value(f32(strconv.atof_quick(responses[attr])),
 					cl.trained_attributes[attr].minimum, cl.trained_attributes[attr].maximum,

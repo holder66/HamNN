@@ -92,7 +92,7 @@ pub mut:
 	attribute_ordering []string
 	trained_attributes map[string]TrainedAttribute
 	indices            []int
-	instances          [][]byte
+	instances          [][]u8
 	history            []HistoryEvent
 }
 
@@ -277,5 +277,5 @@ pub mut:
 	validate_file_path string
 	inferred_classes   []string
 	counts             [][]int
-	instances          [][]byte
+	instances          [][]u8
 }

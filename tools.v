@@ -133,17 +133,17 @@ fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
 }
 
 // bin_values_array
-fn bin_values_array<T>(values []T, min T, max T, bins int) []byte {
+fn bin_values_array<T>(values []T, min T, max T, bins int) []u8 {
 	bin_size := (max - min) / bins
-	mut bin_values := []byte{}
-	mut bin := byte(0)
+	mut bin_values := []u8{}
+	mut bin := u8(0)
 	for value in values {
 		if value == -math.max_f32 {
-			bin = byte(0)
+			bin = u8(0)
 		} else if value == max {
-			bin = byte(bins)
+			bin = u8(bins)
 		} else {
-			bin = byte(int((value - min) / bin_size) + 1)
+			bin = u8(int((value - min) / bin_size) + 1)
 		}
 		bin_values << bin
 	}
@@ -153,13 +153,13 @@ fn bin_values_array<T>(values []T, min T, max T, bins int) []byte {
 // bin_single_value
 fn bin_single_value<T>(value T, min T, max T, bins int) byte {
 	bin_size := (max - min) / bins
-	mut bin := byte(0)
+	mut bin := u8(0)
 	if value == -math.max_f32 {
-		bin = byte(0)
+		bin = u8(0)
 	} else if value == max {
-		bin = byte(bins)
+		bin = u8(bins)
 	} else {
-		bin = byte(int((value - min) / bin_size) + 1)
+		bin = u8(int((value - min) / bin_size) + 1)
 	}
 	return bin
 }
