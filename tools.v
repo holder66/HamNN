@@ -9,8 +9,8 @@ import json
 // save_json_file
 fn save_json_file<T>(u T, path string) {
 	s := json.encode(u)
-	mut f := os.open_file(path, 'w') or { panic(err.msg) }
-	f.write_string(s) or { panic(err.msg) }
+	mut f := os.open_file(path, 'w') or { panic(err.msg()) }
+	f.write_string(s) or { panic(err.msg()) }
 	f.close()
 }
 

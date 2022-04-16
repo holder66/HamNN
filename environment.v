@@ -20,7 +20,7 @@ pub fn get_environment() Environment {
 
 // get_package_version
 fn get_package_version() string {
-	vm := vmod.decode(@VMOD_FILE) or { panic(err.msg) }
+	vm := vmod.decode(@VMOD_FILE) or { panic(err.msg()) }
 	return vm.version
 }
 
