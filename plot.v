@@ -104,7 +104,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 	mut max_percents := 0.0
 	mut metrics := Metrics{}
 	for res in result.array_of_results {
-		metrics = get_metrics(res) ?
+		metrics = get_metrics(res)?
 		y_value = metrics.balanced_accuracy * 100
 		// y_value = (f32(res.correct_count) * 100 / res.total_count)
 		x << f64(res.attributes_used)

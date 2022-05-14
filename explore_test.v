@@ -14,22 +14,22 @@ fn test_explore_cross() ? {
 		datafile_path: 'datasets/iris.tab'
 	}
 	mut ds := load_file(opts.datafile_path)
-	result = explore(ds, opts) ?
+	result = explore(ds, opts)?
 	assert result.array_of_results[0].correct_count == 99
 	assert result.array_of_results[0].incorrects_count == 51
 	assert result.array_of_results[0].wrong_count == 51
 	assert result.array_of_results[0].total_count == 150
-	metrics = get_metrics(result.array_of_results[0]) ?
+	metrics = get_metrics(result.array_of_results[0])?
 	assert metrics.balanced_accuracy >= 0.66
 
 	opts.uniform_bins = false
 	opts.bins = [10, 12]
-	result = explore(ds, opts) ?
+	result = explore(ds, opts)?
 	assert result.array_of_results.last().correct_count == 141
 	assert result.array_of_results.last().incorrects_count == 9
 	assert result.array_of_results.last().wrong_count == 9
 	assert result.array_of_results.last().total_count == 150
-	metrics = get_metrics(result.array_of_results.last()) ?
+	metrics = get_metrics(result.array_of_results.last())?
 	assert metrics.balanced_accuracy >= 0.94
 	println('Done with iris.tab')
 
@@ -67,7 +67,7 @@ fn test_explore_verify() ? {
 		datafile_path: 'datasets/bcw350train'
 	}
 	mut ds := load_file(opts.datafile_path)
-	mut result := explore(ds, opts) ?
+	mut result := explore(ds, opts)?
 	assert result.array_of_results[7].correct_count == 170
 	assert result.array_of_results[7].wrong_count == 4
 	println('done with explore_verify of bcw')

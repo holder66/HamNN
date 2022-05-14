@@ -23,7 +23,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
 			show_explore_header(saved_er, settings)
 			for result in saved_er.array_of_results {
-				show_explore_line(result, settings) ?
+				show_explore_line(result, settings)?
 			}
 			if settings.graph_flag {
 				// plot_explore(saved_er)}
@@ -50,11 +50,11 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"verify"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
-			show_verify(saved_vr, settings) ?
+			show_verify(saved_vr, settings)?
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"cross"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
-			show_crossvalidation(saved_vr, settings) ?
+			show_crossvalidation(saved_vr, settings)?
 		}
 		else {
 			println('File type not recognized!')

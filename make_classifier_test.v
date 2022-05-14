@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder2') {
-		os.rmdir_all('tempfolder2') ?
+		os.rmdir_all('tempfolder2')?
 	}
-	os.mkdir_all('tempfolder2') ?
+	os.mkdir_all('tempfolder2')?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder2') ?
+	os.rmdir_all('tempfolder2')?
 }
 
 // test_make_classifier
@@ -77,21 +77,21 @@ fn test_save_classifier() ? {
 	ds = load_file('datasets/developer.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = load_file('datasets/anneal.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = load_file('datasets/soybean-large-train.tab')
 	cl = make_classifier(ds, opts)
 
-	tcl = load_classifier_file(opts.classifierfile_path) ?
+	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
@@ -100,7 +100,7 @@ fn test_save_classifier() ? {
 		ds = load_file(path)
 		cl = make_classifier(ds, opts)
 
-		tcl = load_classifier_file(opts.classifierfile_path) ?
+		tcl = load_classifier_file(opts.classifierfile_path)?
 		assert tcl.trained_attributes == cl.trained_attributes
 		assert tcl.instances == cl.instances
 	}

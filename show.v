@@ -166,7 +166,7 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
-	show_cross_or_verify_result(result, settings) ?
+	show_cross_or_verify_result(result, settings)?
 }
 
 // show_crossvalidation
@@ -178,18 +178,18 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 		 }
 	 })
 	show_parameters(result.Parameters)
-	show_cross_or_verify_result(result, settings) ?
+	show_cross_or_verify_result(result, settings)?
 }
 
 // show_cross_or_verify_result
 fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySettings) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
-	mut metrics := get_metrics(result) ?
+	mut metrics := get_metrics(result)?
 	if !settings.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
 	} else {
-		show_expanded_result(metrics, result) ?
+		show_expanded_result(metrics, result)?
 		print_confusion_matrix(result)
 	}
 }
@@ -198,7 +198,7 @@ fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySetting
 fn show_expanded_result(metrics Metrics, result CrossVerifyResult) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
-	show_multiple_classes_stats(metrics, result) ?
+	show_multiple_classes_stats(metrics, result)?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
@@ -257,21 +257,21 @@ fn wt_avg(a []f64, wts []int) ?f64 {
 	for i, wt in wts {
 		wp += a[i] * wt
 	}
-	return wp / arrays.sum(wts) ?
+	return wp / arrays.sum(wts)?
 }
 
 // avg_metrics
 fn (mut m Metrics) avg_metrics() ?Metrics {
 	count := m.precision.len
 
-	m.avg_precision << arrays.sum(m.precision) ? / count
-	m.avg_recall << arrays.sum(m.recall) ? / count
-	m.avg_f1_score << arrays.sum(m.f1_score) ? / count
+	m.avg_precision << arrays.sum(m.precision)? / count
+	m.avg_recall << arrays.sum(m.recall)? / count
+	m.avg_f1_score << arrays.sum(m.f1_score)? / count
 	m.avg_type << 'macro'
 
-	m.avg_precision << wt_avg(m.precision, m.class_counts) ?
-	m.avg_recall << wt_avg(m.recall, m.class_counts) ?
-	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts) ?
+	m.avg_precision << wt_avg(m.precision, m.class_counts)?
+	m.avg_recall << wt_avg(m.recall, m.class_counts)?
+	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
 	m.avg_type << 'weighted'
 	// multiclass balanced accuracy is the arithmetic mean of the recalls
 	m.balanced_accuracy = m.avg_recall[0]
@@ -287,7 +287,7 @@ fn get_metrics(result CrossVerifyResult) ?Metrics {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
 	}
-	metrics.avg_metrics() ?
+	metrics.avg_metrics()?
 	return metrics
 }
 
@@ -371,7 +371,7 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(get_metrics(result) ?, result) ?
+		show_multiple_classes_stats(get_metrics(result)?, result)?
 	}
 }
 
@@ -452,14 +452,14 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 	if settings.show_flag || settings.expanded_flag {
 		if !settings.expanded_flag {
 			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			metrics := get_metrics(result) ?
+			metrics := get_metrics(result)?
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}')
-				show_multiple_classes_stats(get_metrics(result) ?, result) ?
+				show_multiple_classes_stats(get_metrics(result)?, result)?
 			}
 		}
 	}

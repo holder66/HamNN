@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder3') {
-		os.rmdir_all('tempfolder3') ?
+		os.rmdir_all('tempfolder3')?
 	}
-	os.mkdir_all('tempfolder3') ?
+	os.mkdir_all('tempfolder3')?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder3') ?
+	os.rmdir_all('tempfolder3')?
 }
 
 // test_validate_save_result
@@ -54,7 +54,7 @@ fn test_validate() ? {
 	opts.number_of_attributes = [2]
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = validate(cl, opts) ?
+	result = validate(cl, opts)?
 	assert result.inferred_classes == ['f', 'f', 'f', 'm', 'm', 'm', 'f', 'f', 'm', 'f']
 	assert result.counts == [[1, 0], [1, 0], [1, 0], [0, 1], [0, 1],
 		[0, 1], [1, 0], [1, 0], [0, 1], [3, 0]]
@@ -68,7 +68,7 @@ fn test_validate() ? {
 	opts.bins = [2, 4]
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = validate(cl, opts) ?
+	result = validate(cl, opts)?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign',
@@ -122,7 +122,7 @@ fn test_validate() ? {
 	// repeat with weighting
 	opts.weighting_flag = true
 	cl = make_classifier(ds, opts)
-	result = validate(cl, opts) ?
+	result = validate(cl, opts)?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign',
@@ -190,7 +190,7 @@ fn test_validate() ? {
 	cl = make_classifier(ds, opts)
 	cl = Classifier{}
 	opts.classifierfile_path = opts.outputfile_path
-	result = validate(load_classifier_file(opts.classifierfile_path) ?, opts) ?
+	result = validate(load_classifier_file(opts.classifierfile_path)?, opts)?
 	assert result.inferred_classes == ['benign', 'benign', 'benign', 'benign', 'benign', 'malignant',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'benign',
 		'benign', 'benign', 'benign', 'benign', 'benign', 'benign', 'malignant', 'benign', 'benign',
@@ -260,13 +260,13 @@ fn test_validate() ? {
 	cl = make_classifier(ds, opts)
 	// reset the outputfile_path so that validate won't overwrite the classifier
 	opts.outputfile_path = ''
-	result = validate(cl, opts) ?
+	result = validate(cl, opts)?
 	assert result.counts[0] == [12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	s := result.inferred_classes[0..4]
 	assert s == ['diaporthe-stem-canker', 'diaporthe-stem-canker', 'diaporthe-stem-canker',
 		'diaporthe-stem-canker']
-	tcl := load_classifier_file('tempfolder3/classifierfile') ?
-	test_result = validate(tcl, opts) ?
+	tcl := load_classifier_file('tempfolder3/classifierfile')?
+	test_result = validate(tcl, opts)?
 
 	assert result.inferred_classes == test_result.inferred_classes
 	assert result.counts == test_result.counts

@@ -50,7 +50,7 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		show_verify(verify_result, opts.DisplaySettings) ?
+		show_verify(verify_result, opts.DisplaySettings)?
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')

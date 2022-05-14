@@ -6,13 +6,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder1') {
-		os.rmdir_all('tempfolder1') ?
+		os.rmdir_all('tempfolder1')?
 	}
-	os.mkdir_all('tempfolder1') ?
+	os.mkdir_all('tempfolder1')?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder1') ?
+	os.rmdir_all('tempfolder1')?
 }
 
 // test_file_type
@@ -92,7 +92,7 @@ fn test_load_classifier_file() ? {
 	opts.number_of_attributes = [4]
 	ds = load_file('datasets/developer.tab')
 	cl = make_classifier(ds, opts)
-	tcl = load_classifier_file('tempfolder1/classifierfile') ?
+	tcl = load_classifier_file('tempfolder1/classifierfile')?
 	// assert cl.Options == tcl.Options
 	assert cl.Class == tcl.Class
 	assert cl.attribute_ordering == tcl.attribute_ordering
@@ -104,7 +104,7 @@ fn test_load_classifier_file() ? {
 	opts.number_of_attributes = [2]
 	ds = load_file('datasets/iris.tab')
 	cl = make_classifier(ds, opts)
-	tcl = load_classifier_file('tempfolder1/classifierfile') ?
+	tcl = load_classifier_file('tempfolder1/classifierfile')?
 	// assert cl.Options == tcl.Options
 	assert cl.Class == tcl.Class
 	assert cl.attribute_ordering == tcl.attribute_ordering
@@ -125,8 +125,8 @@ fn test_load_instances_file() ? {
 	opts.testfile_path = 'datasets/test_validate.tab'
 	ds = load_file('datasets/test.tab')
 	cl = make_classifier(ds, opts)
-	vr = validate(cl, opts) ?
-	tvr = load_instances_file('tempfolder1/validate_result.json') ?
+	vr = validate(cl, opts)?
+	tvr = load_instances_file('tempfolder1/validate_result.json')?
 	assert vr.Class == tvr.Class
 	assert vr.inferred_classes == tvr.inferred_classes
 	assert vr.counts == tvr.counts
@@ -134,8 +134,8 @@ fn test_load_instances_file() ? {
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
 	ds = load_file('datasets/soybean-large-train.tab')
 	cl = make_classifier(ds, opts)
-	vr = validate(cl, opts) ?
-	tvr = load_instances_file('tempfolder1/validate_result.json') ?
+	vr = validate(cl, opts)?
+	tvr = load_instances_file('tempfolder1/validate_result.json')?
 	assert vr.Class == tvr.Class
 	assert vr.inferred_classes == tvr.inferred_classes
 	assert vr.counts == tvr.counts

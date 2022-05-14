@@ -77,7 +77,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		if opts.random_pick {
 			mut n := 0
 			for pick_list.len < total_instances {
-				n = rand.int_in_range(0, total_instances) ?
+				n = rand.int_in_range(0, total_instances)?
 				if n in pick_list {
 					continue
 				}
@@ -100,7 +100,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	}
 	// show_results(cross_result, cross_opts)
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		show_crossvalidation(cross_result, cross_opts.DisplaySettings) ?
+		show_crossvalidation(cross_result, cross_opts.DisplaySettings)?
 	}
 	return cross_result
 }

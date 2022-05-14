@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder')?
 	}
-	os.mkdir_all('tempfolder') ?
+	os.mkdir_all('tempfolder')?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder') ?
+	os.rmdir_all('tempfolder')?
 }
 
 // test_show_analyze has no asserts; the console output needs
@@ -50,7 +50,7 @@ fn test_show_append() ? {
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/test_validate.tab'
-	val_results = validate(cl, opts) ?
+	val_results = validate(cl, opts)?
 	// now do the append, first from val_results, and
 	// saving the extended classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
@@ -59,7 +59,7 @@ fn test_show_append() ? {
 
 	// now do it again but from the saved validate result,
 	// appending to the previously extended classifier
-	tcl = append_instances(load_classifier_file('tempfolder/classifierfile') ?, load_instances_file('tempfolder/instancesfile') ?,
+	tcl = append_instances(load_classifier_file('tempfolder/classifierfile')?, load_instances_file('tempfolder/instancesfile')?,
 		opts)
 
 	// repeat with soybean
@@ -69,7 +69,7 @@ fn test_show_append() ? {
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
-	val_results = validate(cl, opts) ?
+	val_results = validate(cl, opts)?
 	// now do the append, first from val_results, and
 	// saving the extended classifier
 	opts.outputfile_path = 'tempfolder/classifierfile'
@@ -78,7 +78,7 @@ fn test_show_append() ? {
 
 	// now do it again but from the saved validate result,
 	// appending to the previously extended classifier
-	tcl = append_instances(load_classifier_file('tempfolder/classifierfile') ?, load_instances_file('tempfolder/instancesfile') ?,
+	tcl = append_instances(load_classifier_file('tempfolder/classifierfile')?, load_instances_file('tempfolder/instancesfile')?,
 		opts)
 }
 
@@ -105,27 +105,27 @@ fn test_show_crossvalidation() ? {
 		command: 'cross'
 	}
 	println('\n\ndeveloper.tab')
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
 	println('\ndeveloper.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
 
 	println('\n\nbreast-cancer-wisconsin-disc.tab')
 	opts.expanded_flag = false
 	opts.number_of_attributes = [4]
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
 	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
 
 	println('\n\niris.tab')
 	opts.expanded_flag = false
 	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
 	println('\niris.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts) ?
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
 }
 
 // test_show_explore_cross
@@ -148,7 +148,7 @@ fn test_show_explore_cross() ? {
 		datafile_path: 'datasets/developer.tab'
 		command: 'explore'
 	}
-	results = explore(load_file(opts.datafile_path), opts) ?
+	results = explore(load_file(opts.datafile_path), opts)?
 }
 
 // test_show_explore_verify
@@ -167,11 +167,11 @@ fn test_show_explore_verify() ? {
 		datafile_path: 'datasets/bcw350train'
 		testfile_path: 'datasets/bcw174test'
 	}
-	results = explore(load_file(opts.datafile_path), opts) ?
+	results = explore(load_file(opts.datafile_path), opts)?
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	opts.number_of_attributes = [0]
-	results = explore(load_file(opts.datafile_path), opts) ?
+	results = explore(load_file(opts.datafile_path), opts)?
 }
 
 // test_show_rank_attributes
@@ -218,7 +218,7 @@ fn test_show_validate() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = validate(cl, opts) ?
+	result = validate(cl, opts)?
 }
 
 // test_show_verify
@@ -241,11 +241,11 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts) ?
+	result = verify(cl, opts)?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts) ?
+	result = verify(cl, opts)?
 	// println('result two in show_test: $result')
 }

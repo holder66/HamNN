@@ -78,14 +78,14 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 				ex_opts.bins = [2, bin]
 			}
 			if ex_opts.testfile_path == '' {
-				result = cross_validate(ds, ex_opts) ?
+				result = cross_validate(ds, ex_opts)?
 			} else {
 				cl = make_classifier(ds, ex_opts)
-				result = verify(cl, ex_opts) ?
+				result = verify(cl, ex_opts)?
 			}
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
-			show_explore_line(result, results.DisplaySettings) ?
+			show_explore_line(result, results.DisplaySettings)?
 
 			array_of_results << result
 			bin += binning.interval
@@ -94,7 +94,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	}
 	results.array_of_results = array_of_results
 	if opts.graph_flag {
-		plot_explore(results, opts) ?
+		plot_explore(results, opts)?
 		if ds.Class.class_counts.len == 2 {
 			plot_roc(results, opts)
 		}

@@ -6,13 +6,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder') ?
+		os.rmdir_all('tempfolder')?
 	}
-	os.mkdir_all('tempfolder') ?
+	os.mkdir_all('tempfolder')?
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder') ?
+	os.rmdir_all('tempfolder')?
 }
 
 fn test_display_classifier() ? {
@@ -30,7 +30,7 @@ fn test_display_classifier() ? {
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	display_file(path, settings) ?
+	display_file(path, settings)?
 }
 
 fn test_display_analyze_result() ? {
@@ -43,7 +43,7 @@ fn test_display_analyze_result() ? {
 		show_flag: false
 	}
 	analyze_dataset(load_file('datasets/UCI/anneal.arff'), opts)
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 }
 
 fn test_display_ranking_result() ? {
@@ -56,7 +56,7 @@ fn test_display_ranking_result() ? {
 	mut settings := DisplaySettings{
 		show_flag: false
 	}
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 	// repeat for displaying a plot
 	// settings.graph_flag = true
 	// display_file(opts.outputfile_path, settings) ?
@@ -73,8 +73,8 @@ fn test_display_validate_result() ? {
 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
 	opts.outputfile_path = 'tempfolder/validate_result'
 	opts.testfile_path = 'datasets/bcw174validate'
-	_ = validate(cl, opts) ?
-	display_file(opts.outputfile_path, settings) ?
+	_ = validate(cl, opts)?
+	display_file(opts.outputfile_path, settings)?
 }
 
 fn test_display_verify_result() ? {
@@ -90,10 +90,10 @@ fn test_display_verify_result() ? {
 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
 	opts.outputfile_path = 'tempfolder/verify_result'
 	opts.testfile_path = 'datasets/bcw174test'
-	_ = verify(cl, opts) ?
-	display_file(opts.outputfile_path, settings) ?
+	_ = verify(cl, opts)?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 }
 
 fn test_display_cross_result() ? {
@@ -112,14 +112,14 @@ fn test_display_cross_result() ? {
 	}
 	ds := load_file('datasets/UCI/segment.arff')
 	opts.outputfile_path = 'tempfolder/cross_result'
-	_ = cross_validate(ds, opts) ?
-	display_file(opts.outputfile_path, settings) ?
+	_ = cross_validate(ds, opts)?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
 	opts.folds = 10
 	opts.repetitions = 10
 	opts.random_pick = true
-	_ = cross_validate(ds, opts) ?
-	display_file(opts.outputfile_path, settings) ?
+	_ = cross_validate(ds, opts)?
+	display_file(opts.outputfile_path, settings)?
 }
 
 fn test_display_explore_result_cross() ? {
@@ -131,21 +131,21 @@ fn test_display_explore_result_cross() ? {
 		outputfile_path: 'tempfolder/explore_result'
 		// show_flag: true
 	}
-	_ = explore(load_file(opts.datafile_path), opts) ?
+	_ = explore(load_file(opts.datafile_path), opts)?
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 
 	// repeat for a binary class dataset
 	opts.datafile_path = 'datasets/bcw174test'
-	_ = explore(load_file(opts.datafile_path), opts) ?
+	_ = explore(load_file(opts.datafile_path), opts)?
 	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 }
 
 fn test_display_explore_result_verify() ? {
@@ -157,20 +157,20 @@ fn test_display_explore_result_verify() ? {
 		concurrency_flag: true
 		outputfile_path: 'tempfolder/explore_result'
 	}
-	_ = explore(load_file(opts.datafile_path), opts) ?
+	_ = explore(load_file(opts.datafile_path), opts)?
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 
 	// repeat for a binary class dataset
 	opts.datafile_path = 'datasets/bcw350train'
 	opts.testfile_path = 'datasets/bcw174test'
-	_ = explore(load_file(opts.datafile_path), opts) ?
+	_ = explore(load_file(opts.datafile_path), opts)?
 	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings) ?
+	display_file(opts.outputfile_path, settings)?
 }
