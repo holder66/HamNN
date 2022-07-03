@@ -50,14 +50,6 @@ fn main() {
 }
 ```
 
-## Memory leak problem:
-
-At the present time, if your code using the HamNN library (especially memory-intensive operations such as cross-validate or explore) dies without going to completion, it may be due to memory leaks caused by the V lang compiler. The best way to prevent these memory leaks is to compile with the gc flag, eg:
- ```sh
- v -gc boehm .
- ```
-You may need to install the libgc or libgc-dev library, using "brew" or "apt".
-
 ## Getting help:
 The V lang community meets on [Discord](https://discord.gg/vlang)
 
