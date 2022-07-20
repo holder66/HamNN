@@ -111,6 +111,7 @@ pub mut:
 	number_of_attributes []int = [0]
 	uniform_bins         bool
 	exclude_flag         bool
+	purge_flag			 bool
 	weighting_flag       bool
 	folds                int
 	repetitions          int

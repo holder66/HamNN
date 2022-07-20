@@ -13,8 +13,10 @@ import time
 // Options (also see the Options struct):
 // bins: range for binning or slicing of continuous attributes;
 // uniform_bins: same number of bins for continuous attributes;
-// number_of_attributes: range for attributes to include;
+// number_of_attributes: the number of highest-ranked attributes to include;
 // exclude_flag: excludes missing values when ranking attributes;
+// purge_flag: remove those instances which are duplicates, after
+//     binning and based on only the attributes to be used;
 // outputfile_path: if specified, saves the classifier to this file.
 // ```
 pub fn make_classifier(ds Dataset, opts Options) Classifier {
@@ -82,6 +84,9 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
+	if opts.purge_flag {
+		cl = purge(cl)
+	}
 	// create an event
 	if opts.command == 'make' || opts.command == 'append' {
 		mut event := HistoryEvent{
@@ -93,12 +98,14 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		}
 		cl.history << event
 	}
+	
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
 	}
 	if opts.outputfile_path != '' {
 		save_json_file(cl, opts.outputfile_path)
 	}
+	// println(cl)
 	return cl
 }
 
