@@ -100,6 +100,7 @@ struct HistoryEvent {
 pub mut:
 	event_date        time.Time
 	instances_count   int
+	original_instances_count	int
 	event_environment Environment
 	event             string
 	file_path         string

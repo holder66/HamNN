@@ -95,6 +95,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 			event_date: time.utc()
 			event_environment: get_environment()
 			instances_count: cl.instances.len
+			original_instances_count: ds.class_values.len
 		}
 		cl.history << event
 	}

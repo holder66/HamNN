@@ -121,10 +121,12 @@ pub fn show_classifier(cl Classifier) {
 			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' })
 	}
 	println(chalk.fg(chalk.style('\nClassifier History:', 'bold'), 'green'))
-	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                            Instances',
+	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                   Original Instances' + if cl.purge_flag { '  After purging'} else {''},
 		'underline'), 'blue'))
+	// println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                   Original Instances  After purging',
+		// 'underline'), 'blue'))
 	for events in cl.history {
-		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.instances_count:10}')
+		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.original_instances_count:10}' + if cl.purge_flag { ' ${events.instances_count:14}' } else {''})
 	}
 }
 
@@ -136,6 +138,7 @@ fn show_parameters(p Parameters) {
 	} else {
 		p.number_of_attributes[0].str()
 	}
+	purge_string := if p.purge_flag { 'on' } else { 'off' }
 	weight_string := if p.weighting_flag { 'yes' } else { 'no' }
 	results_array := [
 		'Attributes: $attr_string',
@@ -145,6 +148,7 @@ fn show_parameters(p Parameters) {
 		} else {
 			'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
 		},
+		'Purging of duplicate instances: $purge_string',
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
 	]
 	print_array(results_array)
