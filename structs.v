@@ -236,6 +236,7 @@ pub mut:
 	total_count          int
 	bin_values           []int // used for displaying the binning range for explore
 	attributes_used      int
+	classifier_instances_counts	[]int
 	repetitions          int
 	confusion_matrix     [][]string
 }

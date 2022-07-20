@@ -182,6 +182,9 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 		 }
 	 })
 	show_parameters(result.Parameters)
+	if result.purge_flag {
+		println('Average classifier instances after purging: ${arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len):10.2f}')
+	}
 	show_cross_or_verify_result(result, settings)?
 }
 

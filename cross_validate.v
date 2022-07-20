@@ -93,6 +93,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		cross_result.inferred_classes << repetition_result.inferred_classes
 		cross_result.actual_classes << repetition_result.actual_classes
 		cross_result.binning = repetition_result.binning
+		cross_result.classifier_instances_counts << repetition_result.classifier_instances_counts
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
 	if opts.outputfile_path != '' {
@@ -147,13 +148,16 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
+			repetition_result.classifier_instances_counts << fold_result.classifier_instances_counts
 		}
 	}
+	// println(arrays.sum(repetition_result.classifier_instances_counts) or {0} / f64(repetition_result.classifier_instances_counts.len))
 	return repetition_result
 }
 
 // summarize_results
 fn summarize_results(repeats int, mut result CrossVerifyResult) CrossVerifyResult {
+	// println(result.classifier_instances_counts)
 	mut inferred := ''
 	for i, actual in result.actual_classes {
 		inferred = result.inferred_classes[i]
@@ -234,6 +238,8 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
 	fold_result.binning = part_cl.binning
+	fold_result.classifier_instances_counts << part_cl.instances.len
+	// println(fold_result.classifier_instances_counts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {
 		// get the index of the corresponding attribute in the fold
