@@ -100,7 +100,7 @@ struct HistoryEvent {
 pub mut:
 	event_date        time.Time
 	instances_count   int
-	original_instances_count	int
+	prepurge_instances_count	int
 	event_environment Environment
 	event             string
 	file_path         string
@@ -236,6 +236,7 @@ pub mut:
 	total_count          int
 	bin_values           []int // used for displaying the binning range for explore
 	attributes_used      int
+	prepurge_instances_counts_array	[]int
 	classifier_instances_counts	[]int
 	repetitions          int
 	confusion_matrix     [][]string

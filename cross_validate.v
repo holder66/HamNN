@@ -94,6 +94,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		cross_result.actual_classes << repetition_result.actual_classes
 		cross_result.binning = repetition_result.binning
 		cross_result.classifier_instances_counts << repetition_result.classifier_instances_counts
+		cross_result.prepurge_instances_counts_array << repetition_result.prepurge_instances_counts_array
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
 	if opts.outputfile_path != '' {
@@ -139,16 +140,18 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
+			repetition_result.classifier_instances_counts << fold_result.classifier_instances_counts
+			repetition_result.prepurge_instances_counts_array << fold_result.prepurge_instances_counts_array
 		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
 			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)
-
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
 			repetition_result.classifier_instances_counts << fold_result.classifier_instances_counts
+			repetition_result.prepurge_instances_counts_array << fold_result.prepurge_instances_counts_array
 		}
 	}
 	// println(arrays.sum(repetition_result.classifier_instances_counts) or {0} / f64(repetition_result.classifier_instances_counts.len))

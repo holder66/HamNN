@@ -126,7 +126,7 @@ pub fn show_classifier(cl Classifier) {
 	// println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                   Original Instances  After purging',
 		// 'underline'), 'blue'))
 	for events in cl.history {
-		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.original_instances_count:10}' + if cl.purge_flag { ' ${events.instances_count:14}' } else {''})
+		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.prepurge_instances_count:10}' + if cl.purge_flag { ' ${events.instances_count:14}' } else {''})
 	}
 }
 
@@ -156,7 +156,7 @@ fn show_parameters(p Parameters) {
 
 // show_validate
 fn show_validate(result ValidateResult) {
-	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
+	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" pusing a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	println('Number of instances validated: $result.inferred_classes.len')
@@ -430,12 +430,14 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	if results.uniform_bins {
 		println('(same number of bins for all continous attributes)')
 	}
+	purge_string := if results.purge_flag { 'on' } else { 'off' }
+	println('Purging of duplicate instances: $purge_string')
 	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
 	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
 		' nearest neighbor counts by class prevalences')
 	println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
 	if !settings.expanded_flag {
-		println(chalk.fg(chalk.style('Attributes     Bins  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
+		println(chalk.fg(chalk.style('Attributes     Bins  Instances (%)  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
 			'underline'), 'blue'))
 	} else {
 		if results.pos_neg_classes[0] != '' {
@@ -458,9 +460,12 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 	// do nothing if neither the -s or the -e flag was set
 	if settings.show_flag || settings.expanded_flag {
 		if !settings.expanded_flag {
-			percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
+			instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
+			// instances_percent := instances_avg / 
 			metrics := get_metrics(result)?
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${instances_avg:10.2f}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
