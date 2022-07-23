@@ -84,18 +84,19 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
+	prepurge_instances_count := cl.instances.len 
 	if opts.purge_flag {
 		cl = purge(cl)
 	}
 	// create an event
-	if opts.command == 'make' || opts.command == 'append' {
+	if opts.command in ['make', 'append', 'verify', 'validate', 'query'] {
 		mut event := HistoryEvent{
 			event: 'make'
 			file_path: ds.path
 			event_date: time.utc()
 			event_environment: get_environment()
 			instances_count: cl.instances.len
-			prepurge_instances_count: ds.class_values.len
+			prepurge_instances_count: prepurge_instances_count
 		}
 		cl.history << event
 	}

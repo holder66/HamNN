@@ -282,4 +282,7 @@ pub mut:
 	inferred_classes   []string
 	counts             [][]int
 	instances          [][]u8
+	attributes_used      int
+	prepurge_instances_counts_array	[]int
+	classifier_instances_counts	[]int
 }

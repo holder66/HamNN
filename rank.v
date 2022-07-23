@@ -40,8 +40,8 @@ import math
 //
 // ```sh
 // Options:
-// `bins` specifies the range for binning (slicing) continous attributes;
-// `exclude_flag` to exclude missing values when calculating rank values;
+// -b --bins: specifies the range for binning (slicing) continous attributes;
+// -x --exclude:  to exclude missing values when calculating rank values;
 // Output options:
 // `show_flag` to print the ranked list to the console;
 // `graph_flag` to generate plots of rank values for each attribute on the

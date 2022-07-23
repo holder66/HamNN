@@ -156,7 +156,7 @@ fn show_parameters(p Parameters) {
 
 // show_validate
 fn show_validate(result ValidateResult) {
-	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" pusing a classifier from "$result.classifier_path"',
+	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	println('Number of instances validated: $result.inferred_classes.len')
@@ -170,6 +170,13 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
+	// println(result)
+	if result.purge_flag {
+		total_count := result.prepurge_instances_counts_array[0]
+		purged_count := total_count - result.classifier_instances_counts[0]
+		purged_percent := 100 * f64(purged_count) / total_count
+	println('Instances purged: $purged_count out of $total_count ($purged_percent%)')
+	}
 	show_cross_or_verify_result(result, settings)?
 }
 
@@ -462,10 +469,11 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 		if !settings.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
-			// instances_percent := instances_avg / 
+			instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
 			metrics := get_metrics(result)?
+			println(result.prepurge_instances_counts_array.len)
 
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${instances_avg:10.2f}  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${instances_avg:10.2f} ($instances_percent:6.2f) ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
