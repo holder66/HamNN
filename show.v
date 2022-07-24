@@ -196,7 +196,10 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 	 })
 	show_parameters(result.Parameters)
 	if result.purge_flag {
-		println('Average classifier instances after purging: ${arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len):10.2f}')
+		total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
+		purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
+		purged_percent := 100 * purged_count_avg / total_count_avg
+	println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 	}
 	show_cross_or_verify_result(result, settings)?
 }
