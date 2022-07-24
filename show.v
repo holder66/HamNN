@@ -446,14 +446,14 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	if results.uniform_bins {
 		println('(same number of bins for all continous attributes)')
 	}
-	purge_string := if results.purge_flag { 'on' } else { 'off' }
-	println('Purging of duplicate instances: $purge_string')
 	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
 	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
 		' nearest neighbor counts by class prevalences')
 	println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
+	purge_string := if results.purge_flag { 'on' } else { 'off' }
+	println('Purging of duplicate instances: $purge_string')
 	if !settings.expanded_flag {
-		println(chalk.fg(chalk.style('Attributes     Bins  Instances (%)  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
+		println(chalk.fg(chalk.style('Attributes     Bins' + if results.purge_flag {'     Purged instances      (%)'} else { '' } + '  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
 			'underline'), 'blue'))
 	} else {
 		if results.pos_neg_classes[0] != '' {
@@ -462,7 +462,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 			println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 				'underline'), 'blue'))
 		} else {
-			println(chalk.fg(chalk.style('Attributes     Bins', 'underline'), 'blue'))
+			println(chalk.fg(chalk.style('Attributes     Bins' + if results.purge_flag {'     Purged instances      (%)'} else { '' }, 'underline'), 'blue'))
 			println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 				'underline'), 'blue'))
 		}
@@ -475,19 +475,28 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 	// println(result)
 	// do nothing if neither the -s or the -e flag was set
 	if settings.show_flag || settings.expanded_flag {
+		mut total_count_avg := 0.0
+		mut purged_count_avg := 0.0
+		mut purged_percent := 0.0
+		if result.purge_flag {
+			total_count_avg = arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
+			purged_count_avg = total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
+			purged_percent = 100 * purged_count_avg / total_count_avg
+			// println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
+		}
 		if !settings.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
-			instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
+			// instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
+			// instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
 			metrics := get_metrics(result)?
-			println(result.prepurge_instances_counts_array.len)
-
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}  ${instances_avg:10.2f} ($instances_percent:6.2f) ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+			// println(result.prepurge_instances_counts_array.len)
+			
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag { '${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' } + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
 			} else {
-				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}')
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag { ' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' })
 				show_multiple_classes_stats(get_metrics(result)?, result)?
 			}
 		}
