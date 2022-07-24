@@ -122,8 +122,8 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 
 		}
 	}
-		result.classifier_instances_counts << cl.history[0].instances_count
-		result.prepurge_instances_counts_array << cl.history[0].prepurge_instances_count
+	result.classifier_instances_counts << cl.history[0].instances_count
+	result.prepurge_instances_counts_array << cl.history[0].prepurge_instances_count
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): $result')
 	}

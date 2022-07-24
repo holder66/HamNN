@@ -148,8 +148,8 @@ fn show_parameters(p Parameters) {
 		} else {
 			'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
 		},
-		'Purging of duplicate instances: $purge_string',
 		'Prevalence weighting of nearest neighbor counts: $weight_string ',
+		'Purging of duplicate instances: $purge_string',
 	]
 	print_array(results_array)
 }
@@ -159,6 +159,12 @@ fn show_validate(result ValidateResult) {
 	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
+	if result.purge_flag {
+		total_count := result.prepurge_instances_counts_array[0]
+		purged_count := total_count - result.classifier_instances_counts[0]
+		purged_percent := 100 * f64(purged_count) / total_count
+	println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
+	}
 	println('Number of instances validated: $result.inferred_classes.len')
 	println('Inferred classes: $result.inferred_classes')
 	println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')

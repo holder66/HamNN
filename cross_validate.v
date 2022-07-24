@@ -240,9 +240,12 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		instance_indices: fold.indices
 	}
 	part_cl := make_classifier(part_ds, cross_opts)
+	println(part_cl.history)
 	fold_result.binning = part_cl.binning
+
 	fold_result.classifier_instances_counts << part_cl.instances.len
 	fold_result.prepurge_instances_counts_array << part_cl.history[0].prepurge_instances_count
+	println('we are here')
 	// println(fold_result.classifier_instances_counts)
 	// for each attribute in the trained partition classifier
 	for attr in part_cl.attribute_ordering {

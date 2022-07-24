@@ -89,17 +89,19 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		cl = purge(cl)
 	}
 	// create an event
-	if opts.command in ['make', 'append', 'verify', 'validate', 'query'] {
-		mut event := HistoryEvent{
-			event: 'make'
-			file_path: ds.path
-			event_date: time.utc()
-			event_environment: get_environment()
-			instances_count: cl.instances.len
-			prepurge_instances_count: prepurge_instances_count
-		}
-		cl.history << event
+	mut event := HistoryEvent{
+		event: 'make'
+		instances_count: cl.instances.len
+		prepurge_instances_count: prepurge_instances_count
 	}
+	if opts.command in ['make', 'append', 'verify', 'validate', 'query'] {
+			event.file_path = ds.path
+			event.event_date = time.utc()
+			event.event_environment = get_environment()
+
+		}
+	cl.history << event
+
 	
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
