@@ -459,7 +459,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 		if results.pos_neg_classes[0] != '' {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 			println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-			println(chalk.fg(chalk.style("Attributes    Bins     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
+			println(chalk.fg(chalk.style("Attributes    Bins" + if results.purge_flag {'      Purged instances      (%)'} else { '' } + "     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 				'underline'), 'blue'))
 		} else {
 			println(chalk.fg(chalk.style('Attributes     Bins' + if results.purge_flag {'     Purged instances      (%)'} else { '' }, 'underline'), 'blue'))
@@ -494,7 +494,7 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag { '${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' } + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
-				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}  ${get_binary_stats(result)}')
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}'  + if result.purge_flag { ' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' } + '  ${get_binary_stats(result)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag { ' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' })
 				show_multiple_classes_stats(get_metrics(result)?, result)?
