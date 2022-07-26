@@ -121,12 +121,15 @@ pub fn show_classifier(cl Classifier) {
 			if val.attribute_type == 'C' { '          ${val.minimum:10.2f} ${val.maximum:10.2f} ${val.bins:5}' } else { '      ${val.translation_table.len:4}' })
 	}
 	println(chalk.fg(chalk.style('\nClassifier History:', 'bold'), 'green'))
-	println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                   Original Instances' + if cl.purge_flag { '  After purging'} else {''},
-		'underline'), 'blue'))
+	println(chalk.fg(chalk.style(
+		'Date & Time (UTC)    Event   From file                   Original Instances' +
+		if cl.purge_flag { '  After purging' } else { '' }, 'underline'), 'blue'))
 	// println(chalk.fg(chalk.style('Date & Time (UTC)    Event   From file                   Original Instances  After purging',
-		// 'underline'), 'blue'))
+	// 'underline'), 'blue'))
 	for events in cl.history {
-		println('${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.prepurge_instances_count:10}' + if cl.purge_flag { ' ${events.instances_count:14}' } else {''})
+		println(
+			'${events.event_date:-19}  ${events.event:-6}  ${events.file_path:-35} ${events.prepurge_instances_count:10}' +
+			if cl.purge_flag { ' ${events.instances_count:14}' } else { '' })
 	}
 }
 
@@ -163,7 +166,7 @@ fn show_validate(result ValidateResult) {
 		total_count := result.prepurge_instances_counts_array[0]
 		purged_count := total_count - result.classifier_instances_counts[0]
 		purged_percent := 100 * f64(purged_count) / total_count
-	println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
+		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
 	}
 	println('Number of instances validated: $result.inferred_classes.len')
 	println('Inferred classes: $result.inferred_classes')
@@ -181,7 +184,7 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 		total_count := result.prepurge_instances_counts_array[0]
 		purged_count := total_count - result.classifier_instances_counts[0]
 		purged_percent := 100 * f64(purged_count) / total_count
-	println('Instances purged: $purged_count out of $total_count ($purged_percent%)')
+		println('Instances purged: $purged_count out of $total_count ($purged_percent%)')
 	}
 	show_cross_or_verify_result(result, settings)?
 }
@@ -199,7 +202,7 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 		total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
 		purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
 		purged_percent := 100 * purged_count_avg / total_count_avg
-	println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
+		println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 	}
 	show_cross_or_verify_result(result, settings)?
 }
@@ -453,16 +456,21 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	purge_string := if results.purge_flag { 'on' } else { 'off' }
 	println('Purging of duplicate instances: $purge_string')
 	if !settings.expanded_flag {
-		println(chalk.fg(chalk.style('Attributes     Bins' + if results.purge_flag {'     Purged instances      (%)'} else { '' } + '  Matches  Nonmatches  Accuracy(%): Raw  Balanced',
-			'underline'), 'blue'))
+		println(chalk.fg(chalk.style('Attributes     Bins' +
+			if results.purge_flag { '     Purged instances      (%)' } else { '' } +
+			'  Matches  Nonmatches  Accuracy(%): Raw  Balanced', 'underline'), 'blue'))
 	} else {
 		if results.pos_neg_classes[0] != '' {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 			println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-			println(chalk.fg(chalk.style("Attributes    Bins" + if results.purge_flag {'      Purged instances      (%)'} else { '' } + "     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
+			println(chalk.fg(chalk.style('Attributes    Bins' +
+				if results.purge_flag { '      Purged instances      (%)' } else { '' } +
+				"     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
 				'underline'), 'blue'))
 		} else {
-			println(chalk.fg(chalk.style('Attributes     Bins' + if results.purge_flag {'     Purged instances      (%)'} else { '' }, 'underline'), 'blue'))
+			println(chalk.fg(chalk.style('Attributes     Bins' +
+				if results.purge_flag { '     Purged instances      (%)' } else { '' },
+				'underline'), 'blue'))
 			println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 				'underline'), 'blue'))
 		}
@@ -490,13 +498,27 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 			// instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
 			metrics := get_metrics(result)?
 			// println(result.prepurge_instances_counts_array.len)
-			
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag { '${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' } + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
+				if result.purge_flag {
+				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+			} else {
+				''
+			} +
+				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
 		} else {
 			if result.pos_neg_classes[0] != '' {
-				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}'  + if result.purge_flag { ' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' } + '  ${get_binary_stats(result)}')
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
+					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+				} else {
+					''
+				} + '  ${get_binary_stats(result)}')
 			} else {
-				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag { ' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)' } else { '' })
+				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
+					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+				} else {
+					''
+				})
 				show_multiple_classes_stats(get_metrics(result)?, result)?
 			}
 		}

@@ -4,7 +4,7 @@ module hamnn
 // purge returns a Classifier struct with duplicate instances removed,
 // given a Classifier (as created by make_classifier()).
 
-// purge 
+// purge
 fn purge(cl Classifier) Classifier {
 	// println('purging...')
 	mut pcl := cl
@@ -26,8 +26,7 @@ fn purge(cl Classifier) Classifier {
 				pcl.instances.delete(i)
 				pcl.class_values.delete(i)
 				// println('length of instances after delete: $pcl.instances.len')
-			}
-			else {
+			} else {
 				j++
 				if j >= i {
 					break
@@ -37,7 +36,7 @@ fn purge(cl Classifier) Classifier {
 		i++
 		if i >= pcl.class_values.len {
 			break
-		}	
+		}
 	}
 	// for k in 0..pcl.class_values.len {
 	// 	println('$k, ${pcl.class_values[k]}, ${pcl.instances[k]}')
@@ -46,7 +45,7 @@ fn purge(cl Classifier) Classifier {
 	return pcl
 }
 
-// test_dup 
+// test_dup
 fn test_dup(l_class string, r_class string, l_instance []u8, r_instance []u8) bool {
 	if l_class == r_class && l_instance == r_instance {
 		return true

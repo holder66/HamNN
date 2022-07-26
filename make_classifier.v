@@ -84,7 +84,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	}
 	cl.instances = transpose(attr_binned_values)
 	cl.attribute_ordering = attr_names
-	prepurge_instances_count := cl.instances.len 
+	prepurge_instances_count := cl.instances.len
 	if opts.purge_flag {
 		cl = purge(cl)
 	}
@@ -95,14 +95,12 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 		prepurge_instances_count: prepurge_instances_count
 	}
 	if opts.command in ['make', 'append', 'verify', 'validate', 'query'] {
-			event.file_path = ds.path
-			event.event_date = time.utc()
-			event.event_environment = get_environment()
-
-		}
+		event.file_path = ds.path
+		event.event_date = time.utc()
+		event.event_environment = get_environment()
+	}
 	cl.history << event
 
-	
 	if (opts.show_flag || opts.expanded_flag) && opts.command == 'make' {
 		show_classifier(cl)
 	}

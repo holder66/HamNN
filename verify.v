@@ -119,7 +119,6 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 		for i, test_instance in test_instances {
 			result.inferred_classes << classify_instance(i, cl, test_instance, opts).inferred_class
 			result.actual_classes << result.labeled_classes[i]
-
 		}
 	}
 	result.classifier_instances_counts << cl.history[0].instances_count

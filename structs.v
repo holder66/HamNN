@@ -98,12 +98,12 @@ pub mut:
 
 struct HistoryEvent {
 pub mut:
-	event_date        time.Time
-	instances_count   int
-	prepurge_instances_count	int
-	event_environment Environment
-	event             string
-	file_path         string
+	event_date               time.Time
+	instances_count          int
+	prepurge_instances_count int
+	event_environment        Environment
+	event                    string
+	file_path                string
 }
 
 struct Parameters {
@@ -112,7 +112,7 @@ pub mut:
 	number_of_attributes []int = [0]
 	uniform_bins         bool
 	exclude_flag         bool
-	purge_flag			 bool
+	purge_flag           bool
 	weighting_flag       bool
 	folds                int
 	repetitions          int
@@ -228,18 +228,18 @@ pub mut:
 	true_negatives       map[string]int
 	false_negatives      map[string]int
 	// outer key: actual class; inner key: predicted class
-	confusion_matrix_map map[string]map[string]f64
-	pos_neg_classes      []string
-	correct_count        int
-	incorrects_count     int
-	wrong_count          int
-	total_count          int
-	bin_values           []int // used for displaying the binning range for explore
-	attributes_used      int
-	prepurge_instances_counts_array	[]int
-	classifier_instances_counts	[]int
-	repetitions          int
-	confusion_matrix     [][]string
+	confusion_matrix_map            map[string]map[string]f64
+	pos_neg_classes                 []string
+	correct_count                   int
+	incorrects_count                int
+	wrong_count                     int
+	total_count                     int
+	bin_values                      []int // used for displaying the binning range for explore
+	attributes_used                 int
+	prepurge_instances_counts_array []int
+	classifier_instances_counts     []int
+	repetitions                     int
+	confusion_matrix                [][]string
 }
 
 pub struct AttributeRange {
@@ -276,13 +276,13 @@ pub struct ValidateResult {
 	Class
 	Parameters
 pub mut:
-	struct_type        string = '.ValidateResult'
-	classifier_path    string
-	validate_file_path string
-	inferred_classes   []string
-	counts             [][]int
-	instances          [][]u8
-	attributes_used      int
-	prepurge_instances_counts_array	[]int
-	classifier_instances_counts	[]int
+	struct_type                     string = '.ValidateResult'
+	classifier_path                 string
+	validate_file_path              string
+	inferred_classes                []string
+	counts                          [][]int
+	instances                       [][]u8
+	attributes_used                 int
+	prepurge_instances_counts_array []int
+	classifier_instances_counts     []int
 }

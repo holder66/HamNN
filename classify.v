@@ -15,8 +15,7 @@ module hamnn
 // by class prevalences.
 // ```
 pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u8, opts Options) ClassifyResult {
-	mut result := ClassifyResult{
-	}
+	mut result := ClassifyResult{}
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
