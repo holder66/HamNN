@@ -9,7 +9,8 @@ import strconv
 // trained attribute. It then asks to confirm or redo the responses. Once
 // confirmed, the instance is classified and the inferred class is shown.
 // The classified instance can optionally be saved in a file.
-// The saved instance can be appended to the classifier using append.append().
+// The saved instance can be appended to the classifier using
+// append_instances().
 pub fn query(cl Classifier, opts Options) ClassifyResult {
 	mut answer := ''
 	mut classify_result := ClassifyResult{}
