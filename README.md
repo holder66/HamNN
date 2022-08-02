@@ -9,7 +9,7 @@ There is an associated Command Line Interface app, [VHamNN](https://github.com/h
 You can use the library with your own datasets, or with a selection of publicly available datasets that are widely used for demonstrating and testing ML classifiers, in the `datasets` directory. These files are either in [ARFF (Attribute-Relation File Format)](https://waikato.github.io/weka-wiki/formats_and_processing/arff_stable/) or in [Orange file format](https://orange3.readthedocs.io/projects/orange-data-mining-library/en/latest/reference/data.io.html).
 
 Classification accuracy with datasets in the `datasets` directory:
-See this [table](http://henry.olders.ca/datasets/datasets%20for%20vhamnn.numbers.pdf)
+See this [table](https://henry.olders.ca/wordpress/?p=1885)
 
 Do we really need another ML library? [Read this!](https://github.com/holder66/vhamnn/blob/master/AI_for_rest_of_us.md)
 
