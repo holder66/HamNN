@@ -257,19 +257,6 @@ fn get_show_bins(bins []int) string {
 	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
-struct Metrics {
-mut:
-	precision         []f64
-	recall            []f64
-	f1_score          []f64
-	avg_precision     []f64
-	avg_recall        []f64
-	avg_f1_score      []f64
-	avg_type          []string
-	balanced_accuracy f64
-	class_counts      []int
-}
-
 // append_metric
 fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
 	m.precision << p
