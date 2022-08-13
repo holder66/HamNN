@@ -287,3 +287,17 @@ pub mut:
 	prepurge_instances_counts_array []int
 	classifier_instances_counts     []int
 }
+
+struct Metrics {
+mut:
+	precision         []f64
+	recall            []f64
+	f1_score          []f64
+	avg_precision     []f64
+	avg_recall        []f64
+	avg_f1_score      []f64
+	avg_type          []string
+	balanced_accuracy f64
+	balanced_accuracy_binary f64
+	class_counts      []int
+}
