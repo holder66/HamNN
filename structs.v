@@ -211,6 +211,7 @@ pub mut:
 pub struct CrossVerifyResult {
 	Parameters
 	DisplaySettings
+	Metrics
 pub mut:
 	struct_type          string = '.CrossVerifyResult'
 	classifier_path      string

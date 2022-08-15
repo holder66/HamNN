@@ -104,6 +104,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
 		show_crossvalidation(cross_result, cross_opts.DisplaySettings)?
 	}
+	cross_result.Metrics = get_metrics(cross_result)?
 	return cross_result
 }
 
