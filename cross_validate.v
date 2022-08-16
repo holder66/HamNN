@@ -101,12 +101,14 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		save_json_file(cross_result, opts.outputfile_path)
 	}
 	// show_results(cross_result, cross_opts)
-	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		show_crossvalidation(cross_result, cross_opts.DisplaySettings)?
-	}
+
 	cross_result.Metrics = get_metrics(cross_result)?
+	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if cross_result.pos_neg_classes.len == 2 {
 		cross_result.BinaryMetrics = get_binary_stats(cross_result)
+	}
+		if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
+		show_crossvalidation(cross_result, cross_opts.DisplaySettings)?
 	}
 	return cross_result
 }

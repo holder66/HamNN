@@ -234,7 +234,7 @@ fn show_expanded_result(metrics Metrics, result CrossVerifyResult) ? {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
 		println("   TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd")
-		println('${get_binary_stats_line(result)}')
+		println('${get_binary_stats_line(result.BinaryMetrics)}')
 	}
 }
 
@@ -322,7 +322,7 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 // show_expanded_explore_result
 fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 	if result.pos_neg_classes[0] != '' {
-		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result)}')
+		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result.BinaryMetrics)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
 		show_multiple_classes_stats(get_metrics(result)?, result)?
@@ -412,7 +412,7 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
 				} else {
 					''
-				} + '  ${get_binary_stats_line(result)}')
+				} + '  ${get_binary_stats_line(result.BinaryMetrics)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
 					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
