@@ -9,18 +9,31 @@ import arrays
 // import math
 
 // show_multiple_classes_stats
-fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
+// fn show_multiple_classes_stats(metrics Metrics, result CrossVerifyResult) ? {
+// 	mut show_result := []string{}
+// 	for i, class in result.class_counts.keys() {
+// 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${metrics.precision[i]:5.3f}     ${metrics.recall[i]:5.3f}       ${metrics.f1_score[i]:5.3f}'
+// 	}
+// 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)'
+// 	for i, avg_type in metrics.avg_type {
+// 		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
+// 	}
+// 	print_array(show_result)
+// }
+
+// show_multiple_classes_stats
+fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 	mut show_result := []string{}
+	m := result.Metrics
 	for i, class in result.class_counts.keys() {
-		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${metrics.precision[i]:5.3f}     ${metrics.recall[i]:5.3f}       ${metrics.f1_score[i]:5.3f}'
+		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${m.precision[i]:5.3f}     ${m.recall[i]:5.3f}       ${m.f1_score[i]:5.3f}'
 	}
-	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)'
-	for i, avg_type in metrics.avg_type {
-		show_result << '${avg_type.title():18} Averages:                                   ${metrics.avg_precision[i]:5.3f}     ${metrics.avg_recall[i]:5.3f}       ${metrics.avg_f1_score[i]:5.3f}'
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)'
+	for i, avg_type in m.avg_type {
+		show_result << '${avg_type.title():18} Averages:                                   ${m.avg_precision[i]:5.3f}     ${m.avg_recall[i]:5.3f}       ${m.avg_f1_score[i]:5.3f}'
 	}
 	print_array(show_result)
 }
-
 // append_metric
 fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
 	m.precision << p

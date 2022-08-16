@@ -105,35 +105,35 @@ fn test_wt_avg() ? {
 // }
 
 // test_show_crossvalidation
-// fn test_show_crossvalidation() ? {
-// 	println('test_show_crossvalidation prints out cross-validation results for developer.tab, breast-cancer-wisconsin-disc.tab, and iris.tab')
-// 	mut cvr := CrossVerifyResult{}
-// 	mut opts := Options{
-// 		show_flag: true
-// 		concurrency_flag: true
-// 		command: 'cross'
-// 	}
-// 	println('\n\ndeveloper.tab')
-// 	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
-// 	println('\ndeveloper.tab with expanded results')
-// 	opts.expanded_flag = true
-// 	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
-// 	println('\n\nbreast-cancer-wisconsin-disc.tab')
-// 	opts.expanded_flag = false
-// 	opts.number_of_attributes = [4]
-// 	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
-// 	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
-// 	opts.expanded_flag = true
-// 	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
-// 	println('\n\niris.tab')
-// 	opts.expanded_flag = false
-// 	opts.bins = [3, 6]
-// 	opts.number_of_attributes = [2]
-// 	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
-// 	println('\niris.tab with expanded results')
-// 	opts.expanded_flag = true
-// 	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
-// }
+fn test_show_crossvalidation() ? {
+	println('test_show_crossvalidation prints out cross-validation results for developer.tab, breast-cancer-wisconsin-disc.tab, and iris.tab')
+	mut cvr := CrossVerifyResult{}
+	mut opts := Options{
+		show_flag: true
+		concurrency_flag: true
+		command: 'cross'
+	}
+	println('\n\ndeveloper.tab')
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
+	println('\ndeveloper.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
+	println('\n\nbreast-cancer-wisconsin-disc.tab')
+	opts.expanded_flag = false
+	opts.number_of_attributes = [4]
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	println('\n\niris.tab')
+	opts.expanded_flag = false
+	opts.bins = [3, 6]
+	opts.number_of_attributes = [2]
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	println('\niris.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+}
 
 // // test_show_explore_cross
 // fn test_show_explore_cross() ? {

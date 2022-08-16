@@ -229,7 +229,7 @@ fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySetting
 fn show_expanded_result(metrics Metrics, result CrossVerifyResult) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
-	show_multiple_classes_stats(metrics, result)?
+	show_multiple_classes_stats(result)?
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
@@ -325,7 +325,7 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result.BinaryMetrics)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(get_metrics(result)?, result)?
+		// show_multiple_classes_stats(get_metrics(result)?, result)?
 	}
 }
 
@@ -419,7 +419,7 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 				} else {
 					''
 				})
-				show_multiple_classes_stats(get_metrics(result)?, result)?
+				// show_multiple_classes_stats(get_metrics(result)?, result)?
 			}
 		}
 	}
