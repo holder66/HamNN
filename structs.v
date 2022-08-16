@@ -212,6 +212,7 @@ pub struct CrossVerifyResult {
 	Parameters
 	DisplaySettings
 	Metrics
+	BinaryMetrics
 pub mut:
 	struct_type          string = '.CrossVerifyResult'
 	classifier_path      string
@@ -299,6 +300,20 @@ mut:
 	avg_f1_score      []f64
 	avg_type          []string
 	balanced_accuracy f64
-	balanced_accuracy_binary f64
 	class_counts      []int
+}
+
+struct BinaryMetrics {
+mut:
+	t_p 	int
+	f_p 	int
+	t_n 	int
+	f_n 	int
+	raw_acc 	f64
+	sens 	f64
+	spec 	f64
+	ppv		f64
+	npv		f64
+	f1_score 	f64
+	balanced_accuracy_binary f64
 }

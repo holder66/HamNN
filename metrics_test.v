@@ -125,10 +125,12 @@ fn test_show_crossvalidation() ? {
 	opts.number_of_attributes = [4]
 	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
 	println(cvr.Metrics)
+	println(cvr.BinaryMetrics)
 	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
 	opts.expanded_flag = true
 	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
 	println(cvr.Metrics)
+	println(cvr.BinaryMetrics)
 	println('\n\niris.tab')
 	opts.expanded_flag = false
 	opts.bins = [3, 6]

@@ -115,6 +115,23 @@ fn get_binary_stats(result CrossVerifyResult) string {
 	bal_acc := (sens + spec) * 50
 	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5}  ${sens:5.3f}  ${spec:5.3f}  ${ppv:5.3f}  ${npv:5.3f}  ${f1_score:5.3f}     ${raw_acc:6.2f}%  ${bal_acc:6.2f}%'
 }
+// get_binary_stats_line
+fn get_binary_stats_line(result CrossVerifyResult) string {
+	pos_class := result.pos_neg_classes[0]
+	neg_class := result.pos_neg_classes[1]
+	t_p := result.correct_inferences[pos_class]
+	t_n := result.correct_inferences[neg_class]
+	f_p := result.incorrect_inferences[pos_class]
+	f_n := result.incorrect_inferences[neg_class]
+	raw_acc := result.correct_count * 100 / f64(result.total_count)
+	sens := t_p / f64(t_p + f_n)
+	spec := t_n / f64(t_n + f_p)
+	ppv := t_p / f64(t_p + f_p)
+	npv := t_n / f64(t_n + f_n)
+	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
+	bal_acc := (sens + spec) * 50
+	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5}  ${sens:5.3f}  ${spec:5.3f}  ${ppv:5.3f}  ${npv:5.3f}  ${f1_score:5.3f}     ${raw_acc:6.2f}%  ${bal_acc:6.2f}%'
+}
 
 // get_pos_neg_classes
 fn get_pos_neg_classes(class_counts map[string]int) []string {
