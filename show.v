@@ -189,7 +189,7 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 		total_count := result.prepurge_instances_counts_array[0]
 		purged_count := total_count - result.classifier_instances_counts[0]
 		purged_percent := 100 * f64(purged_count) / total_count
-		println('Instances purged: $purged_count out of $total_count ($purged_percent%)')
+		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
 	}
 	show_cross_or_verify_result(result, settings)?
 }
