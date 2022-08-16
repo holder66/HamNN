@@ -5,7 +5,6 @@
 
 module hamnn
 import arrays
-import strings
 
 // import math
 
@@ -30,6 +29,8 @@ fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
 	return m
 }
 
+// wt_avg takes an array of real values and an array of weights (typically 
+// class counts), and computes a weighted average
 fn wt_avg(a []f64, wts []int) ?f64 {
 	mut wp := 0.0
 	for i, wt in wts {
@@ -67,11 +68,6 @@ fn get_metrics(result CrossVerifyResult) ?Metrics {
 	}
 	metrics.avg_metrics()?
 	return metrics
-}
-
-// pad
-fn pad(l int) string {
-	return strings.repeat(' '[0], l)
 }
 
 // get_multiclass_stats calculates precision, recall, and F1 score for one

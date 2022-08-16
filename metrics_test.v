@@ -15,6 +15,14 @@ fn testsuite_end() ? {
 	os.rmdir_all('tempfolder')?
 }
 
+// test_wt_avg 
+fn test_wt_avg() ? {
+	assert wt_avg([0.0], [1])? == 0.0
+	// assert wt_avg([], []) or { 1.0 } == 0.0, 'cannot sum over an empty array'
+	assert wt_avg([1.0, 2.0, 3.0], [3, 2, 1])? == 10.0 / 6
+	// assert wt_avg([1.0, 2.0, 3.0], [-3, 2, 1])? == 10.0 / 0
+}
+
 // // test_show_analyze has no asserts; the console output needs
 // // to be verified visually.
 // fn test_show_analyze() {
@@ -108,26 +116,29 @@ fn test_show_crossvalidation() ? {
 	println('\n\ndeveloper.tab')
 	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
 	println('\ndeveloper.tab with expanded results')
-	println(cvr)
+	println(cvr.Metrics)
 	opts.expanded_flag = true
 	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
-
-	// println('\n\nbreast-cancer-wisconsin-disc.tab')
-	// opts.expanded_flag = false
-	// opts.number_of_attributes = [4]
-	// cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
-	// println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
-	// opts.expanded_flag = true
-	// cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
-
-	// println('\n\niris.tab')
-	// opts.expanded_flag = false
-	// opts.bins = [3, 6]
-	// opts.number_of_attributes = [2]
-	// cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
-	// println('\niris.tab with expanded results')
-	// opts.expanded_flag = true
-	// cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	println(cvr.Metrics)
+	println('\n\nbreast-cancer-wisconsin-disc.tab')
+	opts.expanded_flag = false
+	opts.number_of_attributes = [4]
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	println(cvr.Metrics)
+	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	println(cvr.Metrics)
+	println('\n\niris.tab')
+	opts.expanded_flag = false
+	opts.bins = [3, 6]
+	opts.number_of_attributes = [2]
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	println(cvr.Metrics)
+	println('\niris.tab with expanded results')
+	opts.expanded_flag = true
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	println(cvr.Metrics)
 }
 
 // // test_show_explore_cross
