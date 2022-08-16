@@ -215,12 +215,12 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 // show_cross_or_verify_result
 fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySettings) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
-	mut metrics := get_metrics(result)?
+	// mut metrics := get_metrics(result)?
 	if !settings.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${metrics.balanced_accuracy * 100:6.2f}%)')
+		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)')
 	} else {
-		show_expanded_result(metrics, result)?
+		show_expanded_result(result.Metrics, result)?
 		print_confusion_matrix(result)
 	}
 }
