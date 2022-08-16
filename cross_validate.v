@@ -105,6 +105,9 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		show_crossvalidation(cross_result, cross_opts.DisplaySettings)?
 	}
 	cross_result.Metrics = get_metrics(cross_result)?
+	if cross_result.pos_neg_classes.len == 2 {
+		cross_result.BinaryMetrics = get_binary_stats(cross_result)
+	}
 	return cross_result
 }
 

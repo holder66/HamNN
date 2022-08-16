@@ -99,21 +99,24 @@ fn get_multiclass_stats(class string, result CrossVerifyResult) (f64, f64, f64) 
 }
 
 // get_binary_stats
-fn get_binary_stats(result CrossVerifyResult) string {
-	pos_class := result.pos_neg_classes[0]
-	neg_class := result.pos_neg_classes[1]
-	t_p := result.correct_inferences[pos_class]
-	t_n := result.correct_inferences[neg_class]
-	f_p := result.incorrect_inferences[pos_class]
-	f_n := result.incorrect_inferences[neg_class]
-	raw_acc := result.correct_count * 100 / f64(result.total_count)
-	sens := t_p / f64(t_p + f_n)
-	spec := t_n / f64(t_n + f_p)
-	ppv := t_p / f64(t_p + f_p)
-	npv := t_n / f64(t_n + f_n)
-	f1_score := t_p / f64(t_p + (0.5 * f64(f_p + f_n)))
-	bal_acc := (sens + spec) * 50
-	return '${t_p:5} ${f_p:5} ${t_n:5} ${f_n:5}  ${sens:5.3f}  ${spec:5.3f}  ${ppv:5.3f}  ${npv:5.3f}  ${f1_score:5.3f}     ${raw_acc:6.2f}%  ${bal_acc:6.2f}%'
+fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
+		pos_class := result.pos_neg_classes[0]
+		neg_class := result.pos_neg_classes[1]
+		mut bm := BinaryMetrics{
+		t_p: result.correct_inferences[pos_class]
+		t_n: result.correct_inferences[neg_class]
+		f_p: result.incorrect_inferences[pos_class]
+		f_n: result.incorrect_inferences[neg_class]
+		raw_acc: result.correct_count * 100 / f64(result.total_count)
+	}
+		bm.sens = bm.t_p / f64(bm.t_p + bm.f_n)
+		bm.spec = bm.t_n / f64(bm.t_n + bm.f_p)
+		bm.ppv = bm.t_p / f64(bm.t_p + bm.f_p)
+		bm.npv = bm.t_n / f64(bm.t_n + bm.f_n)
+		bm.f1_score = bm.t_p / f64(bm.t_p + (0.5 * f64(bm.f_p + bm.f_n)))
+		bm.balanced_accuracy_binary = (bm.sens + bm.spec) * 50
+	
+	return bm
 }
 // get_binary_stats_line
 fn get_binary_stats_line(result CrossVerifyResult) string {
