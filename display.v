@@ -20,9 +20,10 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	match true {
 		s.contains('"struct_type":".ExploreResult"') {
-			saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
+			mut saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
 			show_explore_header(saved_er, settings)
-			for result in saved_er.array_of_results {
+			for mut result in saved_er.array_of_results {
+				result.DisplaySettings = settings
 				show_explore_line(result)?
 			}
 			if settings.graph_flag {

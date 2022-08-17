@@ -331,6 +331,7 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 
 // show_explore_header
 fn show_explore_header(results ExploreResult, settings DisplaySettings) {
+	// println(results)
 	mut explore_type_string := ''
 	if results.testfile_path == '' {
 		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
@@ -382,6 +383,8 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 fn show_explore_line(result CrossVerifyResult) ? {
 	// println(result)
 	// do nothing if neither the -s or the -e flag was set
+	mut binary := false
+	if result.pos_neg_classes[0] != '' {binary = true}
 	if result.show_flag || result.expanded_flag {
 		mut total_count_avg := 0.0
 		mut purged_count_avg := 0.0
@@ -390,22 +393,18 @@ fn show_explore_line(result CrossVerifyResult) ? {
 			total_count_avg = arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
 			purged_count_avg = total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
 			purged_percent = 100 * purged_count_avg / total_count_avg
-			// println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 		}
 		if !result.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			// instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
-			// instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
-			metrics := get_metrics(result)?
-			// println(result.prepurge_instances_counts_array.len)
-
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
 				if result.purge_flag {
 				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
 			} else {
 				''
 			} +
-				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${metrics.balanced_accuracy * 100:7.2f}')
+				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${result.balanced_accuracy * 100:7.2f}' + 
+				if binary { '    ${result.balanced_accuracy_binary:6.2f}'}
+				else { '' })
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
