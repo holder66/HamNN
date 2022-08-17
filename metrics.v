@@ -38,7 +38,7 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
 	m.avg_type << 'weighted'
 	// multiclass balanced accuracy is the arithmetic mean of the recalls
-	m.balanced_accuracy = m.avg_recall[0]
+	m.balanced_accuracy = m.avg_recall[0] * 100    // so as to be a percentage
 	return m
 }
 
@@ -98,7 +98,7 @@ fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
 	bm.spec = bm.t_n / f64(bm.t_n + bm.f_p)
 	bm.ppv = bm.t_p / f64(bm.t_p + bm.f_p)
 	bm.npv = bm.t_n / f64(bm.t_n + bm.f_n)
-	bm.f1_score = bm.t_p / f64(bm.t_p + (0.5 * f64(bm.f_p + bm.f_n)))
+	bm.f1_score_binary = bm.t_p / f64(bm.t_p + (0.5 * f64(bm.f_p + bm.f_n)))
 	bm.balanced_accuracy_binary = (bm.sens + bm.spec) * 50
 	return bm
 }

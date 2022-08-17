@@ -218,7 +218,7 @@ fn show_cross_or_verify_result(result CrossVerifyResult) ? {
 	// mut metrics := get_metrics(result)?
 	if !result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}% binary balanced:${result.balanced_accuracy_binary:6.2f}%)')
+		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy:6.2f}% binary balanced:${result.balanced_accuracy_binary:6.2f}%)')
 	} else {
 		show_expanded_result(result)?
 		print_confusion_matrix(result)
@@ -233,8 +233,8 @@ fn show_expanded_result(result CrossVerifyResult) ? {
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
-		println("   TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd")
-		println('${get_binary_stats_line(result.BinaryMetrics)}')
+		println("   TP    FP    TN    FN  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced  Binary Balanced")
+		println('${get_binary_stats_line(result)}')
 	}
 }
 
@@ -322,7 +322,7 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 // show_expanded_explore_result
 fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 	if result.pos_neg_classes[0] != '' {
-		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result.BinaryMetrics)}')
+		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
 		show_multiple_classes_stats(result)?
@@ -332,6 +332,8 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 // show_explore_header
 fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	// println(results)
+	mut binary := false
+	if results.pos_neg_classes[0] != '' {binary = true}
 	mut explore_type_string := ''
 	if results.testfile_path == '' {
 		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
@@ -358,19 +360,19 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	println('Purging of duplicate instances: $purge_string')
 	if !settings.expanded_flag {
 		println(chalk.fg(chalk.style('Attributes     Bins' +
-			if results.purge_flag { '     Purged instances      (%)' } else { '' } +
-			'  Matches  Nonmatches  Accuracy(%): Raw  Balanced', 'underline'), 'blue'))
+			if results.purge_flag { '     Purged instances     (%)' } else { '' } +
+			'  Matches  Nonmatches  Accuracy: Raw  Balanced' + if binary {'  Binary Balanced'} else {''}, 'underline'), 'blue'))
 	} else {
-		if results.pos_neg_classes[0] != '' {
+		if binary {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 			println('Note: for binary classification, balanced accuracy = (sensitivity + specificity) / 2')
 			println(chalk.fg(chalk.style('Attributes    Bins' +
-				if results.purge_flag { '      Purged instances      (%)' } else { '' } +
-				"     TP    FP    TN    FN  Sens'y Spec'y PPV    NPV    F1 Score  Raw Acc'y  Bal'd",
+				if results.purge_flag { '      Purged instances     (%)' } else { '' } +
+				"     TP    FP    TN    FN  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced  Binary Balanced",
 				'underline'), 'blue'))
 		} else {
 			println(chalk.fg(chalk.style('Attributes     Bins' +
-				if results.purge_flag { '     Purged instances      (%)' } else { '' },
+				if results.purge_flag { '     Purged instances     (%)' } else { '' },
 				'underline'), 'blue'))
 			println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 				'underline'), 'blue'))
@@ -398,23 +400,23 @@ fn show_explore_line(result CrossVerifyResult) ? {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
 				if result.purge_flag {
-				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
 			} else {
 				''
 			} +
-				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}           ${accuracy_percent:7.2f}   ${result.balanced_accuracy * 100:7.2f}' + 
-				if binary { '    ${result.balanced_accuracy_binary:6.2f}'}
+				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%' + 
+				if binary { '          ${result.balanced_accuracy_binary:6.2f}%'}
 				else { '' })
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
 				} else {
 					''
-				} + '  ${get_binary_stats_line(result.BinaryMetrics)}')
+				} + '  ${get_binary_stats_line(result)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.1f}%)'
+					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
 				} else {
 					''
 				})
@@ -425,8 +427,8 @@ fn show_explore_line(result CrossVerifyResult) ? {
 }
 
 // get_binary_stats_line
-fn get_binary_stats_line(bm BinaryMetrics) string {
-	return '${bm.t_p:5} ${bm.f_p:5} ${bm.t_n:5} ${bm.f_n:5}  ${bm.sens:5.3f}  ${bm.spec:5.3f}  ${bm.ppv:5.3f}  ${bm.npv:5.3f}  ${bm.f1_score:5.3f}     ${bm.raw_acc:6.2f}%  ${bm.balanced_accuracy_binary:6.2f}%'
+fn get_binary_stats_line(r CrossVerifyResult) string {
+	return '${r.t_p:5} ${r.f_p:5} ${r.t_n:5} ${r.f_n:5}   ${r.sens:5.3f}  ${r.spec:5.3f}  ${r.ppv:5.3f}  ${r.npv:5.3f}     ${r.f1_score_binary:5.3f}        ${r.raw_acc:6.2f}%   ${r.balanced_accuracy:6.2f}%          ${r.balanced_accuracy_binary:6.2f}%'
 }
 
 // show_multiple_classes_stats
@@ -436,7 +438,7 @@ fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 	for i, class in result.class_counts.keys() {
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${m.precision[i]:5.3f}     ${m.recall[i]:5.3f}       ${m.f1_score[i]:5.3f}'
 	}
-	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)'
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${result.raw_acc:6.2f}% multiclass balanced:${result.balanced_accuracy:6.2f}%)'
 	for i, avg_type in m.avg_type {
 		show_result << '${avg_type.title():18} Averages:                                   ${m.avg_precision[i]:5.3f}     ${m.avg_recall[i]:5.3f}       ${m.avg_f1_score[i]:5.3f}'
 	}

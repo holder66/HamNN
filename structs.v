@@ -314,6 +314,6 @@ mut:
 	spec 	f64
 	ppv		f64
 	npv		f64
-	f1_score 	f64
+	f1_score_binary	f64
 	balanced_accuracy_binary f64
 }
