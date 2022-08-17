@@ -107,7 +107,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	if cross_result.pos_neg_classes.len == 2 {
 		cross_result.BinaryMetrics = get_binary_stats(cross_result)
 	}
-		if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
+	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
 		show_crossvalidation(cross_result)?
 	}
 	return cross_result

@@ -4,6 +4,7 @@
 // best explanation of multiclass metrics and how they're calculated
 
 module hamnn
+
 import arrays
 
 // append_metric
@@ -14,7 +15,7 @@ fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
 	return m
 }
 
-// wt_avg takes an array of real values and an array of weights (typically 
+// wt_avg takes an array of real values and an array of weights (typically
 // class counts), and computes a weighted average
 fn wt_avg(a []f64, wts []int) ?f64 {
 	mut wp := 0.0
@@ -38,7 +39,7 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
 	m.avg_type << 'weighted'
 	// multiclass balanced accuracy is the arithmetic mean of the recalls
-	m.balanced_accuracy = m.avg_recall[0] * 100    // so as to be a percentage
+	m.balanced_accuracy = m.avg_recall[0] * 100 // so as to be a percentage
 	return m
 }
 
@@ -85,9 +86,9 @@ fn get_multiclass_stats(class string, result CrossVerifyResult) (f64, f64, f64) 
 
 // get_binary_stats
 fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
-		pos_class := result.pos_neg_classes[0]
-		neg_class := result.pos_neg_classes[1]
-		mut bm := BinaryMetrics{
+	pos_class := result.pos_neg_classes[0]
+	neg_class := result.pos_neg_classes[1]
+	mut bm := BinaryMetrics{
 		t_p: result.correct_inferences[pos_class]
 		t_n: result.correct_inferences[neg_class]
 		f_p: result.incorrect_inferences[pos_class]

@@ -249,7 +249,6 @@ fn get_show_bins(bins []int) string {
 	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
-
 // print_confusion_matrix
 fn print_confusion_matrix(result CrossVerifyResult) {
 	// collect confusion matrix rows into a matrix
@@ -333,7 +332,9 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	// println(results)
 	mut binary := false
-	if results.pos_neg_classes[0] != '' {binary = true}
+	if results.pos_neg_classes[0] != '' {
+		binary = true
+	}
 	mut explore_type_string := ''
 	if results.testfile_path == '' {
 		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
@@ -361,7 +362,8 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	if !settings.expanded_flag {
 		println(chalk.fg(chalk.style('Attributes     Bins' +
 			if results.purge_flag { '     Purged instances     (%)' } else { '' } +
-			'  Matches  Nonmatches  Accuracy: Raw  Balanced' + if binary {'  Binary Balanced'} else {''}, 'underline'), 'blue'))
+			'  Matches  Nonmatches  Accuracy: Raw  Balanced' +
+			if binary { '  Binary Balanced' } else { '' }, 'underline'), 'blue'))
 	} else {
 		if binary {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
@@ -386,7 +388,9 @@ fn show_explore_line(result CrossVerifyResult) ? {
 	// println(result)
 	// do nothing if neither the -s or the -e flag was set
 	mut binary := false
-	if result.pos_neg_classes[0] != '' {binary = true}
+	if result.pos_neg_classes[0] != '' {
+		binary = true
+	}
 	if result.show_flag || result.expanded_flag {
 		mut total_count_avg := 0.0
 		mut purged_count_avg := 0.0
@@ -398,15 +402,15 @@ fn show_explore_line(result CrossVerifyResult) ? {
 		}
 		if !result.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
-				if result.purge_flag {
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag {
 				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
 			} else {
 				''
-			} +
-				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%' + 
-				if binary { '          ${result.balanced_accuracy_binary:6.2f}%'}
-				else { '' })
+			} + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%' + if binary {
+				'          ${result.balanced_accuracy_binary:6.2f}%'
+			} else {
+				''
+			})
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {

@@ -124,93 +124,93 @@ fn test_display_verify_result() ? {
 // 	display_file(opts.outputfile_path, settings)?
 // }
 
-// fn test_display_explore_result_cross() ? {
-// 	mut opts := Options{
-// 		command: 'explore'
-// 		datafile_path: 'datasets/UCI/iris.arff'
-// 		bins: [2, 3]
-// 		number_of_attributes: [2,3]
-// 		concurrency_flag: true
-// 		outputfile_path: 'tempfolder/explore_result'
-// 		// show_flag: true
-// 	}
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	mut settings := DisplaySettings{
-// 		show_flag: true
-// 	}
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+fn test_display_explore_result_cross() ? {
+	mut opts := Options{
+		command: 'explore'
+		datafile_path: 'datasets/UCI/iris.arff'
+		bins: [2, 3]
+		number_of_attributes: [2, 3]
+		concurrency_flag: true
+		outputfile_path: 'tempfolder/explore_result'
+		// show_flag: true
+	}
+	_ = explore(load_file(opts.datafile_path), opts)?
+	mut settings := DisplaySettings{
+		show_flag: true
+	}
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat with purge flag set
-// 	opts.purge_flag = true
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+	// repeat with purge flag set
+	opts.purge_flag = true
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat for a binary class dataset
-// 	opts.number_of_attributes = [0]
-// 	opts.datafile_path = 'datasets/bcw174test'
-// 	opts.purge_flag = false
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+	// repeat for a binary class dataset
+	opts.number_of_attributes = [0]
+	opts.datafile_path = 'datasets/bcw174test'
+	opts.purge_flag = false
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat with purge flag set
-// 	opts.purge_flag = true
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
-// }
+	// repeat with purge flag set
+	opts.purge_flag = true
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
+}
 
-// fn test_display_explore_result_verify() ? {
-// 	mut opts := Options{
-// 		command: 'explore'
-// 		datafile_path: 'datasets/soybean-large-train.tab'
-// 		testfile_path: 'datasets/soybean-large-test.tab'
-// 		bins: [2, 6]
-// 		number_of_attributes: [12,15]
-// 		concurrency_flag: true
-// 		outputfile_path: 'tempfolder/explore_result'
-// 	}
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	mut settings := DisplaySettings{
-// 		show_flag: true
-// 	}
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+fn test_display_explore_result_verify() ? {
+	mut opts := Options{
+		command: 'explore'
+		datafile_path: 'datasets/soybean-large-train.tab'
+		testfile_path: 'datasets/soybean-large-test.tab'
+		bins: [2, 6]
+		number_of_attributes: [12, 15]
+		concurrency_flag: true
+		outputfile_path: 'tempfolder/explore_result'
+	}
+	_ = explore(load_file(opts.datafile_path), opts)?
+	mut settings := DisplaySettings{
+		show_flag: true
+	}
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat with purge flag set
-// 	opts.purge_flag = true
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+	// repeat with purge flag set
+	opts.purge_flag = true
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat for a binary class dataset
-// 	opts.datafile_path = 'datasets/bcw350train'
-// 	opts.testfile_path = 'datasets/bcw174test'
-// 	opts.purge_flag = false
-// 	opts.number_of_attributes = [0]
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
+	// repeat for a binary class dataset
+	opts.datafile_path = 'datasets/bcw350train'
+	opts.testfile_path = 'datasets/bcw174test'
+	opts.purge_flag = false
+	opts.number_of_attributes = [0]
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
 
-// 	// repeat with purge flag set
-// 	opts.purge_flag = true
-// 	_ = explore(load_file(opts.datafile_path), opts)?
-// 	settings.expanded_flag = false
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	display_file(opts.outputfile_path, settings)?
-// }
+	// repeat with purge flag set
+	opts.purge_flag = true
+	_ = explore(load_file(opts.datafile_path), opts)?
+	settings.expanded_flag = false
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	display_file(opts.outputfile_path, settings)?
+}
