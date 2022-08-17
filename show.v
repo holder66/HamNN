@@ -179,7 +179,7 @@ fn show_validate(result ValidateResult) {
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
+fn show_verify(result CrossVerifyResult) ? {
 	// println(result)
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
 		'underline'), 'magenta'))
@@ -216,17 +216,17 @@ fn show_crossvalidation(result CrossVerifyResult) ? {
 fn show_cross_or_verify_result(result CrossVerifyResult) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
 	// mut metrics := get_metrics(result)?
-	if result.expanded_flag {
+	if !result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)')
+		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}% binary balanced:${result.balanced_accuracy_binary:6.2f}%)')
 	} else {
-		show_expanded_result(result.Metrics, result)?
+		show_expanded_result(result)?
 		print_confusion_matrix(result)
 	}
 }
 
 // show_expanded_result
-fn show_expanded_result(metrics Metrics, result CrossVerifyResult) ? {
+fn show_expanded_result(result CrossVerifyResult) ? {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
 	show_multiple_classes_stats(result)?
@@ -325,7 +325,7 @@ fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result.BinaryMetrics)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		// show_multiple_classes_stats(get_metrics(result)?, result)?
+		show_multiple_classes_stats(result)?
 	}
 }
 
@@ -419,7 +419,7 @@ fn show_explore_line(result CrossVerifyResult) ? {
 				} else {
 					''
 				})
-				// show_multiple_classes_stats(get_metrics(result)?, result)?
+				show_multiple_classes_stats(result)?
 			}
 		}
 	}

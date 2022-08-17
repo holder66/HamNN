@@ -70,6 +70,7 @@ fn test_display_validate_result() ? {
 	mut settings := DisplaySettings{
 		show_flag: true
 	}
+	opts.datafile_path = 'datasets/bcw350train'
 	cl := make_classifier(load_file('datasets/bcw350train'), opts)
 	opts.outputfile_path = 'tempfolder/validate_result'
 	opts.testfile_path = 'datasets/bcw174validate'
@@ -91,36 +92,37 @@ fn test_display_verify_result() ? {
 	opts.outputfile_path = 'tempfolder/verify_result'
 	opts.testfile_path = 'datasets/bcw174test'
 	_ = verify(cl, opts)?
+	settings.expanded_flag = false
 	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
 	display_file(opts.outputfile_path, settings)?
 }
 
-fn test_display_cross_result() ? {
-	// cross-validate a dataset file, save the result, then display
-	mut opts := Options{
-		command: 'cross'
-		number_of_attributes: [4]
-		bins: [12]
-		folds: 5
-		repetitions: 0
-		random_pick: false
-		concurrency_flag: true
-	}
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
-	ds := load_file('datasets/UCI/segment.arff')
-	opts.outputfile_path = 'tempfolder/cross_result'
-	_ = cross_validate(ds, opts)?
-	display_file(opts.outputfile_path, settings)?
-	settings.expanded_flag = true
-	opts.folds = 10
-	opts.repetitions = 10
-	opts.random_pick = true
-	_ = cross_validate(ds, opts)?
-	display_file(opts.outputfile_path, settings)?
-}
+// fn test_display_cross_result() ? {
+// 	// cross-validate a dataset file, save the result, then display
+// 	mut opts := Options{
+// 		command: 'cross'
+// 		number_of_attributes: [4]
+// 		bins: [12]
+// 		folds: 5
+// 		repetitions: 0
+// 		random_pick: false
+// 		concurrency_flag: true
+// 	}
+// 	mut settings := DisplaySettings{
+// 		show_flag: true
+// 	}
+// 	ds := load_file('datasets/UCI/segment.arff')
+// 	opts.outputfile_path = 'tempfolder/cross_result'
+// 	_ = cross_validate(ds, opts)?
+// 	display_file(opts.outputfile_path, settings)?
+// 	settings.expanded_flag = true
+// 	opts.folds = 10
+// 	opts.repetitions = 10
+// 	opts.random_pick = true
+// 	_ = cross_validate(ds, opts)?
+// 	display_file(opts.outputfile_path, settings)?
+// }
 
 fn test_display_explore_result_cross() ? {
 	mut opts := Options{

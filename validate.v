@@ -12,7 +12,7 @@ module hamnn
 // This file can be used to append these instances to the classifier.
 pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 	// load the testfile as a Dataset struct
-	println(opts)
+	// println(opts)
 	mut test_ds := load_file(opts.testfile_path)
 	// instantiate a struct for the result
 	mut validate_result := ValidateResult{

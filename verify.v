@@ -55,7 +55,7 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
 	}
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		show_verify(verify_result, opts.DisplaySettings)?
+		show_verify(verify_result)?
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')
