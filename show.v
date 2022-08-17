@@ -382,6 +382,13 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 }
 
+// get_purged_percent 
+fn get_purged_percent(result CrossVerifyResult) (f64, f64, f64) {
+	total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
+	purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
+	return purged_count_avg, total_count_avg, 100 * purged_count_avg / total_count_avg
+}
+
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
 fn show_explore_line(result CrossVerifyResult) ? {
@@ -392,18 +399,11 @@ fn show_explore_line(result CrossVerifyResult) ? {
 		binary = true
 	}
 	if result.show_flag || result.expanded_flag {
-		mut total_count_avg := 0.0
-		mut purged_count_avg := 0.0
-		mut purged_percent := 0.0
-		if result.purge_flag {
-			total_count_avg = arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
-			purged_count_avg = total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
-			purged_percent = 100 * purged_count_avg / total_count_avg
-		}
+		purged, total, purged_percent := get_purged_percent(result)
 		if !result.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-				'${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
+				'${purged:10.1f} out of $total (${purged_percent:5.2f})'
 			} else {
 				''
 			} + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%' + if binary {
@@ -414,13 +414,13 @@ fn show_explore_line(result CrossVerifyResult) ? {
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
+					' ${purged:10.1f} out of $total (${purged_percent:5.2f})'
 				} else {
 					''
 				} + '  ${get_binary_stats_line(result)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:5.2f})'
+					' ${purged:10.1f} out of $total (${purged_percent:5.2f})'
 				} else {
 					''
 				})

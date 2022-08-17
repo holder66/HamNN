@@ -1,6 +1,8 @@
 // explore.v
 module hamnn
 
+import arrays
+
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
 // ```sh
@@ -102,7 +104,51 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
 	}
+	results.ExploreAnalytics = get_explore_analytics(results)?
+	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
+		show_explore_trailer(results)?
+	}
 	return results
+}
+
+// show_explore_trailer 
+fn show_explore_trailer(results ExploreResult) ? {
+	println('This will be the explore trailer')
+	
+}
+
+// get_explore_analytics
+fn get_explore_analytics(results ExploreResult) ?ExploreAnalytics {
+	mut raw_accuracies := []f64{}
+	mut balanced_accuracies := []f64{}
+	mut binary_balanced_accuracies := []f64{}
+	for a in results.array_of_results {
+		raw_accuracies << a.raw_acc
+		balanced_accuracies << a.balanced_accuracy
+		binary_balanced_accuracies << a.balanced_accuracy_binary
+	}
+	rraw := results.array_of_results[arrays.idx_max(raw_accuracies)?]
+	rbal := results.array_of_results[arrays.idx_max(balanced_accuracies)?]
+	rbin := results.array_of_results[arrays.idx_max(binary_balanced_accuracies)?]
+	mut analysis := ExploreAnalytics{
+		raw_accuracy_maximum_settings: get_max_settings(rraw, rraw.raw_acc)?
+		balanced_accuracy_maximum_settings: get_max_settings(rbal, rbal.balanced_accuracy)?
+		binary_balanced_accuracy_maximum_settings: get_max_settings(rbin, rbin.balanced_accuracy_binary)?
+		}
+	println(analysis)
+	return analysis
+}
+
+// get_max_settings
+fn get_max_settings(result CrossVerifyResult, max f64) ?MaxSettings {
+	_, _, purged_percent := get_purged_percent(result)
+	mut max_settings := MaxSettings{
+		max_value: max 
+		attributes_used: result.attributes_used
+		binning: get_binning(result.bin_values)
+		purged_percent: purged_percent
+	}
+	return max_settings
 }
 
 // get_attribute_range

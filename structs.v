@@ -256,6 +256,7 @@ pub struct ExploreResult {
 	Parameters
 	AttributeRange
 	DisplaySettings
+	ExploreAnalytics
 pub mut:
 	struct_type      string = '.ExploreResult'
 	path             string
@@ -316,4 +317,18 @@ mut:
 	npv                      f64
 	f1_score_binary          f64
 	balanced_accuracy_binary f64
+}
+
+struct MaxSettings {
+mut:
+	max_value 	f64
+	attributes_used int
+	binning  Binning
+	purged_percent f64
+}
+struct ExploreAnalytics {
+mut:
+	raw_accuracy_maximum_settings MaxSettings
+	balanced_accuracy_maximum_settings MaxSettings
+	binary_balanced_accuracy_maximum_settings MaxSettings
 }
