@@ -85,7 +85,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 			}
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
-			show_explore_line(result, results.DisplaySettings)?
+			show_explore_line(result)?
 
 			array_of_results << result
 			bin += binning.interval

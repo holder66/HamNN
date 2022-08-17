@@ -23,7 +23,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
 			show_explore_header(saved_er, settings)
 			for result in saved_er.array_of_results {
-				show_explore_line(result, settings)?
+				show_explore_line(result)?
 			}
 			if settings.graph_flag {
 				// plot_explore(saved_er)}

@@ -379,10 +379,10 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
-fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
+fn show_explore_line(result CrossVerifyResult) ? {
 	// println(result)
 	// do nothing if neither the -s or the -e flag was set
-	if settings.show_flag || settings.expanded_flag {
+	if result.show_flag || result.expanded_flag {
 		mut total_count_avg := 0.0
 		mut purged_count_avg := 0.0
 		mut purged_percent := 0.0
@@ -392,7 +392,7 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 			purged_percent = 100 * purged_count_avg / total_count_avg
 			// println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 		}
-		if !settings.expanded_flag {
+		if !result.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			// instances_avg := arrays.sum(result.classifier_instances_counts) or {0} / f64(result.classifier_instances_counts.len)
 			// instances_percent := 100.0 * instances_avg / f64(result.prepurge_instances_counts_array.len)
