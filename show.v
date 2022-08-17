@@ -424,3 +424,22 @@ fn show_explore_line(result CrossVerifyResult, settings DisplaySettings) ? {
 		}
 	}
 }
+
+// get_binary_stats_line
+fn get_binary_stats_line(bm BinaryMetrics) string {
+	return '${bm.t_p:5} ${bm.f_p:5} ${bm.t_n:5} ${bm.f_n:5}  ${bm.sens:5.3f}  ${bm.spec:5.3f}  ${bm.ppv:5.3f}  ${bm.npv:5.3f}  ${bm.f1_score:5.3f}     ${bm.raw_acc:6.2f}%  ${bm.balanced_accuracy_binary:6.2f}%'
+}
+
+// show_multiple_classes_stats
+fn show_multiple_classes_stats(result CrossVerifyResult) ? {
+	mut show_result := []string{}
+	m := result.Metrics
+	for i, class in result.class_counts.keys() {
+		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${m.precision[i]:5.3f}     ${m.recall[i]:5.3f}       ${m.f1_score[i]:5.3f}'
+	}
+	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${f32(result.correct_count) * 100 / result.total_count:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)'
+	for i, avg_type in m.avg_type {
+		show_result << '${avg_type.title():18} Averages:                                   ${m.avg_precision[i]:5.3f}     ${m.avg_recall[i]:5.3f}       ${m.avg_f1_score[i]:5.3f}'
+	}
+	print_array(show_result)
+}
