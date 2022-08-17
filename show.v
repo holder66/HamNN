@@ -191,11 +191,11 @@ fn show_verify(result CrossVerifyResult, settings DisplaySettings) ? {
 		purged_percent := 100 * f64(purged_count) / total_count
 		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
 	}
-	show_cross_or_verify_result(result, settings)?
+	show_cross_or_verify_result(result)?
 }
 
 // show_crossvalidation
-fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
+fn show_crossvalidation(result CrossVerifyResult) ? {
 	println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
 		'magenta'))
 	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' + if result.repetitions > 1 { ', $result.repetitions repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
@@ -209,14 +209,14 @@ fn show_crossvalidation(result CrossVerifyResult, settings DisplaySettings) ? {
 		purged_percent := 100 * purged_count_avg / total_count_avg
 		println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 	}
-	show_cross_or_verify_result(result, settings)?
+	show_cross_or_verify_result(result)?
 }
 
 // show_cross_or_verify_result
-fn show_cross_or_verify_result(result CrossVerifyResult, settings DisplaySettings) ? {
+fn show_cross_or_verify_result(result CrossVerifyResult) ? {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
 	// mut metrics := get_metrics(result)?
-	if !settings.expanded_flag {
+	if result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% multiclass balanced:${result.balanced_accuracy * 100:6.2f}%)')
 	} else {
