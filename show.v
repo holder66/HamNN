@@ -382,6 +382,18 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 }
 
+// show_explore_trailer 
+fn show_explore_trailer(results ExploreResult) ? {
+	// println('This will be the explore trailer')
+	// println(results.ExploreAnalytics)
+	println('\nRaw accuracy maximum: ${results.raw_accuracy_maximum_settings.max_value:5.2f}% when $results.raw_accuracy_maximum_settings.attributes_used attributes are used, with ')
+	println('Balanced accuracy maximum: ${results.balanced_accuracy_maximum_settings.max_value:5.2f}% when $results.balanced_accuracy_maximum_settings.attributes_used attributes are used, with ')
+	if results.pos_neg_classes[0] != '' {
+		println('Binary balanced accuracy maximum: ${results.binary_balanced_accuracy_maximum_settings.max_value:5.2f}% when $results.binary_balanced_accuracy_maximum_settings.attributes_used attributes are used, with ')
+	}
+	println('')
+}
+
 // get_purged_percent 
 fn get_purged_percent(result CrossVerifyResult) (f64, f64, f64) {
 	total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)

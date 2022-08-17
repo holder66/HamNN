@@ -26,6 +26,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 				result.DisplaySettings = settings
 				show_explore_line(result)?
 			}
+			show_explore_trailer(saved_er)?
 			if settings.graph_flag {
 				// plot_explore(saved_er)}
 			}

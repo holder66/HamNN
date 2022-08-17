@@ -101,20 +101,14 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 			plot_roc(results, opts)
 		}
 	}
+	results.ExploreAnalytics = get_explore_analytics(results)?
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
 	}
-	results.ExploreAnalytics = get_explore_analytics(results)?
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
 		show_explore_trailer(results)?
 	}
 	return results
-}
-
-// show_explore_trailer 
-fn show_explore_trailer(results ExploreResult) ? {
-	println('This will be the explore trailer')
-	
 }
 
 // get_explore_analytics
