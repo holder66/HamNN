@@ -256,7 +256,6 @@ pub struct ExploreResult {
 	Parameters
 	AttributeRange
 	DisplaySettings
-	ExploreAnalytics
 pub mut:
 	struct_type      string = '.ExploreResult'
 	path             string
@@ -266,6 +265,8 @@ pub mut:
 	repetitions      int
 	random_pick      bool
 	array_of_results []CrossVerifyResult
+	accuracy_types 	[]string = ['raw accuracy', 'balanced accuracy', 'binary balanced accuracy']
+	analytics 		[]MaxSettings
 }
 
 pub struct PlotResult {
@@ -321,14 +322,15 @@ mut:
 
 struct MaxSettings {
 mut:
+	// accuracy_type 	string
 	max_value 	f64
 	attributes_used int
-	binning  Binning
+	binning  []int
 	purged_percent f64
 }
-struct ExploreAnalytics {
-mut:
-	raw_accuracy_maximum_settings MaxSettings
-	balanced_accuracy_maximum_settings MaxSettings
-	binary_balanced_accuracy_maximum_settings MaxSettings
-}
+// struct ExploreAnalytics {
+// mut:
+// 	raw_accuracy_maximum_settings MaxSettings
+// 	balanced_accuracy_maximum_settings MaxSettings
+// 	binary_balanced_accuracy_maximum_settings MaxSettings
+// }

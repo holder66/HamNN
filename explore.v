@@ -101,7 +101,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 			plot_roc(results, opts)
 		}
 	}
-	results.ExploreAnalytics = get_explore_analytics(results)?
+	results.analytics = get_explore_analytics(results)?
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
 	}
@@ -112,24 +112,31 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 }
 
 // get_explore_analytics
-fn get_explore_analytics(results ExploreResult) ?ExploreAnalytics {
-	mut raw_accuracies := []f64{}
-	mut balanced_accuracies := []f64{}
-	mut binary_balanced_accuracies := []f64{}
-	for a in results.array_of_results {
-		raw_accuracies << a.raw_acc
-		balanced_accuracies << a.balanced_accuracy
-		binary_balanced_accuracies << a.balanced_accuracy_binary
+fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
+	mut analysis := []MaxSettings{}
+	mut setting := MaxSettings{}
+	for i, acc_type in results.accuracy_types {
+		println(acc_type)
+		setting.max_value = f64(i)
+		analysis << setting
 	}
-	rraw := results.array_of_results[arrays.idx_max(raw_accuracies)?]
-	rbal := results.array_of_results[arrays.idx_max(balanced_accuracies)?]
-	rbin := results.array_of_results[arrays.idx_max(binary_balanced_accuracies)?]
-	mut analysis := ExploreAnalytics{
-		raw_accuracy_maximum_settings: get_max_settings(rraw, rraw.raw_acc)?
-		balanced_accuracy_maximum_settings: get_max_settings(rbal, rbal.balanced_accuracy)?
-		binary_balanced_accuracy_maximum_settings: get_max_settings(rbin, rbin.balanced_accuracy_binary)?
-		}
-	println(analysis)
+
+	// mut raw_accuracies := []f64{}
+	// mut balanced_accuracies := []f64{}
+	// mut binary_balanced_accuracies := []f64{}
+	// for a in results.array_of_results {
+	// 	raw_accuracies << a.raw_acc
+	// 	balanced_accuracies << a.balanced_accuracy
+	// 	binary_balanced_accuracies << a.balanced_accuracy_binary
+	// }
+	// rraw := results.array_of_results[arrays.idx_max(raw_accuracies)?]
+	// rbal := results.array_of_results[arrays.idx_max(balanced_accuracies)?]
+	// rbin := results.array_of_results[arrays.idx_max(binary_balanced_accuracies)?]
+	// mut analysis := ExploreAnalytics{
+	// 	raw_accuracy_maximum_settings: get_max_settings(rraw, rraw.raw_acc)?
+	// 	balanced_accuracy_maximum_settings: get_max_settings(rbal, rbal.balanced_accuracy)?
+	// 	binary_balanced_accuracy_maximum_settings: get_max_settings(rbin, rbin.balanced_accuracy_binary)?
+	// 	}
 	return analysis
 }
 
@@ -139,7 +146,7 @@ fn get_max_settings(result CrossVerifyResult, max f64) ?MaxSettings {
 	mut max_settings := MaxSettings{
 		max_value: max 
 		attributes_used: result.attributes_used
-		binning: get_binning(result.bin_values)
+		binning: result.bin_values
 		purged_percent: purged_percent
 	}
 	return max_settings
