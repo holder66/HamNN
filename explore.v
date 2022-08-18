@@ -114,29 +114,35 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 // get_explore_analytics
 fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 	mut analysis := []MaxSettings{}
-	mut setting := MaxSettings{}
-	for i, acc_type in results.accuracy_types {
-		println(acc_type)
-		setting.max_value = f64(i)
-		analysis << setting
+	// mut setting := MaxSettings{}
+	// collect all the accuracy figures into arrays
+	mut raw_accuracies := []f64{}
+	mut balanced_accuracies := []f64{}
+	mut binary_balanced_accuracies := []f64{}
+	for a in results.array_of_results {
+		raw_accuracies << a.raw_acc
+		balanced_accuracies << a.balanced_accuracy
+		binary_balanced_accuracies << a.balanced_accuracy_binary
 	}
-
-	// mut raw_accuracies := []f64{}
-	// mut balanced_accuracies := []f64{}
-	// mut binary_balanced_accuracies := []f64{}
-	// for a in results.array_of_results {
-	// 	raw_accuracies << a.raw_acc
-	// 	balanced_accuracies << a.balanced_accuracy
-	// 	binary_balanced_accuracies << a.balanced_accuracy_binary
-	// }
-	// rraw := results.array_of_results[arrays.idx_max(raw_accuracies)?]
-	// rbal := results.array_of_results[arrays.idx_max(balanced_accuracies)?]
-	// rbin := results.array_of_results[arrays.idx_max(binary_balanced_accuracies)?]
-	// mut analysis := ExploreAnalytics{
-	// 	raw_accuracy_maximum_settings: get_max_settings(rraw, rraw.raw_acc)?
-	// 	balanced_accuracy_maximum_settings: get_max_settings(rbal, rbal.balanced_accuracy)?
-	// 	binary_balanced_accuracy_maximum_settings: get_max_settings(rbin, rbin.balanced_accuracy_binary)?
-	// 	}
+	// get the index for the maximum value of each accuracy type
+	mut max_accuracy_indices := []int{}
+	max_accuracy_indices << arrays.idx_max(raw_accuracies)?
+	max_accuracy_indices << arrays.idx_max(balanced_accuracies)?
+	max_accuracy_indices << arrays.idx_max(binary_balanced_accuracies)?
+	println(max_accuracy_indices)
+	// put the maximum accuracy values into an array
+	mut max_accuracy_values := []f64{}
+	for i, idx in max_accuracy_indices {
+		max_accuracy_values << match i {
+			0 { raw_accuracies[idx] }
+			1 { balanced_accuracies[idx] }
+			2 { binary_balanced_accuracies[idx] }
+			else { 0.0 }
+		}
+	}
+	for i, idx in max_accuracy_indices {
+		analysis << get_max_settings(results.array_of_results[idx], max_accuracy_values[i])?
+	}
 	return analysis
 }
 

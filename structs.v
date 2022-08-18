@@ -119,6 +119,7 @@ pub mut:
 	repetitions          int
 	random_pick          bool
 	command              string
+	args 	[]string
 }
 
 struct DisplaySettings {
@@ -137,7 +138,7 @@ pub struct Options {
 	DisplaySettings
 pub mut:
 	struct_type         string = '.Options'
-	args                []string
+	// args                []string
 	non_options         []string
 	bins                []int = [2, 16]
 	concurrency_flag    bool

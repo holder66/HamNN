@@ -387,8 +387,9 @@ fn show_explore_trailer(results ExploreResult) ? {
 	// println('This will be the explore trailer')
 	// println(results.ExploreAnalytics)
 	println('')
+	println('Command line arguments: ${results.args}')
 	for i, acc_type in results.accuracy_types {
-		println('i: $i  $acc_type  ${results.analytics[i].max_value}')
+		println('i: $i  $acc_type  ${results.analytics[i]}')
 	}
 	// println('Raw accuracy maximum: ${results.raw_accuracy_maximum_settings.max_value:5.2f}% when $results.raw_accuracy_maximum_settings.attributes_used attributes are used, with ${get_show_bins(results.raw_accuracy_maximum_settings.binning)} bins.')
 	// println('Balanced accuracy maximum: ${results.balanced_accuracy_maximum_settings.max_value:5.2f}% when $results.balanced_accuracy_maximum_settings.attributes_used attributes are used, with ${get_show_bins(results.balanced_accuracy_maximum_settings.binning)} bins.' )
