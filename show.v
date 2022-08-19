@@ -249,6 +249,17 @@ fn get_show_bins(bins []int) string {
 	return '${bins[0]:2} - ${bins[1]:-2}'
 }
 
+// show_bins_for_trailer
+fn show_bins_for_trailer(bins []int) string {
+	if bins == [] || 0 in bins {
+		return ''
+	}
+	if bins.len == 1 || bins[0] == bins[1] {
+		return '${bins[0]}'
+	}
+	return '${bins[0]} - ${bins[1]}'
+}
+
 // print_confusion_matrix
 fn print_confusion_matrix(result CrossVerifyResult) {
 	// collect confusion matrix rows into a matrix
@@ -382,24 +393,26 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 }
 
-// show_explore_trailer 
+// show_explore_trailer
 fn show_explore_trailer(results ExploreResult) ? {
-	// println('This will be the explore trailer')
-	// println(results.ExploreAnalytics)
 	println('')
-	println('Command line arguments: ${results.args}')
+	println('Command line arguments: $results.args')
+	println('Maximun accuracies obtained:')
+	mut ea := MaxSettings{}
 	for i, acc_type in results.accuracy_types {
-		println('i: $i  $acc_type  ${results.analytics[i]}')
+		ea = results.analytics[i]
+		if ea.max_value > 0.0 {
+			println('${acc_type:28}: ${ea.max_value:6.2f}%, using $ea.attributes_used attributes' + if show_bins_for_trailer(ea.binning) != '' { ', with binning ${show_bins_for_trailer(ea.binning)}' } else { '' } + if ea.purged_percent > 0.0 {
+				', ${ea.purged_percent:5.2f}% instances purged.'
+			} else {
+				''
+			})
+		}
 	}
-	// println('Raw accuracy maximum: ${results.raw_accuracy_maximum_settings.max_value:5.2f}% when $results.raw_accuracy_maximum_settings.attributes_used attributes are used, with ${get_show_bins(results.raw_accuracy_maximum_settings.binning)} bins.')
-	// println('Balanced accuracy maximum: ${results.balanced_accuracy_maximum_settings.max_value:5.2f}% when $results.balanced_accuracy_maximum_settings.attributes_used attributes are used, with ${get_show_bins(results.balanced_accuracy_maximum_settings.binning)} bins.' )
-	// if results.pos_neg_classes[0] != '' {
-	// 	println('Binary balanced accuracy maximum: ${results.binary_balanced_accuracy_maximum_settings.max_value:5.2f}% when $results.binary_balanced_accuracy_maximum_settings.attributes_used attributes are used, with ${get_show_bins(results.binary_balanced_accuracy_maximum_settings.binning)} bins.')
-	// }
 	println('')
 }
 
-// get_purged_percent 
+// get_purged_percent
 fn get_purged_percent(result CrossVerifyResult) (f64, f64, f64) {
 	total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
 	purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)

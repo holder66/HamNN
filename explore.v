@@ -129,7 +129,6 @@ fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 	max_accuracy_indices << arrays.idx_max(raw_accuracies)?
 	max_accuracy_indices << arrays.idx_max(balanced_accuracies)?
 	max_accuracy_indices << arrays.idx_max(binary_balanced_accuracies)?
-	println(max_accuracy_indices)
 	// put the maximum accuracy values into an array
 	mut max_accuracy_values := []f64{}
 	for i, idx in max_accuracy_indices {
@@ -150,7 +149,7 @@ fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 fn get_max_settings(result CrossVerifyResult, max f64) ?MaxSettings {
 	_, _, purged_percent := get_purged_percent(result)
 	mut max_settings := MaxSettings{
-		max_value: max 
+		max_value: max
 		attributes_used: result.attributes_used
 		binning: result.bin_values
 		purged_percent: purged_percent

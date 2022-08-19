@@ -119,7 +119,7 @@ pub mut:
 	repetitions          int
 	random_pick          bool
 	command              string
-	args 	[]string
+	args                 []string
 }
 
 struct DisplaySettings {
@@ -137,7 +137,7 @@ pub struct Options {
 	Parameters
 	DisplaySettings
 pub mut:
-	struct_type         string = '.Options'
+	struct_type string = '.Options'
 	// args                []string
 	non_options         []string
 	bins                []int = [2, 16]
@@ -266,8 +266,8 @@ pub mut:
 	repetitions      int
 	random_pick      bool
 	array_of_results []CrossVerifyResult
-	accuracy_types 	[]string = ['raw accuracy', 'balanced accuracy', 'binary balanced accuracy']
-	analytics 		[]MaxSettings
+	accuracy_types   []string = ['raw accuracy', 'balanced accuracy', 'binary balanced accuracy']
+	analytics        []MaxSettings
 }
 
 pub struct PlotResult {
@@ -324,11 +324,12 @@ mut:
 struct MaxSettings {
 mut:
 	// accuracy_type 	string
-	max_value 	f64
+	max_value       f64
 	attributes_used int
-	binning  []int
-	purged_percent f64
+	binning         []int
+	purged_percent  f64
 }
+
 // struct ExploreAnalytics {
 // mut:
 // 	raw_accuracy_maximum_settings MaxSettings
