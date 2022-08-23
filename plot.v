@@ -167,7 +167,6 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 			color: 'red'
 			size: 14.0
 			family: 'Times New Roman'
-
 		}
 	}
 	annotation2 := plot.Annotation{
@@ -184,7 +183,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 	annotation3 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 15
-		text: 'UTC: ${time.utc()}'
+		text: 'UTC: $time.utc()'
 		align: 'center'
 		font: plot.Font{
 			color: 'blue'
