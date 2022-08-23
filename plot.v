@@ -3,6 +3,7 @@ module hamnn
 // import arrays
 import math
 import vsl.plot
+import time
 
 struct RankTrace {
 mut:
@@ -162,12 +163,45 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 		y: 5
 		text: 'Hover your cursor over a marker to view details.'
 		align: 'center'
+		font: plot.Font{
+			color: 'red'
+			size: 14.0
+			family: 'Times New Roman'
+
+		}
 	}
 	annotation2 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 10
 		text: explore_type_string(opts)
-		align: 'left'
+		align: 'center'
+		font: plot.Font{
+			color: 'blue'
+			size: 12.0
+			family: 'Times New Roman'
+		}
+	}
+	annotation3 := plot.Annotation{
+		x: (array_max(x) + array_min(x)) / 2
+		y: 15
+		text: 'UTC: ${time.utc()}'
+		align: 'center'
+		font: plot.Font{
+			color: 'blue'
+			size: 12.0
+			family: 'Times New Roman'
+		}
+	}
+	annotation4 := plot.Annotation{
+		x: (array_max(x) + array_min(x)) / 2
+		y: 20
+		text: 'args: $result.args'
+		align: 'center'
+		font: plot.Font{
+			color: 'black'
+			size: 12.0
+			family: 'Times New Roman'
+		}
 	}
 	title_string := if binary_flag { 'Binary ' } else { '' } +
 		'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
@@ -181,10 +215,9 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 				text: 'Number of Attributes Used'
 			}
 		}
-		annotations: [annotation1, annotation2]
-		autosize: false
+		annotations: [annotation1, annotation2, annotation3, annotation4]
+		autosize: true
 	)
-	println('Just before the plot command, plt: $plt')
 	plt.show() or { panic(err) }
 }
 
@@ -334,12 +367,8 @@ fn filter<T>(match_value string, a []string, b []T) []T {
 // to include only elements whose corresponding element
 // in array a is equal to the match_value.
 fn filter_int<T>(match_value int, a []int, b []T) []T {
-	println(match_value)
-	println(a)
-	println(b)
 	mut result := []T{}
 	for i, value in a {
-		println([i, value])
 		if match_value == value {
 			result << b[i]
 		}
