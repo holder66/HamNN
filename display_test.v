@@ -22,6 +22,7 @@ fn test_display_classifier() ? {
 		command: 'make'
 		bins: [3, 10]
 		number_of_attributes: [8]
+		graph_flag: true
 	}
 	opts.outputfile_path = 'tempfolder/classifierfile'
 	mut ds := load_file('datasets/developer.tab')
@@ -98,31 +99,31 @@ fn test_display_verify_result() ? {
 	display_file(opts.outputfile_path, settings)?
 }
 
-// fn test_display_cross_result() ? {
-// 	// cross-validate a dataset file, save the result, then display
-// 	mut opts := Options{
-// 		command: 'cross'
-// 		number_of_attributes: [4]
-// 		bins: [12]
-// 		folds: 5
-// 		repetitions: 0
-// 		random_pick: false
-// 		concurrency_flag: true
-// 	}
-// 	mut settings := DisplaySettings{
-// 		show_flag: true
-// 	}
-// 	ds := load_file('datasets/UCI/segment.arff')
-// 	opts.outputfile_path = 'tempfolder/cross_result'
-// 	_ = cross_validate(ds, opts)?
-// 	display_file(opts.outputfile_path, settings)?
-// 	settings.expanded_flag = true
-// 	opts.folds = 10
-// 	opts.repetitions = 10
-// 	opts.random_pick = true
-// 	_ = cross_validate(ds, opts)?
-// 	display_file(opts.outputfile_path, settings)?
-// }
+fn test_display_cross_result() ? {
+	// cross-validate a dataset file, save the result, then display
+	mut opts := Options{
+		command: 'cross'
+		number_of_attributes: [4]
+		bins: [12]
+		folds: 5
+		repetitions: 0
+		random_pick: false
+		concurrency_flag: true
+	}
+	mut settings := DisplaySettings{
+		show_flag: true
+	}
+	ds := load_file('datasets/UCI/segment.arff')
+	opts.outputfile_path = 'tempfolder/cross_result'
+	_ = cross_validate(ds, opts)?
+	display_file(opts.outputfile_path, settings)?
+	settings.expanded_flag = true
+	opts.folds = 10
+	opts.repetitions = 10
+	opts.random_pick = true
+	_ = cross_validate(ds, opts)?
+	display_file(opts.outputfile_path, settings)?
+}
 
 fn test_display_explore_result_cross() ? {
 	mut opts := Options{
@@ -132,11 +133,13 @@ fn test_display_explore_result_cross() ? {
 		number_of_attributes: [2, 3]
 		concurrency_flag: true
 		outputfile_path: 'tempfolder/explore_result'
+		graph_flag: true
 		// show_flag: true
 	}
 	_ = explore(load_file(opts.datafile_path), opts)?
 	mut settings := DisplaySettings{
 		show_flag: true
+		graph_flag: true
 	}
 	display_file(opts.outputfile_path, settings)?
 	settings.expanded_flag = true
@@ -178,6 +181,7 @@ fn test_display_explore_result_verify() ? {
 		number_of_attributes: [12, 15]
 		concurrency_flag: true
 		outputfile_path: 'tempfolder/explore_result'
+		graph_flag: true
 	}
 	_ = explore(load_file(opts.datafile_path), opts)?
 	mut settings := DisplaySettings{

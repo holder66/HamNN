@@ -95,12 +95,6 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		atts += results.att_interval
 	}
 	results.array_of_results = array_of_results
-	if opts.graph_flag {
-		plot_explore(results, opts)?
-		if ds.Class.class_counts.len == 2 {
-			plot_roc(results, opts)
-		}
-	}
 	results.analytics = get_explore_analytics(results)?
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
@@ -108,13 +102,18 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
 		show_explore_trailer(results)?
 	}
+	if opts.graph_flag {
+		plot_explore(results, opts)?
+		if ds.Class.class_counts.len == 2 {
+			plot_roc(results, opts)
+		}
+	}
 	return results
 }
 
 // get_explore_analytics
 fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 	mut analysis := []MaxSettings{}
-	// mut setting := MaxSettings{}
 	// collect all the accuracy figures into arrays
 	mut raw_accuracies := []f64{}
 	mut balanced_accuracies := []f64{}

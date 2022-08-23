@@ -3,6 +3,14 @@ module hamnn
 
 // import arrays
 
+// test_uniques
+fn test_uniques() {
+	assert uniques([1]) == [1]
+	assert uniques([1, 4, 5, 1, 1, 4]) == [1, 4, 5]
+	assert uniques(['a', 'b', 'a']) == ['a', 'b']
+	assert uniques([0.1, 0.11]) == [0.1, 0.11]
+}
+
 fn test_transpose() {
 	matrix := [['1', '2', '3'], ['4', '5', '6']]
 	assert transpose(matrix) == [['1', '4'], ['2', '5'], ['3', '6']]

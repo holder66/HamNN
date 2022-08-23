@@ -43,13 +43,13 @@ fn integer_element_counts(array []int) map[int]int {
 	return counts
 }
 
-// pub fn element_counts<T>(array []T) map[T]int {
-// 	mut counts := map[T]int{}
-// 	for element in array {
-// 		counts[element]++
-// 	}
-// 	return counts
-// }
+pub fn element_counts<T>(array []T) map[T]int {
+	mut counts := map[T]int{}
+	for element in array {
+		counts[element]++
+	}
+	return counts
+}
 
 // parse_range takes a string like '3,6,8' and returns [3, 6, 8]
 fn parse_range(arg string) []int {
@@ -266,4 +266,9 @@ fn array_sum<T>(list []T) T {
 	}
 
 	return head
+}
+
+// uniques
+fn uniques<T>(list []T) []T {
+	return element_counts(list).keys()
 }

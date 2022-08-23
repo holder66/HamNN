@@ -34,7 +34,7 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 			id: i
 			name: name
 			count: ds.data[i].len
-			uniques: uniques(ds.data[i])
+			uniques: uniques_values(ds.data[i])
 			missing: missing_vals[i]
 			att_type: ds.inferred_attribute_types[i]
 			for_training: i in indices_of_useful_attributes
@@ -55,8 +55,8 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	return result
 }
 
-// uniques
-fn uniques(attribute_values []string) int {
+// uniques_values
+fn uniques_values(attribute_values []string) int {
 	return string_element_counts(attribute_values).len
 }
 

@@ -88,58 +88,73 @@ mut:
 	max_percents    f64
 	attributes_used []f64
 	bin_range       []string
+	bin_for_sorting int
 }
 
 // plot_explore generates a scatterplot for the results of
 // an explore.explore() on a dataset.
 fn plot_explore(result ExploreResult, opts Options) ? {
-	// println('result in plot_explore: $result')
+	// println('opts in plot_explore: $opts')
+	binary_flag := if result.pos_neg_classes[0] != '' { true } else { false }
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}
 	mut y := []f64{}
-	mut bin_values := []string{}
-	mut y_value := 1.0
+	mut bin_values_strings := []string{}
+	mut bin_values_strings_filtered := []string{}
 	mut percents := []f64{}
 	mut max_percents := 0.0
-	mut metrics := Metrics{}
+	mut bins_for_sorting := []int{}
 	for res in result.array_of_results {
-		metrics = get_metrics(res)?
-		y_value = metrics.balanced_accuracy * 100
-		// y_value = (f32(res.correct_count) * 100 / res.total_count)
 		x << f64(res.attributes_used)
-		y << y_value
-		// create strings that can be used for filtering
-		if res.bin_values.len == 1 || res.bin_values[0] == res.bin_values[1] {
-			bin_values << '${res.bin_values[0]} bins'
-		} else {
-			bin_values << 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
-		}
+		y << if binary_flag { res.balanced_accuracy_binary } else { res.balanced_accuracy }
+		bin_values_strings << show_bins_for_trailer(res.bin_values)
+		bins_for_sorting << res.bin_values.last()
 	}
 	// get the unique bin_values, each one will generate a separate trace
-	for key, _ in string_element_counts(bin_values) {
-		percents = filter(key, bin_values, y).map((math.round(it * 100)) / 100)
+	for b in uniques(bins_for_sorting) {
+		percents = filter_int(b, bins_for_sorting, y)
+		bin_values_strings_filtered = filter_int(b, bins_for_sorting, bin_values_strings)
 		max_percents = array_max(percents)
 		traces << ExploreTrace{
-			label: '$key ${array_max(percents):5.2f}'
+			label: 'Bins: ${bin_values_strings_filtered[0]} ${array_max(percents):5.2f}'
 			percents: percents
 			max_percents: max_percents
-			attributes_used: filter(key, bin_values, x)
-			bin_range: ['$key']
+			attributes_used: filter_int(b, bins_for_sorting, x)
+			bin_range: ['${bin_values_strings_filtered[0]}']
+			bin_for_sorting: b
 		}
 	}
-	// sort the traces according to the maximum value of percents
-	traces.sort(a.max_percents > b.max_percents)
-
+	custom_sort_fn := fn (a &ExploreTrace, b &ExploreTrace) int {
+		// return -1 when a comes before b
+		// return 0, when both are in same order
+		// return 1 when b comes before a
+		if a.max_percents == b.max_percents {
+			if a.bin_for_sorting > b.bin_for_sorting {
+				return 1
+			}
+			if a.bin_for_sorting < b.bin_for_sorting {
+				return -1
+			}
+			return 0
+		}
+		if a.max_percents > b.max_percents {
+			return -1
+		} else if a.max_percents < b.max_percents {
+			return 1
+		}
+		return 0
+	}
+	traces.sort_with_compare(custom_sort_fn)
 	for value in traces {
 		plt.add_trace(
 			trace_type: .scatter
 			x: value.attributes_used
-			y: value.percents
+			y: value.percents.map((math.round(it * 100)) / 100)
 			text: value.bin_range.repeat(value.percents.len)
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: '%{text}<br>attributes: %{x}<br>accuracy: %{y}%'
+			hovertemplate: 'bins: %{text}<br>attributes: %{x}<br>accuracy: %{y}%'
 		)
 	}
 	annotation1 := plot.Annotation{
@@ -154,10 +169,11 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 		text: explore_type_string(opts)
 		align: 'left'
 	}
-	title_string := 'Balanced Accuracy by Number of Attributes for "$opts.datafile_path"'
+	title_string := if binary_flag { 'Binary ' } else { '' } +
+		'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
 	plt.set_layout(
 		title: title_string
-		width: 800
+		width: 900
 		xaxis: plot.Axis{
 			tickmode: 'array'
 			tickvals: x
@@ -168,6 +184,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 		annotations: [annotation1, annotation2]
 		autosize: false
 	)
+	println('Just before the plot command, plt: $plt')
 	plt.show() or { panic(err) }
 }
 
@@ -306,6 +323,23 @@ fn plot_roc(result ExploreResult, opts Options) {
 fn filter<T>(match_value string, a []string, b []T) []T {
 	mut result := []T{}
 	for i, value in a {
+		if match_value == value {
+			result << b[i]
+		}
+	}
+	return result
+}
+
+// filter_int takes two coordinated arrays. It filters array b
+// to include only elements whose corresponding element
+// in array a is equal to the match_value.
+fn filter_int<T>(match_value int, a []int, b []T) []T {
+	println(match_value)
+	println(a)
+	println(b)
+	mut result := []T{}
+	for i, value in a {
+		println([i, value])
 		if match_value == value {
 			result << b[i]
 		}

@@ -397,7 +397,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 fn show_explore_trailer(results ExploreResult) ? {
 	println('')
 	println('Command line arguments: $results.args')
-	println('Maximun accuracies obtained:')
+	println('Maximum accuracies obtained:')
 	mut ea := MaxSettings{}
 	for i, acc_type in results.accuracy_types {
 		ea = results.analytics[i]

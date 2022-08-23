@@ -39,39 +39,40 @@ fn test_rank_attributes_plot() {
 fn test_explore_plot() ? {
 	mut results := ExploreResult{}
 	mut opts := Options{
-		number_of_attributes: [2, 7]
-		bins: [2, 8]
-		// show_flag: true
+		command: 'explore'
+		// number_of_attributes: [2, 7]
+		bins: [3, 7]
+		show_flag: true
 		// expanded_flag: true
 		graph_flag: true
 		weighting_flag: true
 		exclude_flag: true
 		concurrency_flag: true
-		uniform_bins: true
-		folds: 10
-		repetitions: 50
-		random_pick: true
-		datafile_path: 'datasets/2_class_developer.tab'
+		// uniform_bins: true
+		purge_flag: true
+		// folds: 10
+		// repetitions: 50
+		// random_pick: true
+		// datafile_path: 'datasets/2_class_developer.tab'
 	}
 	// cross with 2 classes (generates ROC plots)
-	mut ds := load_file(opts.datafile_path)
-	results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)?
 
 	// test for cross with more than 2 classes
-	opts.datafile_path = 'datasets/developer.tab'
+	opts.datafile_path = 'datasets/iris.tab'
 	results = explore(load_file(opts.datafile_path), opts)?
 
-	// verify with 2 classes (generates ROC plots)
-	opts.datafile_path = 'datasets/bcw350train'
-	opts.testfile_path = 'datasets/bcw174test'
-	opts.number_of_attributes = [0]
+	// // verify with 2 classes (generates ROC plots)
+	// opts.datafile_path = 'datasets/bcw350train'
+	// opts.testfile_path = 'datasets/bcw174test'
+	// opts.number_of_attributes = [0]
 
-	results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)?
 
-	// verify with more than 2 classes
-	opts.datafile_path = 'datasets/soybean-large-train.tab'
-	opts.testfile_path = 'datasets/soybean-large-test.tab'
-	opts.number_of_attributes = [0]
+	// // verify with more than 2 classes
+	// opts.datafile_path = 'datasets/soybean-large-train.tab'
+	// opts.testfile_path = 'datasets/soybean-large-test.tab'
+	// opts.number_of_attributes = [0]
 
-	results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)?
 }

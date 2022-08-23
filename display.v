@@ -20,6 +20,9 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	match true {
 		s.contains('"struct_type":".ExploreResult"') {
+			mut opts := Options{
+				DisplaySettings: settings
+			}
 			mut saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
 			show_explore_header(saved_er, settings)
 			for mut result in saved_er.array_of_results {
@@ -28,7 +31,8 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			}
 			show_explore_trailer(saved_er)?
 			if settings.graph_flag {
-				// plot_explore(saved_er)}
+				println(saved_er)
+				plot_explore(saved_er, opts)?
 			}
 		}
 		s.contains('"struct_type":".Classifier"') {
