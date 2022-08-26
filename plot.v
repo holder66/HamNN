@@ -16,7 +16,7 @@ mut:
 // plot_rank generates a scatterplot of the rank values
 // for continuous attributes, as a function of the number of bins.
 fn plot_rank(result RankingResult) {
-	mut ranked_atts := result.array_of_ranked_attributes
+	mut ranked_atts := result.array_of_ranked_attributes.clone()
 	mut traces := []RankTrace{}
 	mut plt := plot.new_plot()
 	mut x := []f64{}

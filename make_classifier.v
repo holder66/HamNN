@@ -35,7 +35,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
 	ranking_result := rank_attributes(ds, opts)
-	mut ranked_attributes := ranking_result.array_of_ranked_attributes
+	mut ranked_attributes := ranking_result.array_of_ranked_attributes.clone()
 	cl.binning = ranking_result.binning
 	// println('binning in make_classifier: $cl.binning')
 	// println('opts.number_of_attributes: $opts.number_of_attributes')
