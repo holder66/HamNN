@@ -24,7 +24,7 @@ v install holder66.hamnn
 And (optionally) libraries used by HamNN for generating plots and for colored output on the console:
 ```
 v install vsl
-v install etienne_napoleone.chalk
+v install Mewzax.chalk
 ```
 In your V code:
 ```
@@ -34,7 +34,7 @@ Example source code:
 ```v
 module main
 
-import holder66.hamnn
+import hamnn
 import os
 
 fn main() {

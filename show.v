@@ -11,7 +11,7 @@
 
 module hamnn
 
-import etienne_napoleone.chalk
+import mewzax.chalk
 import arrays
 import strings
 // import math

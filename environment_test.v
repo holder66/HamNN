@@ -4,7 +4,7 @@ module hamnn
 
 // test_get_package_version
 fn test_get_package_version() {
-	assert get_package_version() == '0.2.1'
+	assert get_package_version() == '0.2.2'
 }
 
 // test_get_environment
