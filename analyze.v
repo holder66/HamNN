@@ -28,6 +28,8 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 	// println('missing_values in analyze_dataset: $missing_vals')
 	mut indices_of_useful_attributes := ds.useful_continuous_attributes.keys()
 	indices_of_useful_attributes << ds.useful_discrete_attributes.keys()
+	mut max_values := []f32{}
+	mut min_values := []f32{}
 	mut atts := []Attribute{}
 	for i, name in ds.attribute_names {
 		mut att_info := Attribute{
@@ -44,8 +46,13 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 			att_info.min = f32(array_min(ds.useful_continuous_attributes[i].filter(it != -math.max_f32)))
 		}
 		atts << att_info
+		max_values << att_info.max 
+		min_values << att_info.min
 	}
 	result.attributes = atts
+	result.overall_max = array_max(max_values)
+	result.overall_min = array_min(min_values)
+	println([result.overall_min, result.overall_max])
 	if opts.show_flag {
 		show_analyze(result)
 	}
