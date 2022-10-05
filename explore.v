@@ -1,8 +1,6 @@
 // explore.v
 module hamnn
 
-import arrays
-
 // explore runs a series of cross-validations or verifications,
 // over a range of attributes and a range of binning values.
 // ```sh
@@ -125,9 +123,9 @@ fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 	}
 	// get the index for the maximum value of each accuracy type
 	mut max_accuracy_indices := []int{}
-	max_accuracy_indices << arrays.idx_max(raw_accuracies)?
-	max_accuracy_indices << arrays.idx_max(balanced_accuracies)?
-	max_accuracy_indices << arrays.idx_max(binary_balanced_accuracies)?
+	max_accuracy_indices << idx_max(raw_accuracies)
+	max_accuracy_indices << idx_max(balanced_accuracies)
+	max_accuracy_indices << idx_max(binary_balanced_accuracies)
 	// put the maximum accuracy values into an array
 	mut max_accuracy_values := []f64{}
 	for i, idx in max_accuracy_indices {
