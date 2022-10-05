@@ -12,6 +12,8 @@ import encoding.utf8
 // Example:
 // `ds := load_file('datasets/iris.tab')`
 pub fn load_file(path string) Dataset {
+	println(path)
+	println(file_type(path))
 	return match file_type(path) {
 		'orange_newer' { load_orange_newer_file(path) }
 		'orange_older' { load_orange_older_file(path) }
@@ -29,7 +31,7 @@ pub fn file_type(path string) string {
 	if os.file_ext(path) == '.arff' {
 		return 'arff'
 	}
-	header := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
+	header := os.read_lines(path.trim_space()) or { panic('Failed to open $path in file_type()') }
 	if header[0].contains('#') {
 		return 'orange_newer'
 	} else {
@@ -231,8 +233,11 @@ fn load_orange_newer_file(path string) Dataset {
 		path: path
 		attribute_names: types_attributes.map(it[1])
 		attribute_types: types_attributes.map(it[0])
-		data: transpose(content[1..].map(extract_words(it)))
+		ox_spectra: content[1..].map(extract_words(it))
+		// data: transpose(content[1..].map(extract_words(it)))
+
 	}
+	ds.data = transpose(ds.ox_spectra)
 	ds.inferred_attribute_types = infer_attribute_types_newer(ds)
 	ds.Class = set_class_struct(ds)
 	ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)

@@ -34,6 +34,7 @@ pub mut:
 	attribute_types              []string
 	inferred_attribute_types     []string
 	data                         [][]string
+	ox_spectra		[][]string
 	useful_continuous_attributes map[int][]f32
 	useful_discrete_attributes   map[int][]string
 }
