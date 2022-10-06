@@ -96,7 +96,6 @@ mut:
 // an explore.explore() on a dataset.
 fn plot_explore(result ExploreResult, opts Options) ? {
 	// println('opts in plot_explore: $opts')
-	binary_flag := if result.pos_neg_classes[0] != '' { true } else { false }
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}
@@ -202,8 +201,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 			family: 'Times New Roman'
 		}
 	}
-	title_string := 
-		'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
+	title_string := 'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
 	plt.set_layout(
 		title: title_string
 		width: 900

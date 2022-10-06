@@ -425,11 +425,13 @@ fn show_explore_line(result CrossVerifyResult) ? {
 		purged, total, purged_percent := get_purged_percent(result)
 		if !result.expanded_flag {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' + if result.purge_flag {
+			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
+				if result.purge_flag {
 				'${purged:10.1f} out of $total (${purged_percent:5.2f})'
 			} else {
 				''
-			} + '  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%')
+			} +
+				'  ${result.correct_count:7}  ${result.labeled_classes.len - result.correct_count:10}       ${accuracy_percent:7.2f}%  ${result.balanced_accuracy:7.2f}%')
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {

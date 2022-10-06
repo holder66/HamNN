@@ -308,16 +308,16 @@ mut:
 
 struct BinaryMetrics {
 mut:
-	t_p                      int
-	f_p                      int
-	t_n                      int
-	f_n                      int
-	raw_acc                  f64
-	sens                     f64
-	spec                     f64
-	ppv                      f64
-	npv                      f64
-	f1_score_binary          f64
+	t_p             int
+	f_p             int
+	t_n             int
+	f_n             int
+	raw_acc         f64
+	sens            f64
+	spec            f64
+	ppv             f64
+	npv             f64
+	f1_score_binary f64
 }
 
 struct MaxSettings {
