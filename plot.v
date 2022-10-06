@@ -96,7 +96,6 @@ mut:
 // an explore.explore() on a dataset.
 fn plot_explore(result ExploreResult, opts Options) ? {
 	// println('opts in plot_explore: $opts')
-	binary_flag := if result.pos_neg_classes[0] != '' { true } else { false }
 	mut plt := plot.new_plot()
 	mut traces := []ExploreTrace{}
 	mut x := []f64{}
@@ -108,7 +107,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 	mut bins_for_sorting := []int{}
 	for res in result.array_of_results {
 		x << f64(res.attributes_used)
-		y << if binary_flag { res.balanced_accuracy_binary } else { res.balanced_accuracy }
+		y << res.balanced_accuracy
 		bin_values_strings << show_bins_for_trailer(res.bin_values)
 		bins_for_sorting << res.bin_values.last()
 	}
@@ -202,8 +201,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 			family: 'Times New Roman'
 		}
 	}
-	title_string := if binary_flag { 'Binary ' } else { '' } +
-		'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
+	title_string := 'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
 	plt.set_layout(
 		title: title_string
 		width: 900

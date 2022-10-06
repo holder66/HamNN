@@ -269,7 +269,7 @@ pub mut:
 	repetitions      int
 	random_pick      bool
 	array_of_results []CrossVerifyResult
-	accuracy_types   []string = ['raw accuracy', 'balanced accuracy', 'binary balanced accuracy']
+	accuracy_types   []string = ['raw accuracy', 'balanced accuracy']
 	analytics        []MaxSettings
 }
 
@@ -311,17 +311,16 @@ mut:
 
 struct BinaryMetrics {
 mut:
-	t_p                      int
-	f_p                      int
-	t_n                      int
-	f_n                      int
-	raw_acc                  f64
-	sens                     f64
-	spec                     f64
-	ppv                      f64
-	npv                      f64
-	f1_score_binary          f64
-	balanced_accuracy_binary f64
+	t_p             int
+	f_p             int
+	t_n             int
+	f_n             int
+	raw_acc         f64
+	sens            f64
+	spec            f64
+	ppv             f64
+	npv             f64
+	f1_score_binary f64
 }
 
 struct MaxSettings {
