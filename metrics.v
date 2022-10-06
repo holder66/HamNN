@@ -91,8 +91,8 @@ fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
 	mut bm := BinaryMetrics{
 		t_p: result.correct_inferences[pos_class]
 		t_n: result.correct_inferences[neg_class]
-		f_p: result.incorrect_inferences[pos_class]
-		f_n: result.incorrect_inferences[neg_class]
+		f_n: result.incorrect_inferences[pos_class]
+		f_p: result.incorrect_inferences[neg_class]
 		raw_acc: result.correct_count * 100 / f64(result.total_count)
 	}
 	bm.sens = bm.t_p / f64(bm.t_p + bm.f_n)
@@ -100,7 +100,7 @@ fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
 	bm.ppv = bm.t_p / f64(bm.t_p + bm.f_p)
 	bm.npv = bm.t_n / f64(bm.t_n + bm.f_n)
 	bm.f1_score_binary = bm.t_p / f64(bm.t_p + (0.5 * f64(bm.f_p + bm.f_n)))
-	bm.balanced_accuracy_binary = (bm.sens + bm.spec) * 50
+	// bm.balanced_accuracy_binary = (bm.sens + bm.spec) * 50
 	return bm
 }
 
