@@ -96,21 +96,4 @@ fn single_array_maximum<T>(a []T) bool {
 	return false
 }
 
-// idx_max
-fn idx_max<T>(a []T) int {
-	if a == [] {
-		panic('idx_max was called on an empty array')
-	}
-	if a.len == 1 {
-		return 0
-	}
-	mut idx := 0
-	mut val := a[0]
-	for i, e in a {
-		if e > val {
-			val = e
-			idx = i
-		}
-	}
-	return idx
-}
+

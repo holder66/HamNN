@@ -384,12 +384,18 @@ fn pad_string_array_to_length(mut arr []string, l int) []string {
 
 // identify_class_attribute returns the index for the class attribute
 fn identify_class_attribute(inferred_attribute_types []string) int {
-	mut i := 0
-	for i <= inferred_attribute_types.len {
-		if inferred_attribute_types[i] == 'c' {
-			break
+	for i, val in inferred_attribute_types {
+		if val == 'c' {
+			return i
 		}
-		i++
 	}
-	return i
+	// mut i := 0
+	// for i <= inferred_attribute_types.len {
+	// 	if inferred_attribute_types[i] == 'c' {
+	// 		break
+	// 	}
+	// 	i++
+	// }
+	// return i
+	return 0
 }

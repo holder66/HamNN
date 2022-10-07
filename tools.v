@@ -272,3 +272,22 @@ fn array_sum<T>(list []T) T {
 fn uniques<T>(list []T) []T {
 	return element_counts(list).keys()
 }
+
+// idx_max
+fn idx_max<T>(a []T) int {
+	if a == [] {
+		panic('idx_max was called on an empty array')
+	}
+	if a.len == 1 {
+		return 0
+	}
+	mut idx := 0
+	mut val := a[0]
+	for i, e in a {
+		if e > val {
+			val = e
+			idx = i
+		}
+	}
+	return idx
+}
