@@ -39,7 +39,7 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	// println(cl.class_counts)
 	mut adjusted_class_counts := map[string]int{}
 	for key,val in cl.class_counts {
-		adjusted_class_counts[key] = if val == 175 { val * 1} else {val}
+		adjusted_class_counts[key] = if val >=225 { val * 10} else {val}
 	}
 	// println(adjusted_class_counts)
 	for sphere_index, radius in radii {

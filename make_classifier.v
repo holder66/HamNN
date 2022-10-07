@@ -42,6 +42,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	if opts.number_of_attributes[0] != 0 && opts.number_of_attributes[0] < ranked_attributes.len {
 		ranked_attributes = ranked_attributes[..opts.number_of_attributes[0]]
 	}
+	// println('ranked_attributes: $ranked_attributes')
 	// for continuous attributes, discretize and get binned values
 	// for discrete attributes, create a translation table to go from
 	// strings to integers (note that this table needs to be saved)
