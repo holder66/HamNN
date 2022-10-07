@@ -36,6 +36,12 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	mut radii := integer_element_counts(hamming_dist_array).keys()
 	radii.sort()
 	mut radius_row := []int{len: cl.class_counts.len}
+	// println(cl.class_counts)
+	mut adjusted_class_counts := map[string]int{}
+	for key,val in cl.class_counts {
+		adjusted_class_counts[key] = if val == 175 { val * 1} else {val}
+	}
+	// println(adjusted_class_counts)
 	for sphere_index, radius in radii {
 		// populate the counts by class for this radius
 		for class_index, class in classes {
@@ -43,8 +49,9 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 				if distance <= radius && class == cl.class_values[instance] {
 					radius_row[class_index] += (if !opts.weighting_flag {
 						1
-					} else {
-						int(cl.lcm_class_counts / cl.class_counts[classes[class_index]])
+					} else { 
+						// println('$cl.lcm_class_counts ${cl.class_counts[classes[class_index]]}')
+						int(cl.lcm_class_counts / adjusted_class_counts[classes[class_index]])
 					})
 				}
 			}

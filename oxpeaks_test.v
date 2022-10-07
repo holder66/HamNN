@@ -2,9 +2,6 @@
 module hamnn
 
 import os
-// import arrays
-// import strconv
-// import vplot
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder1') {
@@ -13,22 +10,10 @@ fn testsuite_begin() ? {
 	os.mkdir_all('tempfolder1')?
 }
 
-// fn testsuite_end() ? {
-// 	os.rmdir_all('tempfolder1')?
-// }
-
-// fn inds(a []f64) []f64 {
-// 	mut s := []f64{}
-// 	for i in 0 .. a.len {
-// 		s << i
-// 	}
-// 	return s
-// }
-
 // test_load_file
 fn test_load_file() {
 	// set up a new training file
-	mut new_train_file := os.open_file('tempfolder1/new_Oxford-train.tab', 'w+')?
+	mut new_train_file := os.open_file('tempfolder1/new3000000p_Oxford-train.tab', 'w+')?
 	mut ds := Dataset{}
 	ds = load_file('/Users/henryolders/Oxford_dataset_stuff/Oxford-train.tab')
 	mut peak_rows := [][]string{}
@@ -56,12 +41,11 @@ fn test_load_file() {
 	println(all_peak_data[2].len)
 	println(typeof(all_peak_data[0][0]).name)
 	mut split_segment := []string{}
-	
-	
+		
 	for i, mut row in all_peak_data {  // cycle through all instances
 		mut expanded_row := []string{}
 		println(row[0])
-		for mut segment in row {    // cycle through each peak data type
+		for mut segment in row[..1] {    // cycle through each peak data type
 			// println(segment)
 			// split the string and put into an array
 			split_segment = segment.split(',')
@@ -74,19 +58,15 @@ fn test_load_file() {
 				missing_vals_array[loc] = split_segment[j]
 			}
 			// println(missing_vals_array)
-			expanded_row << missing_vals_array.join(',')
-			// println('case: $i expanded_row: $expanded_row')
-
-			
-		
+			expanded_row << missing_vals_array.join('\t')
+			// println('case: $i expanded_row: $expanded_row')	
 		}
-		peak_rows << [ds.ox_spectra[i][0..3].join(',') + ',' + expanded_row.join(',')]
+		peak_rows << [ds.ox_spectra[i][0..3].join('\t') + '\t' + expanded_row.join(',')]
 		// println(peak_rows[i])
 		println("row $i length: ${peak_rows[i][0].split(',').len}")
 		new_train_file.writeln(peak_rows[i][0])?
 	}
 	new_train_file.close()
-
 }
 
 
