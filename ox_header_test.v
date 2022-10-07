@@ -3,7 +3,7 @@
 module hamnn
 
 fn test_header_test() {
-	start := 'i#id,c#status,i#group'
+	start := 'i#id\tc#status\ti#group'
 	p := []string{len: 917, init: 'p${(it + 1)}'}
 	// h := []string{len: 917, init: 'h$it'}
 	// b := []string{len: 917, init: 'b$it'}
