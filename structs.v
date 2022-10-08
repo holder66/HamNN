@@ -116,6 +116,7 @@ pub mut:
 	exclude_flag         bool
 	purge_flag           bool
 	weighting_flag       bool
+	weight_adjustment	f64 = 0.3
 	folds                int
 	repetitions          int
 	random_pick          bool
@@ -141,7 +142,7 @@ pub mut:
 	struct_type string = '.Options'
 	// args                []string
 	non_options         []string
-	bins                []int = [2, 16]
+	bins                []int = [1, 16]
 	concurrency_flag    bool
 	datafile_path       string = 'datasets/developer.tab'
 	testfile_path       string

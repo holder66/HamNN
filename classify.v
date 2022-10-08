@@ -1,5 +1,6 @@
 // classify.v
 module hamnn
+import math
 
 // classify_instance takes a trained classifier and an instance to be
 // classified; it returns the inferred class for the instance and the
@@ -38,9 +39,27 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	mut radius_row := []int{len: cl.class_counts.len}
 	// println(cl.class_counts)
 	mut adjusted_class_counts := map[string]int{}
-	for key,val in cl.class_counts {
-		adjusted_class_counts[key] = if val >=175 { val * 2} else {val}
+	mut max_class_count := 0
+	mut class_count_diff := (cl.class_counts.values()[0] - cl.class_counts.values()[1])
+	// println(class_count_diff)
+	if opts.weighting_flag && cl.class_counts.len == 2 {
+		for _, val in cl.class_counts {
+			max_class_count = if val >= max_class_count {val} else {max_class_count}
+		}
+
+		// println(max_class_count)
+		for key,val in cl.class_counts {
+			adjusted_class_counts[key] = if val >= max_class_count {
+										val }
+									else { val }
+			// adjusted_class_counts[key] = int(val * class_count_diff)
+		}
 	}
+	// println('$cl.class_counts $adjusted_class_counts')
+	// println(adjusted_class_counts)
+	// for key,val in cl.class_counts {
+	// 	adjusted_class_counts[key] = if val >174 { val * opts.weight_adjustment} else {val}
+	// }
 	// println(adjusted_class_counts)
 	for sphere_index, radius in radii {
 		// populate the counts by class for this radius
@@ -51,7 +70,7 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 						1
 					} else { 
 						// println('$cl.lcm_class_counts ${cl.class_counts[classes[class_index]]}')
-						int(cl.lcm_class_counts / adjusted_class_counts[classes[class_index]])
+						int(i64(lcm(get_map_values(adjusted_class_counts)))/ adjusted_class_counts[classes[class_index]])
 					})
 				}
 			}
