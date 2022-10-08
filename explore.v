@@ -75,7 +75,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 			if ex_opts.uniform_bins {
 				ex_opts.bins = [bin, bin]
 			} else {
-				ex_opts.bins = [2, bin]
+				ex_opts.bins = [1, bin]
 			}
 			if ex_opts.testfile_path == '' {
 				result = cross_validate(ds, ex_opts)?

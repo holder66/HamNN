@@ -13,7 +13,7 @@ fn testsuite_begin() ? {
 // test_load_file
 fn test_load_file() {
 	// set up a new training file
-	mut new_train_file := os.open_file('tempfolder1/new3000000p_Oxford-train.tab', 'w+')?
+	mut new_train_file := os.open_file('/Users/henryolders/vlang/vhamnn/datasets/new2500000p_Oxford-train.tab', 'w+')?
 	mut ds := Dataset{}
 	ds = load_file('/Users/henryolders/Oxford_dataset_stuff/Oxford-train.tab')
 	mut peak_rows := [][]string{}
@@ -27,7 +27,7 @@ fn test_load_file() {
 		// println(fid)
 		file_to_octave.write_string(raw_spectrum[3..].join(','))?
 		file_to_octave.close()
-		println(os.execute_or_panic('./octave_find_peaks.m tempfolder1/ox_spectrum.csv tempfolder1/peakfile.csv 3000000'))
+		println(os.execute_or_panic('./octave_find_peaks.m tempfolder1/ox_spectrum.csv tempfolder1/peakfile.csv 2500000'))
 		mut peaks_data := os.read_lines('tempfolder1/peakfile.csv')?
 		// println(peaks_data)
 		locs := peaks_data[0].split(',').map(it.int())

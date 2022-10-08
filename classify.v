@@ -1,6 +1,6 @@
 // classify.v
 module hamnn
-import math
+// import math
 
 // classify_instance takes a trained classifier and an instance to be
 // classified; it returns the inferred class for the instance and the
@@ -40,7 +40,7 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	// println(cl.class_counts)
 	mut adjusted_class_counts := map[string]int{}
 	mut max_class_count := 0
-	mut class_count_diff := (cl.class_counts.values()[0] - cl.class_counts.values()[1])
+	// mut class_count_diff := (cl.class_counts.values()[0] - cl.class_counts.values()[1])
 	// println(class_count_diff)
 	if opts.weighting_flag && cl.class_counts.len == 2 {
 		for _, val in cl.class_counts {

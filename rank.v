@@ -218,7 +218,7 @@ fn get_binning(bins []int) Binning {
 	}
 	if bins.len == 1 {
 		return Binning{
-			lower: 2
+			lower: 1
 			upper: bins[0]
 			interval: 1
 		}
