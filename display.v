@@ -31,8 +31,9 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			}
 			show_explore_trailer(saved_er)?
 			if settings.graph_flag {
-				println(saved_er)
+				// println(saved_er)
 				plot_explore(saved_er, opts)?
+				plot_roc(saved_er, opts)
 			}
 		}
 		s.contains('"struct_type":".Classifier"') {
