@@ -233,11 +233,10 @@ fn load_orange_newer_file(path string) Dataset {
 		path: path
 		attribute_names: types_attributes.map(it[1])
 		attribute_types: types_attributes.map(it[0])
-		ox_spectra: content[1..].map(extract_words(it))
-		// data: transpose(content[1..].map(extract_words(it)))
-
+		// ox_spectra: content[1..].map(extract_words(it))
+		data: transpose(content[1..].map(extract_words(it)))
 	}
-	ds.data = transpose(ds.ox_spectra)
+	// ds.data = transpose(ds.ox_spectra)
 	ds.inferred_attribute_types = infer_attribute_types_newer(ds)
 	ds.Class = set_class_struct(ds)
 	ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)

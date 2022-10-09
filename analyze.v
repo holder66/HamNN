@@ -46,7 +46,7 @@ pub fn analyze_dataset(ds Dataset, opts Options) AnalyzeResult {
 			att_info.min = f32(array_min(ds.useful_continuous_attributes[i].filter(it != -math.max_f32)))
 		}
 		atts << att_info
-		max_values << att_info.max 
+		max_values << att_info.max
 		min_values << att_info.min
 	}
 	result.attributes = atts
