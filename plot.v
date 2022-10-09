@@ -294,7 +294,6 @@ fn plot_roc(result ExploreResult, opts Options) {
 			attributes_used: '$res.attributes_used'
 		}
 	}
-	// println('roc_results: $roc_results')
 	// sort on the x axis value, ie one_minus_specificity
 	roc_results.sort(a.one_minus_specificity < b.one_minus_specificity)
 	// get the unique bin_range values, each one will generate a separate trace
@@ -304,17 +303,13 @@ fn plot_roc(result ExploreResult, opts Options) {
 		x_coordinates << roc_result.one_minus_specificity
 		y_coordinates << roc_result.sensitivity
 	}
-	println('bin_range_values: $bin_range_values')
-	println('attributes_used_values: $attributes_used_values')
-	println('x_coordinates: $x_coordinates')
-	println('y_coordinates: $y_coordinates')
+
 	for key, _ in string_element_counts(bin_range_values) {
 		traces << ROCTrace{
 			curve_series_variable_values: '$key'
 			x_coordinates: filter(key, bin_range_values, x_coordinates)
 			y_coordinates: filter(key, bin_range_values, y_coordinates)
 			curve_variable_values: filter(key, bin_range_values, attributes_used_values)
-
 		}
 	}
 	if result.binning.lower != 0 {
