@@ -137,7 +137,7 @@ pub struct Options {
 	Parameters
 	DisplaySettings
 pub mut:
-	struct_type string = '.Options'
+	struct_type         string = '.Options'
 	non_options         []string
 	bins                []int = [1, 16]
 	concurrency_flag    bool
