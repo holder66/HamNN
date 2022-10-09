@@ -101,11 +101,11 @@ fn show_rank_attributes(result RankingResult) {
 		'underline'), 'magenta'))
 	println('Missing values: $exclude_phrase')
 	println('Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval')
-	println(chalk.fg(chalk.style(' Index  Name                         Type   Rank Value   Bins',
+	println(chalk.fg(chalk.style('         Name                         Index  Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}
-	for attr in result.array_of_ranked_attributes {
-		array_to_print << '${attr.attribute_index:6}  ${attr.attribute_name:-27} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
+	for i, attr in result.array_of_ranked_attributes {
+		array_to_print << '${i + 1:6}   ${attr.attribute_name:-27} ${attr.attribute_index:6} ${attr.inferred_attribute_type:2}         ${attr.rank_value:7.2f} ${attr.bins:6}'
 	}
 	print_array(array_to_print)
 }

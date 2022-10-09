@@ -260,8 +260,8 @@ fn plot_roc(result ExploreResult, opts Options) {
 	mut bin_range_values := []string{}
 	mut attributes_used_values := []string{}
 	mut bin_range := ''
-	mut pos_class := result.array_of_results[0].pos_neg_classes[0]
-	mut neg_class := result.array_of_results[0].pos_neg_classes[1]
+	// mut pos_class := result.array_of_results[0].pos_neg_classes[0]
+	// mut neg_class := result.array_of_results[0].pos_neg_classes[1]
 	annotation1 := plot.Annotation{
 		x: 0.5
 		y: -0.05
@@ -288,15 +288,12 @@ fn plot_roc(result ExploreResult, opts Options) {
 			bin_range = 'bins ${res.bin_values[0]} - ${res.bin_values[1]}'
 		}
 		roc_results << ROCResult{
-			sensitivity: res.correct_inferences[pos_class] / f64(
-				res.correct_inferences[pos_class] + res.incorrect_inferences[neg_class])
-			one_minus_specificity: 1.0 - (res.correct_inferences[neg_class] / f64(
-				res.correct_inferences[neg_class] + res.incorrect_inferences[pos_class]))
+			sensitivity: res.sens
+			one_minus_specificity: 1.0 - res.spec
 			bin_range: bin_range
 			attributes_used: '$res.attributes_used'
 		}
 	}
-	// println('roc_results: $roc_results')
 	// sort on the x axis value, ie one_minus_specificity
 	roc_results.sort(a.one_minus_specificity < b.one_minus_specificity)
 	// get the unique bin_range values, each one will generate a separate trace
@@ -306,6 +303,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 		x_coordinates << roc_result.one_minus_specificity
 		y_coordinates << roc_result.sensitivity
 	}
+
 	for key, _ in string_element_counts(bin_range_values) {
 		traces << ROCTrace{
 			curve_series_variable_values: '$key'
@@ -337,6 +335,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 			curve_variable_values: filter(key, attributes_used_values, bin_range_values)
 		}
 	}
+
 	traces = massage_roc_traces(mut traces)
 	make_roc_plot_traces(traces, mut plt_atts, 'binning')
 	make_roc_plot_layout(mut plt_atts, 'Attributes Used', opts.datafile_path, [
@@ -420,7 +419,7 @@ fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable str
 			mode: 'lines+markers'
 			name: '$trace.curve_series_variable_values (AUC=${trace.area_under_curve:3.2})'
 			text: trace.curve_variable_values
-			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{x}<br>one minus specificity: %{y}'
+			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{y}<br>one minus specificity: %{x}'
 		)
 	}
 }
