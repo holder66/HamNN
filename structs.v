@@ -147,6 +147,7 @@ pub mut:
 	classifierfile_path string
 	instancesfile_path  string
 	help_flag           bool
+	multiple_flag	bool
 }
 
 pub struct Environment {
