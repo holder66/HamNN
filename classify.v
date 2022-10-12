@@ -24,7 +24,7 @@ pub fn classify_instance(
 	// giving the lowest Hamming distance.
 	mut hamming_dist_array := []int{cap: cl.instances.len}
 	mut hamming_dist := 0
-	classes := cl.class_counts.keys()
+	// classes := cl.class_counts.keys()
 	// get the hamming distance for each of the corresponding byte_values
 	// in each classifier instance and the instance to be classified
 	for instance in cl.instances {
@@ -41,13 +41,13 @@ pub fn classify_instance(
 	mut radius_row := []int{len: cl.class_counts.len}
 	for sphere_index, radius in radii {
 		// populate the counts by class for this radius
-		for class_index, class in classes {
+		for class_index, class in cl.classes {
 			for instance, distance in hamming_dist_array {
 				if distance <= radius && class == cl.class_values[instance] {
 					radius_row[class_index] += (if !opts.weighting_flag {
 						1
 					} else {
-						int(i64(lcm(get_map_values(cl.class_counts))) / cl.class_counts[classes[class_index]])
+						int(i64(lcm(get_map_values(cl.class_counts))) / cl.class_counts[cl.classes[class_index]])
 					})
 				}
 			}
@@ -55,10 +55,10 @@ pub fn classify_instance(
 		if !single_array_maximum(radius_row) {
 			continue
 		}
-		result.inferred_class = classes[idx_max(radius_row)]
+		result.inferred_class = cl.classes[idx_max(radius_row)]
 		result.index = index
 		result.nearest_neighbors_by_class = radius_row
-		result.classes = classes
+		result.classes = cl.classes
 		result.weighting_flag = cl.weighting_flag
 		result.hamming_distance = radii[sphere_index]
 		result.sphere_index = sphere_index

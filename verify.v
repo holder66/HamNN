@@ -37,6 +37,7 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 		testfile_path: opts.testfile_path
 		labeled_classes: test_ds.class_values
 		class_counts: test_ds.class_counts
+		classes: test_ds.classes
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		binning: cl.binning

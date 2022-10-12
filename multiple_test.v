@@ -44,7 +44,7 @@ fn test_multiple_verify() ? {
 	cl = make_classifier(ds, opts)
 	opts.command = 'verify'
 	vr = verify(cl, opts)?
-	// println(vr)
+	println(vr.classes)
 
 	println('Done with test.tab')
 

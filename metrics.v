@@ -48,7 +48,7 @@ fn get_metrics(result CrossVerifyResult) ?Metrics {
 	mut metrics := Metrics{
 		class_counts: get_map_values(result.class_counts)
 	}
-	for class in result.class_counts.keys() {
+	for class in result.classes {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
 	}

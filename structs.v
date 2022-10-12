@@ -13,6 +13,7 @@ const (
 pub struct Class {
 pub mut:
 	class_name       string
+	classes 	[]string   // to ensure that the ordering remains the same
 	class_values     []string
 	class_counts     map[string]int
 	lcm_class_counts i64
@@ -225,6 +226,7 @@ pub mut:
 	inferred_classes     []string
 	nearest_neighbors_by_class	[][]int
 	instance_indices     []int
+	classes 	[]string
 	class_counts         map[string]int
 	labeled_instances    map[string]int
 	correct_inferences   map[string]int

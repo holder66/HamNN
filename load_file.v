@@ -350,10 +350,13 @@ fn get_useful_discrete_attributes(ds Dataset) map[int][]string {
 // set_class_struct
 fn set_class_struct(ds Dataset) Class {
 	i := identify_class_attribute(ds.inferred_attribute_types)
+	class_counts := string_element_counts(ds.data[i])
 	mut cl := Class{
 		class_name: ds.attribute_names[i]
 		class_values: ds.data[i]
-		class_counts: string_element_counts(ds.data[i])
+		// class_counts: string_element_counts(ds.data[i])
+		class_counts: class_counts
+		classes: class_counts.keys()
 	}
 	return cl
 }

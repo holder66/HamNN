@@ -175,7 +175,7 @@ fn show_validate(result ValidateResult) {
 	}
 	println('Number of instances validated: $result.inferred_classes.len')
 	println('Inferred classes: $result.inferred_classes')
-	println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
+	println('For classes: $result.classes the nearest neighbor counts are:\n$result.counts')
 }
 
 // show_verify
@@ -292,7 +292,7 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 	display_confusion_matrix.prepend(header_row)
 
 	// get the length of the longest class name
-	mut l := result.class_counts.keys().map(it.len)
+	mut l := result.classes.map(it.len)
 	l << 9 // to make sure that the minimum length covers up to 5 digits
 	l_max := array_max(l)
 	println(chalk.fg(chalk.style('Confusion Matrix' +
@@ -460,7 +460,7 @@ fn get_binary_stats_line(r CrossVerifyResult) string {
 fn show_multiple_classes_stats(result CrossVerifyResult) ? {
 	mut show_result := []string{}
 	m := result.Metrics
-	for i, class in result.class_counts.keys() {
+	for i, class in result.classes {
 		show_result << '    ${class:-21}       ${result.labeled_instances[class]:5}   ${result.correct_inferences[class]:5} (${f32(result.correct_inferences[class]) * 100 / result.labeled_instances[class]:6.2f}%)        ${m.precision[i]:5.3f}     ${m.recall[i]:5.3f}       ${m.f1_score[i]:5.3f}'
 	}
 	show_result << '        Totals                  ${result.total_count:5}   ${result.correct_count:5} (accuracy: raw:${result.raw_acc:6.2f}% balanced:${result.balanced_accuracy:6.2f}%)'
