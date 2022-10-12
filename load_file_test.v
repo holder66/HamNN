@@ -27,15 +27,14 @@ fn test_load_file() {
 	mut ds := Dataset{}
 	ds = load_file('datasets/developer.tab')
 	assert ds.Class == Class{
-		class_name: 'gender'
-		class_values: ['m', 'm', 'm', 'f', 'f', 'm', 'X', 'f', 'm', 'm', 'm', 'X', 'm']
-		class_counts: {
-			'm': 8
-			'f': 3
-			'X': 2
-		}
-		lcm_class_counts: 0
-	}
+
+    class_name: 'gender'
+    classes: ['m', 'f', 'X']
+    class_values: ['m', 'm', 'm', 'f', 'f', 'm', 'X', 'f', 'm', 'm', 'm', 'X', 'm']
+    class_counts: {'m': 8, 'f': 3, 'X': 2}
+    lcm_class_counts: 0
+}
+
 	assert ds.attribute_names == ['firstname', 'lastname', 'age', 'gender', 'height', 'weight',
 		'SEC', 'city', 'number', 'negative']
 	assert ds.inferred_attribute_types == ['i', 'D', 'C', 'c', 'C', 'C', 'D', 'D', 'C', 'C']
