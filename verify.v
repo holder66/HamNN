@@ -119,10 +119,14 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 			// println(classify_result)
 			result.inferred_classes << classify_result.inferred_class
 			result.actual_classes << classify_result.labeled_class
+			result.nearest_neighbors_by_class << classify_result.nearest_neighbors_by_class
 		}
 	} else {
 		for i, test_instance in test_instances {
-			result.inferred_classes << classify_instance(i, cl, test_instance, opts).inferred_class
+			classify_result = classify_instance(i, cl, test_instance, opts)
+			// result.inferred_classes << classify_instance(i, cl, test_instance, opts).inferred_class
+			result.inferred_classes << classify_result.inferred_class
+			result.nearest_neighbors_by_class << classify_result.nearest_neighbors_by_class
 			result.actual_classes << result.labeled_classes[i]
 		}
 	}

@@ -223,6 +223,7 @@ pub mut:
 	labeled_classes      []string
 	actual_classes       []string
 	inferred_classes     []string
+	nearest_neighbors_by_class	[][]int
 	instance_indices     []int
 	class_counts         map[string]int
 	labeled_instances    map[string]int
