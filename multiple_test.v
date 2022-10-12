@@ -28,24 +28,32 @@ fn test_multiple_verify() ? {
 
 	mut result := CrossVerifyResult{}
 	mut ds := Dataset{}
-	mut cl := Classifier{}
+	mut cl1 := Classifier{}
+	mut cl2 := Classifier{}
 	mut saved_cl := Classifier{}
-	mut vr := CrossVerifyResult{}
+	mut vr1 := CrossVerifyResult{}
+	mut vr2 := CrossVerifyResult{}
 
 	// test verify with a non-saved classifier
 	opts.command = 'make'
-	opts.datafile_path = 'datasets/test.tab'
-	opts.testfile_path = 'datasets/test_verify.tab'
+	opts.datafile_path = 'datasets/multiples-train.tab'
+	opts.testfile_path = 'datasets/multiples-verify.tab'
 	opts.classifierfile_path = ''
-	opts.bins = [2, 3]
-	opts.number_of_attributes = [1]
+	opts.bins = [1,2]
+	opts.number_of_attributes = [2]
+	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
+	cl1 = make_classifier(ds, opts)
 	opts.command = 'verify'
-	vr = verify(cl, opts)?
-	println(vr.classes)
+	vr1 = verify(cl1, opts)?
+	opts.bins = [1,1]
+	opts.number_of_attributes = [1]
+	opts.weighting_flag = true
+	cl2 = make_classifier(ds, opts)
+	vr2 = verify(cl2, opts)?
 
-	println('Done with test.tab')
+
+	println('Done with multiples-train.tab')
 
 	// opts.datafile_path = 'datasets/bcw350train'
 	// opts.testfile_path = 'datasets/bcw174test'

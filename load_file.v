@@ -12,8 +12,8 @@ import encoding.utf8
 // Example:
 // `ds := load_file('datasets/iris.tab')`
 pub fn load_file(path string) Dataset {
-	println(path)
-	println(file_type(path))
+	// println(path)
+	// println(file_type(path))
 	return match file_type(path) {
 		'orange_newer' { load_orange_newer_file(path) }
 		'orange_older' { load_orange_older_file(path) }
