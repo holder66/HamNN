@@ -52,6 +52,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		classifier_path: ds.path
 		labeled_classes: ds.class_values
 		class_counts: ds.class_counts
+		classes: ds.classes
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		repetitions: opts.repetitions
