@@ -114,9 +114,9 @@ fn test_multiple_verify() ? {
 	test_ds1 = load_file(opts.testfile_path)
 	// println(test_ds1.class_values)
 	test_instances1 = generate_test_instances_array(cl1, test_ds1)
-	opts.number_of_attributes = [2]
-	opts.bins = [4,4]
-	opts.weighting_flag = true
+	opts.number_of_attributes = [10]
+	opts.bins = [1,3]
+	opts.weighting_flag = false
 	cl2 = make_classifier(ds, opts)
 	test_ds2 = load_file(opts.testfile_path)
 	// println(test_ds2)
