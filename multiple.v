@@ -92,20 +92,55 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		nearest_neighbors_array << mcr.nearest_neighbors_by_class
 		inferred_class_array << mcr.inferred_class
 		// println('$i $mcr.nearest_neighbors_by_class $mcr.inferred_class')
-		// identify when there is disagreement between classifiers for 
-		// the inferred class
-		if inferred_class_array.len > 1 && uniques(inferred_class_array).len > 1 {
-			println('$index $nearest_neighbors_array $inferred_class_array')
-			// if only one of the nearest neighbors lists has a zero, use that
-			// inferred class
-			println(nearest_neighbors_array.filter(0 in it).len)
-			match true {
-				nearest_neighbors_array.filter(0 in it).len == 1 {
-					println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
+	}
+	// identify when there is disagreement between classifiers for 
+	// the inferred class
+	// mut i_nn := 0
+	mut max_nn := 0
+	mut sum_nn := 0
+	mut avg_nn := 0.0
+	mut ratios_array := []f64{}
+	zero_nn := nearest_neighbors_array.filter(0 in it).len
+	if inferred_class_array.len > 1 && uniques(inferred_class_array).len > 1 {
+		println('$index $nearest_neighbors_array $inferred_class_array')
+		// if only one of the nearest neighbors lists has a zero, use that
+		// inferred class
+
+		// println(zero_nn)
+		match true {
+			zero_nn == 1 {
+				// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
+				mcr.inferred_class = inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+			}
+			zero_nn > 1 {
+				// when there are 2 or more results with zeros, pick the 
+				// result having the largest maximum, and use that maximum
+				// to get the inferred class
+				// println(nearest_neighbors_array.map(array_max(it)))
+				// println(idx_max(nearest_neighbors_array.map(array_max(it))))
+				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
+				mcr.inferred_class = cl0.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
+			}
+			else {
+				// when none of the results have zeros in them, pick the 
+				// result having the largest ratio of its maximum to the 
+				// average of the other nearest neighbor counts
+				for nearest_neighbors in nearest_neighbors_array {
+					// i_nn = idx_max(nearest_neighbors)
+					max_nn = array_max(nearest_neighbors)
+					sum_nn = array_sum(nearest_neighbors)
+					// average of non-maximum values
+					avg_nn = (sum_nn - max_nn) / (nearest_neighbors.len - 1)
+					// println('i_nn: $i_nn max_nn: $max_nn sum_nn: $sum_nn avg_nn: $avg_nn')
+					// get ratio 
+					// println(max_nn / avg_nn)
+					ratios_array << (max_nn / avg_nn)
 				}
-				else {}
+				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
+				mcr.inferred_class = cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])]
 			}
 		}
+	
 	}
 	return mcr
 }

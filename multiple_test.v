@@ -9,13 +9,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder4') {
-		os.rmdir_all('tempfolder4')?
+		os.rmdir_all('tempfolder4')!
 	}
-	os.mkdir_all('tempfolder4')?
+	os.mkdir_all('tempfolder4')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder4')?
+	os.rmdir_all('tempfolder4')!
 }
 
 // test_multiple_verify
@@ -34,6 +34,7 @@ fn test_multiple_verify() ? {
 	mut saved_cl := Classifier{}
 	mut vr1 := CrossVerifyResult{}
 	mut vr2 := CrossVerifyResult{}
+	mut mc_result := ClassifyResult{}
 
 	// test verify with a non-saved classifier
 	opts.command = 'make'
@@ -47,7 +48,7 @@ fn test_multiple_verify() ? {
 	// println(ds.class_values)
 	cl1 = make_classifier(ds, opts)
 	mut test_ds1 := load_file(opts.testfile_path)
-	println(test_ds1.class_values)
+	// println(test_ds1.class_values)
 	mut test_instances1 := generate_test_instances_array(cl1, test_ds1)
 	// opts.command = 'verify'
 	// vr1 = verify(cl1, opts)?
@@ -59,10 +60,10 @@ fn test_multiple_verify() ? {
 
 	mut test_ds2 := load_file(opts.testfile_path)
 	mut test_instances2 := generate_test_instances_array(cl2, test_ds1)
-	println('test_instances1: $test_instances1')
-	println('test_instances2: $test_instances2')
+	// println('test_instances1: $test_instances1')
+	// println('test_instances2: $test_instances2')
 	for i in 0..test_instances1.len {
-	println(multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class)
+	// println(multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class)
 	}
 	println('Done with multiples-train.tab')
 
@@ -70,27 +71,75 @@ fn test_multiple_verify() ? {
 	opts.testfile_path = 'datasets/bcw174test'
 	opts.classifierfile_path = ''
 	opts.number_of_attributes = [1]
-	opts.weighting_flag = false
+	opts.weighting_flag = true
 	ds = load_file(opts.datafile_path)
 	cl1 = make_classifier(ds, opts)
 	test_ds1 = load_file(opts.testfile_path)
 	// println(test_ds1.class_values)
 	test_instances1 = generate_test_instances_array(cl1, test_ds1)
-	opts.number_of_attributes = [4]
-	opts.weighting_flag = false
+	opts.number_of_attributes = [6]
+	opts.weighting_flag = true
 	cl2 = make_classifier(ds, opts)
 	test_ds2 = load_file(opts.testfile_path)
-	println(test_ds2)
+	// println(test_ds2)
 	test_instances2 = generate_test_instances_array(cl2, test_ds1)
 	// println('test_instances1: $test_instances1')
 	// println('test_instances2: $test_instances2')
+	mut correct_count := 0
+	mut incorrect_count := 0
+	mut raw_accuracy := 0.0
 	for i in 0..test_instances1.len {
-		println('actual class: ${test_ds2.class_values[i]}')
-		multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class
+		mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
+		if test_ds2.class_values[i] == mc_result.inferred_class {
+
+			correct_count += 1
+		} else {
+		 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
+		 	incorrect_count += 1
+		 }
 	}
+	println('correct_count: $correct_count incorrect_count: $incorrect_count')
 
 
 	println('Done with bcw350train')
+
+	opts.datafile_path = 'datasets/leukemia38train.tab'
+	opts.testfile_path = 'datasets/leukemia34test.tab'
+	opts.classifierfile_path = ''
+	opts.number_of_attributes = [1]
+	opts.bins = [5,5]
+	opts.weighting_flag = true
+	ds = load_file(opts.datafile_path)
+	cl1 = make_classifier(ds, opts)
+	test_ds1 = load_file(opts.testfile_path)
+	// println(test_ds1.class_values)
+	test_instances1 = generate_test_instances_array(cl1, test_ds1)
+	opts.number_of_attributes = [2]
+	opts.bins = [4,4]
+	opts.weighting_flag = true
+	cl2 = make_classifier(ds, opts)
+	test_ds2 = load_file(opts.testfile_path)
+	// println(test_ds2)
+	test_instances2 = generate_test_instances_array(cl2, test_ds1)
+	// println('test_instances1: $test_instances1')
+	// println('test_instances2: $test_instances2')
+	correct_count = 0
+	incorrect_count = 0
+	raw_accuracy = 0.0
+	for i in 0..test_instances1.len {
+		mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
+		if test_ds2.class_values[i] == mc_result.inferred_class {
+
+			correct_count += 1
+		} else {
+		 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
+		 	incorrect_count += 1
+		 }
+	}
+	println('correct_count: $correct_count incorrect_count: $incorrect_count')
+
+
+	println('Done with leukemia')
 
 	// // now with a saved classifier
 	// opts.outputfile_path = 'tempfolder4/classifierfile'
