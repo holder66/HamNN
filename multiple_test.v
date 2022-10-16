@@ -5,6 +5,7 @@
 module hamnn
 
 import os
+// import vtl
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder4') {
@@ -21,8 +22,8 @@ fn testsuite_end() ? {
 fn test_multiple_verify() ? {
 	mut opts := Options{
 		verbose_flag: false
-		show_flag: true
-		expanded_flag: true
+		show_flag: false
+		expanded_flag: false
 		concurrency_flag: true
 	}
 
@@ -43,30 +44,53 @@ fn test_multiple_verify() ? {
 	opts.number_of_attributes = [2]
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
+	// println(ds.class_values)
 	cl1 = make_classifier(ds, opts)
-	opts.command = 'verify'
-	vr1 = verify(cl1, opts)?
+	mut test_ds1 := load_file(opts.testfile_path)
+	println(test_ds1.class_values)
+	mut test_instances1 := generate_test_instances_array(cl1, test_ds1)
+	// opts.command = 'verify'
+	// vr1 = verify(cl1, opts)?
+	// println(vr1)
 	opts.bins = [1,1]
 	opts.number_of_attributes = [1]
 	opts.weighting_flag = true
 	cl2 = make_classifier(ds, opts)
-	vr2 = verify(cl2, opts)?
 
-
+	mut test_ds2 := load_file(opts.testfile_path)
+	mut test_instances2 := generate_test_instances_array(cl2, test_ds1)
+	println('test_instances1: $test_instances1')
+	println('test_instances2: $test_instances2')
+	for i in 0..test_instances1.len {
+	println(multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class)
+	}
 	println('Done with multiples-train.tab')
 
-	// opts.datafile_path = 'datasets/bcw350train'
-	// opts.testfile_path = 'datasets/bcw174test'
-	// opts.classifierfile_path = ''
-	// opts.number_of_attributes = [4]
-	// opts.bins = [2, 4]
-	// ds = load_file(opts.datafile_path)
-	// cl = make_classifier(ds, opts)
-	// result = verify(cl, opts)?
-	// assert result.correct_count == 171
-	// assert result.wrong_count == 3
+	opts.datafile_path = 'datasets/bcw350train'
+	opts.testfile_path = 'datasets/bcw174test'
+	opts.classifierfile_path = ''
+	opts.number_of_attributes = [1]
+	opts.weighting_flag = false
+	ds = load_file(opts.datafile_path)
+	cl1 = make_classifier(ds, opts)
+	test_ds1 = load_file(opts.testfile_path)
+	// println(test_ds1.class_values)
+	test_instances1 = generate_test_instances_array(cl1, test_ds1)
+	opts.number_of_attributes = [4]
+	opts.weighting_flag = false
+	cl2 = make_classifier(ds, opts)
+	test_ds2 = load_file(opts.testfile_path)
+	println(test_ds2)
+	test_instances2 = generate_test_instances_array(cl2, test_ds1)
+	// println('test_instances1: $test_instances1')
+	// println('test_instances2: $test_instances2')
+	for i in 0..test_instances1.len {
+		println('actual class: ${test_ds2.class_values[i]}')
+		multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class
+	}
 
-	// println('Done with bcw350train')
+
+	println('Done with bcw350train')
 
 	// // now with a saved classifier
 	// opts.outputfile_path = 'tempfolder4/classifierfile'

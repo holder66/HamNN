@@ -14,6 +14,15 @@ fn save_json_file<T>(u T, path string) {
 	f.close()
 }
 
+// idx_true returns the index of the first true element in boolean array a.
+// Returns -1 if no true element found.
+fn idx_true(a []bool) int {
+	for i, val in a {
+		if val {return i}
+	}
+	return -1
+}
+
 // transpose a 2d array
 fn transpose<T>(matrix [][]T) [][]T {
 	mut matrix_t := [][]T{len: matrix[0].len, init: []T{len: matrix.len}}
