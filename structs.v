@@ -114,6 +114,7 @@ pub mut:
 	number_of_attributes []int = [0]
 	uniform_bins         bool
 	exclude_flag         bool
+	multiple_flag bool
 	purge_flag           bool
 	weighting_flag       bool
 	folds                int
@@ -194,10 +195,13 @@ pub mut:
 	struct_type                string = '.ClassifyResult'
 	index                      int
 	inferred_class             string
+	inferred_class_array []string 
 	labeled_class              string
 	nearest_neighbors_by_class []int
+	nearest_neighbors_array [][]int 
 	classes                    []string
 	weighting_flag             bool
+	multiple_flag bool
 	hamming_distance           int
 	sphere_index               int
 }
