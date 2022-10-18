@@ -148,6 +148,7 @@ pub mut:
 	outputfile_path     string
 	classifierfile_path string
 	instancesfile_path  string
+	multiple_classify_options_file_path string
 	help_flag           bool
 	multiple_flag       bool
 }

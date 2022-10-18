@@ -21,22 +21,20 @@ fn testsuite_end() ? {
 // test_multiple_options 
 fn test_multiple_options() ? {
 	mut opts1 := ClassifierOptions{
-		lower: 1
-		upper: 2 
+		bins: [1,2]
 		number_of_attributes: [1]
 		weighting_flag: true
 	}
 	mut opts2 := ClassifierOptions{
-		lower: 1
-		upper: 2 
+		bins: [1,2]
 		number_of_attributes: [6]
 		weighting_flag: true
 	}
 	mut multiple_options := MultipleOptions{
 		classifier_options: [opts1, opts2]
 	}
-	save_json_file(multiple_options, 'tempfolder4/mult_opts')
-	println(read_multiple_opts('tempfolder4/mult_opts')?)
+	save_json_file(multiple_options, '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')
+	println(read_multiple_opts('/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')?)
 }
 
 // test_multiple_verify

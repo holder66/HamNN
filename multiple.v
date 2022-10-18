@@ -6,8 +6,8 @@ import os
 import json
 
 pub struct ClassifierOptions {
-	Binning
 pub mut:
+	bins []int
 	number_of_attributes []int 
 	uniform_bins         bool
 	exclude_flag         bool
@@ -27,6 +27,19 @@ fn read_multiple_opts(path string) ?MultipleOptions {
 	mut multiple_options := json.decode(MultipleOptions, s) or { panic('Failed to parse json') }
 	return multiple_options
 }
+
+// get_mult_classifier 
+fn get_mult_classifier(ds Dataset, cl_opts ClassifierOptions, mut opts Options) Classifier {
+	opts.bins = cl_opts.bins
+	opts.number_of_attributes = cl_opts.number_of_attributes
+	opts.uniform_bins = cl_opts.uniform_bins
+	opts.exclude_flag = cl_opts.exclude_flag
+	opts.multiple_flag = cl_opts.multiple_flag
+	opts.purge_flag = cl_opts.purge_flag
+	opts.weighting_flag = cl_opts.weighting_flag
+	return make_classifier(ds, opts)
+}
+
 // when multiple classifiers have been generated with different settings, 
 // a given instance to be classified will take multiple values, one for 
 // each classifier, and corresponding to the settings for that classifier.
