@@ -64,7 +64,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 	}
 	mut atts := results.start
 	mut bin := binning.lower
-	mut cl := Classifier{}
+	// mut cl := Classifier{}
 	mut array_of_results := []CrossVerifyResult{}
 	// mut plot_data := [][]PlotResult{}
 
@@ -80,8 +80,8 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 			if ex_opts.testfile_path == '' {
 				result = cross_validate(ds, ex_opts)?
 			} else {
-				cl = make_classifier(ds, ex_opts)
-				result = verify(cl, ex_opts)?
+				// cl = make_classifier(ds, ex_opts)
+				result = verify(ex_opts)?
 			}
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts

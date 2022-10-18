@@ -27,7 +27,13 @@ pub fn verify_multiple(opts Options) ?CrossVerifyResult {
 // 		a confusion matrix.
 // outputfile_path: saves the result as a json file
 // ```
-pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
+pub fn verify(opts Options) ?CrossVerifyResult {
+	mut cl := Classifier{}
+		if opts.classifierfile_path == '' {
+			cl = make_classifier(load_file(opts.datafile_path), opts)
+		} else {
+			cl = load_classifier_file(opts.classifierfile_path)?
+		}
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	mut confusion_matrix_map := map[string]map[string]f64{}

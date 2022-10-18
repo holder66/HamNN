@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder4') {
-		os.rmdir_all('tempfolder4')?
+		os.rmdir_all('tempfolder4')!
 	}
-	os.mkdir_all('tempfolder4')?
+	os.mkdir_all('tempfolder4')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder4')?
+	os.rmdir_all('tempfolder4')!	
 }
 
 // test_verify
@@ -35,8 +35,8 @@ fn test_verify() ? {
 	opts.bins = [2, 3]
 	opts.number_of_attributes = [2]
 	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	assert verify(cl, opts)?.correct_count == 10
+	// cl = make_classifier(ds, opts)
+	assert verify(opts)?.correct_count == 10
 
 	println('Done with test.tab')
 
@@ -46,8 +46,8 @@ fn test_verify() ? {
 	opts.number_of_attributes = [4]
 	opts.bins = [2, 4]
 	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -58,8 +58,9 @@ fn test_verify() ? {
 	cl = Classifier{}
 	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
-	cl = Classifier{}
-	result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+	// cl = Classifier{}
+	// result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+	result = verify(opts)?
 	assert result.correct_count == 171
 	assert result.wrong_count == 3
 
@@ -71,9 +72,9 @@ fn test_verify() ? {
 	opts.number_of_attributes = [33]
 	opts.bins = [2, 16]
 	opts.weighting_flag = true
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// ds = load_file(opts.datafile_path)
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
@@ -84,8 +85,9 @@ fn test_verify() ? {
 	cl = Classifier{}
 	result = CrossVerifyResult{}
 	cl = make_classifier(ds, opts)
-	cl = Classifier{}
-	result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+	// cl = Classifier{}
+	// result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+	result = verify(opts)?
 	assert result.correct_count == 340
 	assert result.wrong_count == 36
 
@@ -100,9 +102,9 @@ fn test_verify() ? {
 		opts.bins = [2, 2]
 		opts.weighting_flag = false
 		opts.show_flag = false
-		ds = load_file(opts.datafile_path)
-		cl = make_classifier(ds, opts)
-		result = verify(cl, opts)?
+		// ds = load_file(opts.datafile_path)
+		// cl = make_classifier(ds, opts)
+		result = verify(opts)?
 		assert result.correct_count == 9982
 		assert result.wrong_count == 18
 
@@ -113,8 +115,9 @@ fn test_verify() ? {
 		cl = Classifier{}
 		result = CrossVerifyResult{}
 		cl = make_classifier(ds, opts)
-		cl = Classifier{}
-		result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+		// cl = Classifier{}
+		// result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
+		result = verify(opts)?
 		assert result.correct_count == 9982
 		assert result.wrong_count == 18
 
