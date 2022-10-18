@@ -28,12 +28,6 @@ pub fn verify_multiple(opts Options) ?CrossVerifyResult {
 // outputfile_path: saves the result as a json file
 // ```
 pub fn verify(opts Options) ?CrossVerifyResult {
-	mut cl := Classifier{}
-		if opts.classifierfile_path == '' {
-			cl = make_classifier(load_file(opts.datafile_path), opts)
-		} else {
-			cl = load_classifier_file(opts.classifierfile_path)?
-		}
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	mut confusion_matrix_map := map[string]map[string]f64{}
@@ -45,23 +39,35 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 	}
 	// instantiate a struct for the result
 	mut verify_result := CrossVerifyResult{
-		classifier_path: cl.datafile_path
+		classifier_path: opts.datafile_path
 		testfile_path: opts.testfile_path
 		labeled_classes: test_ds.class_values
 		class_counts: test_ds.class_counts
 		classes: test_ds.classes
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
-		binning: cl.binning
-		Parameters: cl.Parameters
+		binning: opts.binning
+		command: 'verify'
+		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
-	verify_result.command = 'verify' // override the 'make' command from cl.Parameters
-	// massage each instance in the test dataset according to the
-	// attribute parameters in the classifier
-	test_instances := generate_test_instances_array(cl, test_ds)
-	// for the instances in the test data, perform classifications
-	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
+	if opts.multiple_classify_options_file_path == '' {
+		mut cl := Classifier{}
+		if opts.classifierfile_path == '' {
+			cl = make_classifier(load_file(opts.datafile_path), opts)
+		} else {
+			cl = load_classifier_file(opts.classifierfile_path)?
+		}
+		// verify_result.command = 'verify' // override the 'make' command from cl.Parameters
+		// massage each instance in the test dataset according to the
+		// attribute parameters in the classifier
+		test_instances := generate_test_instances_array(cl, test_ds)
+		// for the instances in the test data, perform classifications
+		verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
+		} else {
+			mult_opts := read_multiple_opts(opts.multiple_classify_options_file_path)?
+			println('mult_opts: $mult_opts')
+		}
 	verify_result.Metrics = get_metrics(verify_result)?
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
