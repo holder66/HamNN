@@ -2,6 +2,31 @@
 
 module hamnn
 import arrays
+import os
+import json
+
+pub struct ClassifierOptions {
+	Binning
+pub mut:
+	number_of_attributes []int 
+	uniform_bins         bool
+	exclude_flag         bool
+	multiple_flag 	bool
+	purge_flag           bool
+	weighting_flag       bool
+}
+
+pub struct MultipleOptions {
+	classifier_options []ClassifierOptions
+}
+
+// read_multiple_opts 
+fn read_multiple_opts(path string) ?MultipleOptions {
+	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	print(s)
+	mut multiple_options := json.decode(MultipleOptions, s) or { panic('Failed to parse json') }
+	return multiple_options
+}
 // when multiple classifiers have been generated with different settings, 
 // a given instance to be classified will take multiple values, one for 
 // each classifier, and corresponding to the settings for that classifier.
@@ -52,8 +77,8 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut radii := []int{}
 	mut combined_radii := []int{}
 	mut radius_row := []int{len: cl0.class_counts.len}
-	mut nearest_neighbors_array := [][]int{}
-	mut inferred_class_array := []string{}
+	// mut nearest_neighbors_array := [][]int{}
+	// mut inferred_class_array := []string{}
 	for row in hamming_dist_arrays {
 		radii = uniques(row)
 		// radii.sort()
@@ -89,8 +114,8 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			mcr.sphere_index = sphere_index
 			break
 		}
-		nearest_neighbors_array << mcr.nearest_neighbors_by_class
-		inferred_class_array << mcr.inferred_class
+		mcr.nearest_neighbors_array << mcr.nearest_neighbors_by_class
+		mcr.inferred_class_array << mcr.inferred_class
 		// println('$i $mcr.nearest_neighbors_by_class $mcr.inferred_class')
 	}
 	// identify when there is disagreement between classifiers for 
@@ -100,9 +125,9 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut sum_nn := 0
 	mut avg_nn := 0.0
 	mut ratios_array := []f64{}
-	zero_nn := nearest_neighbors_array.filter(0 in it).len
-	if inferred_class_array.len > 1 && uniques(inferred_class_array).len > 1 {
-		println('$index $nearest_neighbors_array $inferred_class_array')
+	zero_nn := mcr.nearest_neighbors_array.filter(0 in it).len
+	if mcr.inferred_class_array.len > 1 && uniques(mcr.inferred_class_array).len > 1 {
+		println('$index $mcr.nearest_neighbors_array $mcr.inferred_class_array')
 		// if only one of the nearest neighbors lists has a zero, use that
 		// inferred class
 
@@ -110,7 +135,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		match true {
 			zero_nn == 1 {
 				// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
-				mcr.inferred_class = inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+				mcr.inferred_class = mcr.inferred_class_array[idx_true(mcr.nearest_neighbors_array.map(0 in it))]
 			}
 			zero_nn > 1 {
 				// when there are 2 or more results with zeros, pick the 
@@ -119,13 +144,13 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				// println(nearest_neighbors_array.map(array_max(it)))
 				// println(idx_max(nearest_neighbors_array.map(array_max(it))))
 				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
-				mcr.inferred_class = cl0.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
+				mcr.inferred_class = cl0.classes[idx_max(mcr.nearest_neighbors_array[idx_max(mcr.nearest_neighbors_array.map(array_max(it)))])]
 			}
 			else {
 				// when none of the results have zeros in them, pick the 
 				// result having the largest ratio of its maximum to the 
 				// average of the other nearest neighbor counts
-				for nearest_neighbors in nearest_neighbors_array {
+				for nearest_neighbors in mcr.nearest_neighbors_array {
 					// i_nn = idx_max(nearest_neighbors)
 					max_nn = array_max(nearest_neighbors)
 					sum_nn = array_sum(nearest_neighbors)
@@ -137,7 +162,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 					ratios_array << (max_nn / avg_nn)
 				}
 				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
-				mcr.inferred_class = cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])]
+				mcr.inferred_class = cl0.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
 			}
 		}
 	
