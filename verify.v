@@ -7,6 +7,12 @@ module hamnn
 
 import runtime
 
+// verify_multiple 
+pub fn verify_multiple(opts Options) ?CrossVerifyResult {
+	mut vr := CrossVerifyResult{}
+	return vr
+}
+
 // verify classifies all the instances in a verification datafile (specified
 // by `opts.testfile_path`) using a trained Classifier; returns metrics
 // comparing the inferred classes to the labeled (assigned) classes
