@@ -180,8 +180,10 @@ fn show_validate(result ValidateResult) {
 
 // show_verify
 fn show_verify(result CrossVerifyResult) ? {
-	// println(result)
-	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
+	println(result)
+	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' + 
+		if result.multiple_flag {'multiple classifiers '} else {'a classifier '}
+		+ 'from "$result.classifier_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	// println(result)

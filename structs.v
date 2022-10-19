@@ -226,6 +226,7 @@ pub mut:
 	struct_type                string = '.CrossVerifyResult'
 	classifier_path            string
 	testfile_path              string
+	multiple_classify_options_file_path string
 	labeled_classes            []string
 	actual_classes             []string
 	inferred_classes           []string

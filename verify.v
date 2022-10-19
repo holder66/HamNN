@@ -32,9 +32,11 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		}
 	}
 	// instantiate a struct for the result
+	println('opts.Parameters in verify: $opts.Parameters')
 	mut verify_result := CrossVerifyResult{
 		classifier_path: opts.datafile_path
 		testfile_path: opts.testfile_path
+		multiple_classify_options_file_path: opts.multiple_classify_options_file_path
 		labeled_classes: test_ds.class_values
 		class_counts: test_ds.class_counts
 		classes: test_ds.classes
@@ -45,7 +47,8 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
-	if opts.multiple_classify_options_file_path == '' {
+	println('verify_result in verify: $verify_result')
+	if !opts.multiple_flag {
 		mut cl := Classifier{}
 		if opts.classifierfile_path == '' {
 			cl = make_classifier(load_file(opts.datafile_path), opts)
@@ -70,6 +73,7 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
+			verify_result.Parameters = params
 			// println('mult_opts: $mult_opts')
 			classifier_array << make_classifier(ds, mult_opts)
 			instances_to_be_classified << generate_test_instances_array(classifier_array.last(), test_ds)
@@ -78,9 +82,11 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		// println('instances_to_be_classified: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified: $instances_to_be_classified')
-		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut verify_result, opts)
+		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut verify_result, mult_opts)
 	}
+	println(verify_result.Metrics)
 	verify_result.Metrics = get_metrics(verify_result)?
+	println(verify_result.Metrics)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
@@ -136,18 +142,14 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 
 // multiple_classify_to_verify 
 fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
-	mut m_classify_result := ClassifyResult{}
-	
-	if !opts.concurrency_flag {
-
-	} else {
-		for i, test_instance in m_instances {
-			m_classify_result = multiple_classifier_classify(i, m_cl, test_instance, opts)
-			// println('m_classify_result: $m_classify_result.inferred_class')
-			result.inferred_classes << m_classify_result.inferred_class
-			result.actual_classes << result.labeled_classes[i]
-			result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
-		}
+	// println('result in multiple_classify_to_verify: $result')
+	mut m_classify_result := ClassifyResult{}	
+	for i, test_instance in m_instances {
+		m_classify_result = multiple_classifier_classify(i, m_cl, test_instance, opts)
+		// println('m_classify_result: $m_classify_result.inferred_class')
+		result.inferred_classes << m_classify_result.inferred_class
+		result.actual_classes << result.labeled_classes[i]
+		result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
 	}
 	result.classifier_instances_counts << m_cl[0].history[0].instances_count
 	result.prepurge_instances_counts_array << m_cl[0].history[0].prepurge_instances_count
@@ -158,7 +160,7 @@ fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut resu
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('summarize_result: $result')
 	}
-	// println('result: $result')
+	println('result at end of multiple_classify_to_verify: $result')
 	return result
 }
 
