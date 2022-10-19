@@ -179,13 +179,16 @@ fn show_validate(result ValidateResult) {
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult) ? {
-	println(result)
+fn show_verify(result CrossVerifyResult, opts Options) ? {
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' + 
-		if result.multiple_flag {'multiple classifiers '} else {'a classifier '}
+		if opts.multiple_flag {'multiple classifiers '} else {'a classifier '}
 		+ 'from "$result.classifier_path"',
 		'underline'), 'magenta'))
-	show_parameters(result.Parameters)
+	if opts.multiple_flag {
+		println('Classifier parameters are in file "$opts.multiple_classify_options_file_path"')
+	} else {
+		show_parameters(result.Parameters)
+	}
 	// println(result)
 	if result.purge_flag {
 		total_count := result.prepurge_instances_counts_array[0]
@@ -393,9 +396,9 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 }
 
 // show_explore_trailer
-fn show_explore_trailer(results ExploreResult) ? {
+fn show_explore_trailer(results ExploreResult, opts Options) ? {
 	println('')
-	println('Command line arguments: $results.args')
+	println('Command line arguments: $opts.args')
 	println('Maximum accuracies obtained:')
 	mut ea := MaxSettings{}
 	for i, acc_type in results.accuracy_types {

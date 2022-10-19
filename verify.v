@@ -32,7 +32,7 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		}
 	}
 	// instantiate a struct for the result
-	println('opts.Parameters in verify: $opts.Parameters')
+	// println('opts.Parameters in verify: $opts.Parameters')
 	mut verify_result := CrossVerifyResult{
 		classifier_path: opts.datafile_path
 		testfile_path: opts.testfile_path
@@ -43,11 +43,10 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
 		binning: opts.binning
-		command: 'verify'
 		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
-	println('verify_result in verify: $verify_result')
+	// println('verify_result in verify: $verify_result')
 	if !opts.multiple_flag {
 		mut cl := Classifier{}
 		if opts.classifierfile_path == '' {
@@ -84,17 +83,17 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		// println('instances_to_be_classified: $instances_to_be_classified')
 		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut verify_result, mult_opts)
 	}
-	println(verify_result.Metrics)
+	// println(verify_result.Metrics)
 	verify_result.Metrics = get_metrics(verify_result)?
-	println(verify_result.Metrics)
+	// println(verify_result.Metrics)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
 	}
 	// verify_result.command = 'verify'
 	// println('verify_result: $verify_result')
-	if verify_result.command == 'verify' && (verify_result.show_flag || verify_result.expanded_flag) {
-		show_verify(verify_result)?
+	if opts.command == 'verify' && (verify_result.show_flag || verify_result.expanded_flag) {
+		show_verify(verify_result, opts)?
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')
@@ -160,7 +159,7 @@ fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut resu
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('summarize_result: $result')
 	}
-	println('result at end of multiple_classify_to_verify: $result')
+	// println('result at end of multiple_classify_to_verify: $result')
 	return result
 }
 

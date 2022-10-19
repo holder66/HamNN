@@ -98,7 +98,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		save_json_file(results, opts.outputfile_path)
 	}
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
-		show_explore_trailer(results)?
+		show_explore_trailer(results, opts)?
 	}
 	if opts.graph_flag {
 		plot_explore(results, opts)?

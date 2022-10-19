@@ -29,7 +29,7 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 				result.DisplaySettings = settings
 				show_explore_line(result)?
 			}
-			show_explore_trailer(saved_er)?
+			show_explore_trailer(saved_er, opts)?
 			if settings.graph_flag {
 				// println(saved_er)
 				plot_explore(saved_er, opts)?
@@ -56,9 +56,12 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			show_validate(saved_valr)
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"verify"') {
+			mut opts := Options{
+				DisplaySettings: settings
+			}
 			mut saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
 			saved_vr.DisplaySettings = settings
-			show_verify(saved_vr)?
+			show_verify(saved_vr, opts)?
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"cross"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }

@@ -5,17 +5,6 @@ import arrays
 import os
 import json
 
-// pub struct ClassifierOptions {
-// pub mut:
-// 	bins []int
-// 	number_of_attributes []int 
-// 	uniform_bins         bool
-// 	exclude_flag         bool
-// 	multiple_flag 	bool
-// 	purge_flag           bool
-// 	weighting_flag       bool
-// }
-
 pub struct MultipleOptions {
 	classifier_options []Parameters
 }
@@ -23,7 +12,6 @@ pub struct MultipleOptions {
 // read_multiple_opts 
 fn read_multiple_opts(path string) ?MultipleOptions {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
-	// print(s)
 	mut multiple_options := json.decode(MultipleOptions, s) or { panic('Failed to parse json') }
 	return multiple_options
 }
@@ -51,8 +39,6 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		index: index 
 		classes: cl0.class_values
 	}
-	// println('classifiers: $classifiers')
-	// println(cl0.class_values)
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in all the classifiers; return the class for the 
 	// instance giving the lowest Hamming distance.

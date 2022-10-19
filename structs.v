@@ -114,14 +114,12 @@ pub mut:
 	number_of_attributes []int = [0]
 	uniform_bins         bool
 	exclude_flag         bool
-	multiple_flag bool
+	// multiple_flag bool
 	purge_flag           bool
 	weighting_flag       bool
 	folds                int
 	repetitions          int
 	random_pick          bool
-	command              string
-	args                 []string
 }
 
 struct DisplaySettings {
@@ -151,6 +149,8 @@ pub mut:
 	multiple_classify_options_file_path string
 	help_flag           bool
 	multiple_flag       bool
+	command              string
+	args                 []string
 }
 
 pub struct Environment {

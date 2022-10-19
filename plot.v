@@ -193,7 +193,7 @@ fn plot_explore(result ExploreResult, opts Options) ? {
 	annotation4 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 20
-		text: 'args: $result.args'
+		text: 'args: $opts.args'
 		align: 'center'
 		font: plot.Font{
 			color: 'black'
