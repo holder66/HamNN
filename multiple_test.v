@@ -20,13 +20,21 @@ fn testsuite_end() ? {
 
 // test_multiple_options 
 fn test_multiple_options() ? {
-	mut opts1 := ClassifierOptions{
-		bins: [1,2]
+	mut opts1 := Parameters{
+		binning: Binning{
+			lower: 1
+			upper: 2
+			interval: 1
+		}
 		number_of_attributes: [1]
 		weighting_flag: true
 	}
-	mut opts2 := ClassifierOptions{
-		bins: [1,2]
+	mut opts2 := Parameters{
+		binning: Binning{
+			lower: 1
+			upper: 2
+			interval: 1
+		}
 		number_of_attributes: [6]
 		weighting_flag: true
 	}
@@ -34,131 +42,138 @@ fn test_multiple_options() ? {
 		classifier_options: [opts1, opts2]
 	}
 	save_json_file(multiple_options, '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')
-	println(read_multiple_opts('/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')?)
+	// println(read_multiple_opts('/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')?)
 }
 
 // test_multiple_verify
 fn test_multiple_verify() ? {
 	mut opts := Options{
 		verbose_flag: false
-		show_flag: false
-		expanded_flag: false
+		show_flag: true
+		expanded_flag: true
 		concurrency_flag: true
 	}
 
 	mut result := CrossVerifyResult{}
-	mut ds := Dataset{}
-	mut cl1 := Classifier{}
-	mut cl2 := Classifier{}
-	mut saved_cl := Classifier{}
-	mut vr1 := CrossVerifyResult{}
-	mut vr2 := CrossVerifyResult{}
-	mut mc_result := ClassifyResult{}
+	// mut ds := Dataset{}
+	// mut cl1 := Classifier{}
+	// mut cl2 := Classifier{}
+	// mut saved_cl := Classifier{}
+	// mut vr1 := CrossVerifyResult{}
+	// mut vr2 := CrossVerifyResult{}
+	// mut mc_result := ClassifyResult{}
 
-	// test verify with a non-saved classifier
-	opts.command = 'make'
-	opts.datafile_path = 'datasets/multiples-train.tab'
-	opts.testfile_path = 'datasets/multiples-verify.tab'
-	opts.classifierfile_path = ''
-	opts.bins = [1,2]
-	opts.number_of_attributes = [2]
-	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	// println(ds.class_values)
-	cl1 = make_classifier(ds, opts)
-	mut test_ds1 := load_file(opts.testfile_path)
-	// println(test_ds1.class_values)
-	mut test_instances1 := generate_test_instances_array(cl1, test_ds1)
-	// opts.command = 'verify'
-	// vr1 = verify(cl1, opts)?
-	// println(vr1)
-	opts.bins = [1,1]
-	opts.number_of_attributes = [1]
-	opts.weighting_flag = true
-	cl2 = make_classifier(ds, opts)
-
-	mut test_ds2 := load_file(opts.testfile_path)
-	mut test_instances2 := generate_test_instances_array(cl2, test_ds1)
-	// println('test_instances1: $test_instances1')
-	// println('test_instances2: $test_instances2')
-	for i in 0..test_instances1.len {
-	// println(multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class)
-	}
-	println('Done with multiples-train.tab')
-
-	opts.datafile_path = 'datasets/bcw350train'
-	opts.testfile_path = 'datasets/bcw174test'
-	opts.classifierfile_path = ''
-	opts.number_of_attributes = [1]
-	opts.weighting_flag = true
-	ds = load_file(opts.datafile_path)
-	cl1 = make_classifier(ds, opts)
-	test_ds1 = load_file(opts.testfile_path)
-	// println(test_ds1.class_values)
-	test_instances1 = generate_test_instances_array(cl1, test_ds1)
-	opts.number_of_attributes = [6]
-	opts.weighting_flag = true
-	cl2 = make_classifier(ds, opts)
-	test_ds2 = load_file(opts.testfile_path)
-	// println(test_ds2)
-	test_instances2 = generate_test_instances_array(cl2, test_ds1)
-	// println('test_instances1: $test_instances1')
-	// println('test_instances2: $test_instances2')
-	mut correct_count := 0
-	mut incorrect_count := 0
-	mut raw_accuracy := 0.0
-	for i in 0..test_instances1.len {
-		mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
-		if test_ds2.class_values[i] == mc_result.inferred_class {
-
-			correct_count += 1
-		} else {
-		 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
-		 	incorrect_count += 1
-		 }
-	}
-	println('correct_count: $correct_count incorrect_count: $incorrect_count')
-
-
-	println('Done with bcw350train')
-
+	// test verify with multiple_classify_options_file_path
 	opts.datafile_path = 'datasets/leukemia38train.tab'
 	opts.testfile_path = 'datasets/leukemia34test.tab'
-	opts.classifierfile_path = ''
-	opts.number_of_attributes = [1]
-	opts.bins = [5,5]
-	opts.weighting_flag = true
-	ds = load_file(opts.datafile_path)
-	cl1 = make_classifier(ds, opts)
-	test_ds1 = load_file(opts.testfile_path)
-	// println(test_ds1.class_values)
-	test_instances1 = generate_test_instances_array(cl1, test_ds1)
-	opts.number_of_attributes = [10]
-	opts.bins = [1,3]
-	opts.weighting_flag = false
-	cl2 = make_classifier(ds, opts)
-	test_ds2 = load_file(opts.testfile_path)
-	// println(test_ds2)
-	test_instances2 = generate_test_instances_array(cl2, test_ds1)
-	// println('test_instances1: $test_instances1')
-	// println('test_instances2: $test_instances2')
-	correct_count = 0
-	incorrect_count = 0
-	raw_accuracy = 0.0
-	for i in 0..test_instances1.len {
-		mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
-		if test_ds2.class_values[i] == mc_result.inferred_class {
+	opts.multiple_classify_options_file_path = '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts'
+	result = verify(opts)?
+	println(result)
+}
+	// // test verify with a non-saved classifier
+	// opts.command = 'make'
+	// opts.datafile_path = 'datasets/multiples-train.tab'
+	// opts.testfile_path = 'datasets/multiples-verify.tab'
+	// opts.classifierfile_path = ''
+	// opts.bins = [1,2]
+	// opts.number_of_attributes = [2]
+	// opts.weighting_flag = false
+	// ds = load_file(opts.datafile_path)
+	// // println(ds.class_values)
+	// cl1 = make_classifier(ds, opts)
+	// mut test_ds1 := load_file(opts.testfile_path)
+	// // println(test_ds1.class_values)
+	// mut test_instances1 := generate_test_instances_array(cl1, test_ds1)
+	// // opts.command = 'verify'
+	// // vr1 = verify(cl1, opts)?
+	// // println(vr1)
+	// opts.bins = [1,1]
+	// opts.number_of_attributes = [1]
+	// opts.weighting_flag = true
+	// cl2 = make_classifier(ds, opts)
 
-			correct_count += 1
-		} else {
-		 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
-		 	incorrect_count += 1
-		 }
-	}
-	println('correct_count: $correct_count incorrect_count: $incorrect_count')
+	// mut test_ds2 := load_file(opts.testfile_path)
+	// mut test_instances2 := generate_test_instances_array(cl2, test_ds1)
+	// // println('test_instances1: $test_instances1')
+	// // println('test_instances2: $test_instances2')
+	// for i in 0..test_instances1.len {
+	// // println(multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts).inferred_class)
+	// }
+	// println('Done with multiples-train.tab')
+
+	// opts.datafile_path = 'datasets/bcw350train'
+	// opts.testfile_path = 'datasets/bcw174test'
+	// opts.classifierfile_path = ''
+	// opts.number_of_attributes = [1]
+	// opts.weighting_flag = true
+	// ds = load_file(opts.datafile_path)
+	// cl1 = make_classifier(ds, opts)
+	// test_ds1 = load_file(opts.testfile_path)
+	// // println(test_ds1.class_values)
+	// test_instances1 = generate_test_instances_array(cl1, test_ds1)
+	// opts.number_of_attributes = [6]
+	// opts.weighting_flag = true
+	// cl2 = make_classifier(ds, opts)
+	// test_ds2 = load_file(opts.testfile_path)
+	// // println(test_ds2)
+	// test_instances2 = generate_test_instances_array(cl2, test_ds1)
+	// // println('test_instances1: $test_instances1')
+	// // println('test_instances2: $test_instances2')
+	// mut correct_count := 0
+	// mut incorrect_count := 0
+	// mut raw_accuracy := 0.0
+	// for i in 0..test_instances1.len {
+	// 	mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
+	// 	if test_ds2.class_values[i] == mc_result.inferred_class {
+
+	// 		correct_count += 1
+	// 	} else {
+	// 	 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
+	// 	 	incorrect_count += 1
+	// 	 }
+	// }
+	// println('correct_count: $correct_count incorrect_count: $incorrect_count')
 
 
-	println('Done with leukemia')
+	// println('Done with bcw350train')
+
+	// opts.datafile_path = 'datasets/leukemia38train.tab'
+	// opts.testfile_path = 'datasets/leukemia34test.tab'
+	// opts.classifierfile_path = ''
+	// opts.number_of_attributes = [1]
+	// opts.bins = [5,5]
+	// opts.weighting_flag = true
+	// ds = load_file(opts.datafile_path)
+	// cl1 = make_classifier(ds, opts)
+	// test_ds1 = load_file(opts.testfile_path)
+	// // println(test_ds1.class_values)
+	// test_instances1 = generate_test_instances_array(cl1, test_ds1)
+	// opts.number_of_attributes = [10]
+	// opts.bins = [1,3]
+	// opts.weighting_flag = false
+	// cl2 = make_classifier(ds, opts)
+	// test_ds2 = load_file(opts.testfile_path)
+	// // println(test_ds2)
+	// test_instances2 = generate_test_instances_array(cl2, test_ds1)
+	// // println('test_instances1: $test_instances1')
+	// // println('test_instances2: $test_instances2')
+	// correct_count = 0
+	// incorrect_count = 0
+	// raw_accuracy = 0.0
+	// for i in 0..test_instances1.len {
+	// 	mc_result = multiple_classifier_classify(i, [cl1, cl2], [test_instances1[i], test_instances2[i]], opts)
+	// 	if test_ds2.class_values[i] == mc_result.inferred_class {
+
+	// 		correct_count += 1
+	// 	} else {
+	// 	 	println('i: $i  actual class: ${test_ds2.class_values[i]} inferred_class: $mc_result.inferred_class')
+	// 	 	incorrect_count += 1
+	// 	 }
+	// }
+	// println('correct_count: $correct_count incorrect_count: $incorrect_count')
+
+
+	// println('Done with leukemia')
 
 	// // now with a saved classifier
 	// opts.outputfile_path = 'tempfolder4/classifierfile'
@@ -226,7 +241,7 @@ fn test_multiple_verify() ? {
 	// 	assert result.wrong_count == 18
 
 	// 	println('Done with mnist_test.tab using saved classifier')
-}
+// }
 
 // if get_environment().arch_details[0] != '4 cpus' {
 

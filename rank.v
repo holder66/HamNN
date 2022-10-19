@@ -49,6 +49,7 @@ import math
 // `outputfile_path`, saves the result as json.
 // ```
 pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
+	// println('opts in rank_attributes: $opts')
 	// to get the denominator for calculating percentages of rank values,
 	// we get the rank value for the class attribute, which should be 100%
 	mut ranking_result := RankingResult{
@@ -57,14 +58,21 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	}
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.exclude_flag))
+	// println("we are here")
 	if opts.verbose_flag && opts.command == 'rank' {
-		println('perfect_rank_value: $perfect_rank_value')
+		// println('perfect_rank_value: $perfect_rank_value')
 	}
 	mut ranked_atts := []RankedAttribute{}
 	mut binning := Binning{}
 	if ds.useful_continuous_attributes.len != 0 {
-		binning = get_binning(opts.bins)
+		// binning = get_binning(opts.bins)
+		if opts.binning.lower > 0 {
+			binning = opts.binning
+		} else {
+			binning = get_binning(opts.bins)
+		}
 	}
+	// println('binning here: $binning')
 
 	// for each usable attribute, calculate a rank value taking into
 	// account the class prevalences
@@ -104,6 +112,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 			}
 		}
 		bin_numbers.reverse_in_place()
+		// println('bin numbers after reversing: $bin_numbers')
 		for bin_number in bin_numbers {
 			rank_value = i64(0)
 

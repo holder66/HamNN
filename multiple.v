@@ -5,44 +5,45 @@ import arrays
 import os
 import json
 
-pub struct ClassifierOptions {
-pub mut:
-	bins []int
-	number_of_attributes []int 
-	uniform_bins         bool
-	exclude_flag         bool
-	multiple_flag 	bool
-	purge_flag           bool
-	weighting_flag       bool
-}
+// pub struct ClassifierOptions {
+// pub mut:
+// 	bins []int
+// 	number_of_attributes []int 
+// 	uniform_bins         bool
+// 	exclude_flag         bool
+// 	multiple_flag 	bool
+// 	purge_flag           bool
+// 	weighting_flag       bool
+// }
 
 pub struct MultipleOptions {
-	classifier_options []ClassifierOptions
+	classifier_options []Parameters
 }
 
 // read_multiple_opts 
 fn read_multiple_opts(path string) ?MultipleOptions {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
-	print(s)
+	// print(s)
 	mut multiple_options := json.decode(MultipleOptions, s) or { panic('Failed to parse json') }
 	return multiple_options
 }
 
 // get_mult_classifier 
-fn get_mult_classifier(ds Dataset, cl_opts ClassifierOptions, mut opts Options) Classifier {
-	opts.bins = cl_opts.bins
-	opts.number_of_attributes = cl_opts.number_of_attributes
-	opts.uniform_bins = cl_opts.uniform_bins
-	opts.exclude_flag = cl_opts.exclude_flag
-	opts.multiple_flag = cl_opts.multiple_flag
-	opts.purge_flag = cl_opts.purge_flag
-	opts.weighting_flag = cl_opts.weighting_flag
-	return make_classifier(ds, opts)
-}
+// fn get_mult_classifier(ds Dataset, cl_opts ClassifierOptions, mut opts Options) Classifier {
+// 	opts.bins = cl_opts.bins
+// 	opts.number_of_attributes = cl_opts.number_of_attributes
+// 	opts.uniform_bins = cl_opts.uniform_bins
+// 	opts.exclude_flag = cl_opts.exclude_flag
+// 	opts.multiple_flag = cl_opts.multiple_flag
+// 	opts.purge_flag = cl_opts.purge_flag
+// 	opts.weighting_flag = cl_opts.weighting_flag
+// 	return make_classifier(ds, opts)
+// }
 
 // when multiple classifiers have been generated with different settings, 
 // a given instance to be classified will take multiple values, one for 
 // each classifier, and corresponding to the settings for that classifier.
+// Note that opts is not used at present
 // multiple_classifier_classify
 fn multiple_classifier_classify(index int, classifiers []Classifier, instances_to_be_classified [][]u8, opts Options) ClassifyResult {
 	cl0 := classifiers[0]
@@ -50,6 +51,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		index: index 
 		classes: cl0.class_values
 	}
+	// println('classifiers: $classifiers')
 	// println(cl0.class_values)
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in all the classifiers; return the class for the 
@@ -59,9 +61,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut hamming_dist_arrays := [][]int{}
 	mut hamming_dist := 0
 	mut number_of_attributes := []int{}
-	for _ in classifiers {
-		number_of_attributes << cl0.attribute_ordering.len
+	for cl in classifiers {
+		number_of_attributes << cl.attribute_ordering.len
 	}
+	// println('number_of_attributes: $number_of_attributes')
 	maximum_number_of_attributes := array_max(number_of_attributes)
 	// println('maximum_number_of_attributes: $maximum_number_of_attributes')
 	// get the hamming distance for each of the corresponding byte_values
@@ -140,7 +143,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut ratios_array := []f64{}
 	zero_nn := mcr.nearest_neighbors_array.filter(0 in it).len
 	if mcr.inferred_class_array.len > 1 && uniques(mcr.inferred_class_array).len > 1 {
-		println('$index $mcr.nearest_neighbors_array $mcr.inferred_class_array')
+		
 		// if only one of the nearest neighbors lists has a zero, use that
 		// inferred class
 
@@ -178,6 +181,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				mcr.inferred_class = cl0.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
 			}
 		}
+		println('$index $mcr.nearest_neighbors_array $mcr.inferred_class_array inferred_class: $mcr.inferred_class')
 	
 	}
 	return mcr

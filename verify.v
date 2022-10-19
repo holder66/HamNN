@@ -7,12 +7,6 @@ module hamnn
 
 import runtime
 
-// verify_multiple 
-pub fn verify_multiple(opts Options) ?CrossVerifyResult {
-	mut vr := CrossVerifyResult{}
-	return vr
-}
-
 // verify classifies all the instances in a verification datafile (specified
 // by `opts.testfile_path`) using a trained Classifier; returns metrics
 // comparing the inferred classes to the labeled (assigned) classes
@@ -64,16 +58,36 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		test_instances := generate_test_instances_array(cl, test_ds)
 		// for the instances in the test data, perform classifications
 		verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-		} else {
-			mult_opts := read_multiple_opts(opts.multiple_classify_options_file_path)?
-			println('mult_opts: $mult_opts')
+	} else {
+		mut classifier_array := []Classifier{}
+		mut instances_to_be_classified := [][][]u8{}
+		// mut mult_opts := []Parameters{}
+		mut mult_opts := opts
+		ds := load_file(opts.datafile_path)
+		mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path)?
+		// println('mult_opts: $mult_opts')
+		for params in saved_params.classifier_options {
+			// println('params: $params')
+			// println('number of attributes: $params.number_of_attributes')
+			mult_opts.Parameters = params
+			// println('mult_opts: $mult_opts')
+			classifier_array << make_classifier(ds, mult_opts)
+			instances_to_be_classified << generate_test_instances_array(classifier_array.last(), test_ds)
 		}
+		// println('classifier_array: $classifier_array')
+		// println('instances_to_be_classified: $instances_to_be_classified')
+		instances_to_be_classified = transpose(instances_to_be_classified)
+		// println('instances_to_be_classified: $instances_to_be_classified')
+		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut verify_result, opts)
+	}
 	verify_result.Metrics = get_metrics(verify_result)?
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
 	}
-	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
+	// verify_result.command = 'verify'
+	// println('verify_result: $verify_result')
+	if verify_result.command == 'verify' && (verify_result.show_flag || verify_result.expanded_flag) {
 		show_verify(verify_result)?
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
@@ -118,6 +132,34 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 	result_channel <- classify_result
 	// dump(result_channel)
 	return
+}
+
+// multiple_classify_to_verify 
+fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+	mut m_classify_result := ClassifyResult{}
+	
+	if !opts.concurrency_flag {
+
+	} else {
+		for i, test_instance in m_instances {
+			m_classify_result = multiple_classifier_classify(i, m_cl, test_instance, opts)
+			// println('m_classify_result: $m_classify_result.inferred_class')
+			result.inferred_classes << m_classify_result.inferred_class
+			result.actual_classes << result.labeled_classes[i]
+			result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
+		}
+	}
+	result.classifier_instances_counts << m_cl[0].history[0].instances_count
+	result.prepurge_instances_counts_array << m_cl[0].history[0].prepurge_instances_count
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('result in classify_to_verify(): $result')
+	}
+	result = summarize_results(1, mut result)
+	if opts.verbose_flag && opts.command == 'verify' {
+		println('summarize_result: $result')
+	}
+	// println('result: $result')
+	return result
 }
 
 // classify_to_verify classifies each instance in an array, and
