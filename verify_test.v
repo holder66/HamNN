@@ -11,7 +11,7 @@ fn testsuite_begin() ? {
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder4')!	
+	os.rmdir_all('tempfolder4')!
 }
 
 // test_verify

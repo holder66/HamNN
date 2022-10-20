@@ -6,13 +6,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder1') {
-		os.rmdir_all('tempfolder1')?
+		os.rmdir_all('tempfolder1')!
 	}
-	os.mkdir_all('tempfolder1')?
+	os.mkdir_all('tempfolder1')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder1')?
+	os.rmdir_all('tempfolder1')!
 }
 
 // test_file_type

@@ -75,13 +75,15 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 			verify_result.Parameters = params
 			// println('mult_opts: $mult_opts')
 			classifier_array << make_classifier(ds, mult_opts)
-			instances_to_be_classified << generate_test_instances_array(classifier_array.last(), test_ds)
+			instances_to_be_classified << generate_test_instances_array(classifier_array.last(),
+				test_ds)
 		}
 		// println('classifier_array: $classifier_array')
 		// println('instances_to_be_classified: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified: $instances_to_be_classified')
-		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut verify_result, mult_opts)
+		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut
+			verify_result, mult_opts)
 	}
 	// println(verify_result.Metrics)
 	verify_result.Metrics = get_metrics(verify_result)?
@@ -139,10 +141,10 @@ fn option_worker_verify(work_channel chan int, result_channel chan ClassifyResul
 	return
 }
 
-// multiple_classify_to_verify 
+// multiple_classify_to_verify
 fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	// println('result in multiple_classify_to_verify: $result')
-	mut m_classify_result := ClassifyResult{}	
+	mut m_classify_result := ClassifyResult{}
 	for i, test_instance in m_instances {
 		m_classify_result = multiple_classifier_classify(i, m_cl, test_instance, opts)
 		// println('m_classify_result: $m_classify_result.inferred_class')

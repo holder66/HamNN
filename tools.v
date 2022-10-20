@@ -18,7 +18,9 @@ fn save_json_file<T>(u T, path string) {
 // Returns -1 if no true element found.
 fn idx_true(a []bool) int {
 	for i, val in a {
-		if val {return i}
+		if val {
+			return i
+		}
 	}
 	return -1
 }

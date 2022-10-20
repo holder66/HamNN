@@ -115,11 +115,11 @@ pub mut:
 	uniform_bins         bool
 	exclude_flag         bool
 	// multiple_flag bool
-	purge_flag           bool
-	weighting_flag       bool
-	folds                int
-	repetitions          int
-	random_pick          bool
+	purge_flag     bool
+	weighting_flag bool
+	folds          int
+	repetitions    int
+	random_pick    bool
 }
 
 struct DisplaySettings {
@@ -137,20 +137,20 @@ pub struct Options {
 	Parameters
 	DisplaySettings
 pub mut:
-	struct_type         string = '.Options'
-	non_options         []string
-	bins                []int = [1, 16]
-	concurrency_flag    bool
-	datafile_path       string = 'datasets/developer.tab'
-	testfile_path       string
-	outputfile_path     string
-	classifierfile_path string
-	instancesfile_path  string
+	struct_type                         string = '.Options'
+	non_options                         []string
+	bins                                []int = [1, 16]
+	concurrency_flag                    bool
+	datafile_path                       string = 'datasets/developer.tab'
+	testfile_path                       string
+	outputfile_path                     string
+	classifierfile_path                 string
+	instancesfile_path                  string
 	multiple_classify_options_file_path string
-	help_flag           bool
-	multiple_flag       bool
-	command              string
-	args                 []string
+	help_flag                           bool
+	multiple_flag                       bool
+	command                             string
+	args                                []string
 }
 
 pub struct Environment {
@@ -196,13 +196,13 @@ pub mut:
 	struct_type                string = '.ClassifyResult'
 	index                      int
 	inferred_class             string
-	inferred_class_array []string 
+	inferred_class_array       []string
 	labeled_class              string
 	nearest_neighbors_by_class []int
-	nearest_neighbors_array [][]int 
+	nearest_neighbors_array    [][]int
 	classes                    []string
 	weighting_flag             bool
-	multiple_flag bool
+	multiple_flag              bool
 	hamming_distance           int
 	sphere_index               int
 }
@@ -223,25 +223,25 @@ pub struct CrossVerifyResult {
 	Metrics
 	BinaryMetrics
 pub mut:
-	struct_type                string = '.CrossVerifyResult'
-	classifier_path            string
-	testfile_path              string
+	struct_type                         string = '.CrossVerifyResult'
+	classifier_path                     string
+	testfile_path                       string
 	multiple_classify_options_file_path string
-	labeled_classes            []string
-	actual_classes             []string
-	inferred_classes           []string
-	nearest_neighbors_by_class [][]int
-	instance_indices           []int
-	classes                    []string
-	class_counts               map[string]int
-	labeled_instances          map[string]int
-	correct_inferences         map[string]int
-	incorrect_inferences       map[string]int
-	wrong_inferences           map[string]int
-	true_positives             map[string]int
-	false_positives            map[string]int
-	true_negatives             map[string]int
-	false_negatives            map[string]int
+	labeled_classes                     []string
+	actual_classes                      []string
+	inferred_classes                    []string
+	nearest_neighbors_by_class          [][]int
+	instance_indices                    []int
+	classes                             []string
+	class_counts                        map[string]int
+	labeled_instances                   map[string]int
+	correct_inferences                  map[string]int
+	incorrect_inferences                map[string]int
+	wrong_inferences                    map[string]int
+	true_positives                      map[string]int
+	false_positives                     map[string]int
+	true_negatives                      map[string]int
+	false_negatives                     map[string]int
 	// outer key: actual class; inner key: predicted class
 	confusion_matrix_map            map[string]map[string]f64
 	pos_neg_classes                 []string

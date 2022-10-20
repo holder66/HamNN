@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder3') {
-		os.rmdir_all('tempfolder3')?
+		os.rmdir_all('tempfolder3')!
 	}
-	os.mkdir_all('tempfolder3')?
+	os.mkdir_all('tempfolder3')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder3')?
+	os.rmdir_all('tempfolder3')!
 }
 
 // test_validate_save_result

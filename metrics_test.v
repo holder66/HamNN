@@ -6,13 +6,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder')?
+		os.rmdir_all('tempfolder')!
 	}
-	os.mkdir_all('tempfolder')?
+	os.mkdir_all('tempfolder')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder')?
+	os.rmdir_all('tempfolder')!
 }
 
 // test_wt_avg
@@ -246,14 +246,14 @@ fn test_show_verify() ? {
 	opts.classifierfile_path = ''
 	opts.number_of_attributes = [4]
 	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// ds = load_file(opts.datafile_path)
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	// println('result two in show_test: $result')
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
@@ -261,16 +261,16 @@ fn test_show_verify() ? {
 	opts.number_of_attributes = [24]
 	opts.expanded_flag = false
 	opts.weighting_flag = false
-	ds = load_file(opts.datafile_path)
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// ds = load_file(opts.datafile_path)
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 	// println('result two in show_test: $result')
 	opts.purge_flag = true
-	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	// cl = make_classifier(ds, opts)
+	result = verify(opts)?
 }

@@ -33,7 +33,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	} else {
 		cl.binning = get_binning(opts.bins)
 	}
-		// println('cl.binning: $cl.binning')
+	// println('cl.binning: $cl.binning')
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
@@ -41,7 +41,7 @@ pub fn make_classifier(ds Dataset, opts Options) Classifier {
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
-	mut rank_opts := opts 
+	mut rank_opts := opts
 	rank_opts.binning = cl.binning
 	ranking_result := rank_attributes(ds, rank_opts)
 	mut ranked_attributes := ranking_result.array_of_ranked_attributes.clone()

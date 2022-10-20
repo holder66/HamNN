@@ -5,13 +5,13 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder2') {
-		os.rmdir_all('tempfolder2')?
+		os.rmdir_all('tempfolder2')!
 	}
-	os.mkdir_all('tempfolder2')?
+	os.mkdir_all('tempfolder2')!
 }
 
 fn testsuite_end() ? {
-	os.rmdir_all('tempfolder2')?
+	os.rmdir_all('tempfolder2')!
 }
 
 // test_make_classifier

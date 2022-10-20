@@ -180,10 +180,9 @@ fn show_validate(result ValidateResult) {
 
 // show_verify
 fn show_verify(result CrossVerifyResult, opts Options) ? {
-	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' + 
-		if opts.multiple_flag {'multiple classifiers '} else {'a classifier '}
-		+ 'from "$result.classifier_path"',
-		'underline'), 'magenta'))
+	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' +
+		if opts.multiple_flag { 'multiple classifiers ' } else { 'a classifier ' } +
+		'from "$result.classifier_path"', 'underline'), 'magenta'))
 	if opts.multiple_flag {
 		println('Classifier parameters are in file "$opts.multiple_classify_options_file_path"')
 	} else {

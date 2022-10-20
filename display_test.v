@@ -6,14 +6,14 @@ import os
 
 fn testsuite_begin() ? {
 	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder')?
+		os.rmdir_all('tempfolder')!
 	}
-	os.mkdir_all('tempfolder')?
+	os.mkdir_all('tempfolder')!
 }
 
-fn testsuite_end() ? {
-	os.rmdir_all('tempfolder')?
-}
+// fn testsuite_end() ? {
+// 	os.rmdir_all('tempfolder')!
+// }
 
 fn test_display_classifier() ? {
 	// make a classifier and save it, then display the saved classifier file
@@ -82,21 +82,19 @@ fn test_display_validate_result() ? {
 fn test_display_verify_result() ? {
 	// verify a dataset file, save the result, then display
 	mut opts := Options{
-		command: 'make'
+		datafile_path: 'datasets/bcw350train'
+		testfile_path: 'datasets/bcw174test'
+		outputfile_path: 'tempfolder/verify_result'
+		command: 'verify'
 		number_of_attributes: [5]
 		concurrency_flag: true
-	}
-	mut settings := DisplaySettings{
 		show_flag: true
 	}
-	cl := make_classifier(load_file('datasets/bcw350train'), opts)
-	opts.outputfile_path = 'tempfolder/verify_result'
-	opts.testfile_path = 'datasets/bcw174test'
-	_ = verify(cl, opts)?
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)?
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)?
+	_ = verify(opts)?
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts.DisplaySettings)?
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts.DisplaySettings)?
 }
 
 fn test_display_cross_result() ? {
