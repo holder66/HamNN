@@ -164,7 +164,7 @@ fn show_parameters(p Parameters) {
 
 // show_validate
 fn show_validate(result ValidateResult) {
-	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
+	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.datafile_path"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	if result.purge_flag {
@@ -182,7 +182,7 @@ fn show_validate(result ValidateResult) {
 fn show_verify(result CrossVerifyResult, opts Options) ? {
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' +
 		if opts.multiple_flag { 'multiple classifiers ' } else { 'a classifier ' } +
-		'from "$result.classifier_path"', 'underline'), 'magenta'))
+		'from "$result.datafile_path"', 'underline'), 'magenta'))
 	if opts.multiple_flag {
 		println('Classifier parameters are in file "$opts.multiple_classify_options_file_path"')
 	} else {
@@ -200,13 +200,19 @@ fn show_verify(result CrossVerifyResult, opts Options) ? {
 
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult) ? {
-	println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
+	// println('result in show_crossvalidation: $result')
+	println(chalk.fg(chalk.style('\nCross-validation of "$result.datafile_path"' + if result.multiple_classify_options_file_path != '' {' using multiple classifiers'} else {''}, 'underline'),
 		'magenta'))
+	
 	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' + if result.repetitions > 1 { ', $result.repetitions repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
 		 } else { ''
 		 }
 	 })
-	show_parameters(result.Parameters)
+	if result.multiple_classify_options_file_path != '' {
+		println('(Classifier parameters in file "$result.multiple_classify_options_file_path")')
+	} else {
+		show_parameters(result.Parameters)
+	}
 	if result.purge_flag {
 		total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
 		purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)

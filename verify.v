@@ -34,7 +34,7 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 	// instantiate a struct for the result
 	// println('opts.Parameters in verify: $opts.Parameters')
 	mut verify_result := CrossVerifyResult{
-		classifier_path: opts.datafile_path
+		datafile_path: opts.datafile_path
 		testfile_path: opts.testfile_path
 		multiple_classify_options_file_path: opts.multiple_classify_options_file_path
 		labeled_classes: test_ds.class_values

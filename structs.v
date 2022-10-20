@@ -224,7 +224,7 @@ pub struct CrossVerifyResult {
 	BinaryMetrics
 pub mut:
 	struct_type                         string = '.CrossVerifyResult'
-	classifier_path                     string
+	datafile_path                     string
 	testfile_path                       string
 	multiple_classify_options_file_path string
 	labeled_classes                     []string
@@ -294,7 +294,7 @@ pub struct ValidateResult {
 	Parameters
 pub mut:
 	struct_type                     string = '.ValidateResult'
-	classifier_path                 string
+	datafile_path                 string
 	validate_file_path              string
 	inferred_classes                []string
 	counts                          [][]int

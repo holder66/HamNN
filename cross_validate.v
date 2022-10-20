@@ -49,7 +49,8 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		inferences_map[key] = 0
 	}
 	mut cross_result := CrossVerifyResult{
-		classifier_path: ds.path
+		datafile_path: ds.path
+		multiple_classify_options_file_path: opts.multiple_classify_options_file_path
 		labeled_classes: ds.class_values
 		class_counts: ds.class_counts
 		classes: ds.classes

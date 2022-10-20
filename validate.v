@@ -19,7 +19,7 @@ pub fn validate(cl Classifier, opts Options) ?ValidateResult {
 		struct_type: '.ValidateResult'
 		inferred_classes: []string{}
 		validate_file_path: opts.testfile_path
-		classifier_path: opts.datafile_path
+		datafile_path: opts.datafile_path
 		exclude_flag: opts.exclude_flag
 		purge_flag: opts.purge_flag
 		weighting_flag: opts.weighting_flag
