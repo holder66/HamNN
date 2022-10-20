@@ -382,7 +382,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 			println(chalk.fg(chalk.style('Attributes    Bins' +
 				if results.purge_flag { '      Purged instances     (%)' } else { '' } +
-				"     TP    FP    TN    FN  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced",
+				"     TP    FN    TN    FP  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced",
 				'underline'), 'blue'))
 		} else {
 			println(chalk.fg(chalk.style('Attributes     Bins' +
