@@ -112,12 +112,12 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				for instance, distance in row {
 					// println('classifiers[i].class_values[instance]: ${classifiers[i].class_values[instance]}')
 					if distance <= radius && class == classifiers[i].class_values[instance] {
-						radius_row[class_index] += if !classifiers[i].weighting_flag {
+						radius_row[class_index] += 
+						if !classifiers[i].weighting_flag {
 							1
 						} else {
 							// println(int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]]))
-							// int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]])
-							1
+							int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]])
 						}
 					}
 				}
@@ -150,31 +150,39 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut avg_nn := 0.0
 	mut ratios_array := []f64{}
 	zero_nn := nearest_neighbors_array.filter(0 in it).len
+	// println(uniques(inferred_class_array))
+				// println(uniques(inferred_class_array).filter(it != ''))
 	if inferred_class_array.len > 1 && uniques(inferred_class_array).len > 1 {
-		// if only one of the nearest neighbors lists has a zero, use that
-		// inferred class
+
 
 		// println('zero_nn: $zero_nn')
 		match true {
+			// if only one of the nearest neighbors lists has entries,
+			// use that inferred class
+			uniques(inferred_class_array).filter(it != '').len == 1 {
+				final_cr.inferred_class = uniques(inferred_class_array).filter(it != '')[0]
+			}
+			// if only one of the nearest neighbors lists has a zero, use that
+			// inferred class
 			zero_nn == 1 {
 				// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
 				final_cr.inferred_class = inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
 			}
 			zero_nn > 1 {
-				// when there are 2 or more results with zeros, pick the
-				// result having the largest maximum, and use that maximum
-				// to get the inferred class
-				// println(nearest_neighbors_array.map(array_max(it)))
-				// println(idx_max(nearest_neighbors_array.map(array_max(it))))
-				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
-				// final_cr.inferred_class = cl.classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
+			// 	when there are 2 or more results with zeros, pick the
+			// 	result having the largest maximum, and use that maximum
+			// 	to get the inferred class
+				println(nearest_neighbors_array.map(array_max(it)))
+				println(idx_max(nearest_neighbors_array.map(array_max(it))))
+				// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
+				// final_cr.inferred_class = classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
 			}
 			else {
 				// when none of the results have zeros in them, pick the
 				// result having the largest ratio of its maximum to the
 				// average of the other nearest neighbor counts
 				for nearest_neighbors in nearest_neighbors_array {
-					// i_nn = idx_max(nearest_neighbors)
+					i_nn := idx_max(nearest_neighbors)
 					if nearest_neighbors.len >0 {
 						max_nn = array_max(nearest_neighbors)
 						sum_nn = array_sum(nearest_neighbors)
@@ -187,6 +195,8 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 					} else {
 						ratios_array << 0
 					}
+					// println('ratios_array: $ratios_array')
+					final_cr.inferred_class = inferred_class_array[idx_max(ratios_array)]
 					
 				}
 				// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
@@ -195,7 +205,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		}
 		println('$index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
 	} else {
-		final_cr.inferred_class = inferred_class_array[0]
+		final_cr.inferred_class = uniques(inferred_class_array)[0]
 	}
 
 	return final_cr
