@@ -70,7 +70,13 @@ fn test_multiple_verify() ? {
 	result = verify(opts)?
 	println(result)
 }
-
+fn test_get_map_key_for_max_value(m map{string}int) string {
+	max := array_max(m.values())
+	for key, val in m {
+		if val == max {return key}
+	}
+	return ''
+}
 
 // test_multiple_crossvalidate 
 fn test_multiple_crossvalidate() ? {

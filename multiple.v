@@ -13,8 +13,7 @@ pub struct MultipleOptions {
 // read_multiple_opts
 fn read_multiple_opts(path string) ?MultipleOptions {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
-	mut multiple_options := json.decode(MultipleOptions, s) or { panic('Failed to parse json') }
-	return multiple_options
+	return json.decode(MultipleOptions, s)
 }
 
 // get_mult_classifier
@@ -157,6 +156,11 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 
 		// println('zero_nn: $zero_nn')
 		match true {
+			// if the number of inferred classes is an odd number, pick 
+			// the winner
+			inferred_class_array.len % 2 != 0 {
+				final_cr.inferred_class = get_map_key_for_max_value(string_element_counts(inferred_class_array))
+			}
 			// if only one of the nearest neighbors lists has entries,
 			// use that inferred class
 			uniques(inferred_class_array).filter(it != '').len == 1 {
@@ -182,7 +186,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				// result having the largest ratio of its maximum to the
 				// average of the other nearest neighbor counts
 				for nearest_neighbors in nearest_neighbors_array {
-					i_nn := idx_max(nearest_neighbors)
+					// i_nn := idx_max(nearest_neighbors)
 					if nearest_neighbors.len >0 {
 						max_nn = array_max(nearest_neighbors)
 						sum_nn = array_sum(nearest_neighbors)
@@ -207,6 +211,13 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	} else {
 		final_cr.inferred_class = uniques(inferred_class_array)[0]
 	}
-
 	return final_cr
+}
+
+fn get_map_key_for_max_value(m map[string]int) string {
+	max := array_max(m.values())
+	for key, val in m {
+		if val == max {return key}
+	}
+	return ''
 }

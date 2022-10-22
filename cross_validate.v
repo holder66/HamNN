@@ -2,7 +2,7 @@
 module hamnn
 
 import strconv
-// import runtime
+import runtime
 import rand
 
 // cross_validate performs n-fold cross-validation on a dataset: it
@@ -124,38 +124,38 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) ?Cros
 	folds := if cross_opts.folds == 0 { ds.class_values.len } else { cross_opts.folds }
 	// if the concurrency flag is set
 	if cross_opts.concurrency_flag {
-		println('we are not implementing this for multiple classifiers')
-		// mut result_channel := chan CrossVerifyResult{cap: folds}
-		// // queue all work + the sentinel values:
-		// jobs := runtime.nr_jobs()
-		// mut work_channel := chan int{cap: folds + jobs}
-		// for i in 0 .. folds {
-		// 	work_channel <- i
-		// }
-		// for _ in 0 .. jobs {
-		// 	work_channel <- -1
-		// }
-		// // start a thread pool to do the work:
-		// mut tpool := []thread{}
-		// for _ in 0 .. jobs {
-		// 	tpool << go option_worker(work_channel, result_channel, pick_list, folds,
-		// 		ds, cross_opts)?
-		// }
-		// tpool.wait()
-		// //
-		// for _ in 0 .. folds {
-		// 	fold_result = <-result_channel
-		// 	// println(summarize_results(1, mut fold_result).incorrects_count)
-		// 	repetition_result.inferred_classes << fold_result.inferred_classes
-		// 	repetition_result.actual_classes << fold_result.labeled_classes
-		// 	repetition_result.binning = fold_result.binning
-		// 	repetition_result.classifier_instances_counts << fold_result.classifier_instances_counts
-		// 	repetition_result.prepurge_instances_counts_array << fold_result.prepurge_instances_counts_array
-		// }
+		// we are not implementing this for multiple classifiers
+		mut result_channel := chan CrossVerifyResult{cap: folds}
+		// queue all work + the sentinel values:
+		jobs := runtime.nr_jobs()
+		mut work_channel := chan int{cap: folds + jobs}
+		for i in 0 .. folds {
+			work_channel <- i
+		}
+		for _ in 0 .. jobs {
+			work_channel <- -1
+		}
+		// start a thread pool to do the work:
+		mut tpool := []thread{}
+		for _ in 0 .. jobs {
+			tpool << go option_worker(work_channel, result_channel, pick_list, folds,
+				ds, cross_opts)
+		}
+		tpool.wait()
+		//
+		for _ in 0 .. folds {
+			fold_result = <-result_channel
+			// println(summarize_results(1, mut fold_result).incorrects_count)
+			repetition_result.inferred_classes << fold_result.inferred_classes
+			repetition_result.actual_classes << fold_result.labeled_classes
+			repetition_result.binning = fold_result.binning
+			repetition_result.classifier_instances_counts << fold_result.classifier_instances_counts
+			repetition_result.prepurge_instances_counts_array << fold_result.prepurge_instances_counts_array
+		}
 	} else {
 		// for each fold
 		for current_fold in 0 .. folds {
-			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)?
+			fold_result = do_one_fold(pick_list, current_fold, folds, ds, cross_opts)
 			repetition_result.inferred_classes << fold_result.inferred_classes
 			repetition_result.actual_classes << fold_result.labeled_classes
 			repetition_result.binning = fold_result.binning
@@ -240,7 +240,7 @@ fn div_map(n int, mut m map[string]int) map[string]int {
 }
 
 // do_one_fold
-fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) ?CrossVerifyResult {
+fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut byte_values_array := [][]u8{}
 	// partition the dataset into a partial dataset and a fold
 	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
@@ -280,7 +280,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
-		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path)?
+		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or { MultipleOptions{} }
 		for params in saved_params.classifier_options {
 
 			// println('params: $params')
@@ -306,7 +306,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		// println('instances_to_be_classified before transpose: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified after transpose: $instances_to_be_classified')
-		fold_result = multiple_classify_in_cross(classifier_array, instances_to_be_classified, mut
+		fold_result = multiple_classify_in_cross(current_fold, classifier_array, instances_to_be_classified, mut
 			fold_result, mult_opts)
 	}
 	// println('fold_result.binning in do_one_fold: $fold_result.binning')
@@ -328,24 +328,24 @@ fn process_fold_data(part_attr TrainedAttribute, fold_data []string) []u8 {
 }
 
 // option_worker
-fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, pick_list []int, folds int, ds Dataset, opts Options) ? {
+fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, pick_list []int, folds int, ds Dataset, opts Options) {
 	for {
 		mut current_fold := <-work_channel
 		if current_fold < 0 {
 			break
 		}
-		result_channel <- do_one_fold(pick_list, current_fold, folds, ds, opts)?
+		result_channel <- do_one_fold(pick_list, current_fold, folds, ds, opts)
 	}
 }
 
 // multiple_classify_in_cross classifies each instance in an array, and
 // returns the results of the classification.
-fn multiple_classify_in_cross(m_cl []Classifier, m_test_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+fn multiple_classify_in_cross(fold int, m_cl []Classifier, m_test_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
 	mut m_classify_result := ClassifyResult{}
 	// for each instance in the test data, perform a classification
 	for i, test_instance in m_test_instances {
 		// println('i: $i test_instance: $test_instance')
-		m_classify_result = multiple_classifier_classify(i, m_cl, test_instance, opts)
+		m_classify_result = multiple_classifier_classify(fold, m_cl, test_instance, opts)
 		result.inferred_classes << m_classify_result.inferred_class
 		result.actual_classes << result.labeled_classes[i]
 		result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
