@@ -29,7 +29,7 @@ import rand
 // 	a confusion matrix.
 // outputfile_path: saves the result as a json file.
 // ```
-pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
+pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	// to sort out what is going on, run the test file with concurrency off.
 	mut cross_opts := opts
 	cross_opts.datafile_path = ds.path
@@ -77,7 +77,7 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 		if opts.random_pick {
 			mut n := 0
 			for pick_list.len < total_instances {
-				n = rand.int_in_range(0, total_instances)?
+				n = rand.int_in_range(0, total_instances) or { 0 }
 				if n in pick_list {
 					continue
 				}
@@ -102,13 +102,13 @@ pub fn cross_validate(ds Dataset, opts Options) ?CrossVerifyResult {
 	}
 	// show_results(cross_result, cross_opts)
 
-	cross_result.Metrics = get_metrics(cross_result)?
+	cross_result.Metrics = get_metrics(cross_result)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if cross_result.pos_neg_classes.len == 2 {
 		cross_result.BinaryMetrics = get_binary_stats(cross_result)
 	}
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
-		show_crossvalidation(cross_result)?
+		show_crossvalidation(cross_result)
 	}
 	return cross_result
 }

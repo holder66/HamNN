@@ -24,7 +24,7 @@ module hamnn
 //	used.
 // outputfile_path: saves the result to a file.
 // ```
-pub fn explore(ds Dataset, opts Options) ?ExploreResult {
+pub fn explore(ds Dataset, opts Options) ExploreResult {
 	mut ex_opts := opts
 	mut results := ExploreResult{
 		path: opts.datafile_path
@@ -78,14 +78,14 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 				ex_opts.bins = [1, bin]
 			}
 			if ex_opts.testfile_path == '' {
-				result = cross_validate(ds, ex_opts)?
+				result = cross_validate(ds, ex_opts)
 			} else {
 				cl = make_classifier(ds, ex_opts)
-				result = verify(cl, ex_opts)?
+				result = verify(cl, ex_opts)
 			}
 			result.bin_values = ex_opts.bins
 			result.attributes_used = atts
-			show_explore_line(result)?
+			show_explore_line(result)
 
 			array_of_results << result
 			bin += binning.interval
@@ -93,15 +93,15 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 		atts += results.att_interval
 	}
 	results.array_of_results = array_of_results
-	results.analytics = get_explore_analytics(results)?
+	results.analytics = get_explore_analytics(results)
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
 	}
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
-		show_explore_trailer(results)?
+		show_explore_trailer(results)
 	}
 	if opts.graph_flag {
-		plot_explore(results, opts)?
+		plot_explore(results, opts)
 		if ds.Class.class_counts.len == 2 {
 			plot_roc(results, opts)
 		}
@@ -110,7 +110,7 @@ pub fn explore(ds Dataset, opts Options) ?ExploreResult {
 }
 
 // get_explore_analytics
-fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
+fn get_explore_analytics(results ExploreResult) []MaxSettings {
 	mut analysis := []MaxSettings{}
 	// collect all the accuracy figures into arrays
 	mut raw_accuracies := []f64{}
@@ -133,13 +133,13 @@ fn get_explore_analytics(results ExploreResult) ?[]MaxSettings {
 		}
 	}
 	for i, idx in max_accuracy_indices {
-		analysis << get_max_settings(results.array_of_results[idx], max_accuracy_values[i])?
+		analysis << get_max_settings(results.array_of_results[idx], max_accuracy_values[i])
 	}
 	return analysis
 }
 
 // get_max_settings
-fn get_max_settings(result CrossVerifyResult, max f64) ?MaxSettings {
+fn get_max_settings(result CrossVerifyResult, max f64) MaxSettings {
 	_, _, purged_percent := get_purged_percent(result)
 	mut max_settings := MaxSettings{
 		max_value: max

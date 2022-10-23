@@ -4,22 +4,22 @@ module hamnn
 
 import os
 
-fn testsuite_begin() ? {
+fn testsuite_begin() ! {
 	if os.is_dir('tempfolder') {
-		os.rmdir_all('tempfolder')?
+		os.rmdir_all('tempfolder')!
 	}
-	os.mkdir_all('tempfolder')?
+	os.mkdir_all('tempfolder')!
 }
 
-fn testsuite_end() ? {
-	os.rmdir_all('tempfolder')?
+fn testsuite_end() ! {
+	os.rmdir_all('tempfolder')!
 }
 
 // test_wt_avg
 fn test_wt_avg() ? {
-	assert wt_avg([0.0], [1])? == 0.0
+	assert wt_avg([0.0], [1]) == 0.0
 	// assert wt_avg([], []) or { 1.0 } == 0.0, 'cannot sum over an empty array'
-	assert wt_avg([1.0, 2.0, 3.0], [3, 2, 1])? == 10.0 / 6
+	assert wt_avg([1.0, 2.0, 3.0], [3, 2, 1]) == 10.0 / 6
 	// assert wt_avg([1.0, 2.0, 3.0], [-3, 2, 1])? == 10.0 / 0
 }
 
@@ -114,25 +114,25 @@ fn test_show_crossvalidation() ? {
 		command: 'cross'
 	}
 	println('\n\ndeveloper.tab')
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)
 	println('\ndeveloper.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/developer.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/developer.tab'), opts)
 	println('\n\nbreast-cancer-wisconsin-disc.tab')
 	opts.expanded_flag = false
 	opts.number_of_attributes = [4]
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)
 	println('\nbreast-cancer-wisconsin-disc.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/breast-cancer-wisconsin-disc.tab'), opts)
 	println('\n\niris.tab')
 	opts.expanded_flag = false
 	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
 	println('\niris.tab with expanded results')
 	opts.expanded_flag = true
-	cvr = cross_validate(load_file('datasets/iris.tab'), opts)?
+	cvr = cross_validate(load_file('datasets/iris.tab'), opts)
 }
 
 // // test_show_explore_cross
@@ -248,12 +248,12 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	result = verify(cl, opts)
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	result = verify(cl, opts)
 	// println('result two in show_test: $result')
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
 	opts.testfile_path = 'datasets/soybean-large-test.tab'
@@ -263,14 +263,14 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	ds = load_file(opts.datafile_path)
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	result = verify(cl, opts)
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	result = verify(cl, opts)
 	// println('result two in show_test: $result')
 	opts.purge_flag = true
 	cl = make_classifier(ds, opts)
-	result = verify(cl, opts)?
+	result = verify(cl, opts)
 }

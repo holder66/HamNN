@@ -17,26 +17,26 @@ fn (mut m Metrics) append_metric(p f64, r f64, f1 f64) Metrics {
 
 // wt_avg takes an array of real values and an array of weights (typically
 // class counts), and computes a weighted average
-fn wt_avg(a []f64, wts []int) ?f64 {
+fn wt_avg(a []f64, wts []int) f64 {
 	mut wp := 0.0
 	for i, wt in wts {
 		wp += a[i] * wt
 	}
-	return wp / arrays.sum(wts)?
+	return wp / arrays.sum(wts) or { 1.0 }
 }
 
 // avg_metrics
-fn (mut m Metrics) avg_metrics() ?Metrics {
+fn (mut m Metrics) avg_metrics() Metrics {
 	count := m.precision.len
 
-	m.avg_precision << arrays.sum(m.precision)? / count
-	m.avg_recall << arrays.sum(m.recall)? / count
-	m.avg_f1_score << arrays.sum(m.f1_score)? / count
+	m.avg_precision << arrays.sum(m.precision) or { 0.0 } / count
+	m.avg_recall << arrays.sum(m.recall) or { 0.0 } / count
+	m.avg_f1_score << arrays.sum(m.f1_score) or { 0.0 } / count
 	m.avg_type << 'macro'
 
-	m.avg_precision << wt_avg(m.precision, m.class_counts)?
-	m.avg_recall << wt_avg(m.recall, m.class_counts)?
-	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)?
+	m.avg_precision << wt_avg(m.precision, m.class_counts)
+	m.avg_recall << wt_avg(m.recall, m.class_counts)
+	m.avg_f1_score << wt_avg(m.f1_score, m.class_counts)
 	m.avg_type << 'weighted'
 	// multiclass balanced accuracy is the arithmetic mean of the recalls
 	m.balanced_accuracy = m.avg_recall[0] * 100 // so as to be a percentage
@@ -44,7 +44,7 @@ fn (mut m Metrics) avg_metrics() ?Metrics {
 }
 
 // get_metrics
-fn get_metrics(result CrossVerifyResult) ?Metrics {
+fn get_metrics(result CrossVerifyResult) Metrics {
 	mut metrics := Metrics{
 		class_counts: get_map_values(result.class_counts)
 	}
@@ -52,7 +52,7 @@ fn get_metrics(result CrossVerifyResult) ?Metrics {
 		precision, recall, f1_score := get_multiclass_stats(class, result)
 		metrics.append_metric(precision, recall, f1_score)
 	}
-	metrics.avg_metrics()?
+	metrics.avg_metrics()
 	return metrics
 }
 

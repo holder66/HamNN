@@ -21,7 +21,7 @@ import runtime
 // 		a confusion matrix.
 // outputfile_path: saves the result as a json file
 // ```
-pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
+pub fn verify(cl Classifier, opts Options) CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	mut confusion_matrix_map := map[string]map[string]f64{}
@@ -49,13 +49,13 @@ pub fn verify(cl Classifier, opts Options) ?CrossVerifyResult {
 	test_instances := generate_test_instances_array(cl, test_ds)
 	// for the instances in the test data, perform classifications
 	verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
-	verify_result.Metrics = get_metrics(verify_result)?
+	verify_result.Metrics = get_metrics(verify_result)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
 	}
 	if opts.command == 'verify' && (opts.show_flag || opts.expanded_flag) {
-		show_verify(verify_result)?
+		show_verify(verify_result)
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')

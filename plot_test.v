@@ -58,23 +58,23 @@ fn test_explore_plot() ? {
 		// datafile_path: 'datasets/2_class_developer.tab'
 	}
 	// cross with 2 classes (generates ROC plots)
-	// results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)
 
 	// test for cross with more than 2 classes
 	opts.datafile_path = 'datasets/iris.tab'
-	results = explore(load_file(opts.datafile_path), opts)?
+	results = explore(load_file(opts.datafile_path), opts)
 
 	// // verify with 2 classes (generates ROC plots)
 	// opts.datafile_path = 'datasets/bcw350train'
 	// opts.testfile_path = 'datasets/bcw174test'
 	// opts.number_of_attributes = [0]
 
-	// results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)
 
 	// // verify with more than 2 classes
 	// opts.datafile_path = 'datasets/soybean-large-train.tab'
 	// opts.testfile_path = 'datasets/soybean-large-test.tab'
 	// opts.number_of_attributes = [0]
 
-	// results = explore(load_file(opts.datafile_path), opts)?
+	// results = explore(load_file(opts.datafile_path), opts)
 }
