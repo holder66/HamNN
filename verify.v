@@ -21,7 +21,7 @@ import runtime
 // 		a confusion matrix.
 // outputfile_path: saves the result as a json file
 // ```
-pub fn verify(opts Options) ?CrossVerifyResult {
+pub fn verify(opts Options) CrossVerifyResult {
 	// load the testfile as a Dataset struct
 	mut test_ds := load_file(opts.testfile_path)
 	mut confusion_matrix_map := map[string]map[string]f64{}
@@ -46,13 +46,14 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 		Parameters: opts.Parameters
 		DisplaySettings: opts.DisplaySettings
 	}
+
 	// println('verify_result in verify: $verify_result')
 	if !opts.multiple_flag {
 		mut cl := Classifier{}
 		if opts.classifierfile_path == '' {
 			cl = make_classifier(load_file(opts.datafile_path), opts)
 		} else {
-			cl = load_classifier_file(opts.classifierfile_path)?
+			cl = load_classifier_file(opts.classifierfile_path)
 		}
 		// verify_result.command = 'verify' // override the 'make' command from cl.Parameters
 		// massage each instance in the test dataset according to the
@@ -86,16 +87,17 @@ pub fn verify(opts Options) ?CrossVerifyResult {
 			verify_result, mult_opts)
 	}
 	// println(verify_result.Metrics)
-	verify_result.Metrics = get_metrics(verify_result)?
+	verify_result.Metrics = get_metrics(verify_result)
 	// println(verify_result.Metrics)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if verify_result.pos_neg_classes.len == 2 {
 		verify_result.BinaryMetrics = get_binary_stats(verify_result)
 	}
+
 	// verify_result.command = 'verify'
 	// println('verify_result: $verify_result')
 	if opts.command == 'verify' && (verify_result.show_flag || verify_result.expanded_flag) {
-		show_verify(verify_result, opts)?
+		show_verify(verify_result, opts)
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
 		println('verify_result in verify(): $verify_result')

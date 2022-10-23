@@ -179,7 +179,8 @@ fn show_validate(result ValidateResult) {
 }
 
 // show_verify
-fn show_verify(result CrossVerifyResult, opts Options) ? {
+
+fn show_verify(result CrossVerifyResult, opts Options) {
 	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using ' +
 		if opts.multiple_flag { 'multiple classifiers ' } else { 'a classifier ' } +
 		'from "$result.datafile_path"', 'underline'), 'magenta'))
@@ -195,11 +196,11 @@ fn show_verify(result CrossVerifyResult, opts Options) ? {
 		purged_percent := 100 * f64(purged_count) / total_count
 		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
 	}
-	show_cross_or_verify_result(result)?
+	show_cross_or_verify_result(result)
 }
 
 // show_crossvalidation
-fn show_crossvalidation(result CrossVerifyResult) ? {
+fn show_crossvalidation(result CrossVerifyResult) {
 	// println('result in show_crossvalidation: $result')
 	println(chalk.fg(chalk.style('\nCross-validation of "$result.datafile_path"' + if result.multiple_classify_options_file_path != '' {' using multiple classifiers'} else {''}, 'underline'),
 		'magenta'))
@@ -219,27 +220,27 @@ fn show_crossvalidation(result CrossVerifyResult) ? {
 		purged_percent := 100 * purged_count_avg / total_count_avg
 		println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
 	}
-	show_cross_or_verify_result(result)?
+	show_cross_or_verify_result(result)
 }
 
 // show_cross_or_verify_result
-fn show_cross_or_verify_result(result CrossVerifyResult) ? {
+fn show_cross_or_verify_result(result CrossVerifyResult) {
 	println(chalk.fg(chalk.style('Results:', 'bold'), 'green'))
-	// mut metrics := get_metrics(result)?
+	// mut metrics := get_metrics(result)
 	if !result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% balanced:${result.balanced_accuracy:6.2f}%)')
 	} else {
-		show_expanded_result(result)?
+		show_expanded_result(result)
 		print_confusion_matrix(result)
 	}
 }
 
 // show_expanded_result
-fn show_expanded_result(result CrossVerifyResult) ? {
+fn show_expanded_result(result CrossVerifyResult) {
 	println(chalk.fg('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 		'green'))
-	show_multiple_classes_stats(result)?
+	show_multiple_classes_stats(result)
 	if result.class_counts.len == 2 {
 		println('A correct classification to "${result.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${result.pos_neg_classes[1]}" is a True Negative (TN).')
 		println("   TP    FN    TN    FP  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced")
@@ -339,12 +340,12 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 }
 
 // show_expanded_explore_result
-fn show_expanded_explore_result(result CrossVerifyResult, opts Options) ? {
+fn show_expanded_explore_result(result CrossVerifyResult, opts Options) {
 	if result.pos_neg_classes[0] != '' {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}  ${get_binary_stats_line(result)}')
 	} else {
 		println('${opts.number_of_attributes[0]:10} ${get_show_bins(opts.bins)}')
-		show_multiple_classes_stats(result)?
+		show_multiple_classes_stats(result)
 	}
 }
 
@@ -401,7 +402,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 }
 
 // show_explore_trailer
-fn show_explore_trailer(results ExploreResult, opts Options) ? {
+fn show_explore_trailer(results ExploreResult, opts Options) {
 	println('')
 	println('Command line arguments: $opts.args')
 	println('Maximum accuracies obtained:')
@@ -428,7 +429,7 @@ fn get_purged_percent(result CrossVerifyResult) (f64, f64, f64) {
 
 // show_explore_line displays on the console the results of each
 // cross-validation or verification during an explore session.
-fn show_explore_line(result CrossVerifyResult) ? {
+fn show_explore_line(result CrossVerifyResult) {
 	// println(result)
 	// do nothing if neither the -s or the -e flag was set
 	if result.show_flag || result.expanded_flag {
@@ -455,7 +456,7 @@ fn show_explore_line(result CrossVerifyResult) ? {
 				} else {
 					''
 				})
-				show_multiple_classes_stats(result)?
+				show_multiple_classes_stats(result)
 			}
 		}
 	}
@@ -467,7 +468,7 @@ fn get_binary_stats_line(r CrossVerifyResult) string {
 }
 
 // show_multiple_classes_stats
-fn show_multiple_classes_stats(result CrossVerifyResult) ? {
+fn show_multiple_classes_stats(result CrossVerifyResult) {
 	mut show_result := []string{}
 	m := result.Metrics
 	for i, class in result.classes {

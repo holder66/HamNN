@@ -3,14 +3,14 @@ module hamnn
 
 import os
 
-fn testsuite_begin() ? {
+fn testsuite_begin() ! {
 	if os.is_dir('tempfolder') {
 		os.rmdir_all('tempfolder')!
 	}
 	os.mkdir_all('tempfolder')!
 }
 
-fn testsuite_end() ? {
+fn testsuite_end() ! { 
 	os.rmdir_all('tempfolder')!
 }
 
@@ -44,22 +44,22 @@ fn test_show_cross_validate() ? {
 
 	opts.datafile_path = 'datasets/UCI/balance-scale.arff'
 	ds = load_file(opts.datafile_path)
-	result = cross_validate(ds, opts)?
+	result = cross_validate(ds, opts)
 
 	// repeat with -e
 
 	opts.expanded_flag = true
-	result = cross_validate(ds, opts)?
+	result = cross_validate(ds, opts)
 
 	opts.expanded_flag = false
 	opts.weighting_flag = true
 
-	result = cross_validate(ds, opts)?
+	result = cross_validate(ds, opts)
 
 	// repeat with -e
 
 	opts.expanded_flag = true
-	result = cross_validate(ds, opts)?
+	result = cross_validate(ds, opts)
 	// println(result)
 
 	// multiclass, cross, -s

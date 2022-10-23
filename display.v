@@ -15,7 +15,7 @@ import json
 // 	a confusion matrix for cross-validation or verification operations;
 // graph_flag: generates plots for display in the default web browser.
 // ```
-pub fn display_file(path string, settings DisplaySettings) ? {
+pub fn display_file(path string, settings DisplaySettings) {
 	// determine what kind of file, then call the appropriate functions in show and plot
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	match true {
@@ -27,12 +27,12 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			show_explore_header(saved_er, settings)
 			for mut result in saved_er.array_of_results {
 				result.DisplaySettings = settings
-				show_explore_line(result)?
+				show_explore_line(result)
 			}
-			show_explore_trailer(saved_er, opts)?
+			show_explore_trailer(saved_er, opts)
 			if settings.graph_flag {
 				// println(saved_er)
-				plot_explore(saved_er, opts)?
+				plot_explore(saved_er, opts)
 				plot_roc(saved_er, opts)
 			}
 		}
@@ -61,11 +61,11 @@ pub fn display_file(path string, settings DisplaySettings) ? {
 			}
 			mut saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
 			saved_vr.DisplaySettings = settings
-			show_verify(saved_vr, opts)?
+			show_verify(saved_vr, opts)
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"cross"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
-			show_crossvalidation(saved_vr)?
+			show_crossvalidation(saved_vr)
 		}
 		else {
 			println('File type not recognized!')
