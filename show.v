@@ -202,9 +202,10 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult) {
 	// println('result in show_crossvalidation: $result')
-	println(chalk.fg(chalk.style('\nCross-validation of "$result.datafile_path"' + if result.multiple_classify_options_file_path != '' {' using multiple classifiers'} else {''}, 'underline'),
-		'magenta'))
-	
+	println(chalk.fg(chalk.style('\nCross-validation of "$result.datafile_path"' +
+		if result.multiple_classify_options_file_path != '' { ' using multiple classifiers' } else { '' },
+		'underline'), 'magenta'))
+
 	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' + if result.repetitions > 1 { ', $result.repetitions repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
 		 } else { ''
 		 }

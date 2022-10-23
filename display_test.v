@@ -11,11 +11,9 @@ fn testsuite_begin() ! {
 	os.mkdir_all('tempfolder')!
 }
 
-
 fn testsuite_end() ! {
 	os.rmdir_all('tempfolder')!
 }
-
 
 fn test_display_classifier() ? {
 	// make a classifier and save it, then display the saved classifier file

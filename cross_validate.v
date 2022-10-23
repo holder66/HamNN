@@ -280,9 +280,10 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
-		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or { MultipleOptions{} }
+		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
+			MultipleOptions{}
+		}
 		for params in saved_params.classifier_options {
-
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
@@ -293,7 +294,8 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			byte_values_array = [][]u8{}
 			for attr in part_cl.attribute_ordering {
 				j := fold.attribute_names.index(attr)
-				byte_values_array << process_fold_data(part_cl.trained_attributes[attr], fold.data[j])
+				byte_values_array << process_fold_data(part_cl.trained_attributes[attr],
+					fold.data[j])
 				// println('attr: $attr j: $j ${process_fold_data(part_cl.trained_attributes[attr], fold.data[j])}')
 				// println('byte_values_array: $byte_values_array')
 			}
@@ -301,7 +303,6 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			// println('m_fold_instances: $m_fold_instances')
 			instances_to_be_classified << m_fold_instances
 			// instances_to_be_classified << generate_test_instances_array(classifier_array.last(), )
-
 		}
 		// println('instances_to_be_classified before transpose: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
@@ -352,6 +353,7 @@ fn multiple_classify_in_cross(fold int, m_cl []Classifier, m_test_instances [][]
 	}
 	return result
 }
+
 // classify_in_cross classifies each instance in an array, and
 // returns the results of the classification.
 fn classify_in_cross(cl Classifier, test_instances [][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {

@@ -10,7 +10,7 @@ fn testsuite_begin() ! {
 	os.mkdir_all('tempfolder')!
 }
 
-fn testsuite_end() ! { 
+fn testsuite_end() ! {
 	os.rmdir_all('tempfolder')!
 }
 

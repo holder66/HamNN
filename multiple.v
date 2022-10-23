@@ -35,7 +35,7 @@ fn read_multiple_opts(path string) ?MultipleOptions {
 // multiple_classifier_classify
 fn multiple_classifier_classify(index int, classifiers []Classifier, instances_to_be_classified [][]u8, opts Options) ClassifyResult {
 	// cl0 := classifiers[0]
-	mut m_cr := []ClassifyResult{} 
+	mut m_cr := []ClassifyResult{}
 	mut final_cr := ClassifyResult{
 		index: index
 		// classes: cl0.class_values
@@ -60,7 +60,6 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	// get the hamming distance for each of the corresponding byte_values
 	// in each classifier instance and the instance to be classified
 	for i, cl in classifiers {
-
 		// find the max number of attributes used
 		// println('i: $i number of attributes: $cl.attribute_ordering.len')
 		hamming_distances = []
@@ -111,8 +110,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				for instance, distance in row {
 					// println('classifiers[i].class_values[instance]: ${classifiers[i].class_values[instance]}')
 					if distance <= radius && class == classifiers[i].class_values[instance] {
-						radius_row[class_index] += 
-						if !classifiers[i].weighting_flag {
+						radius_row[class_index] += if !classifiers[i].weighting_flag {
 							1
 						} else {
 							// println(int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]]))
@@ -150,13 +148,13 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	// mut ratios_array := []f64{}
 	// zero_nn := nearest_neighbors_array.filter(0 in it).len
 	// println(uniques(inferred_class_array))
-				// println(uniques(inferred_class_array).filter(it != ''))
+	// println(uniques(inferred_class_array).filter(it != ''))
 	if inferred_class_array.len > 1 && uniques(inferred_class_array).len > 1 {
 		final_cr.inferred_class = resolve_conflict(inferred_class_array, nearest_neighbors_array)
 
 		// // println('zero_nn: $zero_nn')
 		// match true {
-		// 	// if the number of inferred classes is an odd number, pick 
+		// 	// if the number of inferred classes is an odd number, pick
 		// 	// the winner
 		// 	inferred_class_array.len % 2 != 0 {
 		// 		final_cr.inferred_class = get_map_key_for_max_value(string_element_counts(inferred_class_array))
@@ -201,7 +199,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		// 			}
 		// 			// println('ratios_array: $ratios_array')
 		// 			final_cr.inferred_class = inferred_class_array[idx_max(ratios_array)]
-					
+
 		// 		}
 		// 		// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
 		// 		// final_cr.inferred_class = cl.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
@@ -213,11 +211,11 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	return final_cr
 }
 
-// resolve_conflict 
+// resolve_conflict
 fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]int) string {
 	zero_nn := nearest_neighbors_array.filter(0 in it).len
 	return match true {
-		// if the number of inferred classes is an odd number, pick 
+		// if the number of inferred classes is an odd number, pick
 		// the winner
 		inferred_class_array.len % 2 != 0 {
 			get_map_key_for_max_value(string_element_counts(inferred_class_array))
@@ -225,7 +223,7 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 		// if only one of the nearest neighbors lists has entries,
 		// use that inferred class
 		uniques(inferred_class_array).filter(it != '').len == 1 {
-			 uniques(inferred_class_array).filter(it != '')[0]
+			uniques(inferred_class_array).filter(it != '')[0]
 		}
 		// if only one of the nearest neighbors lists has a zero, use that
 		// inferred class
@@ -234,15 +232,15 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 			inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
 		}
 		zero_nn > 1 {
-		// 	when there are 2 or more results with zeros, pick the
-		// 	result having the largest maximum, and use that maximum
-		// 	to get the inferred class
+			// 	when there are 2 or more results with zeros, pick the
+			// 	result having the largest maximum, and use that maximum
+			// 	to get the inferred class
 			println(nearest_neighbors_array.map(array_max(it)))
 			println(idx_max(nearest_neighbors_array.map(array_max(it))))
 			// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
 			// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
 			inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
-		} 
+		}
 		else {
 			// when none of the results have zeros in them, pick the
 			// result having the largest ratio of its maximum to the
@@ -251,10 +249,10 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 			mut sum_nn := 0
 			mut avg_nn := 0.0
 			mut ratios_array := []f64{}
-			
+
 			for nearest_neighbors in nearest_neighbors_array {
 				// i_nn := idx_max(nearest_neighbors)
-				if nearest_neighbors.len >0 {
+				if nearest_neighbors.len > 0 {
 					max_nn = array_max(nearest_neighbors)
 					sum_nn = array_sum(nearest_neighbors)
 					// average of non-maximum values
@@ -267,8 +265,6 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 					ratios_array << 0
 				}
 				// println('ratios_array: $ratios_array')
-				
-				
 			}
 			inferred_class_array[idx_max(ratios_array)]
 			// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
@@ -280,7 +276,9 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 fn get_map_key_for_max_value(m map[string]int) string {
 	max := array_max(m.values())
 	for key, val in m {
-		if val == max {return key}
+		if val == max {
+			return key
+		}
 	}
 	return ''
 }

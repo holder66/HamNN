@@ -67,7 +67,9 @@ pub fn verify(opts Options) CrossVerifyResult {
 		// mut mult_opts := []Parameters{}
 		mut mult_opts := opts
 		ds := load_file(opts.datafile_path)
-		mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path) or { MultipleOptions{} }
+		mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path) or {
+			MultipleOptions{}
+		}
 		// println('mult_opts: $mult_opts')
 		for params in saved_params.classifier_options {
 			// println('params: $params')
