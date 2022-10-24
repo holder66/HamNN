@@ -90,7 +90,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 				pick_list << i
 			}
 		}
-		repetition_result = do_repetition(pick_list, rep, ds, cross_opts)?
+		repetition_result = do_repetition(pick_list, rep, ds, cross_opts) or { panic(err) }
 
 		cross_result.inferred_classes << repetition_result.inferred_classes
 		cross_result.actual_classes << repetition_result.actual_classes

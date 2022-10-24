@@ -214,22 +214,22 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 // resolve_conflict
 fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]int) string {
 	zero_nn := nearest_neighbors_array.filter(0 in it).len
-	return match true {
+	match true {
 		// if the number of inferred classes is an odd number, pick
 		// the winner
 		inferred_class_array.len % 2 != 0 {
-			get_map_key_for_max_value(string_element_counts(inferred_class_array))
+			return get_map_key_for_max_value(string_element_counts(inferred_class_array))
 		}
 		// if only one of the nearest neighbors lists has entries,
 		// use that inferred class
 		uniques(inferred_class_array).filter(it != '').len == 1 {
-			uniques(inferred_class_array).filter(it != '')[0]
+			return uniques(inferred_class_array).filter(it != '')[0]
 		}
 		// if only one of the nearest neighbors lists has a zero, use that
 		// inferred class
 		zero_nn == 1 {
 			// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
-			inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+			return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
 		}
 		zero_nn > 1 {
 			// 	when there are 2 or more results with zeros, pick the
@@ -239,7 +239,7 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 			println(idx_max(nearest_neighbors_array.map(array_max(it))))
 			// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
 			// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
-			inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+			return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
 		}
 		else {
 			// when none of the results have zeros in them, pick the
@@ -266,7 +266,7 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 				}
 				// println('ratios_array: $ratios_array')
 			}
-			inferred_class_array[idx_max(ratios_array)]
+			return inferred_class_array[idx_max(ratios_array)]
 			// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
 			// final_cr.inferred_class = cl.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
 		}

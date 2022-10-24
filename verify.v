@@ -53,7 +53,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 		if opts.classifierfile_path == '' {
 			cl = make_classifier(load_file(opts.datafile_path), opts)
 		} else {
-			cl = load_classifier_file(opts.classifierfile_path)
+			cl = load_classifier_file(opts.classifierfile_path) or { panic(err) }
 		}
 		// verify_result.command = 'verify' // override the 'make' command from cl.Parameters
 		// massage each instance in the test dataset according to the
