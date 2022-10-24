@@ -279,6 +279,7 @@ pub mut:
 	array_of_results []CrossVerifyResult
 	accuracy_types   []string = ['raw accuracy', 'balanced accuracy']
 	analytics        []MaxSettings
+	args 	[]string
 }
 
 pub struct PlotResult {

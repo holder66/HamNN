@@ -37,6 +37,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		repetitions: opts.repetitions
 		random_pick: opts.random_pick
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
+		args: opts.args
 	}
 	mut result := CrossVerifyResult{
 		pos_neg_classes: results.pos_neg_classes

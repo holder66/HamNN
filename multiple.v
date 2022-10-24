@@ -16,18 +16,6 @@ fn read_multiple_opts(path string) ?MultipleOptions {
 	return json.decode(MultipleOptions, s)
 }
 
-// get_mult_classifier
-// fn get_mult_classifier(ds Dataset, cl_opts ClassifierOptions, mut opts Options) Classifier {
-// 	opts.bins = cl_opts.bins
-// 	opts.number_of_attributes = cl_opts.number_of_attributes
-// 	opts.uniform_bins = cl_opts.uniform_bins
-// 	opts.exclude_flag = cl_opts.exclude_flag
-// 	opts.multiple_flag = cl_opts.multiple_flag
-// 	opts.purge_flag = cl_opts.purge_flag
-// 	opts.weighting_flag = cl_opts.weighting_flag
-// 	return make_classifier(ds, opts)
-// }
-
 // when multiple classifiers have been generated with different settings,
 // a given instance to be classified will take multiple values, one for
 // each classifier, and corresponding to the settings for that classifier.
@@ -38,7 +26,6 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut m_cr := []ClassifyResult{}
 	mut final_cr := ClassifyResult{
 		index: index
-		// classes: cl0.class_values
 	}
 	// println('mcr.classes: $mcr.classes')
 	// to classify, get Hamming distances between the entered instance and
@@ -100,9 +87,9 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		mut radius_row := []int{len: classifiers[i].class_counts.len}
 		mut cr := ClassifyResult{}
 		for sphere_index, radius in combined_radii {
-			if radius == classifiers[i].class_counts.len * 2 {
-				break
-			}
+			// if radius == classifiers[i].class_counts.len * 2 {
+			// 	break
+			// }
 			radius_row = radius_row.map(it - it)
 			// println('radius_row: $radius_row')
 			for class_index, class in classifiers[i].classes {
@@ -175,11 +162,11 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 
 		// if only one of the nearest neighbors lists has a zero, use that
 		// inferred class
-		zero_nn == 1 {
-			println('only one entry has a zero')
-			// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
-			return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
-		}
+		// zero_nn == 1 {
+		// 	println('only one entry has a zero')
+		// 	// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
+		// 	return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+		// }
 		zero_nn > 1 {
 			// 	when there are 2 or more results with zeros, pick the
 			// 	result having the largest maximum, and use that maximum
