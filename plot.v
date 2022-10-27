@@ -38,14 +38,15 @@ fn plot_rank(result RankingResult) {
 	mut attributes := []string{}
 	for value in traces {
 		attributes << value.hover_text
+		y := value.rank_values.map(round_two_decimals(it))
 		plt.add_trace(
 			trace_type: .scatter
 			x: x
-			y: value.rank_values.map(round_two_decimals(it))
+			y: y
 			text: value.hover_text
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: 'attribute: %{text}<br>bins: %{x}<br>rank: %{y}'
+			hovertemplate: 'attribute: $value.hover_text<br>bins: $x<br>rank: $y'
 		)
 	}
 	rank_annotation_string := 'Missing Values ' +
@@ -147,14 +148,15 @@ fn plot_explore(result ExploreResult, opts Options) {
 	}
 	traces.sort_with_compare(custom_sort_fn)
 	for value in traces {
+		text := value.bin_range.repeat(value.percents.len)
 		plt.add_trace(
 			trace_type: .scatter
 			x: value.attributes_used
 			y: value.percents.map((math.round(it * 100)) / 100)
-			text: value.bin_range.repeat(value.percents.len)
+			text: text
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: 'bins: %{text}<br>attributes: %{x}<br>accuracy: %{y}%'
+			hovertemplate: 'bins: $text<br>attributes: $value.attributes_used<br>accuracy: S${value.percents.map((math.round(it * 100)) / 100)}%'
 		)
 	}
 	annotation1 := plot.Annotation{
@@ -412,14 +414,16 @@ fn round_two_decimals(a f64) f64 {
 // make_roc_plot_traces
 fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable string) {
 	for trace in traces {
+		x := trace.x_coordinates.map(round_two_decimals(it))
+		y := trace.y_coordinates.map(round_two_decimals(it))
 		plt.add_trace(
 			trace_type: .scatter
-			x: trace.x_coordinates.map(round_two_decimals(it))
-			y: trace.y_coordinates.map(round_two_decimals(it))
+			x: x
+			y: y
 			mode: 'lines+markers'
 			name: '$trace.curve_series_variable_values (AUC=${trace.area_under_curve:3.2})'
 			text: trace.curve_variable_values
-			hovertemplate: '$hover_variable: %{text}<br>sensitivity: %{y}<br>one minus specificity: %{x}'
+			hovertemplate: '$hover_variable: $trace.curve_variable_values<br>sensitivity: $y<br>one minus specificity: $x'
 		)
 	}
 }

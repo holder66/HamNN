@@ -82,7 +82,8 @@ fn (mut a Environment) collect_info() {
 			os_details += ' (WSL)'
 		}
 		// From https://unix.stackexchange.com/a/14346
-		awk_cmd := '[ "$(awk \'\$5=="/" {print \$1}\' </proc/1/mountinfo)" != "$(awk \'\$5=="/" {print \$1}\' </proc/$$/mountinfo)" ] ; echo \$?'
+		// awk_cmd := '[ "$(awk \'\$5=="/" {print \$1}\' </proc/1/mountinfo)" != "$(awk \'\$5=="/" {print \$1}\' </proc/$$/mountinfo)" ] ; echo \$?'
+		awk_cmd := '[ "$(awk \'\$5=="/" { print \$1 }\' </proc/1/mountinfo)" != "$(awk \'\$5=="/" { print \$1 }\' </proc/$$/mountinfo)" ] ; echo \$?'
 		if a.cmd(command: awk_cmd) == '0' {
 			os_details += ' (chroot)'
 		}
