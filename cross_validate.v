@@ -305,9 +305,9 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			// instances_to_be_classified << generate_test_instances_array(classifier_array.last(), )
 		}
 		// println('instances_to_be_classified before transpose: $instances_to_be_classified')
-		instances_to_be_classified = transpose(instances_to_be_classified)
+		// instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified after transpose: $instances_to_be_classified')
-		fold_result = multiple_classify_in_cross(current_fold, classifier_array, instances_to_be_classified, mut
+		fold_result = multiple_classify_in_cross(current_fold, classifier_array, transpose(instances_to_be_classified), mut
 			fold_result, mult_opts)
 	}
 	// println('fold_result.binning in do_one_fold: $fold_result.binning')

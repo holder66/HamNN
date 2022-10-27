@@ -5,16 +5,23 @@ module hamnn
 import arrays
 import os
 import json
+import math
 
 pub struct MultipleOptions {
 	classifier_options []Parameters
 }
 
 // read_multiple_opts
-fn read_multiple_opts(path string) ?MultipleOptions {
+fn read_multiple_opts(path string) !MultipleOptions {
 	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
 	return json.decode(MultipleOptions, s)
 }
+
+// 2022-10-25: consider a different approach: what if we accumulated nearest
+// neighbor counts for all possible values within each classifier, up until
+// all classifiers have gotten to a decision. Since we will be a the same radius
+// in each classifier, the numbers of nearest neighbor counts should be
+// comparable (except cannot use purging, since that reduces total counts)
 
 // when multiple classifiers have been generated with different settings,
 // a given instance to be classified will take multiple values, one for
@@ -82,8 +89,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	}
 	combined_radii = uniques(combined_radii)
 	combined_radii.sort()
+	mut inferred_class_found := []bool{len: hamming_dist_arrays.len, init: false}
 	// println('combined_radii: $combined_radii')
 	for i, row in hamming_dist_arrays {
+		// idx_max
 		mut radius_row := []int{len: classifiers[i].class_counts.len}
 		mut cr := ClassifyResult{}
 		for sphere_index, radius in combined_radii {
@@ -91,7 +100,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			// 	break
 			// }
 			radius_row = radius_row.map(it - it)
-			// println('radius_row: $radius_row')
+			println('classifier index: $i radius_row: $radius_row')
 			for class_index, class in classifiers[i].classes {
 				// println('class_index: $class_index class: $class')
 				for instance, distance in row {
@@ -106,18 +115,33 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 					}
 				}
 			}
-			// println('radius_row: $radius_row')
-			if !single_array_maximum(radius_row) {
-				continue
+			println('radius_row: $radius_row')
+			if single_array_maximum(radius_row) {
+				// continue accumulating nearest neighbor counts until every
+				// classifier has found a unique inferred value, or until
+				// we've maxed out the radii in combined radii
+				inferred_class_found[i] = true
 			}
-			// println('sphere_index: $sphere_index')
-			cr.inferred_class = classifiers[i].classes[idx_max(radius_row)]
-			cr.nearest_neighbors_by_class = radius_row
-			cr.classes = classifiers[i].classes
-			cr.weighting_flag = classifiers[i].weighting_flag
-			cr.hamming_distance = combined_radii[sphere_index]
-			cr.sphere_index = sphere_index
-			break
+				println('row: $i inferred_class_found: $inferred_class_found')
+			if inferred_class_found.all(it) {
+
+
+				// println('sphere_index: $sphere_index')
+				cr.inferred_class = classifiers[i].classes[idx_max(radius_row)]
+				cr.nearest_neighbors_by_class = radius_row
+
+				// try weighting the nearest neighbors numbers by the weight
+				// of the inferred class
+				println('nearest neighbors before weighting: $radius_row')
+				// cr.nearest_neighbors_by_class = radius_row.map(if cr.inferred_class == 'non' {it * 17} else {it* 175})
+				cr.classes = classifiers[i].classes
+				cr.weighting_flag = classifiers[i].weighting_flag
+				cr.hamming_distance = combined_radii[sphere_index]
+				cr.sphere_index = sphere_index
+				break
+			}
+			
+
 		}
 		m_cr << cr
 		nearest_neighbors_array << cr.nearest_neighbors_by_class
@@ -144,7 +168,7 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 	// filter out the null classifier results
 	inferred_class_array_filtered := inferred_class_array.filter(it != '')
 	// nearest_neighbors_array_filtered := nearest_neighbors_array.filter(it.len == 0)
-	zero_nn := nearest_neighbors_array.filter(0 in it).len
+	// zero_nn := nearest_neighbors_array.filter(0 in it).len
 	// println(uniques(inferred_class_array).filter(it != ''))
 	// println(uniques(inferred_class_array).filter(it != '')[0])
 	match true {
@@ -164,19 +188,21 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 		// inferred class
 		// zero_nn == 1 {
 		// 	println('only one entry has a zero')
+		// return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
 		// 	// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
+		// 	// return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+		// }
+
+		// zero_nn > 1 {
+		// 	// 	when there are 2 or more results with zeros, pick the
+		// 	// 	result having the largest maximum, and use that maximum
+		// 	// 	to get the inferred class
+		// 	println(nearest_neighbors_array.map(array_max(it)))
+		// 	println(idx_max(nearest_neighbors_array.map(array_max(it))))
+		// 	// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
+		// 	// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
 		// 	return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
 		// }
-		zero_nn > 1 {
-			// 	when there are 2 or more results with zeros, pick the
-			// 	result having the largest maximum, and use that maximum
-			// 	to get the inferred class
-			println(nearest_neighbors_array.map(array_max(it)))
-			println(idx_max(nearest_neighbors_array.map(array_max(it))))
-			// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
-			// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
-			return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
-		}
 		else {
 			// when none of the results have zeros in them, pick the
 			// result having the largest ratio of its maximum to the
@@ -202,7 +228,8 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 				}
 				// println('ratios_array: $ratios_array')
 			}
-			return inferred_class_array[idx_max(ratios_array)]
+			return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
+			// return inferred_class_array[idx_max(ratios_array)]
 			// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
 			// final_cr.inferred_class = cl.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
 		}
