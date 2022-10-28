@@ -30,7 +30,7 @@ fn read_multiple_opts(path string) !MultipleOptions {
 // multiple_classifier_classify
 fn multiple_classifier_classify(index int, classifiers []Classifier, instances_to_be_classified [][]u8, opts Options) ClassifyResult {
 	// cl0 := classifiers[0]
-	mut m_cr := []ClassifyResult{}
+	// mut m_cr := []ClassifyResult{}
 	mut final_cr := ClassifyResult{
 		index: index
 	}
@@ -43,8 +43,8 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	mut hamming_dist_arrays := [][]int{}
 	mut hamming_dist := 0
 	mut number_of_attributes := []int{}
-	mut nearest_neighbors_array := [][]int{}
-	mut inferred_class_array := []string{}
+	
+	
 	for cl in classifiers {
 		number_of_attributes << cl.attribute_ordering.len
 	}
@@ -80,16 +80,26 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	// mut radius_row := []int{}
 	// mut nearest_neighbors_array := [][]int{}
 	// mut inferred_class_array := []string{}
+
+	// first, get a sorted list of all possible hamming distances
 	for row in hamming_dist_arrays {
 		combined_radii = arrays.merge(combined_radii, uniques(row))
 	}
 	combined_radii = uniques(combined_radii)
 	combined_radii.sort()
+	// set up an array for noting when each classifier has gotten a result
 	mut inferred_class_found := []bool{len: hamming_dist_arrays.len, init: false}
+	// set up an array for classification results
+	mut m_cr := []ClassifyResult{len: hamming_dist_arrays.len}
 	// println('combined_radii: $combined_radii')
-	for sphere_index, radius in combined_radii {
-		m_cr = []ClassifyResult{}
+
+	// for each possible hamming distance...
+	radius_loop: for sphere_index, radius in combined_radii {
+		mut nearest_neighbors_array := [][]int{cap: hamming_dist_arrays.len}
+		mut inferred_class_array := []string{len: hamming_dist_arrays.len, init: ''}
+		// cycle through each classifier...
 		for i, row in hamming_dist_arrays {
+
 			mut radius_row := []int{len: classifiers[i].class_counts.len}
 			mut cr := ClassifyResult{}
 			for class_index, class in classifiers[i].classes {
@@ -106,109 +116,32 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 					}
 				}
 			}
-			// println('classifier index: $i radius_row: $radius_row')
+			nearest_neighbors_array << radius_row
+			
+			// println('nearest_neighbors_array here: $nearest_neighbors_array')
 			if single_array_maximum(radius_row) {
 				// continue accumulating nearest neighbor counts until every
 				// classifier has found a unique inferred value, or until
 				// we've maxed out the radii in combined radii
+				inferred_class_array[i] = classifiers[i].classes[idx_max(radius_row)]
 				inferred_class_found[i] = true
-				cr.inferred_class = classifiers[i].classes[idx_max(radius_row)]
-				cr.nearest_neighbors_by_class = radius_row
-				cr.classes = classifiers[i].classes
-				cr.weighting_flag = classifiers[i].weighting_flag
-				cr.hamming_distance = combined_radii[sphere_index]
-				cr.sphere_index = sphere_index
-				m_cr << cr
-				nearest_neighbors_array << cr.nearest_neighbors_by_class
-				inferred_class_array << cr.inferred_class
+				if index == 175 {println('@175 inferred_class_found: $inferred_class_found')}
+				if inferred_class_found.all(it) {
+					break radius_loop
+				}
 			}
-			// println('row: $i inferred_class_found: $inferred_class_found')
-			if inferred_class_found.all(it) {
 
+		} // end of loop through classifiers
 
-				// println('sphere_index: $sphere_index')
-				
-				// m_cr << cr
-				// nearest_neighbors_array << cr.nearest_neighbors_by_class
-				// inferred_class_array << cr.inferred_class
-				// println('$i $cr.nearest_neighbors_by_class $cr.inferred_class')
-				break
-			}
-				
-			if inferred_class_found.all(it) {break}
+		if inferred_class_array.all(it == '') {continue radius_loop}
+		if inferred_class_array.len > 1 && uniques(inferred_class_array.filter(it != '')).len > 1 {
+			final_cr.inferred_class = resolve_conflict(inferred_class_array, nearest_neighbors_array)
+
+			println('instance: $index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
+		} else {
+			final_cr.inferred_class = uniques(inferred_class_array.filter(it != ''))[0]
 		}
-		if inferred_class_found.all(it) {break}
-	
-
-	// for i, row in hamming_dist_arrays {
-	// 	// idx_max
-	// 	mut radius_row := []int{len: classifiers[i].class_counts.len}
-	// 	mut cr := ClassifyResult{}
-	// 	for sphere_index, radius in combined_radii {
-	// 		// if radius == classifiers[i].class_counts.len * 2 {
-	// 		// 	break
-	// 		// }
-	// 		radius_row = radius_row.map(it - it)
-	// 		println('classifier index: $i radius_row: $radius_row')
-	// 		for class_index, class in classifiers[i].classes {
-	// 			// println('class_index: $class_index class: $class')
-	// 			for instance, distance in row {
-	// 				// println('classifiers[i].class_values[instance]: ${classifiers[i].class_values[instance]}')
-	// 				if distance <= radius && class == classifiers[i].class_values[instance] {
-	// 					radius_row[class_index] += if !classifiers[i].weighting_flag {
-	// 						1
-	// 					} else {
-	// 						// println(int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]]))
-	// 						int(i64(lcm(get_map_values(classifiers[i].class_counts))) / classifiers[i].class_counts[classifiers[i].classes[class_index]])
-	// 					}
-	// 				}
-	// 			}
-	// 		}
-	// 		println('radius_row: $radius_row')
-	// 		if single_array_maximum(radius_row) {
-	// 			// continue accumulating nearest neighbor counts until every
-	// 			// classifier has found a unique inferred value, or until
-	// 			// we've maxed out the radii in combined radii
-	// 			inferred_class_found[i] = true
-	// 		}
-	// 			println('row: $i inferred_class_found: $inferred_class_found')
-	// 		if inferred_class_found.all(it) {
-
-
-	// 			// println('sphere_index: $sphere_index')
-	// 			cr.inferred_class = classifiers[i].classes[idx_max(radius_row)]
-	// 			cr.nearest_neighbors_by_class = radius_row
-
-	// 			// try weighting the nearest neighbors numbers by the weight
-	// 			// of the inferred class
-	// 			println('nearest neighbors before weighting: $radius_row')
-	// 			// cr.nearest_neighbors_by_class = radius_row.map(if cr.inferred_class == 'non' {it * 17} else {it* 175})
-	// 			cr.classes = classifiers[i].classes
-	// 			cr.weighting_flag = classifiers[i].weighting_flag
-	// 			cr.hamming_distance = combined_radii[sphere_index]
-	// 			cr.sphere_index = sphere_index
-	// 			break
-	// 		}
-			
-
-	// 	}
-		// m_cr << cr
-		// nearest_neighbors_array << cr.nearest_neighbors_by_class
-		// inferred_class_array << cr.inferred_class
-		// println('$i $cr.nearest_neighbors_by_class $cr.inferred_class')
-	}
-	println('nearest_neighbors_array: $nearest_neighbors_array')
-	println('inferred_class_array: $inferred_class_array')
-
-	// println(uniques(inferred_class_array))
-	// println(uniques(inferred_class_array).filter(it != ''))
-	if inferred_class_array.len > 1 && uniques(inferred_class_array.filter(it != '')).len > 1 {
-		final_cr.inferred_class = resolve_conflict(inferred_class_array, nearest_neighbors_array)
-
-		println('instance: $index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
-	} else {
-		final_cr.inferred_class = uniques(inferred_class_array.filter(it != ''))[0]
-	}
+	} // end of loop through radii
 	return final_cr
 }
 
