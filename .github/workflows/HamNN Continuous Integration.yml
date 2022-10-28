@@ -9,6 +9,7 @@ on:
    - cron: "31 1,12 * * *"
 
   push:
+    branches: [main]
 
 
 jobs:
