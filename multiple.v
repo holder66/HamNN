@@ -90,13 +90,14 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	// set up an array for noting when each classifier has gotten a result
 	mut inferred_class_found := []bool{len: hamming_dist_arrays.len, init: false}
 	// set up an array for classification results
-	mut m_cr := []ClassifyResult{len: hamming_dist_arrays.len}
+	// mut m_cr := []ClassifyResult{len: hamming_dist_arrays.len}
 	// println('combined_radii: $combined_radii')
-
+	mut nearest_neighbors_array := [][]int{cap: hamming_dist_arrays.len}
+	mut inferred_class_array := []string{len: hamming_dist_arrays.len, init: ''}
 	// for each possible hamming distance...
 	radius_loop: for sphere_index, radius in combined_radii {
-		mut nearest_neighbors_array := [][]int{cap: hamming_dist_arrays.len}
-		mut inferred_class_array := []string{len: hamming_dist_arrays.len, init: ''}
+		nearest_neighbors_array = [][]int{cap: hamming_dist_arrays.len}
+		inferred_class_array = []string{len: hamming_dist_arrays.len, init: ''}
 		// cycle through each classifier...
 		for i, row in hamming_dist_arrays {
 
@@ -125,23 +126,23 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				// we've maxed out the radii in combined radii
 				inferred_class_array[i] = classifiers[i].classes[idx_max(radius_row)]
 				inferred_class_found[i] = true
-				if index == 175 {println('@175 inferred_class_found: $inferred_class_found')}
 				if inferred_class_found.all(it) {
 					break radius_loop
 				}
 			}
-
 		} // end of loop through classifiers
 
-		if inferred_class_array.all(it == '') {continue radius_loop}
+	} // end of loop through radii
+	if inferred_class_array.all(it == '') { panic('failed to infer a class')}
 		if inferred_class_array.len > 1 && uniques(inferred_class_array.filter(it != '')).len > 1 {
 			final_cr.inferred_class = resolve_conflict(inferred_class_array, nearest_neighbors_array)
 
 			println('instance: $index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
 		} else {
+			println('instance: $index $nearest_neighbors_array inferred_class_array: $inferred_class_array')
 			final_cr.inferred_class = uniques(inferred_class_array.filter(it != ''))[0]
 		}
-	} // end of loop through radii
+
 	return final_cr
 }
 
