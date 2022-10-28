@@ -192,6 +192,7 @@ pub mut:
 }
 
 pub struct ClassifyResult {
+	Class
 pub mut:
 	struct_type                string = '.ClassifyResult'
 	index                      int
@@ -201,7 +202,9 @@ pub mut:
 	nearest_neighbors_by_class []int
 	nearest_neighbors_array    [][]int
 	classes                    []string
+	class_counts 				map[string]int
 	weighting_flag             bool
+	weighting_flag_array		[]bool
 	multiple_flag              bool
 	hamming_distance           int
 	sphere_index               int
