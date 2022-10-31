@@ -55,7 +55,7 @@ fn test_wt_avg() ? {
 // 	// create the classifier file and save it
 // 	opts.command = 'make'
 // 	opts.outputfile_path = 'tempfolder/classifierfile'
-// 	cl = make_classifier(load_file('datasets/test.tab'), opts)
+// 	cl = make_classifier(mut load_file('datasets/test.tab'), opts)
 // 	// do a validation and save the result
 // 	opts.outputfile_path = 'tempfolder/instancesfile'
 // 	opts.testfile_path = 'datasets/test_validate.tab'
@@ -74,7 +74,7 @@ fn test_wt_avg() ? {
 // 	// repeat with soybean
 // 	opts.command = 'make'
 // 	opts.outputfile_path = 'tempfolder/classifierfile'
-// 	cl = make_classifier(load_file('datasets/soybean-large-train.tab'), opts)
+// 	cl = make_classifier(mut load_file('datasets/soybean-large-train.tab'), opts)
 // 	// do a validation and save the result
 // 	opts.outputfile_path = 'tempfolder/instancesfile'
 // 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
@@ -99,9 +99,9 @@ fn test_wt_avg() ? {
 // 		command: 'make'
 // 		bins: [3, 10]
 // 	}
-// 	mut cl := make_classifier(load_file('datasets/iris.tab'), opts)
+// 	mut cl := make_classifier(mut load_file('datasets/iris.tab'), opts)
 // 	opts.number_of_attributes = [8]
-// 	cl = make_classifier(load_file('datasets/anneal.tab'), opts)
+// 	cl = make_classifier(mut load_file('datasets/anneal.tab'), opts)
 // }
 
 // test_show_crossvalidation
@@ -224,7 +224,7 @@ fn test_show_crossvalidation() ? {
 // 	opts.number_of_attributes = [4]
 // 	opts.weighting_flag = false
 // 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	result = validate(cl, opts)?
 // }
 
@@ -247,12 +247,12 @@ fn test_show_verify() ? {
 	opts.number_of_attributes = [4]
 	opts.weighting_flag = false
 	// ds = load_file(opts.datafile_path)
-	// cl = make_classifier(ds, opts)
+	// cl = make_classifier(mut ds, opts)
 	result = verify(opts)?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
-	// cl = make_classifier(ds, opts)
+	// cl = make_classifier(mut ds, opts)
 	result = verify(opts)
 	// println('result two in show_test: $result')
 	opts.datafile_path = 'datasets/soybean-large-train.tab'
@@ -262,15 +262,15 @@ fn test_show_verify() ? {
 	opts.expanded_flag = false
 	opts.weighting_flag = false
 	// ds = load_file(opts.datafile_path)
-	// cl = make_classifier(ds, opts)
+	// cl = make_classifier(mut ds, opts)
 	result = verify(opts)?
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
-	// cl = make_classifier(ds, opts)
+	// cl = make_classifier(mut ds, opts)
 	result = verify(opts)?
 	// println('result two in show_test: $result')
 	opts.purge_flag = true
-	// cl = make_classifier(ds, opts)
+	// cl = make_classifier(mut ds, opts)
 	result = verify(opts)
 }

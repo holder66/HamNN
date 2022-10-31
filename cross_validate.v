@@ -243,14 +243,14 @@ fn div_map(n int, mut m map[string]int) map[string]int {
 fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
 	mut byte_values_array := [][]u8{}
 	// partition the dataset into a partial dataset and a fold
-	part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
+	mut part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
 	// println('fold in do_one_fold: $fold')
 	mut fold_result := CrossVerifyResult{
 		labeled_classes: fold.class_values
 		instance_indices: fold.indices
 	}
 	if !cross_opts.multiple_flag {
-		part_cl := make_classifier(part_ds, cross_opts)
+		part_cl := make_classifier(mut part_ds, cross_opts)
 		// println(part_cl.history)
 		fold_result.binning = part_cl.binning
 
@@ -289,7 +289,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			mult_opts.Parameters = params
 			fold_result.Parameters = params
 			// println('mult_opts: $mult_opts')
-			part_cl := make_classifier(part_ds, mult_opts)
+			part_cl := make_classifier(mut part_ds, mult_opts)
 			classifier_array << part_cl
 			byte_values_array = [][]u8{}
 			for attr in part_cl.attribute_ordering {

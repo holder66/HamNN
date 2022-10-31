@@ -13,7 +13,7 @@ fn test_purge() ? {
 		weighting_flag: false
 	}
 	mut ds := load_file('datasets/iris.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(mut ds, opts)
 	assert cl.instances.len == 150
 	mut pcl := purge(cl)
 	assert pcl.instances.len == 12

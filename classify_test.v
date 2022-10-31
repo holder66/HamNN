@@ -13,7 +13,7 @@ fn test_classify_instance() {
 		weighting_flag: false
 	}
 	mut ds := load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(mut ds, opts)
 	assert classify_instance(0, cl, cl.instances[0], opts).inferred_class == 'm'
 	assert classify_instance(0, cl, cl.instances[0], opts).nearest_neighbors_by_class == [
 		1,
@@ -21,7 +21,7 @@ fn test_classify_instance() {
 		0,
 	]
 	opts.weighting_flag = true
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 	assert classify_instance(0, cl, cl.instances[3], opts).inferred_class == 'f'
 	assert classify_instance(0, cl, cl.instances[3], opts).nearest_neighbors_by_class == [
 		0,

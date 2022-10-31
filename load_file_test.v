@@ -93,7 +93,7 @@ fn test_load_classifier_file() ? {
 	opts.bins = [2, 4]
 	opts.number_of_attributes = [4]
 	ds = load_file('datasets/developer.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 	tcl = load_classifier_file('tempfolder1/classifierfile')?
 	// assert cl.Options == tcl.Options
 	assert cl.Class == tcl.Class
@@ -105,7 +105,7 @@ fn test_load_classifier_file() ? {
 	opts.bins = [3, 6]
 	opts.number_of_attributes = [2]
 	ds = load_file('datasets/iris.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 	tcl = load_classifier_file('tempfolder1/classifierfile')?
 	// assert cl.Options == tcl.Options
 	assert cl.Class == tcl.Class
@@ -126,7 +126,7 @@ fn test_load_instances_file() ? {
 	}
 	opts.testfile_path = 'datasets/test_validate.tab'
 	ds = load_file('datasets/test.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 	vr = validate(cl, opts)?
 	tvr = load_instances_file('tempfolder1/validate_result.json')?
 	assert vr.Class == tvr.Class
@@ -135,7 +135,7 @@ fn test_load_instances_file() ? {
 
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
 	ds = load_file('datasets/soybean-large-train.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 	vr = validate(cl, opts)?
 	tvr = load_instances_file('tempfolder1/validate_result.json')?
 	assert vr.Class == tvr.Class

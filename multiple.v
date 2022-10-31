@@ -5,7 +5,7 @@ module hamnn
 import arrays
 import os
 import json
-import math
+// import math
 
 pub struct MultipleOptions {
 	classifier_options []Parameters
@@ -90,7 +90,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				// println('class_index: $class_index class: $class')
 				for instance, distance in row {
 					// println('classifiers[i].class_values[instance]: ${classifiers[i].class_values[instance]}')
-					if distance <= radius && class == classifiers[i].class_values[instance] {
+					if distance == radius && class == classifiers[i].class_values[instance] {
 						radius_row[class_index] += if !classifiers[i].weighting_flag {
 							1
 						} else {
@@ -120,12 +120,11 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 
 		println('instance: $index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
 	} else {
-		// println('instance: $index $nearest_neighbors_array inferred_class_array: $inferred_class_array')
+		println('instance: $index $nearest_neighbors_array inferred_class_array: $inferred_class_array')
 		final_cr.inferred_class = uniques(inferred_class_array.filter(it != ''))[0]
 	}
 	final_cr.inferred_class_array = inferred_class_array
 	final_cr.nearest_neighbors_array = nearest_neighbors_array
-	println(final_cr)
 	return final_cr
 }
 

@@ -15,7 +15,7 @@ fn testsuite_end() ? {
 }
 
 // test_make_classifier
-fn test_make_classifier() ? {
+fn test_make_classifier(mut ) ? {
 	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false
@@ -26,7 +26,7 @@ fn test_make_classifier() ? {
 		weighting_flag: true
 	}
 	mut ds := load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(mut ds, opts)
 	assert cl.class_counts == {
 		'm': 8
 		'f': 3
@@ -75,21 +75,21 @@ fn test_save_classifier() ? {
 	opts.classifierfile_path = opts.outputfile_path
 
 	ds = load_file('datasets/developer.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 
 	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = load_file('datasets/anneal.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 
 	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
 	assert tcl.instances == cl.instances
 
 	ds = load_file('datasets/soybean-large-train.tab')
-	cl = make_classifier(ds, opts)
+	cl = make_classifier(mut ds, opts)
 
 	tcl = load_classifier_file(opts.classifierfile_path)?
 	assert tcl.trained_attributes == cl.trained_attributes
@@ -98,7 +98,7 @@ fn test_save_classifier() ? {
 	if get_environment().arch_details[0] != '4 cpus' {
 		path := 'datasets/mnist_test.tab'
 		ds = load_file(path)
-		cl = make_classifier(ds, opts)
+		cl = make_classifier(mut ds, opts)
 
 		tcl = load_classifier_file(opts.classifierfile_path)?
 		assert tcl.trained_attributes == cl.trained_attributes

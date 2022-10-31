@@ -12,7 +12,7 @@ import runtime
 // comparing the inferred classes to the labeled (assigned) classes
 // of the verification datafile.
 // ```sh
-// Optional (also see `make_classifier()` for options in training a classifier)
+// Optional (also see `make_classifier(mut )` for options in training a classifier)
 // weighting_flag: nearest neighbor counts are weighted by
 // 	class prevalences.
 // Output options:
@@ -51,7 +51,8 @@ pub fn verify(opts Options) CrossVerifyResult {
 	if !opts.multiple_flag {
 		mut cl := Classifier{}
 		if opts.classifierfile_path == '' {
-			cl = make_classifier(load_file(opts.datafile_path), opts)
+			mut ds := load_file(opts.datafile_path)
+			cl = make_classifier(mut ds, opts)
 		} else {
 			cl = load_classifier_file(opts.classifierfile_path) or { panic(err) }
 		}
@@ -66,7 +67,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 		mut instances_to_be_classified := [][][]u8{}
 		// mut mult_opts := []Parameters{}
 		mut mult_opts := opts
-		ds := load_file(opts.datafile_path)
+		mut ds := load_file(opts.datafile_path)
 		mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path) or {
 			MultipleOptions{}
 		}
@@ -77,7 +78,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 			mult_opts.Parameters = params
 			verify_result.Parameters = params
 			// println('mult_opts: $mult_opts')
-			classifier_array << make_classifier(ds, mult_opts)
+			classifier_array << make_classifier(mut ds, mult_opts)
 			instances_to_be_classified << generate_test_instances_array(classifier_array.last(),
 				test_ds)
 		}

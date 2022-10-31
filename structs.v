@@ -120,6 +120,7 @@ pub mut:
 	folds          int
 	repetitions    int
 	random_pick    bool
+	balance_prevalences_flag bool
 }
 
 struct DisplaySettings {

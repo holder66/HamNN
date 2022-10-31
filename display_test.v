@@ -26,7 +26,7 @@ fn test_display_classifier() ? {
 	}
 	opts.outputfile_path = 'tempfolder/classifierfile'
 	mut ds := load_file('datasets/developer.tab')
-	mut cl := make_classifier(ds, opts)
+	mut cl := make_classifier(mut ds, opts)
 	path := 'tempfolder/classifierfile'
 	mut settings := DisplaySettings{
 		show_flag: true
@@ -72,7 +72,7 @@ fn test_display_validate_result() ? {
 		show_flag: true
 	}
 	opts.datafile_path = 'datasets/bcw350train'
-	cl := make_classifier(load_file('datasets/bcw350train'), opts)
+	cl := make_classifier(mut load_file('datasets/bcw350train'), opts)
 	opts.outputfile_path = 'tempfolder/validate_result'
 	opts.testfile_path = 'datasets/bcw174validate'
 	_ = validate(cl, opts)?

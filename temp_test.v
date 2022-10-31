@@ -23,9 +23,9 @@ fn testsuite_end() ! {
 // 		bins: [3, 10]
 // 	}
 // 	mut ds := load_file('datasets/developer.tab')
-// 	mut cl := make_classifier(ds, opts)
+// 	mut cl := make_classifier(mut ds, opts)
 // 	// opts.number_of_attributes = [8]
-// 	// cl = make_classifier(load_file('datasets/anneal.tab'), opts)
+// 	// cl = make_classifier(mut load_file('datasets/anneal.tab'), opts)
 // }
 
 fn test_show_cross_validate() ? {
@@ -96,7 +96,7 @@ fn test_show_cross_validate() ? {
 // 	mut result := CrossVerifyResult{}
 
 // 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	result = verify(cl, opts) ?
 
 // 	// repeat with -e
@@ -110,7 +110,7 @@ fn test_show_cross_validate() ? {
 // 	opts.testfile_path = 'datasets/soybean-large-test.tab'
 
 // 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	result = verify(cl, opts) ?
 
 // 	// repeat with -e

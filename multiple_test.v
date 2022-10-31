@@ -95,7 +95,7 @@ fn test_multiple_crossvalidate() ? {
 // opts.weighting_flag = false
 // ds = load_file(opts.datafile_path)
 // // println(ds.class_values)
-// cl1 = make_classifier(ds, opts)
+// cl1 = make_classifier(mut ds, opts)
 // mut test_ds1 := load_file(opts.testfile_path)
 // // println(test_ds1.class_values)
 // mut test_instances1 := generate_test_instances_array(cl1, test_ds1)
@@ -105,7 +105,7 @@ fn test_multiple_crossvalidate() ? {
 // opts.bins = [1,1]
 // opts.number_of_attributes = [1]
 // opts.weighting_flag = true
-// cl2 = make_classifier(ds, opts)
+// cl2 = make_classifier(mut ds, opts)
 
 // mut test_ds2 := load_file(opts.testfile_path)
 // mut test_instances2 := generate_test_instances_array(cl2, test_ds1)
@@ -122,13 +122,13 @@ fn test_multiple_crossvalidate() ? {
 // opts.number_of_attributes = [1]
 // opts.weighting_flag = true
 // ds = load_file(opts.datafile_path)
-// cl1 = make_classifier(ds, opts)
+// cl1 = make_classifier(mut ds, opts)
 // test_ds1 = load_file(opts.testfile_path)
 // // println(test_ds1.class_values)
 // test_instances1 = generate_test_instances_array(cl1, test_ds1)
 // opts.number_of_attributes = [6]
 // opts.weighting_flag = true
-// cl2 = make_classifier(ds, opts)
+// cl2 = make_classifier(mut ds, opts)
 // test_ds2 = load_file(opts.testfile_path)
 // // println(test_ds2)
 // test_instances2 = generate_test_instances_array(cl2, test_ds1)
@@ -158,14 +158,14 @@ fn test_multiple_crossvalidate() ? {
 // opts.bins = [5,5]
 // opts.weighting_flag = true
 // ds = load_file(opts.datafile_path)
-// cl1 = make_classifier(ds, opts)
+// cl1 = make_classifier(mut ds, opts)
 // test_ds1 = load_file(opts.testfile_path)
 // // println(test_ds1.class_values)
 // test_instances1 = generate_test_instances_array(cl1, test_ds1)
 // opts.number_of_attributes = [10]
 // opts.bins = [1,3]
 // opts.weighting_flag = false
-// cl2 = make_classifier(ds, opts)
+// cl2 = make_classifier(mut ds, opts)
 // test_ds2 = load_file(opts.testfile_path)
 // // println(test_ds2)
 // test_instances2 = generate_test_instances_array(cl2, test_ds1)
@@ -192,7 +192,7 @@ fn test_multiple_crossvalidate() ? {
 // opts.outputfile_path = 'tempfolder4/classifierfile'
 // cl = Classifier{}
 // result = CrossVerifyResult{}
-// cl = make_classifier(ds, opts)
+// cl = make_classifier(mut ds, opts)
 // cl = Classifier{}
 // result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
 // assert result.correct_count == 171
@@ -207,7 +207,7 @@ fn test_multiple_crossvalidate() ? {
 // opts.bins = [2, 16]
 // opts.weighting_flag = true
 // ds = load_file(opts.datafile_path)
-// cl = make_classifier(ds, opts)
+// cl = make_classifier(mut ds, opts)
 // result = verify(cl, opts)?
 // assert result.correct_count == 340
 // assert result.wrong_count == 36
@@ -218,7 +218,7 @@ fn test_multiple_crossvalidate() ? {
 // opts.outputfile_path = 'tempfolder4/classifierfile'
 // cl = Classifier{}
 // result = CrossVerifyResult{}
-// cl = make_classifier(ds, opts)
+// cl = make_classifier(mut ds, opts)
 // cl = Classifier{}
 // result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
 // assert result.correct_count == 340
@@ -236,7 +236,7 @@ fn test_multiple_crossvalidate() ? {
 // 	opts.weighting_flag = false
 // 	opts.show_flag = false
 // 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	result = verify(cl, opts)?
 // 	assert result.correct_count == 9982
 // 	assert result.wrong_count == 18
@@ -247,7 +247,7 @@ fn test_multiple_crossvalidate() ? {
 // 	opts.outputfile_path = 'tempfolder4/classifierfile'
 // 	cl = Classifier{}
 // 	result = CrossVerifyResult{}
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	cl = Classifier{}
 // 	result = verify(load_classifier_file('tempfolder4/classifierfile')?, opts)?
 // 	assert result.correct_count == 9982
@@ -269,14 +269,14 @@ fn test_multiple_crossvalidate() ? {
 // 	opts.concurrency_flag = true
 // 	opts.weighting_flag = false
 // 	ds = load_file(opts.datafile_path)
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	opts.testfile_path = 'datasets/mnist_test.tab'
 // 	result = verify(load_classifier_file('tempfolder4/classifierfile') ?, opts)
 // 	assert result.correct_count == 9566
 // 	assert result.wrong_count == 434
 
 // 	opts.weighting_flag = true
-// 	cl = make_classifier(ds, opts)
+// 	cl = make_classifier(mut ds, opts)
 // 	result = verify(cl, opts)
 // 	assert result.correct_count == 9279
 // 	assert result.wrong_count == 721
@@ -296,7 +296,7 @@ fn test_multiple_crossvalidate() ? {
 // 	}
 // 	mut ds := load_file('datasets/2_class_developer.tab')
 // 	println(ds)
-// 	mut cl1 := make_classifier(ds, opts)
+// 	mut cl1 := make_classifier(mut ds, opts)
 // 	println(cl1)
 // 	for i, instance in cl1.instances {
 // 		println('$i $instance')
@@ -312,7 +312,7 @@ fn test_multiple_crossvalidate() ? {
 // 	opts.weighting_flag = true
 // 	opts.bins = [1,7]
 // 	opts.number_of_attributes = [1]
-// 	mut cl2 := make_classifier(ds, opts)
+// 	mut cl2 := make_classifier(mut ds, opts)
 // 	assert classify_instance(0, cl2, cl2.instances[3], opts).inferred_class == 'f'
 // 	assert classify_instance(0, cl2, cl2.instances[3], opts).nearest_neighbors_by_class == [
 // 		0,
