@@ -135,7 +135,7 @@ fn do_repetition(pick_list []int, rep int, ds Dataset, cross_opts Options) Cross
 		// start a thread pool to do the work:
 		mut tpool := []thread{}
 		for _ in 0 .. jobs {
-			tpool << go option_worker(work_channel, result_channel, pick_list, folds,
+			tpool << spawn option_worker(work_channel, result_channel, pick_list, folds,
 				ds, cross_opts)
 		}
 		tpool.wait()

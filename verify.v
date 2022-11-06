@@ -111,7 +111,7 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 		mut result_channel := chan ClassifyResult{cap: test_instances.len}
 		for i, _ in test_instances {
 			work_channel <- i
-			go option_worker_verify(work_channel, result_channel, cl, test_instances,
+			spawn option_worker_verify(work_channel, result_channel, cl, test_instances,
 				result.labeled_classes, opts)
 		}
 		for _ in test_instances {
