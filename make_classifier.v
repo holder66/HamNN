@@ -49,13 +49,16 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 		}
 		// println('transposed_data after: $transposed_data')
 		ds.data = transpose(transposed_data)
-		println(ds.data)
+		// println(ds.data)
 		// update the Class struct items
 		// println(ds.attribute_names)
 		ds.class_values = ds.data[ds.attribute_names.index(ds.class_name)]
-		println(ds.class_values)
+		// println(ds.class_values)
 		ds.class_counts = string_element_counts(ds.class_values)
 		println(ds.class_counts)
+		// redo the useful_attribute maps
+		ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
+		ds.useful_discrete_attributes = get_useful_discrete_attributes(ds)
 	}
 	
 	mut cl := Classifier{
@@ -80,7 +83,7 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 	// number_of_attributes is 0)
 	mut rank_opts := opts
 	rank_opts.binning = cl.binning
-	println('ds: $ds')
+	// println('ds: $ds')
 	ranking_result := rank_attributes(ds, rank_opts)
 	// println('ranking_result: $ranking_result')
 	mut ranked_attributes := ranking_result.array_of_ranked_attributes.clone()
