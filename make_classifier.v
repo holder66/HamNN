@@ -35,7 +35,7 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 		for class, count in ds.class_counts {
 			multipliers[class] = (ds.class_values.len - count) / count
 		}
-		// println(multipliers)
+		// println('multipliers: ${multipliers}')
 		mut idx := 0
 		for class in ds.class_values {
 			if multipliers[class] > 0 {
@@ -49,13 +49,13 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 		}
 		// println('transposed_data after: $transposed_data')
 		ds.data = transpose(transposed_data)
-		// println(ds.data)
+		println(ds.data)
 		// update the Class struct items
 		// println(ds.attribute_names)
 		ds.class_values = ds.data[ds.attribute_names.index(ds.class_name)]
-		// println(ds.class_values)
+		println(ds.class_values)
 		ds.class_counts = string_element_counts(ds.class_values)
-		// println(ds.class_counts)
+		println(ds.class_counts)
 	}
 	
 	mut cl := Classifier{
@@ -74,13 +74,15 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
-
+	println("cl.lcm_class_counts: $cl.lcm_class_counts")
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)
 	mut rank_opts := opts
 	rank_opts.binning = cl.binning
+	println('ds: $ds')
 	ranking_result := rank_attributes(ds, rank_opts)
+	// println('ranking_result: $ranking_result')
 	mut ranked_attributes := ranking_result.array_of_ranked_attributes.clone()
 	// cl.binning = ranking_result.binning
 	// println('binning in make_classifier: $cl.binning')
