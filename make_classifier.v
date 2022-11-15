@@ -77,7 +77,7 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 	// calculate the least common multiple for class_counts, for use
 	// when the weighting_flag is set
 	cl.lcm_class_counts = i64(lcm(get_map_values(ds.class_counts)))
-	println("cl.lcm_class_counts: $cl.lcm_class_counts")
+	// println("cl.lcm_class_counts: $cl.lcm_class_counts")
 	// first, rank the attributes using the bins and exclude params, and take
 	// the highest-ranked number_of_attributes (all the usable attributes if
 	// number_of_attributes is 0)

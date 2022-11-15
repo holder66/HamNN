@@ -46,27 +46,32 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		number_of_attributes << cl.attribute_ordering.len
 	}
 	maximum_number_of_attributes := array_max(number_of_attributes)
+	lcm_attributes := lcm(number_of_attributes)
 
 	// get the hamming distance for each of the corresponding byte_values
 	// in each classifier instance and the instance to be classified
+	// note that to compare hamming distances between classifiers using
+	// different numbers of attributes, the distances need to be weighted.
+	// mut lcm_attributes := lcm([25,29,8])
+	println('lcm_attributes: $lcm_attributes')
 	for i, cl in classifiers {
 		final_cr.weighting_flag_array << cl.weighting_flag
 		mut hamming_distances := []int{}
 		for instance in cl.instances {
 			mut hamming_dist := 0
 			for j, byte_value in instances_to_be_classified[i] {
-				hamming_dist += get_hamming_distance(byte_value, instance[j])
+				hamming_dist += int(get_hamming_distance(byte_value, instance[j]) * lcm_attributes/number_of_attributes[i])
 			}
 			hamming_distances << hamming_dist
 		}
-		println('hamming_distances: $hamming_distances')
+		// println('hamming_distances: $hamming_distances')
 		// multiply each value by the maximum number of attributes, and
 		// divide by this classifier's number of attributes
 		// println(hamming_distances.map(it * maximum_number_of_attributes / cl.attribute_ordering.len))
 		// hamming_dist_arrays << hamming_distances.map(it * maximum_number_of_attributes / cl.attribute_ordering.len)
 		hamming_dist_arrays << hamming_distances
 	}
-	println('hamming_dist_arrays: $hamming_dist_arrays')
+	// println('hamming_dist_arrays: $hamming_dist_arrays')
 	mut combined_radii := []int{}
 
 	// first, get a sorted list of all possible hamming distances
@@ -86,9 +91,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	radius_loop: for sphere_index, radius in combined_radii {
 		nearest_neighbors_array = [][]int{cap: hamming_dist_arrays.len}
 		inferred_class_array = []string{len: hamming_dist_arrays.len, init: ''}
+		mut radius_row := []int{len: classifiers[i].class_counts.len}
 		// cycle through each classifier...
 		for i, row in hamming_dist_arrays {
-			mut radius_row := []int{len: classifiers[i].class_counts.len}
+			
 			// cycle through each class...
 			for class_index, class in classifiers[i].classes {
 				// println('class_index: $class_index class: $class')
@@ -120,7 +126,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			println('inferred_class_array: $inferred_class_array')
 				println('inferred_class_found: $inferred_class_found')
 		}
-		if inferred_class_found.any(it) {
+		if inferred_class_found.all(it) {
 			break radius_loop
 		}
 		 // end of loop through classifiers
