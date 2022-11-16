@@ -103,7 +103,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 		show_verify(verify_result, opts)
 	}
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('verify_result in verify(): $verify_result')
+		println('verify_result in verify(): ${verify_result}')
 	}
 	if opts.outputfile_path != '' {
 		save_json_file(verify_result, opts.outputfile_path)
@@ -160,11 +160,11 @@ fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut resu
 	result.classifier_instances_counts << m_cl[0].history[0].instances_count
 	result.prepurge_instances_counts_array << m_cl[0].history[0].prepurge_instances_count
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('result in classify_to_verify(): $result')
+		println('result in classify_to_verify(): ${result}')
 	}
 	result = summarize_results(1, mut result)
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('summarize_result: $result')
+		println('summarize_result: ${result}')
 	}
 	// println('result at end of multiple_classify_to_verify: $result')
 	return result
@@ -180,7 +180,7 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 		mut result_channel := chan ClassifyResult{cap: test_instances.len}
 		for i, _ in test_instances {
 			work_channel <- i
-			go option_worker_verify(work_channel, result_channel, cl, test_instances,
+			spawn option_worker_verify(work_channel, result_channel, cl, test_instances,
 				result.labeled_classes, opts)
 		}
 		for _ in test_instances {
@@ -202,11 +202,11 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 	result.classifier_instances_counts << cl.history[0].instances_count
 	result.prepurge_instances_counts_array << cl.history[0].prepurge_instances_count
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('result in classify_to_verify(): $result')
+		println('result in classify_to_verify(): ${result}')
 	}
 	result = summarize_results(1, mut result)
 	if opts.verbose_flag && opts.command == 'verify' {
-		println('summarize_result: $result')
+		println('summarize_result: ${result}')
 	}
 	return result
 }

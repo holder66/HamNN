@@ -13,8 +13,23 @@ pub struct MultipleOptions {
 
 // read_multiple_opts
 fn read_multiple_opts(path string) !MultipleOptions {
-	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
 	return json.decode(MultipleOptions, s)
+}
+
+struct RadiusResults {
+	sphere_index int 
+	hamming_distances_by_class []int 
+	inferred_class_found []bool	
+	inferred_class []string
+}
+
+struct MultipleClassifierResults {
+	number_of_attributes []int 
+	maximum_number_of_attributes int 
+	lcm_attributes int 
+	combined_radii []int 
+	results_by_classifier []RadiusResults
 }
 
 // 2022-10-25: consider a different approach: what if we accumulated nearest
@@ -53,14 +68,14 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	// note that to compare hamming distances between classifiers using
 	// different numbers of attributes, the distances need to be weighted.
 	// mut lcm_attributes := lcm([25,29,8])
-	println('lcm_attributes: $lcm_attributes')
+	println('lcm_attributes: ${lcm_attributes}')
 	for i, cl in classifiers {
 		final_cr.weighting_flag_array << cl.weighting_flag
 		mut hamming_distances := []int{}
 		for instance in cl.instances {
 			mut hamming_dist := 0
 			for j, byte_value in instances_to_be_classified[i] {
-				hamming_dist += int(get_hamming_distance(byte_value, instance[j]) * lcm_attributes/number_of_attributes[i])
+				hamming_dist += int(get_hamming_distance(byte_value, instance[j]) * lcm_attributes / number_of_attributes[i])
 			}
 			hamming_distances << hamming_dist
 		}
@@ -80,7 +95,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	}
 	combined_radii = uniques(combined_radii)
 	combined_radii.sort()
-	println('combined_radii: $combined_radii')
+	println('combined_radii: ${combined_radii}')
 
 	// set up an array for noting when each classifier has gotten a result
 	mut inferred_class_found := []bool{len: hamming_dist_arrays.len, init: false}
@@ -94,7 +109,6 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		mut radius_row := []int{len: classifiers[i].class_counts.len}
 		// cycle through each classifier...
 		for i, row in hamming_dist_arrays {
-			
 			// cycle through each class...
 			for class_index, class in classifiers[i].classes {
 				// println('class_index: $class_index class: $class')
@@ -113,32 +127,31 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				}
 			}
 			nearest_neighbors_array << radius_row
-		
-		
-			println('nearest_neighbors_array: $nearest_neighbors_array')
-			if single_array_maximum(radius_row) {
 
+			println('nearest_neighbors_array: ${nearest_neighbors_array}')
+			if single_array_maximum(radius_row) {
 				inferred_class_array[i] = classifiers[i].classes[idx_max(radius_row)]
-				
+
 				inferred_class_found[i] = true
-				
 			}
-			println('inferred_class_array: $inferred_class_array')
-				println('inferred_class_found: $inferred_class_found')
+			println('inferred_class_array: ${inferred_class_array}')
+			println('inferred_class_found: ${inferred_class_found}')
 		}
 		if inferred_class_found.all(it) {
 			break radius_loop
 		}
-		 // end of loop through classifiers
+		// end of loop through classifiers
 		final_cr.sphere_index = sphere_index
 	} // end of loop through radii
-	if inferred_class_array.all(it == '') { panic('failed to infer a class')}
+	if inferred_class_array.all(it == '') {
+		panic('failed to infer a class')
+	}
 	if inferred_class_array.len > 1 && uniques(inferred_class_array.filter(it != '')).len > 1 {
 		final_cr.inferred_class = resolve_conflict(inferred_class_array, nearest_neighbors_array)
 
-		println('instance: $index $nearest_neighbors_array $inferred_class_array inferred_class: $final_cr.inferred_class')
+		println('instance: ${index} ${nearest_neighbors_array} ${inferred_class_array} inferred_class: ${final_cr.inferred_class}')
 	} else {
-		println('instance: $index $nearest_neighbors_array inferred_class_array: $inferred_class_array')
+		println('instance: ${index} ${nearest_neighbors_array} inferred_class_array: ${inferred_class_array}')
 		final_cr.inferred_class = uniques(inferred_class_array.filter(it != ''))[0]
 	}
 	final_cr.inferred_class_array = inferred_class_array
@@ -157,67 +170,67 @@ fn resolve_conflict(inferred_class_array []string, nearest_neighbors_array [][]i
 	// println(uniques(inferred_class_array).filter(it != ''))
 	// println(uniques(inferred_class_array).filter(it != '')[0])
 	// match true {
-		// if only one of the nearest neighbors lists has entries,
-		// use that inferred class
-		// inferred_class_array.filter(it != '').len == 1 {
-		// 	println('only one entry in inferred class array')
-		// 	return inferred_class_array.filter(it != '')[0]
-		// }
-		// if the number of inferred classes is an odd number, pick
-		// the winner
-		// inferred_class_array_filtered.len % 2 != 0 {
-		// 	return get_map_key_for_max_value(string_element_counts(inferred_class_array_filtered))
-		// }
+	// if only one of the nearest neighbors lists has entries,
+	// use that inferred class
+	// inferred_class_array.filter(it != '').len == 1 {
+	// 	println('only one entry in inferred class array')
+	// 	return inferred_class_array.filter(it != '')[0]
+	// }
+	// if the number of inferred classes is an odd number, pick
+	// the winner
+	// inferred_class_array_filtered.len % 2 != 0 {
+	// 	return get_map_key_for_max_value(string_element_counts(inferred_class_array_filtered))
+	// }
 
-		// if only one of the nearest neighbors lists has a zero, use that
-		// inferred class
-		// zero_nn == 1 {
-		// 	println('only one entry has a zero')
-		// return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
-		// 	// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
-		// 	// return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
-		// }
+	// if only one of the nearest neighbors lists has a zero, use that
+	// inferred class
+	// zero_nn == 1 {
+	// 	println('only one entry has a zero')
+	// return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
+	// 	// println(inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))])
+	// 	// return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+	// }
 
-		// zero_nn > 1 {
-		// 	// 	when there are 2 or more results with zeros, pick the
-		// 	// 	result having the largest maximum, and use that maximum
-		// 	// 	to get the inferred class
-		// 	println(nearest_neighbors_array.map(array_max(it)))
-		// 	println(idx_max(nearest_neighbors_array.map(array_max(it))))
-		// 	// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
-		// 	// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
-		// 	return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
-		// }
-		// else {
-		// 	// when none of the results have zeros in them, pick the
-		// 	// result having the largest ratio of its maximum to the
-		// 	// average of the other nearest neighbor counts
-		// 	mut max_nn := 0
-		// 	mut sum_nn := 0
-		// 	mut avg_nn := 0.0
-		// 	mut ratios_array := []f64{}
+	// zero_nn > 1 {
+	// 	// 	when there are 2 or more results with zeros, pick the
+	// 	// 	result having the largest maximum, and use that maximum
+	// 	// 	to get the inferred class
+	// 	println(nearest_neighbors_array.map(array_max(it)))
+	// 	println(idx_max(nearest_neighbors_array.map(array_max(it))))
+	// 	// println(classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])])
+	// 	// classifiers[i].classes[idx_max(nearest_neighbors_array[idx_max(nearest_neighbors_array.map(array_max(it)))])]
+	// 	return inferred_class_array[idx_true(nearest_neighbors_array.map(0 in it))]
+	// }
+	// else {
+	// 	// when none of the results have zeros in them, pick the
+	// 	// result having the largest ratio of its maximum to the
+	// 	// average of the other nearest neighbor counts
+	// 	mut max_nn := 0
+	// 	mut sum_nn := 0
+	// 	mut avg_nn := 0.0
+	// 	mut ratios_array := []f64{}
 
-		// 	for nearest_neighbors in nearest_neighbors_array {
-		// 		// i_nn := idx_max(nearest_neighbors)
-		// 		if nearest_neighbors.len > 0 {
-		// 			max_nn = array_max(nearest_neighbors)
-		// 			sum_nn = array_sum(nearest_neighbors)
-		// 			// average of non-maximum values
-		// 			avg_nn = (sum_nn - max_nn) / (nearest_neighbors.len - 1)
-		// 			// println('i_nn: $i_nn max_nn: $max_nn sum_nn: $sum_nn avg_nn: $avg_nn')
-		// 			// get ratio
-		// 			// println(max_nn / avg_nn)
-		// 			ratios_array << (max_nn / avg_nn)
-		// 		} else {
-		// 			ratios_array << 0
-		// 		}
-		// 		// println('ratios_array: $ratios_array')
-		// 	}
-		// 	return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
-		// 	// return inferred_class_array[idx_max(ratios_array)]
-		// 	// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
-		// 	// final_cr.inferred_class = cl.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
-		// }
+	// 	for nearest_neighbors in nearest_neighbors_array {
+	// 		// i_nn := idx_max(nearest_neighbors)
+	// 		if nearest_neighbors.len > 0 {
+	// 			max_nn = array_max(nearest_neighbors)
+	// 			sum_nn = array_sum(nearest_neighbors)
+	// 			// average of non-maximum values
+	// 			avg_nn = (sum_nn - max_nn) / (nearest_neighbors.len - 1)
+	// 			// println('i_nn: $i_nn max_nn: $max_nn sum_nn: $sum_nn avg_nn: $avg_nn')
+	// 			// get ratio
+	// 			// println(max_nn / avg_nn)
+	// 			ratios_array << (max_nn / avg_nn)
+	// 		} else {
+	// 			ratios_array << 0
+	// 		}
+	// 		// println('ratios_array: $ratios_array')
+	// 	}
+	// 	return inferred_class_array[idx_max(nearest_neighbors_array.map(math.abs(it[0]-it[1])))]
+	// 	// return inferred_class_array[idx_max(ratios_array)]
+	// 	// println(cl0.classes[idx_max(nearest_neighbors_array[idx_max(ratios_array)])])
+	// 	// final_cr.inferred_class = cl.classes[idx_max(mcr.nearest_neighbors_array[idx_max(ratios_array)])]
+	// }
 	// }
 }
 

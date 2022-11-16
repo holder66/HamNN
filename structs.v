@@ -115,11 +115,11 @@ pub mut:
 	uniform_bins         bool
 	exclude_flag         bool
 	// multiple_flag bool
-	purge_flag     bool
-	weighting_flag bool
-	folds          int
-	repetitions    int
-	random_pick    bool
+	purge_flag               bool
+	weighting_flag           bool
+	folds                    int
+	repetitions              int
+	random_pick              bool
 	balance_prevalences_flag bool
 }
 
@@ -203,9 +203,9 @@ pub mut:
 	nearest_neighbors_by_class []int
 	nearest_neighbors_array    [][]int
 	classes                    []string
-	class_counts 				map[string]int
+	class_counts               map[string]int
 	weighting_flag             bool
-	weighting_flag_array		[]bool
+	weighting_flag_array       []bool
 	multiple_flag              bool
 	hamming_distance           int
 	sphere_index               int
@@ -283,7 +283,7 @@ pub mut:
 	array_of_results []CrossVerifyResult
 	accuracy_types   []string = ['raw accuracy', 'balanced accuracy']
 	analytics        []MaxSettings
-	args 	[]string
+	args             []string
 }
 
 pub struct PlotResult {

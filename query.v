@@ -33,12 +33,12 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 				if cl.trained_attributes[attr].attribute_type == 'D' {
 					possibles = cl.trained_attributes[attr].translation_table.keys()
 					possibles.sort()
-					println('Possible values for "$attr": $possibles')
-					responses[attr] = readline.read_line('Please enter one of these values for attribute "$attr": ') or {
+					println('Possible values for "${attr}": ${possibles}')
+					responses[attr] = readline.read_line('Please enter one of these values for attribute "${attr}": ') or {
 						'error'
 					}.trim_space()
 				} else {
-					responses[attr] = readline.read_line('Enter a value between ${cl.trained_attributes[attr].minimum} and ${cl.trained_attributes[attr].maximum} for "$attr": ') or {
+					responses[attr] = readline.read_line('Enter a value between ${cl.trained_attributes[attr].minimum} and ${cl.trained_attributes[attr].maximum} for "${attr}": ') or {
 						'error'
 					}.trim_space()
 				}
@@ -56,16 +56,16 @@ pub fn query(cl Classifier, opts Options) ClassifyResult {
 	}
 	byte_values = get_byte_values(cl, responses)
 	if opts.verbose_flag {
-		println('byte_values: $byte_values')
+		println('byte_values: ${byte_values}')
 	}
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in the classifier; return the class for the instance
 	// giving the lowest Hamming distance.
 	classify_result = classify_instance(0, cl, byte_values, opts)
 	if classify_result.weighting_flag {
-		println("For the classes $classify_result.classes the prevalence-weighted nearest neighbor counts are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.inferred_class'")
+		println("For the classes ${classify_result.classes} the prevalence-weighted nearest neighbor counts are ${classify_result.nearest_neighbors_by_class}, so the inferred class is '${classify_result.inferred_class}'")
 	} else {
-		println("For the classes $classify_result.classes the numbers of nearest neighbors are $classify_result.nearest_neighbors_by_class, so the inferred class is '$classify_result.inferred_class'")
+		println("For the classes ${classify_result.classes} the numbers of nearest neighbors are ${classify_result.nearest_neighbors_by_class}, so the inferred class is '${classify_result.inferred_class}'")
 	}
 	if opts.outputfile_path != '' {
 		validate_result.instances = [byte_values]

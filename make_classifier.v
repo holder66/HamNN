@@ -10,8 +10,8 @@ import time
 // struct Prevalence {
 // 	mut:
 // 	class string
-// 	start_count int 
-// 	multiplier int 
+// 	start_count int
+// 	multiplier int
 // }
 
 // make_classifier returns a Classifier struct, given a Dataset (as created by
@@ -42,8 +42,8 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 				for _ in 1 .. multipliers[class] {
 					// println(transposed_data[idx])
 					transposed_data.insert(idx, transposed_data[idx])
-					idx += 1	
-				}			
+					idx += 1
+				}
 			}
 			idx += 1
 		}
@@ -60,7 +60,7 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 		ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
 		ds.useful_discrete_attributes = get_useful_discrete_attributes(ds)
 	}
-	
+
 	mut cl := Classifier{
 		Class: ds.Class
 		Parameters: opts.Parameters
