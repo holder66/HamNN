@@ -58,7 +58,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.exclude_flag))
 	if opts.verbose_flag && opts.command == 'rank' {
-		println('perfect_rank_value: $perfect_rank_value')
+		println('perfect_rank_value: ${perfect_rank_value}')
 	}
 	mut ranked_atts := []RankedAttribute{}
 	mut binning := Binning{}

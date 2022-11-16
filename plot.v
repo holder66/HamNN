@@ -25,11 +25,11 @@ fn plot_rank(result RankingResult) {
 	}
 	for attr in ranked_atts.filter(it.inferred_attribute_type == 'C') {
 		traces << RankTrace{
-			label: '$attr.attribute_name ${array_max(attr.rank_value_array):5.2f}'
+			label: '${attr.attribute_name} ${array_max(attr.rank_value_array):5.2f}'
 			rank_values: attr.rank_value_array.map(f64(it)).reverse()
 			maximum_rank_value: array_max(attr.rank_value_array)
 			// the tooltip for each point shows the attribute name
-			hover_text: ['$attr.attribute_name'].repeat(result.binning.upper + 1)
+			hover_text: ['${attr.attribute_name}'].repeat(result.binning.upper + 1)
 		}
 	}
 	// sort in descending order of maximum_rank_value
@@ -46,7 +46,7 @@ fn plot_rank(result RankingResult) {
 			text: value.hover_text
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: 'attribute: $value.hover_text<br>bins: $x<br>rank: $y'
+			hovertemplate: 'attribute: ${value.hover_text}<br>bins: ${x}<br>rank: ${y}'
 		)
 	}
 	rank_annotation_string := 'Missing Values ' +
@@ -64,7 +64,7 @@ fn plot_rank(result RankingResult) {
 		align: 'center'
 	}
 	plt.set_layout(
-		title: 'Rank Values for Continuous Attributes for "$result.path"'
+		title: 'Rank Values for Continuous Attributes for "${result.path}"'
 		autosize: false
 		width: 800
 		xaxis: plot.Axis{
@@ -156,7 +156,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 			text: text
 			mode: 'lines+markers'
 			name: value.label
-			hovertemplate: 'bins: $text<br>attributes: $value.attributes_used<br>accuracy: S${value.percents.map((math.round(it * 100)) / 100)}%'
+			hovertemplate: 'bins: ${text}<br>attributes: ${value.attributes_used}<br>accuracy: S${value.percents.map((math.round(it * 100)) / 100)}%'
 		)
 	}
 	annotation1 := plot.Annotation{
@@ -184,7 +184,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 	annotation3 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 15
-		text: 'UTC: $time.utc()'
+		text: 'UTC: ${time.utc()}'
 		align: 'center'
 		font: plot.Font{
 			color: 'blue'
@@ -195,7 +195,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 	annotation4 := plot.Annotation{
 		x: (array_max(x) + array_min(x)) / 2
 		y: 20
-		text: 'args: $result.args'
+		text: 'args: ${result.args}'
 		align: 'center'
 		font: plot.Font{
 			color: 'black'
@@ -203,7 +203,7 @@ fn plot_explore(result ExploreResult, opts Options) {
 			family: 'Times New Roman'
 		}
 	}
-	title_string := 'Balanced Accuracy by Number of Attributes\n for "$opts.datafile_path"'
+	title_string := 'Balanced Accuracy by Number of Attributes\n for "${opts.datafile_path}"'
 	plt.set_layout(
 		title: title_string
 		width: 900
@@ -224,8 +224,8 @@ fn plot_explore(result ExploreResult, opts Options) {
 fn explore_type_string(opts Options) string {
 	// mut explore_type_string := ''
 	if opts.testfile_path == '' {
-		return if opts.folds == 0 { 'Leave-one-out ' } else { '$opts.folds-fold ' } + 'cross-validations' + if opts.repetitions > 0 {
-			' ($opts.repetitions repetitions' + if opts.random_pick {
+		return if opts.folds == 0 { 'Leave-one-out ' } else { '${opts.folds}-fold ' } + 'cross-validations' + if opts.repetitions > 0 {
+			' (${opts.repetitions} repetitions' + if opts.random_pick {
 				', random selection)'
 			} else {
 				')'
@@ -234,7 +234,7 @@ fn explore_type_string(opts Options) string {
 			''
 		}
 	}
-	return 'Verifications with "$opts.testfile_path"'
+	return 'Verifications with "${opts.testfile_path}"'
 }
 
 struct ROCResult {
@@ -293,7 +293,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 			sensitivity: res.sens
 			one_minus_specificity: 1.0 - res.spec
 			bin_range: bin_range
-			attributes_used: '$res.attributes_used'
+			attributes_used: '${res.attributes_used}'
 		}
 	}
 	// sort on the x axis value, ie one_minus_specificity
@@ -308,7 +308,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 
 	for key, _ in string_element_counts(bin_range_values) {
 		traces << ROCTrace{
-			curve_series_variable_values: '$key'
+			curve_series_variable_values: '${key}'
 			x_coordinates: filter(key, bin_range_values, x_coordinates)
 			y_coordinates: filter(key, bin_range_values, y_coordinates)
 			curve_variable_values: filter(key, bin_range_values, attributes_used_values)
@@ -331,7 +331,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 	traces.clear()
 	for key, _ in string_element_counts(attributes_used_values) {
 		traces << ROCTrace{
-			curve_series_variable_values: '$key'
+			curve_series_variable_values: '${key}'
 			x_coordinates: filter(key, attributes_used_values, x_coordinates)
 			y_coordinates: filter(key, attributes_used_values, y_coordinates)
 			curve_variable_values: filter(key, attributes_used_values, bin_range_values)
@@ -421,9 +421,9 @@ fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable str
 			x: x
 			y: y
 			mode: 'lines+markers'
-			name: '$trace.curve_series_variable_values (AUC=${trace.area_under_curve:3.2})'
+			name: '${trace.curve_series_variable_values} (AUC=${trace.area_under_curve:3.2})'
 			text: trace.curve_variable_values
-			hovertemplate: '$hover_variable: $trace.curve_variable_values<br>sensitivity: $y<br>one minus specificity: $x'
+			hovertemplate: '${hover_variable}: ${trace.curve_variable_values}<br>sensitivity: ${y}<br>one minus specificity: ${x}'
 		)
 	}
 }
@@ -431,7 +431,7 @@ fn make_roc_plot_traces(traces []ROCTrace, mut plt plot.Plot, hover_variable str
 // make_roc_plot_layout
 fn make_roc_plot_layout(mut plt plot.Plot, curve_series string, path string, annotations []plot.Annotation) {
 	plt.set_layout(
-		title: 'ROC Curves by $curve_series for "$path"'
+		title: 'ROC Curves by ${curve_series} for "${path}"'
 		width: 800
 		height: 800
 		xaxis: plot.Axis{

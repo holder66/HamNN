@@ -31,7 +31,7 @@ pub fn file_type(path string) string {
 	if os.file_ext(path) == '.arff' {
 		return 'arff'
 	}
-	header := os.read_lines(path.trim_space()) or { panic('Failed to open $path in file_type()') }
+	header := os.read_lines(path.trim_space()) or { panic('Failed to open ${path} in file_type()') }
 	if header[0].contains('#') {
 		return 'orange_newer'
 	} else {
@@ -45,7 +45,7 @@ pub fn file_type(path string) string {
 // Example:
 // `cl := load_classifier_file('tempfolder/saved_classifier.txt')`
 pub fn load_classifier_file(path string) ?Classifier {
-	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
 	cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
 	return cl
 }
@@ -59,7 +59,7 @@ pub fn load_classifier_file(path string) ?Classifier {
 pub fn load_instances_file(path string) ?ValidateResult {
 	// mut instances := ValidateResult{}
 	// mut s := ''
-	s := os.read_file(path.trim_space()) or { panic('failed to open $path') }
+	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
 	// println(s)
 	instances := json.decode(ValidateResult, s) or { panic('Failed to parse json') }
 	return instances
@@ -83,7 +83,7 @@ fn strip(s string) string {
 
 // load_arff_file
 fn load_arff_file(path string) Dataset {
-	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
+	content := os.read_lines(path.trim_space()) or { panic('failed to open ${path}') }
 	mut ds := Dataset{
 		path: path
 	}
@@ -144,7 +144,7 @@ fn infer_attribute_types_arff(ds Dataset) []string {
 		else if attr_type.contains(',') {
 			inferred = 'D'
 		} else {
-			panic('unrecognized attribute type "$attr_type" for attribute "${ds.attribute_names[i]}"')
+			panic('unrecognized attribute type "${attr_type}" for attribute "${ds.attribute_names[i]}"')
 		}
 		inferred_attribute_types << inferred
 	}
@@ -157,7 +157,7 @@ fn infer_attribute_types_arff(ds Dataset) []string {
 
 // load_orange_older_file loads from a file into a Dataset struct
 fn load_orange_older_file(path string) Dataset {
-	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
+	content := os.read_lines(path.trim_space()) or { panic('failed to open ${path}') }
 	mut ds := Dataset{
 		path: path
 		attribute_names: extract_words(content[0])
@@ -217,7 +217,7 @@ fn infer_attribute_types_older(ds Dataset) []string {
 		} else if attr_type == '' && attr_flag == '' {
 			inferred = infer_type_from_data(ds.data[i])
 		} else {
-			panic('unrecognized attribute type "$attr_type" for attribute "${ds.attribute_names[i]}"')
+			panic('unrecognized attribute type "${attr_type}" for attribute "${ds.attribute_names[i]}"')
 		}
 		inferred_attribute_types << inferred
 	}
@@ -226,7 +226,7 @@ fn infer_attribute_types_older(ds Dataset) []string {
 
 // load_orange_newer_file loads from an orange-newer file into a Dataset struct
 fn load_orange_newer_file(path string) Dataset {
-	content := os.read_lines(path.trim_space()) or { panic('failed to open $path') }
+	content := os.read_lines(path.trim_space()) or { panic('failed to open ${path}') }
 	attribute_words := extract_words(content[0])
 	types_attributes := attribute_words.map(extract_types(it))
 	mut ds := Dataset{
@@ -268,7 +268,7 @@ fn infer_attribute_types_newer(ds Dataset) []string {
 		} else if attr_type == '' {
 			inferred = infer_type_from_data(ds.data[i])
 		} else {
-			panic('unrecognized attribute type "$attr_type" for attribute "${ds.attribute_names[i]}"')
+			panic('unrecognized attribute type "${attr_type}" for attribute "${ds.attribute_names[i]}"')
 		}
 		inferred_attribute_types << inferred
 	}

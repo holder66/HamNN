@@ -43,8 +43,8 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	}
 	mut attribute_max := ds.useful_continuous_attributes.len + ds.useful_discrete_attributes.len
 	if ex_opts.verbose_flag && opts.command == 'explore' {
-		println('ex_opts in explore: $ex_opts')
-		println('number of usable attributes: $attribute_max')
+		println('ex_opts in explore: ${ex_opts}')
+		println('number of usable attributes: ${attribute_max}')
 	}
 	// if there are no useful continuous attributes, skip the binning
 	if ds.useful_continuous_attributes.len == 0 {
@@ -55,8 +55,8 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	binning := results.binning
 
 	if opts.verbose_flag && opts.command == 'explore' {
-		println('attributing: $results.AttributeRange')
-		println('binning: $results.binning')
+		println('attributing: ${results.AttributeRange}')
+		println('binning: ${results.binning}')
 	}
 	if opts.command == 'explore' && (opts.show_flag || opts.expanded_flag) {
 		// show_explore_header(pos_neg_classes, binning, opts)

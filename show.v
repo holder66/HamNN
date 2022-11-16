@@ -26,7 +26,7 @@ fn pad(l int) string {
 // analyze_dataset().
 pub fn show_analyze(result AnalyzeResult) {
 	mut show := []string{}
-	println(chalk.fg(chalk.style('\nAnalysis of Dataset "$result.datafile_path" (File Type $result.datafile_type)',
+	println(chalk.fg(chalk.style('\nAnalysis of Dataset "${result.datafile_path}" (File Type ${result.datafile_type})',
 		'underline'), 'magenta'))
 	println(chalk.fg(chalk.style('All Attributes', 'bold'), 'green'))
 	println(chalk.fg(chalk.style(' Index  Name                          Count  Uniques  Missing      %  Type',
@@ -54,14 +54,14 @@ pub fn show_analyze(result AnalyzeResult) {
 		types << attr.att_type
 	}
 	for key, value in string_element_counts(types) {
-		show << '$key          ${value:6}'
+		show << '${key}          ${value:6}'
 	}
 	show << 'Total:     ${types.len:6}'
 	print_array(show)
 	show = []
 	disc_atts := result.attributes.filter(it.for_training && it.att_type == 'D')
 	println(chalk.fg(chalk.style('Discrete Attributes for Training', 'bold'), 'green') +
-		' ($disc_atts.len attributes)')
+		' (${disc_atts.len} attributes)')
 	println(chalk.fg(chalk.style(' Index  Name                        Uniques', 'underline'),
 		'blue'))
 	for attr in disc_atts {
@@ -72,7 +72,7 @@ pub fn show_analyze(result AnalyzeResult) {
 	show = []
 	cont_atts := result.attributes.filter(it.for_training && it.att_type == 'C')
 	println(chalk.fg(chalk.style('Continuous Attributes for Training', 'bold'), 'green') +
-		' ($cont_atts.len attributes)')
+		' (${cont_atts.len} attributes)')
 
 	println(chalk.fg(chalk.style(' Index  Name                               Min         Max',
 		'underline'), 'blue'))
@@ -82,8 +82,8 @@ pub fn show_analyze(result AnalyzeResult) {
 	print_array(show)
 
 	show = []
-	println(chalk.fg(chalk.style('The Class Attribute: "$result.class_name"', 'bold'), 'green') +
-		' ($result.class_counts.len classes)')
+	println(chalk.fg(chalk.style('The Class Attribute: "${result.class_name}"', 'bold'), 'green') +
+		' (${result.class_counts.len} classes)')
 	println(chalk.fg(chalk.style('Class Value           Cases', 'underline'), 'blue'))
 	for key, value in result.class_counts {
 		show << '${key:-20}  ${value:5}'
@@ -97,10 +97,10 @@ fn show_rank_attributes(result RankingResult) {
 	if result.exclude_flag {
 		exclude_phrase = 'excluded'
 	}
-	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for "$result.path"',
+	println(chalk.fg(chalk.style('\nAttributes Sorted by Rank Value, for "${result.path}"',
 		'underline'), 'magenta'))
-	println('Missing values: $exclude_phrase')
-	println('Bin range for continuous attributes: from $result.binning.lower to $result.binning.upper with interval $result.binning.interval')
+	println('Missing values: ${exclude_phrase}')
+	println('Bin range for continuous attributes: from ${result.binning.lower} to ${result.binning.upper} with interval ${result.binning.interval}')
 	println(chalk.fg(chalk.style('         Name                         Index  Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}
@@ -112,7 +112,7 @@ fn show_rank_attributes(result RankingResult) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	println(chalk.fg(chalk.style('\nClassifier for "$cl.datafile_path"', 'underline'),
+	println(chalk.fg(chalk.style('\nClassifier for "${cl.datafile_path}"', 'underline'),
 		'magenta'))
 	// println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
 	// 	' when calculating rank values')
@@ -149,39 +149,39 @@ fn show_parameters(p Parameters) {
 	purge_string := if p.purge_flag { 'on' } else { 'off' }
 	weight_string := if p.weighting_flag { 'yes' } else { 'no' }
 	results_array := [
-		'Attributes: $attr_string',
-		'Missing values: $exclude_string',
+		'Attributes: ${attr_string}',
+		'Missing values: ${exclude_string}',
 		if p.binning.lower == 0 {
 			'No continuous attributes, thus no binning'
 		} else {
-			'Bin range for continuous attributes: from $p.binning.lower to $p.binning.upper with interval $p.binning.interval'
+			'Bin range for continuous attributes: from ${p.binning.lower} to ${p.binning.upper} with interval ${p.binning.interval}'
 		},
-		'Prevalence weighting of nearest neighbor counts: $weight_string ',
-		'Purging of duplicate instances: $purge_string',
+		'Prevalence weighting of nearest neighbor counts: ${weight_string} ',
+		'Purging of duplicate instances: ${purge_string}',
 	]
 	print_array(results_array)
 }
 
 // show_validate
 fn show_validate(result ValidateResult) {
-	println(chalk.fg(chalk.style('\nValidation of "$result.validate_file_path" using a classifier from "$result.classifier_path"',
+	println(chalk.fg(chalk.style('\nValidation of "${result.validate_file_path}" using a classifier from "${result.classifier_path}"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	if result.purge_flag {
 		total_count := result.prepurge_instances_counts_array[0]
 		purged_count := total_count - result.classifier_instances_counts[0]
 		purged_percent := 100 * f64(purged_count) / total_count
-		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
+		println('Instances purged: ${purged_count} out of ${total_count} (${purged_percent:6.2f}%)')
 	}
-	println('Number of instances validated: $result.inferred_classes.len')
-	println('Inferred classes: $result.inferred_classes')
-	println('For classes: $result.class_counts.keys() the nearest neighbor counts are:\n$result.counts')
+	println('Number of instances validated: ${result.inferred_classes.len}')
+	println('Inferred classes: ${result.inferred_classes}')
+	println('For classes: ${result.class_counts.keys()} the nearest neighbor counts are:\n${result.counts}')
 }
 
 // show_verify
 fn show_verify(result CrossVerifyResult) {
 	// println(result)
-	println(chalk.fg(chalk.style('\nVerification of "$result.testfile_path" using a classifier from "$result.classifier_path"',
+	println(chalk.fg(chalk.style('\nVerification of "${result.testfile_path}" using a classifier from "${result.classifier_path}"',
 		'underline'), 'magenta'))
 	show_parameters(result.Parameters)
 	// println(result)
@@ -189,16 +189,16 @@ fn show_verify(result CrossVerifyResult) {
 		total_count := result.prepurge_instances_counts_array[0]
 		purged_count := total_count - result.classifier_instances_counts[0]
 		purged_percent := 100 * f64(purged_count) / total_count
-		println('Instances purged: $purged_count out of $total_count (${purged_percent:6.2f}%)')
+		println('Instances purged: ${purged_count} out of ${total_count} (${purged_percent:6.2f}%)')
 	}
 	show_cross_or_verify_result(result)
 }
 
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult) {
-	println(chalk.fg(chalk.style('\nCross-validation of "$result.classifier_path"', 'underline'),
-		'magenta'))
-	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '$result.folds-fold' + if result.repetitions > 1 { ', $result.repetitions repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
+	println(chalk.fg(chalk.style('\nCross-validation of "${result.classifier_path}"',
+		'underline'), 'magenta'))
+	println('Partitioning: ' + if result.folds == 0 { 'leave-one-out' } else { '${result.folds}-fold' + if result.repetitions > 1 { ', ${result.repetitions} repetitions' + if result.random_pick { ' with random selection of instances' } else { '' }
 		 } else { ''
 		 }
 	 })
@@ -207,7 +207,7 @@ fn show_crossvalidation(result CrossVerifyResult) {
 		total_count_avg := arrays.sum(result.prepurge_instances_counts_array) or {} / f64(result.prepurge_instances_counts_array.len)
 		purged_count_avg := total_count_avg - arrays.sum(result.classifier_instances_counts) or {} / f64(result.classifier_instances_counts.len)
 		purged_percent := 100 * purged_count_avg / total_count_avg
-		println('Average instances purged: ${purged_count_avg:10.1f} out of $total_count_avg (${purged_percent:6.2f}%)')
+		println('Average instances purged: ${purged_count_avg:10.1f} out of ${total_count_avg} (${purged_percent:6.2f}%)')
 	}
 	show_cross_or_verify_result(result)
 }
@@ -218,7 +218,7 @@ fn show_cross_or_verify_result(result CrossVerifyResult) {
 	// mut metrics := get_metrics(result)
 	if !result.expanded_flag {
 		percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
-		println('correct inferences: $result.correct_count out of $result.labeled_classes.len (accuracy: raw:${percent:6.2f}% balanced:${result.balanced_accuracy:6.2f}%)')
+		println('correct inferences: ${result.correct_count} out of ${result.labeled_classes.len} (accuracy: raw:${percent:6.2f}% balanced:${result.balanced_accuracy:6.2f}%)')
 	} else {
 		show_expanded_result(result)
 		print_confusion_matrix(result)
@@ -296,30 +296,30 @@ fn print_confusion_matrix(result CrossVerifyResult) {
 	l << 9 // to make sure that the minimum length covers up to 5 digits
 	l_max := array_max(l)
 	println(chalk.fg(chalk.style('Confusion Matrix' +
-		if result.repetitions > 1 { ' (values averaged over $result.repetitions repetitions):' } else { ':' },
+		if result.repetitions > 1 { ' (values averaged over ${result.repetitions} repetitions):' } else { ':' },
 		'underline'), 'blue'))
 	mut padded_item := ''
 	for i, rows in display_confusion_matrix {
 		for j, item in rows {
 			match true {
 				i == 0 && j == 0 { // print first item in first row, ie 'predicted classes (columns)'
-					print(chalk.fg('$item  ', 'red'))
+					print(chalk.fg('${item}  ', 'red'))
 				}
 				i == 0 { // print column headers, ie classes
 					padded_item = '${pad(l_max - item.len + 2)}' + item
-					print(chalk.fg('$padded_item', 'red'))
+					print(chalk.fg('${padded_item}', 'red'))
 				}
 				i == 1 && j == 0 { // print 'actual classes' header
 					padded_item = '${pad(6)}' + item
-					print(chalk.fg('$padded_item', 'blue'))
+					print(chalk.fg('${padded_item}', 'blue'))
 				}
 				j == 0 { // print first column (class names)
 					padded_item = '${pad(27 - item.len)}' + item + '  '
-					print(chalk.fg('$padded_item', 'blue'))
+					print(chalk.fg('${padded_item}', 'blue'))
 				}
 				else { // print numeric values for each cell
 					padded_item = '${pad(l_max - item.len + 2)}' + item
-					print('$padded_item')
+					print('${padded_item}')
 				}
 			}
 		}
@@ -347,18 +347,18 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 	mut explore_type_string := ''
 	if results.testfile_path == '' {
-		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '$results.folds-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n ($results.repetitions repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
+		explore_type_string = if results.folds == 0 { 'leave-one-out ' } else { '${results.folds}-fold ' } + 'cross-validation' + if results.repetitions > 0 { '\n (${results.repetitions} repetitions' + if results.random_pick { ', with random selection of instances)' } else { ')' }
 		 } else { ''
 		 }
 	} else {
-		explore_type_string = 'verification of "$results.testfile_path"'
+		explore_type_string = 'verification of "${results.testfile_path}"'
 	}
-	println(chalk.fg(chalk.style('\nExplore $explore_type_string using classifiers from "$results.path"',
+	println(chalk.fg(chalk.style('\nExplore ${explore_type_string} using classifiers from "${results.path}"',
 		'underline'), 'magenta'))
 	if results.binning.lower == 0 {
 		println('No continuous attributes, thus no binning')
 	} else {
-		println('Binning range for continuous attributes: from $results.binning.lower to $results.binning.upper with interval $results.binning.interval')
+		println('Binning range for continuous attributes: from ${results.binning.lower} to ${results.binning.upper} with interval ${results.binning.interval}')
 	}
 	if results.uniform_bins {
 		println('(same number of bins for all continous attributes)')
@@ -366,9 +366,9 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
 	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
 		' nearest neighbor counts by class prevalences')
-	println('Over attribute range from $results.start to $results.end by interval $results.att_interval')
+	println('Over attribute range from ${results.start} to ${results.end} by interval ${results.att_interval}')
 	purge_string := if results.purge_flag { 'on' } else { 'off' }
-	println('Purging of duplicate instances: $purge_string')
+	println('Purging of duplicate instances: ${purge_string}')
 	if !settings.expanded_flag {
 		println(chalk.fg(chalk.style('Attributes     Bins' +
 			if results.purge_flag { '     Purged instances     (%)' } else { '' } +
@@ -393,13 +393,13 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 // show_explore_trailer
 fn show_explore_trailer(results ExploreResult) {
 	println('')
-	println('Command line arguments: $results.args')
+	println('Command line arguments: ${results.args}')
 	println('Maximum accuracies obtained:')
 	mut ea := MaxSettings{}
 	for i, acc_type in results.accuracy_types {
 		ea = results.analytics[i]
 		if ea.max_value > 0.0 {
-			println('${acc_type:28}: ${ea.max_value:6.2f}%, using $ea.attributes_used attributes' + if show_bins_for_trailer(ea.binning) != '' { ', with binning ${show_bins_for_trailer(ea.binning)}' } else { '' } + if ea.purged_percent > 0.0 {
+			println('${acc_type:28}: ${ea.max_value:6.2f}%, using ${ea.attributes_used} attributes' + if show_bins_for_trailer(ea.binning) != '' { ', with binning ${show_bins_for_trailer(ea.binning)}' } else { '' } + if ea.purged_percent > 0.0 {
 				', ${ea.purged_percent:5.2f}% instances purged.'
 			} else {
 				''
@@ -427,7 +427,7 @@ fn show_explore_line(result CrossVerifyResult) {
 			accuracy_percent := (f32(result.correct_count) * 100 / result.labeled_classes.len)
 			println('${result.attributes_used:10}  ${get_show_bins(result.bin_values)}' +
 				if result.purge_flag {
-				'${purged:10.1f} out of $total (${purged_percent:5.2f})'
+				'${purged:10.1f} out of ${total} (${purged_percent:5.2f})'
 			} else {
 				''
 			} +
@@ -435,13 +435,13 @@ fn show_explore_line(result CrossVerifyResult) {
 		} else {
 			if result.pos_neg_classes[0] != '' {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged:10.1f} out of $total (${purged_percent:5.2f})'
+					' ${purged:10.1f} out of ${total} (${purged_percent:5.2f})'
 				} else {
 					''
 				} + '  ${get_binary_stats_line(result)}')
 			} else {
 				println('${result.attributes_used:10} ${get_show_bins(result.bin_values)}' + if result.purge_flag {
-					' ${purged:10.1f} out of $total (${purged_percent:5.2f})'
+					' ${purged:10.1f} out of ${total} (${purged_percent:5.2f})'
 				} else {
 					''
 				})

@@ -64,7 +64,7 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 		break
 	}
 	if opts.verbose_flag && opts.command == 'classify' {
-		println('ClassifyResult in classify.v: $result')
+		println('ClassifyResult in classify.v: ${result}')
 	}
 	return result
 }

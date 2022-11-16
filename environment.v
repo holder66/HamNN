@@ -27,7 +27,7 @@ fn get_package_version() string {
 fn (mut a Environment) collect_info() {
 	mut os_kind := os.user_os()
 	mut arch_details := []string{}
-	arch_details << '$runtime.nr_cpus() cpus'
+	arch_details << '${runtime.nr_cpus()} cpus'
 	if runtime.is_32bit() {
 		arch_details << '32bit'
 	}
@@ -100,10 +100,10 @@ fn (mut a Environment) collect_info() {
 		)
 		p := a.parse(wmic_info, '=')
 		caption, build_number, os_arch := p['caption'], p['buildnumber'], p['osarchitecture']
-		os_details = '$caption v$build_number $os_arch'
+		os_details = '${caption} v${build_number} ${os_arch}'
 	} else {
 		ouname := os.uname()
-		os_details = '$ouname.release, $ouname.version'
+		os_details = '${ouname.release}, ${ouname.version}'
 	}
 	a.os_kind = os_kind
 	a.os_details = os_details
@@ -133,7 +133,7 @@ fn (mut a Environment) cmd(c CmdConfig) string {
 			return output[c.line]
 		}
 	}
-	return 'Error: $x.output'
+	return 'Error: ${x.output}'
 }
 
 fn (app &Environment) parse(config string, sep string) map[string]string {
@@ -187,7 +187,7 @@ fn (mut a Environment) get_linux_os_name() string {
 			}
 			'uname' {
 				ouname := os.uname()
-				os_details = '$ouname.release, $ouname.version'
+				os_details = '${ouname.release}, ${ouname.version}'
 				break
 			}
 			else {}

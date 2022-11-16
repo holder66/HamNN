@@ -15,7 +15,7 @@ pub fn append_instances(cl Classifier, instances_to_append ValidateResult, opts 
 	// to cl.instances, and append the class value for each new instance
 	// cl.class_values, update the cl.class_counts map, and calculate a new lcm
 	if opts.verbose_flag {
-		println('$cl\n$instances_to_append')
+		println('${cl}\n${instances_to_append}')
 	}
 	mut ext_cl := cl
 	event := HistoryEvent{
