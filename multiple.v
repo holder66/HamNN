@@ -106,9 +106,11 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	radius_loop: for sphere_index, radius in combined_radii {
 		nearest_neighbors_array = [][]int{cap: hamming_dist_arrays.len}
 		inferred_class_array = []string{len: hamming_dist_arrays.len, init: ''}
-		mut radius_row := []int{len: classifiers[i].class_counts.len}
+		
 		// cycle through each classifier...
+
 		for i, row in hamming_dist_arrays {
+			mut radius_row := []int{len: classifiers[i].class_counts.len}
 			// cycle through each class...
 			for class_index, class in classifiers[i].classes {
 				// println('class_index: $class_index class: $class')
