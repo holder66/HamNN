@@ -55,7 +55,7 @@ pub fn make_classifier(mut ds Dataset, opts Options) Classifier {
 		ds.class_values = ds.data[ds.attribute_names.index(ds.class_name)]
 		// println(ds.class_values)
 		ds.class_counts = string_element_counts(ds.class_values)
-		println(ds.class_counts)
+		// println(ds.class_counts)
 		// redo the useful_attribute maps
 		ds.useful_continuous_attributes = get_useful_continuous_attributes(ds)
 		ds.useful_discrete_attributes = get_useful_discrete_attributes(ds)
