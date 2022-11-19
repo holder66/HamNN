@@ -199,6 +199,26 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 	show_cross_or_verify_result(result)
 }
 
+// show_multiple_classifiers_options 
+fn show_multiple_classifiers_options(params MultipleOptions) {
+	// println(params)
+	mut row_labels := ['Classifier:','Number of attributes:', 'Binning:', 'Weighting:', 'Balance prevalences:']	
+	println('Multiple Classifier Parameters:')
+	mut row_data := []string{len: 5, init: ''}
+	for i, par in params.classifier_options {
+		row_data[0] = row_data[0] + '${i:-13}'
+		row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
+		binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
+		row_data[2] = row_data[2] +'${binning:-13}'
+		row_data[3] = row_data[3] +'${par.weighting_flag:-13}'
+		row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
+	}
+	for i, row in row_data {
+		println('${row_labels[i]:25}   ${row}')
+	}
+	// println(row_data)
+}
+
 // show_crossvalidation
 fn show_crossvalidation(result CrossVerifyResult) {
 	// println('result in show_crossvalidation: $result')
@@ -212,6 +232,10 @@ fn show_crossvalidation(result CrossVerifyResult) {
 	 })
 	if result.multiple_classify_options_file_path != '' {
 		println('(Classifier parameters in file "${result.multiple_classify_options_file_path}")')
+		saved_params := read_multiple_opts(result.multiple_classify_options_file_path) or {
+			MultipleOptions{}
+		}
+		show_multiple_classifiers_options(saved_params)
 	} else {
 		show_parameters(result.Parameters)
 	}

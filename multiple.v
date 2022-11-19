@@ -29,8 +29,8 @@ mut:
 
 struct MultipleClassifierResults {
 mut:
-	break_on_all_flag            bool
-	combined_radii_flag          bool = true
+	break_on_all_flag            bool = true
+	combined_radii_flag          bool
 	number_of_attributes         []int
 	maximum_number_of_attributes int
 	lcm_attributes               i64
@@ -238,7 +238,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}')
 	} else {
 		final_cr.inferred_class = uniques(inferred_classes_by_classifier.filter(it != ''))[0]
-		// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))} inferred_class: ${final_cr.inferred_class}')
+		println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))} inferred_class: ${final_cr.inferred_class}')
 	}
 	final_cr.inferred_class_array = inferred_class_array
 	final_cr.nearest_neighbors_array = nearest_neighbors_array
