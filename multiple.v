@@ -29,7 +29,7 @@ mut:
 
 struct MultipleClassifierResults {
 mut:
-	break_on_all_flag            bool = true
+	break_on_all_flag            bool 
 	combined_radii_flag          bool
 	number_of_attributes         []int
 	maximum_number_of_attributes int

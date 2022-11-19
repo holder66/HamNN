@@ -202,9 +202,9 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 // show_multiple_classifiers_options 
 fn show_multiple_classifiers_options(params MultipleOptions) {
 	// println(params)
-	mut row_labels := ['Classifier:','Number of attributes:', 'Binning:', 'Weighting:', 'Balance prevalences:']	
+	mut row_labels := ['Classifier:','Number of attributes:', 'Binning:', 'Weighting:', 'Balance prevalences:', 'Purging:']	
 	println('Multiple Classifier Parameters:')
-	mut row_data := []string{len: 5, init: ''}
+	mut row_data := []string{len: 6, init: ''}
 	for i, par in params.classifier_options {
 		row_data[0] = row_data[0] + '${i:-13}'
 		row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
@@ -212,6 +212,7 @@ fn show_multiple_classifiers_options(params MultipleOptions) {
 		row_data[2] = row_data[2] +'${binning:-13}'
 		row_data[3] = row_data[3] +'${par.weighting_flag:-13}'
 		row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
+		row_data[5] = row_data[5] + '${par.purge_flag:-13}'
 	}
 	for i, row in row_data {
 		println('${row_labels[i]:25}   ${row}')

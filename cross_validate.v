@@ -276,7 +276,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		}
 		// println('part_cl.binning in do_one_fold: $part_cl.binning')
 		fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
-	} else {
+	} else { // ie, asking for multiple classifiers...
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
