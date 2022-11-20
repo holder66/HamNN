@@ -281,7 +281,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
 		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
-			MultipleOptions{}
+			MultipleOptions{}	
 		}
 		for params in saved_params.classifier_options {
 			// println('params: $params')
@@ -290,6 +290,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			fold_result.Parameters = params
 			// println('mult_opts: $mult_opts')
 			part_cl := make_classifier(mut part_ds, mult_opts)
+			// println('we are here')
 			classifier_array << part_cl
 			byte_values_array = [][]u8{}
 			for attr in part_cl.attribute_ordering {
@@ -302,6 +303,7 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 			m_fold_instances := transpose(byte_values_array)
 			// println('m_fold_instances: $m_fold_instances')
 			instances_to_be_classified << m_fold_instances
+			// println('hope to be here!')
 			// instances_to_be_classified << generate_test_instances_array(classifier_array.last(), )
 		}
 		// println('instances_to_be_classified before transpose: $instances_to_be_classified')
