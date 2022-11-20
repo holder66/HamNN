@@ -150,6 +150,8 @@ pub mut:
 	multiple_classify_options_file_path string
 	help_flag                           bool
 	multiple_flag                       bool
+		break_on_all_flag            bool 
+	combined_radii_flag          bool
 	command                             string
 	args                                []string
 }
