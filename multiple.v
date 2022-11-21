@@ -265,6 +265,19 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 fn resolve_conflict(mcr MultipleClassifierResults) string {
 	// println(mcr)
 	// at the smallest sphere radius, can we get a majority vote?
+	mut sphere_index := 0
+	for {
+		mut infs := arrays.flatten(mcr.results_by_classifier.map(it.results_by_radius.filter(it.sphere_index == sphere_index && it.inferred_class_found).map(it.inferred_class)))
+		println(infs)
+		println(element_counts(infs))
+		if element_counts(infs).len > 0 {
+		println(get_map_key_for_max_value(element_counts(infs)))
+		return get_map_key_for_max_value(element_counts(infs))
+	}
+		// println(mcr.results_by_classifier.map(it.results_by_radius.map(it.inferred_class_found.)))
+		sphere_index ++
+		if sphere_index >= mcr.max_sphere_index {break}
+	}
 
 	if mcr.results_by_classifier.len == 2 {
 		absolute_differences := mcr.results_by_classifier.map(it.results_by_radius.map(math.abs(it.nearest_neighbors_by_class[0] - it.nearest_neighbors_by_class[1]))).map(it[0])
