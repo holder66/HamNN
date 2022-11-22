@@ -119,6 +119,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		}
 		mcr.combined_radii = uniques(mcr.combined_radii)
 		mcr.combined_radii.sort()
+		mcr.max_sphere_index = mcr.combined_radii.len
 		// println('combined_radii: ${mcr.combined_radii}')
 		// println(mcr)
 
@@ -244,12 +245,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		if inferred_classes_by_classifier.len > 1
 			&& uniques(inferred_classes_by_classifier.filter(it != '')).len > 1 {
 			final_cr.inferred_class = resolve_conflict(mcr)
+			show_detailed_result(index, final_cr.inferred_class, mcr)
 
 			// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}'
-			println('${index:-7} ${final_cr.inferred_class} ')
-			for i, icr in mcr.results_by_classifier {
-				println('           ${i:4} ${icr.results_by_radius.last().sphere_index:2} ${icr.results_by_radius.last().radius:6} ${icr.results_by_radius.last().nearest_neighbors_by_class:-20} ${icr.results_by_radius.last().inferred_class} ')
-			}
+
 			// println(mcr)
 		} else {
 			final_cr.inferred_class = uniques(inferred_classes_by_classifier.filter(it != ''))[0]
@@ -258,7 +257,16 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	}
 	// final_cr.inferred_class_array = inferred_class_array
 	// final_cr.nearest_neighbors_array = nearest_neighbors_array
+	if opts.verbose_flag {show_detailed_result(index, final_cr.inferred_class, mcr)}
 	return final_cr
+}
+
+// show_detailed_result 
+fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) {
+	for i, icr in mcr.results_by_classifier {
+		println('           ${i:4} ${icr.results_by_radius.last().sphere_index:2} ${icr.results_by_radius.last().radius:6} ${icr.results_by_radius.last().nearest_neighbors_by_class:-20} ${icr.results_by_radius.last().inferred_class} ')
+	}
+	println('${index:-7} ${class} ')
 }
 
 // resolve_conflict

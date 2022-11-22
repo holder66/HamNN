@@ -112,6 +112,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 
 // get_explore_analytics
 fn get_explore_analytics(results ExploreResult) []MaxSettings {
+	println(results)
 	mut analysis := []MaxSettings{}
 	// collect all the accuracy figures into arrays
 	mut raw_accuracies := []f64{}
