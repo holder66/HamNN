@@ -428,9 +428,93 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 }
 
+struct ExploreAnalytics {
+	mut:
+	label string
+	value f64
+	settings MaxSettings
+}
+
+// explore_analytics 
+fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
+	mut analytics := []ExploreAnalytics{}
+	raw_accuracies := expr.array_of_results.map(it.raw_acc)
+	raw_acc := ExploreAnalytics{
+		label: 'raw accuracy'
+		value: raw_accuracies[idx_max(raw_accuracies)]
+		settings: analytics_settings(expr.array_of_results[idx_max(raw_accuracies)])
+	}
+	analytics << raw_acc
+	return analytics
+}
+
+// analytics_settings 
+fn analytics_settings(cvr CrossVerifyResult) MaxSettings {
+	_, _, purged_percent := get_purged_percent(cvr)
+	return MaxSettings{
+		attributes_used: cvr.attributes_used
+		binning: cvr.bin_values
+		purged_percent: purged_percent
+	}
+}
+
+// get_explore_analytics
+fn get_explore_analytics(results ExploreResult) []MaxSettings {
+	// println(results)
+	mut analysis := []MaxSettings{}
+	// collect all the accuracy figures into arrays
+	mut raw_accuracies := []f64{}
+	mut balanced_accuracies := []f64{}
+	mut true_positives := []int{}
+	mut true_negatives := []int{}
+	for a in results.array_of_results {
+		raw_accuracies << a.raw_acc
+		balanced_accuracies << a.balanced_accuracy
+		true_positives << a.true_positives[a.pos_neg_classes[0]]
+		true_negatives << a.true_negatives[a.pos_neg_classes[1]]
+	}
+	// get the index for the maximum value of each accuracy type
+	mut max_accuracy_indices := []int{}
+	max_accuracy_indices << idx_max(raw_accuracies)
+	max_accuracy_indices << idx_max(balanced_accuracies)
+	max_accuracy_indices << idx_max(true_positives)
+	max_accuracy_indices << idx_max(true_negatives)
+	println(max_accuracy_indices)
+	// put the maximum accuracy values into an array
+	mut max_accuracy_values := []f64{}
+	for i, idx in max_accuracy_indices {
+		max_accuracy_values << match i {
+			0 { raw_accuracies[idx] }
+			1 { balanced_accuracies[idx] }
+			2 { f64(true_positives[idx])}
+			3 { f64(true_negatives[idx])}
+			else { 0.0 }
+		}
+	}
+	for i, idx in max_accuracy_indices {
+		analysis << get_max_settings(results.array_of_results[idx], max_accuracy_values[i])
+	}
+	return analysis
+}
+
+// get_max_settings
+fn get_max_settings(result CrossVerifyResult, max f64) MaxSettings {
+	_, _, purged_percent := get_purged_percent(result)
+	mut max_settings := MaxSettings{
+		max_value: max
+		attributes_used: result.attributes_used
+		binning: result.bin_values
+		purged_percent: purged_percent
+	}
+	return max_settings
+}
+
 // show_explore_trailer
 fn show_explore_trailer(results ExploreResult, opts Options) {
+	println(explore_analytics(results))
+	maxima := get_explore_analytics(results)
 	println('')
+	println(maxima)
 	println('Command line arguments: ${opts.args}')
 	println('Maximum accuracies obtained:')
 	mut ea := MaxSettings{}
