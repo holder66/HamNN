@@ -94,7 +94,7 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 		atts += results.att_interval
 	}
 	results.array_of_results = array_of_results
-	results.analytics = get_explore_analytics(results)
+	// results.analytics = get_explore_analytics(results)
 	if opts.outputfile_path != '' {
 		save_json_file(results, opts.outputfile_path)
 	}
