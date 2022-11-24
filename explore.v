@@ -110,48 +110,6 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 	return results
 }
 
-// // get_explore_analytics
-// fn get_explore_analytics(results ExploreResult) []MaxSettings {
-// 	println(results)
-// 	mut analysis := []MaxSettings{}
-// 	// collect all the accuracy figures into arrays
-// 	mut raw_accuracies := []f64{}
-// 	mut balanced_accuracies := []f64{}
-// 	for a in results.array_of_results {
-// 		raw_accuracies << a.raw_acc
-// 		balanced_accuracies << a.balanced_accuracy
-// 	}
-// 	// get the index for the maximum value of each accuracy type
-// 	mut max_accuracy_indices := []int{}
-// 	max_accuracy_indices << idx_max(raw_accuracies)
-// 	max_accuracy_indices << idx_max(balanced_accuracies)
-// 	// put the maximum accuracy values into an array
-// 	mut max_accuracy_values := []f64{}
-// 	for i, idx in max_accuracy_indices {
-// 		max_accuracy_values << match i {
-// 			0 { raw_accuracies[idx] }
-// 			1 { balanced_accuracies[idx] }
-// 			else { 0.0 }
-// 		}
-// 	}
-// 	for i, idx in max_accuracy_indices {
-// 		analysis << get_max_settings(results.array_of_results[idx], max_accuracy_values[i])
-// 	}
-// 	return analysis
-// }
-
-// // get_max_settings
-// fn get_max_settings(result CrossVerifyResult, max f64) MaxSettings {
-// 	_, _, purged_percent := get_purged_percent(result)
-// 	mut max_settings := MaxSettings{
-// 		max_value: max
-// 		attributes_used: result.attributes_used
-// 		binning: result.bin_values
-// 		purged_percent: purged_percent
-// 	}
-// 	return max_settings
-// }
-
 // get_attribute_range
 fn get_attribute_range(atts []int, max int) AttributeRange {
 	if atts == [0] {

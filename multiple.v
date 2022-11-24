@@ -263,8 +263,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 
 // show_detailed_result 
 fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) {
+	println('classifier  sphere index  radius  nearest neighbors  inferred class')
 	for i, icr in mcr.results_by_classifier {
-		println('           ${i:4} ${icr.results_by_radius.last().sphere_index:2} ${icr.results_by_radius.last().radius:6} ${icr.results_by_radius.last().nearest_neighbors_by_class:-20} ${icr.results_by_radius.last().inferred_class} ')
+		a := icr.results_by_radius.last()
+		println('${i:10}  ${a.sphere_index:12}  ${a.radius:6}  ${a.nearest_neighbors_by_class:-17}  ${a.inferred_class} ')
 	}
 	println('${index:-7} ${class} ')
 }
