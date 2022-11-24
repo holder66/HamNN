@@ -200,7 +200,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			final_cr.sphere_index = sphere_index
 			sphere_index++
 		} // end of loop through sphere indices
-		
+	} // end of else if (ie not using combined radii)
 		// if !found {
 		// 	println(mcr)
 		// 	panic('failed to infer a class')
@@ -222,7 +222,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			final_cr.inferred_class = uniques(inferred_classes_by_classifier.filter(it != ''))[0]
 			// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))} inferred_class: ${final_cr.inferred_class}')
 		}
-	}
+	
 	// final_cr.inferred_class_array = inferred_class_array
 	// final_cr.nearest_neighbors_array = nearest_neighbors_array
 	if opts.verbose_flag {show_detailed_result(index, final_cr.inferred_class, mcr)}
@@ -239,33 +239,47 @@ fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) 
 	println('${index:-7} ${class} ')
 }
 
+// get_ratio 
+fn get_ratio(a []int) f64 {
+	if 0 in a {return f64(array_max(a.filter(it != 0)))}
+	return f64(array_max(a)) / array_min(a)
+	
+}
+
 // resolve_conflict
 fn resolve_conflict(mcr MultipleClassifierResults) string {
 	// println(mcr)
 	// at the smallest sphere radius, can we get a majority vote?
 	mut sphere_index := 0
-	for {
-		mut infs := arrays.flatten(mcr.results_by_classifier.map(it.results_by_radius.filter(it.sphere_index == sphere_index && it.inferred_class_found).map(it.inferred_class)))
-		// println(infs)
-		// println(element_counts(infs))
-		if element_counts(infs).len > 0 {
-		println(get_map_key_for_max_value(element_counts(infs)))
-		return get_map_key_for_max_value(element_counts(infs))
-	}
-		// println(mcr.results_by_classifier.map(it.results_by_radius.map(it.inferred_class_found.)))
-		sphere_index ++
-		if sphere_index >= mcr.max_sphere_index {break}
-	}
+	// for {
+	// 	mut infs := arrays.flatten(mcr.results_by_classifier.map(it.results_by_radius.filter(it.sphere_index == sphere_index && it.inferred_class_found).map(it.inferred_class)))
+	// 	// println(infs)
+	// 	// println(element_counts(infs))
+	// 	if element_counts(infs).len > 0 {
+	// 	println(get_map_key_for_max_value(element_counts(infs)))
+	// 	return get_map_key_for_max_value(element_counts(infs))
+	// }
+	// 	// println(mcr.results_by_classifier.map(it.results_by_radius.map(it.inferred_class_found.)))
+	// 	sphere_index ++
+	// 	if sphere_index >= mcr.max_sphere_index {break}
+	// }
 
-	if mcr.results_by_classifier.len == 2 {
-		absolute_differences := mcr.results_by_classifier.map(it.results_by_radius.map(math.abs(it.nearest_neighbors_by_class[0] - it.nearest_neighbors_by_class[1]))).map(it[0])
-		println('absolute nearest neighbor differences: ${absolute_differences}')
-		// println(idx_max(absolute_differences))
-		icr_idx := idx_max(absolute_differences)
-		return mcr.results_by_classifier[icr_idx].inferred_class
-	}
+	// pick the result with the biggest ratio between classes
+	// to avoid dividing by zero, if one of the nearest neighbors values
+	// is zero, just use the other one as the ratio
+	ratios := mcr.results_by_classifier.map(it.results_by_radius.last()).map(it.nearest_neighbors_by_class).map(get_ratio(it))
+	println(ratios)
+	return mcr.results_by_classifier[idx_max(ratios)].inferred_class
+
+	// if mcr.results_by_classifier.len == 2 {
+	// 	absolute_differences := mcr.results_by_classifier.map(it.results_by_radius.map(math.abs(it.nearest_neighbors_by_class[0] - it.nearest_neighbors_by_class[1]))).map(it[0])
+	// 	println('absolute nearest neighbor differences: ${absolute_differences}')
+	// 	// println(idx_max(absolute_differences))
+	// 	icr_idx := idx_max(absolute_differences)
+	// 	return mcr.results_by_classifier[icr_idx].inferred_class
+	// }
 	// println('inside resolve_conflict()')
-	return 'unresolved conflict'
+	// return 'unresolved conflict'
 	// return get_map_key_for_max_value(string_element_counts(inferred_class_array_filtered))
 	// filter out the null classifier results
 	// inferred_class_array_filtered := inferred_class_array.filter(it != '')
