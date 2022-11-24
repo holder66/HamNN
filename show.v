@@ -439,12 +439,31 @@ struct ExploreAnalytics {
 fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 	mut analytics := []ExploreAnalytics{}
 	raw_accuracies := expr.array_of_results.map(it.raw_acc)
-	raw_acc := ExploreAnalytics{
+	analytics << ExploreAnalytics{
 		label: 'raw accuracy'
 		value: raw_accuracies[idx_max(raw_accuracies)]
 		settings: analytics_settings(expr.array_of_results[idx_max(raw_accuracies)])
 	}
-	analytics << raw_acc
+	balanced_accuracies := expr.array_of_results.map(it.balanced_accuracy)
+	analytics << ExploreAnalytics{
+		label: 'balanced accuracy'
+		value: balanced_accuracies[idx_max(balanced_accuracies)]
+		settings: analytics_settings(expr.array_of_results[idx_max(balanced_accuracies)])
+	}
+	true_positives := expr.array_of_results.map(it.true_positives[it.pos_neg_classes[0]])
+	println(true_positives)
+	analytics << ExploreAnalytics{
+		label: 'true_positives'
+		value: f64(true_positives[idx_max(true_positives)])
+		settings: analytics_settings(expr.array_of_results[idx_max(true_positives)])
+	}
+	true_negatives := expr.array_of_results.map(it.true_positives[it.pos_neg_classes[1]])
+	println(true_negatives)
+	analytics << ExploreAnalytics{
+		label: 'true_negatives'
+		value: f64(true_negatives[idx_max(true_negatives)])
+		settings: analytics_settings(expr.array_of_results[idx_max(true_negatives)])
+	}
 	return analytics
 }
 
