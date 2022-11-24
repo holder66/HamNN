@@ -7,39 +7,6 @@ import os
 import json
 import math
 
-pub struct MultipleOptions {
-	classifier_options  []Parameters
-	break_on_all_flag   bool
-	combined_radii_flag bool
-}
-
-struct RadiusResults {
-mut:
-	sphere_index               int
-	radius                     int
-	nearest_neighbors_by_class []int
-	inferred_class_found       bool
-	inferred_class             string
-}
-
-struct IndividualClassifierResults {
-mut:
-	results_by_radius []RadiusResults
-	inferred_class    string
-	radii             []int
-}
-
-struct MultipleClassifierResults {
-mut:
-	break_on_all_flag            bool
-	combined_radii_flag          bool
-	number_of_attributes         []int
-	maximum_number_of_attributes int
-	lcm_attributes               i64
-	combined_radii               []int
-	results_by_classifier        []IndividualClassifierResults
-	max_sphere_index int
-}
 
 // read_multiple_opts
 fn read_multiple_opts(path string) !MultipleOptions {
@@ -58,14 +25,15 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 		multiple_flag: true
 		Class: classifiers[0].Class
 	}
+	// println(opts.MultipleOptions)
+
 	mut mcr := MultipleClassifierResults{
-		break_on_all_flag: opts.break_on_all_flag
-		combined_radii_flag: opts.combined_radii_flag
+		MultipleOptions: opts.MultipleOptions
 		results_by_classifier: []IndividualClassifierResults{len: classifiers.len}
 	}
 
 	// println(opts)
-	// println(mcr)
+	// println(mcr.MultipleOptions)
 	// to classify, get Hamming distances between the entered instance and
 	// all the instances in all the classifiers; return the class for the
 	// instance giving the lowest Hamming distance.
@@ -278,8 +246,8 @@ fn resolve_conflict(mcr MultipleClassifierResults) string {
 	mut sphere_index := 0
 	for {
 		mut infs := arrays.flatten(mcr.results_by_classifier.map(it.results_by_radius.filter(it.sphere_index == sphere_index && it.inferred_class_found).map(it.inferred_class)))
-		println(infs)
-		println(element_counts(infs))
+		// println(infs)
+		// println(element_counts(infs))
 		if element_counts(infs).len > 0 {
 		println(get_map_key_for_max_value(element_counts(infs)))
 		return get_map_key_for_max_value(element_counts(infs))

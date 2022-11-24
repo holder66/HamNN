@@ -137,6 +137,7 @@ pub mut:
 pub struct Options {
 	Parameters
 	DisplaySettings
+	MultipleOptions
 pub mut:
 	struct_type                         string = '.Options'
 	non_options                         []string
@@ -150,10 +151,42 @@ pub mut:
 	multiple_classify_options_file_path string
 	help_flag                           bool
 	multiple_flag                       bool
-		break_on_all_flag            bool 
-	combined_radii_flag          bool
 	command                             string
 	args                                []string
+}
+
+pub struct MultipleOptions {
+	pub mut:
+	classifier_options  []Parameters
+	break_on_all_flag   bool
+	combined_radii_flag bool
+}
+
+struct RadiusResults {
+mut:
+	sphere_index               int
+	radius                     int
+	nearest_neighbors_by_class []int
+	inferred_class_found       bool
+	inferred_class             string
+}
+
+struct IndividualClassifierResults {
+mut:
+	results_by_radius []RadiusResults
+	inferred_class    string
+	radii             []int
+}
+
+struct MultipleClassifierResults {
+	MultipleOptions
+mut:
+	number_of_attributes         []int
+	maximum_number_of_attributes int
+	lcm_attributes               i64
+	combined_radii               []int
+	results_by_classifier        []IndividualClassifierResults
+	max_sphere_index int
 }
 
 pub struct Environment {
@@ -228,6 +261,7 @@ pub struct CrossVerifyResult {
 	DisplaySettings
 	Metrics
 	BinaryMetrics
+	MultipleOptions
 pub mut:
 	struct_type                         string = '.CrossVerifyResult'
 	datafile_path                       string

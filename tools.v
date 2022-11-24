@@ -284,6 +284,14 @@ fn uniques<T>(list []T) []T {
 	return element_counts(list).keys()
 }
 
+// find the index of b in arr
+fn find<T>(arr []T, b T) int {
+	for i, a in arr {
+		if a == b {return i}
+	}
+	return 0
+}
+
 // idx_max
 fn idx_max<T>(a []T) int {
 	if a == [] {

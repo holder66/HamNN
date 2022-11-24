@@ -203,7 +203,7 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 fn show_multiple_classifiers_options(params MultipleOptions) {
 	// println(params)
 	mut row_labels := ['Classifier:','Number of attributes:', 'Binning:', 'Weighting:', 'Balance prevalences:', 'Purging:']
-	println('break_on_all_flag: ${params.break_on_all_flag} combined_radii_flag: ${params.combined_radii_flag}')
+	println('break_on_all_flag: ${params.break_on_all_flag}     combined_radii_flag: ${params.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
 	mut row_data := []string{len: 6, init: ''}
 	for i, par in params.classifier_options {
@@ -233,11 +233,11 @@ fn show_crossvalidation(result CrossVerifyResult) {
 		 }
 	 })
 	if result.multiple_classify_options_file_path != '' {
-		println('(Classifier parameters in file "${result.multiple_classify_options_file_path}")')
-		saved_params := read_multiple_opts(result.multiple_classify_options_file_path) or {
-			MultipleOptions{}
-		}
-		show_multiple_classifiers_options(saved_params)
+		// println('(Classifier parameters in file "${result.multiple_classify_options_file_path}")')
+		// saved_params := read_multiple_opts(result.multiple_classify_options_file_path) or {
+		// 	panic('read_multiple_opts() failed')
+		// }
+		show_multiple_classifiers_options(result.MultipleOptions)
 	} else {
 		show_parameters(result.Parameters)
 	}
@@ -464,6 +464,11 @@ fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 		label: 'true negatives'
 		integer_value: true_negatives[idx_max(true_negatives)]
 		settings: analytics_settings(expr.array_of_results[idx_max(true_negatives)])
+	}
+	analytics << ExploreAnalytics{
+		label: 'true positives = 16'
+		integer_value: true_positives[find(true_positives, 16)]
+		settings: analytics_settings(expr.array_of_results[find(true_positives, 16)])
 	}
 	return analytics
 }

@@ -43,6 +43,14 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 			confusion_matrix_map[key2][key1] = 0
 		}
 	}
+	if opts.multiple_classify_options_file_path != '' {
+		cross_opts.MultipleOptions = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or { 
+				panic('read_multiple_opts failed')
+			}
+			cross_opts.break_on_all_flag = opts.break_on_all_flag
+			cross_opts.combined_radii_flag = opts.combined_radii_flag
+
+	}
 	// instantiate a struct for the result
 	mut inferences_map := map[string]int{}
 	for key, _ in ds.class_counts {
@@ -50,13 +58,13 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	}
 	mut cross_result := CrossVerifyResult{
 		datafile_path: ds.path
-		multiple_classify_options_file_path: opts.multiple_classify_options_file_path
+		multiple_classify_options_file_path: cross_opts.multiple_classify_options_file_path
 		labeled_classes: ds.class_values
 		class_counts: ds.class_counts
 		classes: ds.classes
 		pos_neg_classes: get_pos_neg_classes(ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
-		repetitions: opts.repetitions
+		repetitions: cross_opts.repetitions
 		correct_inferences: inferences_map.clone()
 		incorrect_inferences: inferences_map.clone()
 		wrong_inferences: inferences_map.clone()
@@ -64,9 +72,11 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		true_negatives: inferences_map.clone()
 		false_positives: inferences_map.clone()
 		false_negatives: inferences_map.clone()
-		Parameters: opts.Parameters
-		DisplaySettings: opts.DisplaySettings
+		Parameters: cross_opts.Parameters
+		DisplaySettings: cross_opts.DisplaySettings
+		MultipleOptions: cross_opts.MultipleOptions
 	}
+	
 	// if there are no useful continuous attributes, set binning to 0
 	if ds.useful_continuous_attributes.len == 0 {
 		cross_opts.bins = [0]
@@ -280,9 +290,12 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
-		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
-			MultipleOptions{}	
-		}
+		// println(mult_opts)
+		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or { 
+				panic('read_multiple_opts failed')
+			}	
+		
+
 		for params in saved_params.classifier_options {
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
