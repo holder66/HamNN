@@ -5,7 +5,7 @@ module hamnn
 import arrays
 import os
 import json
-import math
+// import math
 
 
 // read_multiple_opts
@@ -250,7 +250,7 @@ fn get_ratio(a []int) f64 {
 fn resolve_conflict(mcr MultipleClassifierResults) string {
 	// println(mcr)
 	// at the smallest sphere radius, can we get a majority vote?
-	mut sphere_index := 0
+	// mut sphere_index := 0
 	// for {
 	// 	mut infs := arrays.flatten(mcr.results_by_classifier.map(it.results_by_radius.filter(it.sphere_index == sphere_index && it.inferred_class_found).map(it.inferred_class)))
 	// 	// println(infs)
