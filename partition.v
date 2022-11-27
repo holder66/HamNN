@@ -61,7 +61,7 @@ fn get_partition_indices(total int, n int, curr int) (int, int) {
 
 // get_rest_of_array given the start s and the end e of the slice to be removed,
 // returns the rest of the array
-fn get_rest_of_array<T>(arr []T, s int, e int) []T {
+fn get_rest_of_array[T](arr []T, s int, e int) []T {
 	mut rest := []T{}
 	for i, val in arr {
 		if i < s || i >= e {
@@ -72,7 +72,7 @@ fn get_rest_of_array<T>(arr []T, s int, e int) []T {
 }
 
 // get_index_items
-fn get_index_items<T>(arr []T, indices []int) []T {
+fn get_index_items[T](arr []T, indices []int) []T {
 	mut sel := []T{}
 	for i, val in arr {
 		if i in indices {

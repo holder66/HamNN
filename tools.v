@@ -7,7 +7,7 @@ import os
 import json
 
 // save_json_file
-fn save_json_file<T>(u T, path string) {
+fn save_json_file[T](u T, path string) {
 	s := json.encode(u)
 	mut f := os.open_file(path, 'w') or { panic(err.msg()) }
 	f.write_string(s) or { panic(err.msg()) }
@@ -15,7 +15,7 @@ fn save_json_file<T>(u T, path string) {
 }
 
 // transpose a 2d array
-fn transpose<T>(matrix [][]T) [][]T {
+fn transpose[T](matrix [][]T) [][]T {
 	mut matrix_t := [][]T{len: matrix[0].len, init: []T{len: matrix.len}}
 	for i, row_element in matrix {
 		for j, col_element in row_element {
@@ -43,7 +43,7 @@ fn integer_element_counts(array []int) map[int]int {
 	return counts
 }
 
-pub fn element_counts<T>(array []T) map[T]int {
+pub fn element_counts[T](array []T) map[T]int {
 	mut counts := map[T]int{}
 	for element in array {
 		counts[element]++
@@ -114,7 +114,7 @@ alternatively, substitute -max_f32 for missing values
 use the previously calculated min and max to discretize. The routine should set the bin number to 0 when it encounters -max_f32
 */
 // pub fn discretize_attribute(values []f32, min f32, max f32, bins int) []int {
-fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
+fn discretize_attribute[T](values []T, min T, max T, bins int) []int {
 	// println('$min  $max  $bins')
 	mut bin_values := []int{}
 	mut bin := bins
@@ -133,7 +133,7 @@ fn discretize_attribute<T>(values []T, min T, max T, bins int) []int {
 }
 
 // bin_values_array
-fn bin_values_array<T>(values []T, min T, max T, bins int) []u8 {
+fn bin_values_array[T](values []T, min T, max T, bins int) []u8 {
 	bin_size := (max - min) / bins
 	mut bin_values := []u8{}
 	mut bin := u8(0)
@@ -151,7 +151,7 @@ fn bin_values_array<T>(values []T, min T, max T, bins int) []u8 {
 }
 
 // bin_single_value
-fn bin_single_value<T>(value T, min T, max T, bins int) byte {
+fn bin_single_value[T](value T, min T, max T, bins int) byte {
 	bin_size := (max - min) / bins
 	mut bin := u8(0)
 	if value == -math.max_f32 {
@@ -223,7 +223,7 @@ fn lcm(arr []int) i64 {
 }
 
 // array_min returns the minimum value in the array
-fn array_min<T>(a []T) T {
+fn array_min[T](a []T) T {
 	// if a.len == 0 {
 	// 	return error('.min called on an empty array')
 	// }
@@ -237,7 +237,7 @@ fn array_min<T>(a []T) T {
 }
 
 // array_max returns the maximum value in the array
-fn array_max<T>(a []T) T {
+fn array_max[T](a []T) T {
 	// if a.len == 0 {
 	// 	return error('.max called on an empty array')
 	// }
@@ -251,7 +251,7 @@ fn array_max<T>(a []T) T {
 }
 
 // array_sum returns the sum of an array's numeric values
-fn array_sum<T>(list []T) T {
+fn array_sum[T](list []T) T {
 	// if list.len == 0 {
 	// 	return error('Cannot sum up array of nothing.')
 	// } else {
@@ -269,12 +269,12 @@ fn array_sum<T>(list []T) T {
 }
 
 // uniques
-fn uniques<T>(list []T) []T {
+fn uniques[T](list []T) []T {
 	return element_counts(list).keys()
 }
 
 // idx_max
-fn idx_max<T>(a []T) int {
+fn idx_max[T](a []T) int {
 	if a == [] {
 		panic('idx_max was called on an empty array')
 	}
