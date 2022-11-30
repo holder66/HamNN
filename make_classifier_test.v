@@ -15,7 +15,7 @@ fn testsuite_end() ? {
 }
 
 // test_make_classifier
-fn test_make_classifier(mut ) ? {
+fn test_make_classifier() ? {
 	mut opts := Options{
 		bins: [2, 12]
 		exclude_flag: false

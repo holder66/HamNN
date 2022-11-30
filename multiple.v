@@ -243,6 +243,8 @@ fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) 
 
 // get_ratio
 fn get_ratio(a []int) f64 {
+	println('a in get_ratio: ${a}')
+	if a.all(it == 0) { return 1 }
 	if 0 in a {
 		return f64(array_max(a.filter(it != 0)))
 	}
