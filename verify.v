@@ -125,7 +125,7 @@ fn generate_test_instances_array(cl Classifier, test_ds Dataset) [][]u8 {
 			}
 		}
 		if cl.trained_attributes[attr].attribute_type == 'C' {
-			test_binned_values = discretize_attribute<f32>(test_ds.useful_continuous_attributes[test_index],
+			test_binned_values = discretize_attribute[f32](test_ds.useful_continuous_attributes[test_index],
 				cl.trained_attributes[attr].minimum, cl.trained_attributes[attr].maximum,
 				cl.trained_attributes[attr].bins)
 		} else { // ie for discrete attributes

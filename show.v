@@ -199,10 +199,11 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 	show_cross_or_verify_result(result)
 }
 
-// show_multiple_classifiers_options 
+// show_multiple_classifiers_options
 fn show_multiple_classifiers_options(params MultipleOptions) {
 	// println(params)
-	mut row_labels := ['Classifier:','Number of attributes:', 'Binning:', 'Weighting:', 'Balance prevalences:', 'Purging:']
+	mut row_labels := ['Classifier:', 'Number of attributes:', 'Binning:', 'Weighting:',
+		'Balance prevalences:', 'Purging:']
 	println('break_on_all_flag: ${params.break_on_all_flag}     combined_radii_flag: ${params.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
 	mut row_data := []string{len: 6, init: ''}
@@ -210,8 +211,8 @@ fn show_multiple_classifiers_options(params MultipleOptions) {
 		row_data[0] = row_data[0] + '${i:-13}'
 		row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
 		binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
-		row_data[2] = row_data[2] +'${binning:-13}'
-		row_data[3] = row_data[3] +'${par.weighting_flag:-13}'
+		row_data[2] = row_data[2] + '${binning:-13}'
+		row_data[3] = row_data[3] + '${par.weighting_flag:-13}'
 		row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
 		row_data[5] = row_data[5] + '${par.purge_flag:-13}'
 	}
@@ -429,14 +430,14 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 }
 
 struct ExploreAnalytics {
-	mut:
-	label string
+mut:
+	label         string
 	percent_value f64
 	integer_value int
-	settings MaxSettings
+	settings      MaxSettings
 }
 
-// explore_analytics 
+// explore_analytics
 fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 	mut analytics := []ExploreAnalytics{}
 	raw_accuracies := expr.array_of_results.map(it.raw_acc)
@@ -473,7 +474,7 @@ fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 	return analytics
 }
 
-// analytics_settings 
+// analytics_settings
 fn analytics_settings(cvr CrossVerifyResult) MaxSettings {
 	_, _, purged_percent := get_purged_percent(cvr)
 	return MaxSettings{

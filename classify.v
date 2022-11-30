@@ -72,7 +72,7 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 // get_hamming_distance returns hamming distance between left and right,
 // when both left and right are values which can be represented by a single
 // bit if a bitstring were created
-fn get_hamming_distance<T>(left T, right T) int {
+fn get_hamming_distance[T](left T, right T) int {
 	if left == right {
 		return 0
 	}
@@ -83,7 +83,7 @@ fn get_hamming_distance<T>(left T, right T) int {
 }
 
 // single_array_maximum returns true if a has only one maximum
-fn single_array_maximum<T>(a []T) bool {
+fn single_array_maximum[T](a []T) bool {
 	if a == [] {
 		panic('single_array_maximum was called on an empty array')
 	}

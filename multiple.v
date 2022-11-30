@@ -7,7 +7,6 @@ import os
 import json
 // import math
 
-
 // read_multiple_opts
 fn read_multiple_opts(path string) !MultipleOptions {
 	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
@@ -150,7 +149,8 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				// if we've already found an inferred class with this classifier, or if no more radii left, skip
 				// println('i: ${i} mcr.results_by_classifier[i].inferred_class: ${mcr.results_by_classifier[i].inferred_class}')
 				// println(mcr.results_by_classifier[i].radii)
-				if mcr.results_by_classifier[i].inferred_class == '' && sphere_index < mcr.results_by_classifier[i].radii.len {
+				if mcr.results_by_classifier[i].inferred_class == ''
+					&& sphere_index < mcr.results_by_classifier[i].radii.len {
 					radius := mcr.results_by_classifier[i].radii[sphere_index]
 					mut rr := RadiusResults{
 						sphere_index: sphere_index
@@ -193,7 +193,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 				found = mcr.results_by_classifier.any(it.results_by_radius.any(it.inferred_class_found))
 			}
 			// println('sphere_index: ${sphere_index} found: ${found}')
-			
+
 			if found || sphere_index >= mcr.max_sphere_index {
 				break sphere_index_loop
 			}
@@ -201,35 +201,37 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			sphere_index++
 		} // end of loop through sphere indices
 	} // end of else if (ie not using combined radii)
-		// if !found {
-		// 	println(mcr)
-		// 	panic('failed to infer a class')
-		// }
-		// if inferred_class_array.all(it == '') {
-		// 	panic('failed to infer a class')
-		// }
-		// collect the classes inferred by each classifier
-		inferred_classes_by_classifier := mcr.results_by_classifier.map(it.inferred_class)
-		if inferred_classes_by_classifier.len > 1
-			&& uniques(inferred_classes_by_classifier.filter(it != '')).len > 1 {
-			final_cr.inferred_class = resolve_conflict(mcr)
-			// show_detailed_result(index, final_cr.inferred_class, mcr)
+	// if !found {
+	// 	println(mcr)
+	// 	panic('failed to infer a class')
+	// }
+	// if inferred_class_array.all(it == '') {
+	// 	panic('failed to infer a class')
+	// }
+	// collect the classes inferred by each classifier
+	inferred_classes_by_classifier := mcr.results_by_classifier.map(it.inferred_class)
+	if inferred_classes_by_classifier.len > 1
+		&& uniques(inferred_classes_by_classifier.filter(it != '')).len > 1 {
+		final_cr.inferred_class = resolve_conflict(mcr)
+		// show_detailed_result(index, final_cr.inferred_class, mcr)
 
-			// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}'
+		// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}'
 
-			// println(mcr)
-		} else {
-			final_cr.inferred_class = uniques(inferred_classes_by_classifier.filter(it != ''))[0]
-			// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))} inferred_class: ${final_cr.inferred_class}')
-		}
-	
+		// println(mcr)
+	} else {
+		final_cr.inferred_class = uniques(inferred_classes_by_classifier.filter(it != ''))[0]
+		// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))} inferred_class: ${final_cr.inferred_class}')
+	}
+
 	// final_cr.inferred_class_array = inferred_class_array
 	// final_cr.nearest_neighbors_array = nearest_neighbors_array
-	if opts.verbose_flag {show_detailed_result(index, final_cr.inferred_class, mcr)}
+	if opts.verbose_flag {
+		show_detailed_result(index, final_cr.inferred_class, mcr)
+	}
 	return final_cr
 }
 
-// show_detailed_result 
+// show_detailed_result
 fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) {
 	println('classifier  sphere index  radius  nearest neighbors  inferred class')
 	for i, icr in mcr.results_by_classifier {
@@ -239,11 +241,12 @@ fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) 
 	println('${index:-7} ${class} ')
 }
 
-// get_ratio 
+// get_ratio
 fn get_ratio(a []int) f64 {
-	if 0 in a {return f64(array_max(a.filter(it != 0)))}
+	if 0 in a {
+		return f64(array_max(a.filter(it != 0)))
+	}
 	return f64(array_max(a)) / array_min(a)
-	
 }
 
 // resolve_conflict

@@ -351,7 +351,7 @@ fn plot_roc(result ExploreResult, opts Options) {
 // filter takes two coordinated arrays. It filters array b
 // to include only elements whose corresponding element
 // in array a is equal to the match_value.
-fn filter<T>(match_value string, a []string, b []T) []T {
+fn filter[T](match_value string, a []string, b []T) []T {
 	mut result := []T{}
 	for i, value in a {
 		if match_value == value {
@@ -364,7 +364,7 @@ fn filter<T>(match_value string, a []string, b []T) []T {
 // filter_int takes two coordinated arrays. It filters array b
 // to include only elements whose corresponding element
 // in array a is equal to the match_value.
-fn filter_int<T>(match_value int, a []int, b []T) []T {
+fn filter_int[T](match_value int, a []int, b []T) []T {
 	mut result := []T{}
 	for i, value in a {
 		if match_value == value {

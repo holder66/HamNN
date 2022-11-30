@@ -156,7 +156,7 @@ pub mut:
 }
 
 pub struct MultipleOptions {
-	pub mut:
+pub mut:
 	classifier_options  []Parameters
 	break_on_all_flag   bool
 	combined_radii_flag bool
@@ -186,7 +186,7 @@ mut:
 	lcm_attributes               i64
 	combined_radii               []int
 	results_by_classifier        []IndividualClassifierResults
-	max_sphere_index int
+	max_sphere_index             int
 }
 
 pub struct Environment {
