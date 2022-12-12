@@ -53,6 +53,8 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		// cross_opts.classifier_indices = opts.classifier_indices
 		if opts.classifier_indices == [] {
 		cross_opts.classifier_indices = []int{len: cross_opts.classifier_options.len, init: it}
+		} else {
+			cross_opts.classifier_indices = opts.classifier_indices
 		}
 	}
 	// instantiate a struct for the result
