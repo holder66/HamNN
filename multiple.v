@@ -213,7 +213,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	if inferred_classes_by_classifier.len > 1
 		&& uniques(inferred_classes_by_classifier.filter(it != '')).len > 1 {
 		final_cr.inferred_class = resolve_conflict(mcr)
-		// show_detailed_result(index, final_cr.inferred_class, mcr)
+		show_detailed_result(index, final_cr.inferred_class, mcr)
 
 		// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}'
 
@@ -233,17 +233,17 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 
 // show_detailed_result
 fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) {
-	println('classifier  sphere index  radius  nearest neighbors  inferred class')
+	println('classifier  sphere index  radius  nearest neighbors  ratio  inferred class')
 	for i, icr in mcr.results_by_classifier {
 		a := icr.results_by_radius.last()
-		println('${i:10}  ${a.sphere_index:12}  ${a.radius:6}  ${a.nearest_neighbors_by_class:-17}  ${a.inferred_class} ')
+		println('${i:10}  ${a.sphere_index:12}  ${a.radius:6}  ${a.nearest_neighbors_by_class:-17} ${get_ratio(a.nearest_neighbors_by_class):6.2f}  ${a.inferred_class} ')
 	}
 	println('${index:-7} ${class} ')
 }
 
 // get_ratio
 fn get_ratio(a []int) f64 {
-	println('a in get_ratio: ${a}')
+	// println('a in get_ratio: ${a}')
 	if a.all(it == 0) { return 1 }
 	if 0 in a {
 		return f64(array_max(a.filter(it != 0)))
@@ -269,11 +269,15 @@ fn resolve_conflict(mcr MultipleClassifierResults) string {
 	// 	if sphere_index >= mcr.max_sphere_index {break}
 	// }
 
+	// pick the result with the greatest number of nearest neighbors
+	// sums := mcr.results_by_classifier.map(it.results_by_radius.last()).map(it.nearest_neighbors_by_class).map(array_sum(it))
+	// return mcr.results_by_classifier[idx_max(sums)].inferred_class
+
 	// pick the result with the biggest ratio between classes
 	// to avoid dividing by zero, if one of the nearest neighbors values
 	// is zero, just use the other one as the ratio
 	ratios := mcr.results_by_classifier.map(it.results_by_radius.last()).map(it.nearest_neighbors_by_class).map(get_ratio(it))
-	println(ratios)
+	// println(ratios)
 	return mcr.results_by_classifier[idx_max(ratios)].inferred_class
 
 	// if mcr.results_by_classifier.len == 2 {

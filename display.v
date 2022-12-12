@@ -63,7 +63,7 @@ pub fn display_file(path string, settings DisplaySettings) {
 			saved_vr.DisplaySettings = settings
 			show_verify(saved_vr, opts)
 		}
-		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"cross"') {
+		s.contains('"struct_type":".CrossVerifyResult"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
 			show_crossvalidation(saved_vr)
 		}

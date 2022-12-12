@@ -160,6 +160,7 @@ pub mut:
 	classifier_options  []Parameters
 	break_on_all_flag   bool
 	combined_radii_flag bool
+	classifier_indices []int
 }
 
 struct RadiusResults {

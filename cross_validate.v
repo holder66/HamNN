@@ -47,8 +47,13 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		cross_opts.MultipleOptions = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
 			panic('read_multiple_opts failed')
 		}
+		println(cross_opts)
 		cross_opts.break_on_all_flag = opts.break_on_all_flag
 		cross_opts.combined_radii_flag = opts.combined_radii_flag
+		// cross_opts.classifier_indices = opts.classifier_indices
+		if opts.classifier_indices == [] {
+		cross_opts.classifier_indices = []int{len: cross_opts.classifier_options.len, init: it}
+		}
 	}
 	// instantiate a struct for the result
 	mut inferences_map := map[string]int{}
@@ -108,9 +113,9 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		cross_result.prepurge_instances_counts_array << repetition_result.prepurge_instances_counts_array
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
-	if opts.outputfile_path != '' {
-		save_json_file(cross_result, opts.outputfile_path)
-	}
+	// if opts.outputfile_path != '' {
+	// 	save_json_file(cross_result, opts.outputfile_path)
+	// }
 	// show_results(cross_result, cross_opts)
 
 	cross_result.Metrics = get_metrics(cross_result)
@@ -120,6 +125,9 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	}
 	if opts.command == 'cross' && (opts.show_flag || opts.expanded_flag) {
 		show_crossvalidation(cross_result)
+	}
+	if opts.outputfile_path != '' {
+		save_json_file(cross_result, opts.outputfile_path)
 	}
 	return cross_result
 }
@@ -250,6 +258,7 @@ fn div_map(n int, mut m map[string]int) map[string]int {
 
 // do_one_fold
 fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_opts Options) CrossVerifyResult {
+	// println('cross_opts in do_one_fold: ${cross_opts}')
 	mut byte_values_array := [][]u8{}
 	// partition the dataset into a partial dataset and a fold
 	mut part_ds, fold := partition(pick_list, current_fold, folds, ds, cross_opts)
@@ -289,12 +298,21 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
+		// println('here we are')
 		// println(mult_opts)
-		mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
-			panic('read_multiple_opts failed')
+		mut saved_params := mult_opts.MultipleOptions
+		// mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
+		// 	panic('read_multiple_opts failed')
+		// }
+		// println('mult_opts.classifier_indices1: ${mult_opts.classifier_indices}')
+		if mult_opts.classifier_indices == [] {
+			mult_opts.classifier_indices = []int{len: saved_params.classifier_options.len, init: it}
 		}
-
-		for params in saved_params.classifier_options {
+		// println('mult_opts.classifier_indices2: ${mult_opts.classifier_indices}')
+		for i in mult_opts.classifier_indices {
+			mut params := saved_params.classifier_options[i]
+		// }
+		// for params in saved_params.classifier_options {
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
@@ -355,6 +373,7 @@ fn option_worker(work_channel chan int, result_channel chan CrossVerifyResult, p
 // multiple_classify_in_cross classifies each instance in an array, and
 // returns the results of the classification.
 fn multiple_classify_in_cross(fold int, m_cl []Classifier, m_test_instances [][][]u8, mut result CrossVerifyResult, opts Options) CrossVerifyResult {
+	// println('opts in multiple_classify_in_cross: ${opts}')
 	mut m_classify_result := ClassifyResult{}
 	// for each instance in the test data, perform a classification
 	for i, test_instance in m_test_instances {
@@ -364,6 +383,8 @@ fn multiple_classify_in_cross(fold int, m_cl []Classifier, m_test_instances [][]
 		result.actual_classes << result.labeled_classes[i]
 		result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
 	}
+	result.MultipleOptions = opts.MultipleOptions
+	// println('result in multiple_classify_in_cross: ${result}')
 	return result
 }
 
