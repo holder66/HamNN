@@ -117,6 +117,7 @@ pub mut:
 	// multiple_flag bool
 	purge_flag               bool
 	weighting_flag           bool
+	weight_ranking_flag bool
 	folds                    int
 	repetitions              int
 	random_pick              bool
