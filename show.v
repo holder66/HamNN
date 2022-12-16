@@ -101,6 +101,7 @@ fn show_rank_attributes(result RankingResult) {
 		'underline'), 'magenta'))
 	println('Missing values: ${exclude_phrase}')
 	println('Bin range for continuous attributes: from ${result.binning.lower} to ${result.binning.upper} with interval ${result.binning.interval}')
+	println(if result.weight_ranking_flag {'Weighted'} else {'Unweighted'} + ' by class prevalences')
 	println(chalk.fg(chalk.style('         Name                         Index  Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}
@@ -202,10 +203,10 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 // show_multiple_classifiers_options
 fn show_multiple_classifiers_options(params MultipleOptions) {
 	mut row_labels := ['Classifier:', 'Number of attributes:', 'Binning:', 'Weighting:',
-		'Balance prevalences:', 'Purging:']
+		'Balance prevalences:', 'Purging:', 'Ranking using weighting:']
 	println('break_on_all_flag: ${params.break_on_all_flag}     combined_radii_flag: ${params.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
-	mut row_data := []string{len: 6, init: ''}
+	mut row_data := []string{len: 7, init: ''}
 	for i, par in params.classifier_options {
 		if i in params.classifier_indices {
 		row_data[0] = row_data[0] + '${i:-13}'
@@ -215,6 +216,7 @@ fn show_multiple_classifiers_options(params MultipleOptions) {
 		row_data[3] = row_data[3] + '${par.weighting_flag:-13}'
 		row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
 		row_data[5] = row_data[5] + '${par.purge_flag:-13}'
+		row_data[6] = row_data[6] + '${par.weight_ranking_flag: -13}'
 	}
 }
 	for i, row in row_data {

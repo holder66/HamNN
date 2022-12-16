@@ -70,6 +70,7 @@ pub mut:
 	struct_type                string = '.RankingResult'
 	path                       string
 	exclude_flag               bool
+	weight_ranking_flag bool
 	binning                    Binning
 	array_of_ranked_attributes []RankedAttribute
 }

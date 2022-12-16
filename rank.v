@@ -55,12 +55,14 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	mut ranking_result := RankingResult{
 		path: ds.path
 		exclude_flag: opts.exclude_flag
+		weight_ranking_flag: opts.weight_ranking_flag
 	}
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
-		ds.Class.class_counts, opts.exclude_flag))
+		ds.Class.class_counts, opts.Parameters))
 	// println("we are here")
+	println(opts.weight_ranking_flag)
 	if opts.verbose_flag && opts.command == 'rank' {
-		// println('perfect_rank_value: $perfect_rank_value')
+		println('perfect_rank_value: $perfect_rank_value')
 	}
 	mut ranked_atts := []RankedAttribute{}
 	mut binning := Binning{}
@@ -140,7 +142,12 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 					}
 					row << count
 				}
-				rank_value += sum_along_row_unweighted(row, get_map_values(ds.class_counts))
+				if opts.weight_ranking_flag {
+					rank_value += sum_along_row_weighted(row, get_map_values(ds.class_counts))
+				} else {
+					rank_value += sum_along_row_unweighted(row, get_map_values(ds.class_counts))
+				}
+				// rank_value += sum_along_row_unweighted(row, get_map_values(ds.class_counts))
 			}
 
 			// for each attribute, find the maximum for the rank_values and
