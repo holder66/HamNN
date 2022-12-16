@@ -145,9 +145,8 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 				if opts.weight_ranking_flag {
 					rank_value += sum_along_row_weighted(row, get_map_values(ds.class_counts))
 				} else {
-					rank_value += sum_along_row_unweighted(row, get_map_values(ds.class_counts))
+					rank_value += sum_along_row_unweighted(row)
 				}
-				// rank_value += sum_along_row_unweighted(row, get_map_values(ds.class_counts))
 			}
 
 			// for each attribute, find the maximum for the rank_values and
@@ -249,7 +248,7 @@ fn get_rank_value_for_strings(values []string, class_values []string, class_coun
 		if params.weight_ranking_flag {
 			rank_val += sum_along_row_weighted(row, get_map_values(class_counts))
 		} else {
-			rank_val += sum_along_row_unweighted(row, get_map_values(class_counts))
+			rank_val += sum_along_row_unweighted(row)
 		}
 	}
 	return rank_val
@@ -273,10 +272,9 @@ fn sum_along_row_weighted(row []int, class_counts_array []int) i64 {
 	// println('row_sum: $row_sum')
 	return row_sum
 }
-// sum_along_row_unweighted returns the sum of the absolute values of the differences
-// between counts multiplied by the class count for every combination pair
-// of classes
-fn sum_along_row_unweighted(row []int, class_counts_array []int) i64 {
+// sum_along_row_unweighted returns the sum of the absolute values of 
+// the differences between counts
+fn sum_along_row_unweighted(row []int) i64 {
 	mut row_sum := 0
 	mut diff := 0
 	for i, count1 in row {

@@ -1,6 +1,14 @@
 // rank_test.v
 module hamnn
 
+// test_sum_along_row_unweighted 
+fn test_sum_along_row_unweighted() {
+	assert sum_along_row_unweighted([]int{}) == 0
+	assert sum_along_row_unweighted([0]) == 0
+	assert sum_along_row_unweighted([2,3,4]) == 4
+	assert sum_along_row_unweighted([1]) == 0
+}
+
 // test_rank_attributes
 fn test_rank_attributes() {
 	mut opts := Options{
