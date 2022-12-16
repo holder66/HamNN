@@ -312,3 +312,33 @@ fn idx_max[T](a []T) int {
 	}
 	return idx
 }
+
+// get_binning
+fn get_binning(bins []int) Binning {
+	if bins == [0] {
+		return Binning{
+			lower: 0
+			upper: 0
+			interval: 1
+		}
+	}
+	if bins.len == 1 {
+		return Binning{
+			lower: 1
+			upper: bins[0]
+			interval: 1
+		}
+	}
+	if bins.len == 2 {
+		return Binning{
+			lower: bins[0]
+			upper: bins[1]
+			interval: 1
+		}
+	}
+	return Binning{
+		lower: bins[0]
+		upper: bins[1]
+		interval: bins[2]
+	}
+}

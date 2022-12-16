@@ -60,7 +60,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	perfect_rank_value := f32(get_rank_value_for_strings(ds.Class.class_values, ds.Class.class_values,
 		ds.Class.class_counts, opts.Parameters))
 	// println("we are here")
-	println(opts.weight_ranking_flag)
+	// println(opts.weight_ranking_flag)
 	if opts.verbose_flag && opts.command == 'rank' {
 		println('perfect_rank_value: $perfect_rank_value')
 	}
@@ -221,36 +221,6 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 		save_json_file(ranking_result, opts.outputfile_path)
 	}
 	return ranking_result
-}
-
-// get_binning
-fn get_binning(bins []int) Binning {
-	if bins == [0] {
-		return Binning{
-			lower: 0
-			upper: 0
-			interval: 1
-		}
-	}
-	if bins.len == 1 {
-		return Binning{
-			lower: 1
-			upper: bins[0]
-			interval: 1
-		}
-	}
-	if bins.len == 2 {
-		return Binning{
-			lower: bins[0]
-			upper: bins[1]
-			interval: 1
-		}
-	}
-	return Binning{
-		lower: bins[0]
-		upper: bins[1]
-		interval: bins[2]
-	}
 }
 
 // get_rank_value_for_strings
