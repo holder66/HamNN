@@ -254,15 +254,16 @@ fn get_rank_value_for_strings(values []string, class_values []string, class_coun
 	return rank_val
 }
 
-// sum_along_row_weighted returns the sum of the absolute values of the differences
-// between counts multiplied by the class count for every combination pair
-// of classes
+// sum_along_row_weighted returns the sum of the absolute values of 
+// the differences between counts multiplied by the class count for 
+// every combination pair of classes
 fn sum_along_row_weighted(row []int, class_counts_array []int) i64 {
 	mut row_sum := 0
 	mut diff := 0
-	for i, count1 in row {
+	for i, count1 in row#[..-1] {
 		for j, count2 in row[i + 1..] {
-			diff = count1 * class_counts_array[j + 1] - count2 * class_counts_array[i]
+			diff = count1 * class_counts_array[i + j + 1] - count2 * class_counts_array[i]
+			// println('${i} ${j} ${count1} ${count2} ${class_counts_array[i + j + 1]} ${class_counts_array[i]}')
 			if diff < 0 {
 				diff *= -1
 			}
@@ -272,6 +273,7 @@ fn sum_along_row_weighted(row []int, class_counts_array []int) i64 {
 	// println('row_sum: $row_sum')
 	return row_sum
 }
+
 // sum_along_row_unweighted returns the sum of the absolute values of 
 // the differences between counts
 fn sum_along_row_unweighted(row []int) i64 {
