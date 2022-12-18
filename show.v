@@ -406,6 +406,7 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 		println('(same number of bins for all continous attributes)')
 	}
 	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
+	println('Ranking of attributes ' + if results.weight_ranking_flag {'weighted'} else {'unweighted'} + ' by class prevalences')
 	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
 		' nearest neighbor counts by class prevalences')
 	println('Over attribute range from ${results.start} to ${results.end} by interval ${results.att_interval}')
