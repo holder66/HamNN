@@ -456,14 +456,14 @@ fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 		percent_value: balanced_accuracies[idx_max(balanced_accuracies)]
 		settings: analytics_settings(expr.array_of_results[idx_max(balanced_accuracies)])
 	}
-	true_positives := expr.array_of_results.map(it.true_positives[it.pos_neg_classes[0]])
+	true_positives := expr.array_of_results.map(it.correct_inferences[it.pos_neg_classes[0]])
 	// println(true_positives)
 	analytics << ExploreAnalytics{
 		label: 'true positives'
 		integer_value: true_positives[idx_max(true_positives)]
 		settings: analytics_settings(expr.array_of_results[idx_max(true_positives)])
 	}
-	true_negatives := expr.array_of_results.map(it.true_positives[it.pos_neg_classes[1]])
+	true_negatives := expr.array_of_results.map(it.correct_inferences[it.pos_neg_classes[1]])
 	// println(true_negatives)
 	analytics << ExploreAnalytics{
 		label: 'true negatives'
@@ -472,8 +472,8 @@ fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
 	}
 	analytics << ExploreAnalytics{
 		label: 'true positives = 16'
-		integer_value: true_positives[find(true_positives, 16)]
-		settings: analytics_settings(expr.array_of_results[find(true_positives, 16)])
+		integer_value: if 16 in true_positives { 16 } else { 0 }
+		settings: analytics_settings(if 16 in true_positives {expr.array_of_results[find(true_positives, 16)] } else {CrossVerifyResult{}})
 	}
 	return analytics
 }
