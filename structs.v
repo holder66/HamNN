@@ -140,6 +140,7 @@ pub struct Options {
 	Parameters
 	DisplaySettings
 	MultipleOptions
+	MultipleClassifiersArray
 pub mut:
 	struct_type                         string = '.Options'
 	non_options                         []string
@@ -151,15 +152,27 @@ pub mut:
 	classifierfile_path                 string
 	instancesfile_path                  string
 	multiple_classify_options_file_path string
+	settingsfile_path string
 	help_flag                           bool
 	multiple_flag                       bool
+	append_settings_flag bool 
 	command                             string
 	args                                []string
 }
 
+pub struct MultipleClassifiersArray {
+pub mut:
+	multiple_classifiers []ClassifierSettings
+}
+
+pub struct ClassifierSettings {
+pub mut:
+	classifier_options  Parameters
+	binary_metrics BinaryMetrics
+}
+
 pub struct MultipleOptions {
 pub mut:
-	classifier_options  []Parameters
 	break_on_all_flag   bool
 	combined_radii_flag bool
 	classifier_indices []int
@@ -265,6 +278,7 @@ pub struct CrossVerifyResult {
 	Metrics
 	BinaryMetrics
 	MultipleOptions
+	MultipleClassifiersArray
 pub mut:
 	struct_type                         string = '.CrossVerifyResult'
 	datafile_path                       string

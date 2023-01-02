@@ -201,22 +201,23 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 }
 
 // show_multiple_classifiers_options
-fn show_multiple_classifiers_options(params MultipleOptions) {
+fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifiersArray) {
 	mut row_labels := ['Classifier:', 'Number of attributes:', 'Binning:', 'Weighting:',
 		'Balance prevalences:', 'Purging:', 'Ranking using weighting:']
-	println('break_on_all_flag: ${params.break_on_all_flag}     combined_radii_flag: ${params.combined_radii_flag}')
+	println('break_on_all_flag: ${m_o.break_on_all_flag}     combined_radii_flag: ${m_o.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
 	mut row_data := []string{len: 7, init: ''}
-	for i, par in params.classifier_options {
-		if i in params.classifier_indices {
+	for i, par in m_c_a.multiple_classifiers {
+		if i in m_o.classifier_indices {
+			println(par)
 		row_data[0] = row_data[0] + '${i:-13}'
-		row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
-		binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
-		row_data[2] = row_data[2] + '${binning:-13}'
-		row_data[3] = row_data[3] + '${par.weighting_flag:-13}'
-		row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
-		row_data[5] = row_data[5] + '${par.purge_flag:-13}'
-		row_data[6] = row_data[6] + '${par.weight_ranking_flag: -13}'
+		// row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
+		// binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
+		// row_data[2] = row_data[2] + '${binning:-13}'
+		// row_data[3] = row_data[3] + '${par.weighting_flag:-13}'
+		// row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
+		// row_data[5] = row_data[5] + '${par.purge_flag:-13}'
+		// row_data[6] = row_data[6] + '${par.weight_ranking_flag: -13}'
 	}
 }
 	for i, row in row_data {
@@ -241,7 +242,7 @@ fn show_crossvalidation(result CrossVerifyResult) {
 		// saved_params := read_multiple_opts(result.multiple_classify_options_file_path) or {
 		// 	panic('read_multiple_opts() failed')
 		// }
-		show_multiple_classifiers_options(result.MultipleOptions)
+		show_multiple_classifiers_options(result.MultipleOptions, result.MultipleClassifiersArray)
 	} else {
 		show_parameters(result.Parameters)
 	}

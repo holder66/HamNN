@@ -14,6 +14,14 @@ fn save_json_file[T](u T, path string) {
 	f.close()
 }
 
+// append_json_file 
+fn append_json_file[T](u T, path string) {
+	s := json.encode(u)
+	mut f := os.open_append(path) or { panic(err.msg()) }
+	f.write_string(s) or { panic(err.msg()) }
+	f.close()
+}
+
 // idx_true returns the index of the first true element in boolean array a.
 // Returns -1 if no true element found.
 fn idx_true(a []bool) int {

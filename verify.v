@@ -69,14 +69,14 @@ pub fn verify(opts Options) CrossVerifyResult {
 		mut mult_opts := opts
 		mut ds := load_file(opts.datafile_path)
 		mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path) or {
-			MultipleOptions{}
+			MultipleClassifiersArray{}
 		}
 		// println('mult_opts: $mult_opts')
-		for params in saved_params.classifier_options {
+		for params in saved_params.multiple_classifiers {
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
-			mult_opts.Parameters = params
-			verify_result.Parameters = params
+			mult_opts.Parameters = params.classifier_options
+			verify_result.Parameters = params.classifier_options
 			// println('mult_opts: $mult_opts')
 			classifier_array << make_classifier(mut ds, mult_opts)
 			instances_to_be_classified << generate_test_instances_array(classifier_array.last(),

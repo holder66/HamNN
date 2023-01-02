@@ -44,7 +44,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		}
 	}
 	if opts.multiple_classify_options_file_path != '' {
-		cross_opts.MultipleOptions = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
+		cross_opts.MultipleClassifiersArray = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
 			panic('read_multiple_opts failed')
 		}
 		println(cross_opts)
@@ -52,7 +52,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		cross_opts.combined_radii_flag = opts.combined_radii_flag
 		// cross_opts.classifier_indices = opts.classifier_indices
 		if opts.classifier_indices == [] {
-		cross_opts.classifier_indices = []int{len: cross_opts.classifier_options.len, init: it}
+		cross_opts.classifier_indices = []int{len: cross_opts.multiple_classifiers.len, init: it}
 		} else {
 			cross_opts.classifier_indices = opts.classifier_indices
 		}
@@ -302,17 +302,17 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		mut mult_opts := cross_opts
 		// println('here we are')
 		// println(mult_opts)
-		mut saved_params := mult_opts.MultipleOptions
+		// mut saved_params := mult_opts.MultipleOptions
 		// mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
 		// 	panic('read_multiple_opts failed')
 		// }
 		// println('mult_opts.classifier_indices1: ${mult_opts.classifier_indices}')
 		if mult_opts.classifier_indices == [] {
-			mult_opts.classifier_indices = []int{len: saved_params.classifier_options.len, init: it}
+			mult_opts.classifier_indices = []int{len: mult_opts.multiple_classifiers.len, init: it}
 		}
 		// println('mult_opts.classifier_indices2: ${mult_opts.classifier_indices}')
 		for i in mult_opts.classifier_indices {
-			mut params := saved_params.classifier_options[i]
+			mut params := mult_opts.multiple_classifiers[i].classifier_options
 		// }
 		// for params in saved_params.classifier_options {
 			// println('params: $params')
