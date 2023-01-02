@@ -362,11 +362,12 @@ mut:
 }
 
 struct BinaryMetrics {
+	// BinaryCounts
 mut:
 	t_p             int
-	f_p             int
-	t_n             int
 	f_n             int
+	t_n             int
+	f_p             int
 	raw_acc         f64
 	sens            f64
 	spec            f64
@@ -375,10 +376,18 @@ mut:
 	f1_score_binary f64
 }
 
+struct BinaryCounts {
+mut:
+	t_p             int
+	f_n             int
+	t_n             int
+	f_p             int
+}
+
 struct MaxSettings {
 mut:
 	// accuracy_type 	string
-	max_value       f64
+	// max_value       f64
 	attributes_used int
 	binning         []int
 	purged_percent  f64
