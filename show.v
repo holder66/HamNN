@@ -210,7 +210,7 @@ fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifi
 	for i, par in m_c_a.multiple_classifiers {
 		if i in m_o.classifier_indices {
 			println(par)
-		row_data[0] = row_data[0] + '${i:-13}'
+		// row_data[0] = row_data[0] + '${i:-13}'
 		// row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
 		// binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
 		// row_data[2] = row_data[2] + '${binning:-13}'
