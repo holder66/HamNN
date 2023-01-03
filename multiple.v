@@ -3,23 +3,6 @@
 module hamnn
 
 import arrays
-import os
-import json
-// import math
-
-// read_multiple_opts
-fn read_multiple_opts(path string) !MultipleClassifiersArray {
-	mut s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
-	// println(s)
-	s = s.replace('}{', '}\t{')
-	// println(s)
-	mut array_s := MultipleClassifiersArray{}
-	for o in s.split('\t') {
-		println(o)
-		array_s.multiple_classifiers << json.decode(ClassifierSettings, o)!
-	}
-	return array_s
-}
 
 // when multiple classifiers have been generated with different settings,
 // a given instance to be classified will take multiple values, one for

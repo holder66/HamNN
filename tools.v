@@ -17,9 +17,21 @@ fn save_json_file[T](u T, path string) {
 // append_json_file 
 fn append_json_file[T](u T, path string) {
 	s := json.encode(u)
-	mut f := os.open_append(path) or { panic(err.msg()) }
+	// mut f := os.open_append(path) or { panic(err.msg()) }
+	mut f := os.open_file(path, 'a') or { panic(err.msg())}
 	f.write_string(s) or { panic(err.msg()) }
 	f.close()
+}
+
+// read_multiple_opts
+fn read_multiple_opts(path string) !MultipleClassifiersArray {
+	mut s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
+	s = s.replace('}{', '}\t{')
+	mut array_s := MultipleClassifiersArray{}
+	for o in s.split('\t') {
+		array_s.multiple_classifiers << json.decode(ClassifierSettings, o)!
+	}
+	return array_s
 }
 
 // idx_true returns the index of the first true element in boolean array a.
