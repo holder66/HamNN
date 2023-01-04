@@ -447,52 +447,39 @@ mut:
 	binary_counts []int
 }
 
-// get_settings_and_counts 
-fn get_settings_and_counts(cvr CrossVerifyResult) (MaxSettings, []int) {
-	return analytics_settings(cvr), [cvr.t_p, cvr.f_n, cvr. t_n, cvr.f_p]
+type Val = int | f64
+struct Analytics {
+mut:
+	valeur Val
+	idx int
+	settings MaxSettings
+	binary_counts []int 
 }
 
-// explore_analytics
-fn explore_analytics(expr ExploreResult) []ExploreAnalytics {
-	mut analytics := []ExploreAnalytics{}
-	raw_accuracies := expr.array_of_results.map(it.raw_acc)
-	mut index_in_array_of_results := idx_max(raw_accuracies)
-	mut settings, mut counts := get_settings_and_counts(expr.array_of_results[index_in_array_of_results])
-	analytics << ExploreAnalytics{
-		label: 'raw accuracy'
-		percent_value: raw_accuracies[index_in_array_of_results]
-		settings: settings
-		binary_counts: counts
-		}
-	balanced_accuracies := expr.array_of_results.map(it.balanced_accuracy)
-	index_in_array_of_results = idx_max(balanced_accuracies)
-	settings, counts = get_settings_and_counts(expr.array_of_results[index_in_array_of_results])
-	analytics << ExploreAnalytics{
-		label: 'balanced accuracy'
-		percent_value: balanced_accuracies[index_in_array_of_results]
-		settings: settings
-		binary_counts: counts
+fn explore_analytics2(expr ExploreResult) map[string]Analytics {
+	mut m := map[string]Analytics{}
+	m['raw accuracy'] = Analytics{
+		valeur: expr.array_of_results.map(it.raw_acc)[idx_max(expr.array_of_results.map(it.raw_acc))]
+		idx: idx_max(expr.array_of_results.map(it.raw_acc))
 	}
-	true_positives := expr.array_of_results.map(it.t_p)
-	index_in_array_of_results = idx_max(true_positives)
-	settings, counts = get_settings_and_counts(expr.array_of_results[index_in_array_of_results])
-	analytics << ExploreAnalytics{
-		label: 'true positives'
-		integer_value: true_positives[index_in_array_of_results]
-		settings: settings
-		binary_counts: counts
+	m['balanced accuracy'] = Analytics{
+		idx: idx_max(expr.array_of_results.map(it.balanced_accuracy))
+		valeur: expr.array_of_results.map(it.balanced_accuracy)[idx_max(expr.array_of_results.map(it.balanced_accuracy))]
 	}
-	true_negatives := expr.array_of_results.map(it.t_n)
-	index_in_array_of_results = idx_max(true_negatives)
-	settings, counts = get_settings_and_counts(expr.array_of_results[index_in_array_of_results])
-	analytics << ExploreAnalytics{
-		label: 'true negatives'
-		integer_value: true_negatives[index_in_array_of_results]
-		settings: settings
-		binary_counts: counts
+	m['true positives'] = Analytics{
+		idx: idx_max(expr.array_of_results.map(it.t_p))
+		valeur: expr.array_of_results.map(it.t_p)[idx_max(expr.array_of_results.map(it.t_p))]
 	}
-	// println('analytics: ${analytics}')
-	return analytics
+	m['true negatives'] = Analytics{
+		idx: idx_max(expr.array_of_results.map(it.t_n))
+		valeur: expr.array_of_results.map(it.t_n)[idx_max(expr.array_of_results.map(it.t_n))]
+	}
+	for _, mut s in m {
+		cvr := expr.array_of_results[s.idx]
+		s.settings = analytics_settings(cvr)
+		s.binary_counts = [cvr.t_p, cvr.f_n, cvr.t_n, cvr.f_p]
+	}
+	return m
 }
 
 // analytics_settings
@@ -505,30 +492,17 @@ fn analytics_settings(cvr CrossVerifyResult) MaxSettings {
 	}
 }
 
-// get_max_settings
-// fn get_max_settings(result CrossVerifyResult, max f64) MaxSettings {
-// 	_, _, purged_percent := get_purged_percent(result)
-// 	mut max_settings := MaxSettings{
-// 		max_value: max
-// 		attributes_used: result.attributes_used
-// 		binning: result.bin_values
-// 		purged_percent: purged_percent
-// 	}
-// 	return max_settings
-// }
-
 // show_explore_trailer
 fn show_explore_trailer(results ExploreResult, opts Options) {
 	// println(explore_analytics(results))
 	println('Command line arguments: ${opts.args}')
 	println('Maximum accuracies obtained:')
-	for a in explore_analytics(results) {
-		print('${a.label:28}: ')
-		if a.percent_value > 0.0 {
-			print('${a.percent_value:6.2f}%,')
-		} else {
-			print('${a.integer_value:7},')
-		}
+	for label, a in explore_analytics2(results) {
+		print('${label:28}: ')
+		print(match a.valeur {
+			f64 { '${a.valeur:6.2f}%'}
+			int { '${a.valeur:7}'}
+			})
 		print(' using ${a.settings.attributes_used} attributes')
 		print(', with binning ${show_bins_for_trailer(a.settings.binning)}')
 		if a.settings.purged_percent > 0.0 {

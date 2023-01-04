@@ -20,26 +20,48 @@ fn testsuite_end() ? {
 
 // test_multiple_options
 fn test_multiple_options() ? {
-	mut opts1 := Parameters{
-		binning: Binning{
-			lower: 1
-			upper: 2
-			interval: 1
+	mut settings1 := ClassifierSettings{
+		classifier_options: Parameters{
+			binning: Binning{
+				lower: 1
+				upper: 2
+				interval: 1
+			}
+			number_of_attributes: [1]
+			weighting_flag: true
 		}
-		number_of_attributes: [1]
-		weighting_flag: true
 	}
-	mut opts2 := Parameters{
-		binning: Binning{
-			lower: 1
-			upper: 2
-			interval: 1
+	mut settings2 := ClassifierSettings{
+		classifier_options: Parameters{
+			binning: Binning{
+				lower: 1
+				upper: 2
+				interval: 1
+			}
+			number_of_attributes: [6]
+			weighting_flag: true
 		}
-		number_of_attributes: [6]
-		weighting_flag: true
 	}
-	mut multiple_options := MultipleOptions{
-		classifier_options: [opts1, opts2]
+	// mut opts1 := Parameters{
+	// 	binning: Binning{
+	// 		lower: 1
+	// 		upper: 2
+	// 		interval: 1
+	// 	}
+	// 	number_of_attributes: [1]
+	// 	weighting_flag: true
+	// }
+	// mut opts2 := Parameters{
+	// 	binning: Binning{
+	// 		lower: 1
+	// 		upper: 2
+	// 		interval: 1
+	// 	}
+	// 	number_of_attributes: [6]
+	// 	weighting_flag: true
+	// }
+	mut multiple_options := MultipleClassifiersArray{
+		multiple_classifiers: [settings1, settings2]
 	}
 	save_json_file(multiple_options, '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')
 	// println(read_multiple_opts('/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')?)
@@ -67,19 +89,19 @@ fn test_multiple_verify() ? {
 	opts.datafile_path = 'datasets/leukemia38train.tab'
 	opts.testfile_path = 'datasets/leukemia34test.tab'
 	opts.multiple_classify_options_file_path = '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts'
-	result = verify(opts)?
+	result = verify(opts)
 	println(result)
 }
 
-fn test_get_map_key_for_max_value(m map[string]int) string {
-	max := array_max(m.values())
-	for key, val in m {
-		if val == max {
-			return key
-		}
-	}
-	return ''
-}
+// fn test_get_map_key_for_max_value(m map[string]int) string {
+// 	max := array_max(m.values())
+// 	for key, val in m {
+// 		if val == max {
+// 			return key
+// 		}
+// 	}
+// 	return ''
+// }
 
 // test_multiple_crossvalidate
 fn test_multiple_crossvalidate() ? {
