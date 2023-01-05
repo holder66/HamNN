@@ -28,10 +28,8 @@ fn test_display_classifier() ? {
 	mut ds := load_file('datasets/developer.tab')
 	mut cl := make_classifier(mut ds, opts)
 	path := 'tempfolder/classifierfile'
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
-	display_file(path, settings)
+	opts.show_flag = true
+	display_file(path, opts)
 }
 
 fn test_display_analyze_result() ? {
@@ -44,7 +42,7 @@ fn test_display_analyze_result() ? {
 		show_flag: false
 	}
 	analyze_dataset(load_file('datasets/UCI/anneal.arff'), opts)
-	display_file(opts.outputfile_path, settings)
+	display_file(opts.outputfile_path, opts)
 }
 
 fn test_display_ranking_result() ? {
@@ -54,10 +52,10 @@ fn test_display_ranking_result() ? {
 		outputfile_path: 'tempfolder/rank_result'
 	}
 	_ = rank_attributes(load_file('datasets/UCI/anneal.arff'), opts)
-	mut settings := DisplaySettings{
-		show_flag: false
-	}
-	display_file(opts.outputfile_path, settings)
+	// mut settings := DisplaySettings{
+	// 	show_flag: false
+	// }
+	display_file(opts.outputfile_path, opts)
 	// repeat for displaying a plot
 	// settings.graph_flag = true
 	// display_file(opts.outputfile_path, settings) ?
@@ -68,15 +66,16 @@ fn test_display_validate_result() ? {
 	mut opts := Options{
 		command: 'make'
 	}
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
+	// mut settings := DisplaySettings{
+	// 	show_flag: true
+	// }
 	opts.datafile_path = 'datasets/bcw350train'
-	cl := make_classifier(mut load_file('datasets/bcw350train'), opts)
+	mut ds := load_file(opts.datafile_path)
+	cl := make_classifier(mut ds, opts)
 	opts.outputfile_path = 'tempfolder/validate_result'
 	opts.testfile_path = 'datasets/bcw174validate'
 	_ = validate(cl, opts)?
-	display_file(opts.outputfile_path, settings)
+	display_file(opts.outputfile_path, opts)
 }
 
 fn test_display_verify_result() ? {
@@ -92,9 +91,9 @@ fn test_display_verify_result() ? {
 	}
 	_ = verify(opts)
 	opts.expanded_flag = false
-	display_file(opts.outputfile_path, opts.DisplaySettings)
+	display_file(opts.outputfile_path, opts)
 	opts.expanded_flag = true
-	display_file(opts.outputfile_path, opts.DisplaySettings)
+	display_file(opts.outputfile_path, opts)
 }
 
 fn test_display_cross_result() ? {
@@ -108,19 +107,19 @@ fn test_display_cross_result() ? {
 		random_pick: false
 		concurrency_flag: true
 	}
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
+	// mut settings := DisplaySettings{
+	// 	show_flag: true
+	// }
 	ds := load_file('datasets/UCI/segment.arff')
 	opts.outputfile_path = 'tempfolder/cross_result'
 	_ = cross_validate(ds, opts)
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
 	opts.folds = 10
 	opts.repetitions = 10
 	opts.random_pick = true
 	_ = cross_validate(ds, opts)
-	display_file(opts.outputfile_path, settings)
+	display_file(opts.outputfile_path, opts)
 }
 
 fn test_display_explore_result_cross() ? {
@@ -135,39 +134,41 @@ fn test_display_explore_result_cross() ? {
 		// show_flag: true
 	}
 	_ = explore(load_file(opts.datafile_path), opts)
-	mut settings := DisplaySettings{
-		show_flag: true
-		graph_flag: true
-	}
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	// mut settings := DisplaySettings{
+	// 	show_flag: true
+	// 	graph_flag: true
+	// }
+	opts.show_flag = true
+	opts.graph_flag = true
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat with purge flag set
 	opts.purge_flag = true
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat for a binary class dataset
 	opts.number_of_attributes = [0]
 	opts.datafile_path = 'datasets/bcw174test'
 	opts.purge_flag = false
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat with purge flag set
 	opts.purge_flag = true
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 }
 
 fn test_display_explore_result_verify() ? {
@@ -182,20 +183,20 @@ fn test_display_explore_result_verify() ? {
 		graph_flag: true
 	}
 	_ = explore(load_file(opts.datafile_path), opts)
-	mut settings := DisplaySettings{
-		show_flag: true
-	}
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	// mut settings := DisplaySettings{
+	// 	show_flag: true
+	// }
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat with purge flag set
 	opts.purge_flag = true
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat for a binary class dataset
 	opts.datafile_path = 'datasets/bcw350train'
@@ -203,16 +204,16 @@ fn test_display_explore_result_verify() ? {
 	opts.purge_flag = false
 	opts.number_of_attributes = [0]
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 
 	// repeat with purge flag set
 	opts.purge_flag = true
 	_ = explore(load_file(opts.datafile_path), opts)
-	settings.expanded_flag = false
-	display_file(opts.outputfile_path, settings)
-	settings.expanded_flag = true
-	display_file(opts.outputfile_path, settings)
+	opts.expanded_flag = false
+	display_file(opts.outputfile_path, opts)
+	opts.expanded_flag = true
+	display_file(opts.outputfile_path, opts)
 }

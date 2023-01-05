@@ -101,7 +101,8 @@ fn show_rank_attributes(result RankingResult) {
 		'underline'), 'magenta'))
 	println('Missing values: ${exclude_phrase}')
 	println('Bin range for continuous attributes: from ${result.binning.lower} to ${result.binning.upper} with interval ${result.binning.interval}')
-	println(if result.weight_ranking_flag {'Weighted'} else {'Unweighted'} + ' by class prevalences')
+	println(if result.weight_ranking_flag { 'Weighted' } else { 'Unweighted' } +
+		' by class prevalences')
 	println(chalk.fg(chalk.style('         Name                         Index  Type   Rank Value   Bins',
 		'underline'), 'blue'))
 	mut array_to_print := []string{}
@@ -113,12 +114,8 @@ fn show_rank_attributes(result RankingResult) {
 
 // show_classifier outputs to the console information about a classifier
 pub fn show_classifier(cl Classifier) {
-	println(chalk.fg(chalk.style('\nClassifier for "${cl.datafile_path}"', 'underline'),
+	println(chalk.fg(chalk.style('\nClassifier from "${cl.datafile_path}"', 'underline'),
 		'magenta'))
-	// println('options: missing values ' + if cl.exclude_flag { 'excluded' } else { 'included' } +
-	// 	' when calculating rank values')
-	// println('Included attributes: $cl.trained_attributes.len\nTrained on $cl.instances.len instances.')
-	// println('Bin range for continuous attributes: from $cl.binning.lower to $cl.binning.upper with interval $cl.binning.interval')
 	show_parameters(cl.Parameters)
 	println(chalk.fg(chalk.style('Index  Attribute                   Type  Rank Value   Uniques       Min        Max  Bins',
 		'underline'), 'blue'))
@@ -141,26 +138,15 @@ pub fn show_classifier(cl Classifier) {
 
 // show_parameters
 fn show_parameters(p Parameters) {
-	exclude_string := if p.exclude_flag { 'excluded' } else { 'included' }
-	attr_string := if p.number_of_attributes[0] == 0 {
-		'all'
-	} else {
-		p.number_of_attributes[0].str()
-	}
-	purge_string := if p.purge_flag { 'on' } else { 'off' }
-	weight_string := if p.weighting_flag { 'yes' } else { 'no' }
-	results_array := [
-		'Attributes: ${attr_string}',
-		'Missing values: ${exclude_string}',
-		if p.binning.lower == 0 {
-			'No continuous attributes, thus no binning'
-		} else {
-			'Bin range for continuous attributes: from ${p.binning.lower} to ${p.binning.upper} with interval ${p.binning.interval}'
-		},
-		'Prevalence weighting of nearest neighbor counts: ${weight_string} ',
-		'Purging of duplicate instances: ${purge_string}',
-	]
-	print_array(results_array)
+	println('Number of attributes: ' +
+		if p.number_of_attributes[0] == 0 { 'all' } else { '${p.number_of_attributes[0]}' })
+	println('Binning range for continuous attributes: ' +
+		if p.binning.lower == 0 { 'not applicable (no continuous attributes used)' } else { 'from ${p.binning.lower} to ${p.binning.upper} with interval ${p.binning.interval}' })
+	println('Missing values: ' + if p.exclude_flag { 'excluded' } else { 'included' })
+	println('Purging of duplicate instances: ${p.purge_flag}')
+	println('Prevalence weighting for ranking attributes: ${p.weight_ranking_flag}')
+	println('Prevalence weighting for nearest neighbor counts: ${p.weighting_flag}')
+	println('Add instances to balance class prevalences: ${p.balance_prevalences_flag}')
 }
 
 // show_validate
@@ -187,6 +173,7 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 		'from "${result.datafile_path}"', 'underline'), 'magenta'))
 	if opts.multiple_flag {
 		println('Classifier parameters are in file "${opts.multiple_classify_options_file_path}"')
+		show_multiple_classifiers_options(result.MultipleOptions, result.MultipleClassifiersArray)
 	} else {
 		show_parameters(result.Parameters)
 	}
@@ -203,27 +190,30 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 // show_multiple_classifiers_options
 fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifiersArray) {
 	mut row_labels := ['Classifier:', 'Number of attributes:', 'Binning:', 'Weighting:',
-		'Balance prevalences:', 'Purging:', 'Ranking using weighting:']
+		'Balance prevalences:', 'Purging:', 'Ranking using weighting:', 'True counts:',
+		'False counts:']
 	println('break_on_all_flag: ${m_o.break_on_all_flag}     combined_radii_flag: ${m_o.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
-	mut row_data := []string{len: 7, init: ''}
+	mut row_data := []string{len: 9, init: ''}
 	for i, par in m_c_a.multiple_classifiers {
 		if i in m_o.classifier_indices {
-			println(par)
-		// row_data[0] = row_data[0] + '${i:-13}'
-		// row_data[1] = row_data[1] + '${par.number_of_attributes[0]:-13}'
-		// binning := '${par.binning.lower}, ${par.binning.upper}, ${par.binning.interval}'
-		// row_data[2] = row_data[2] + '${binning:-13}'
-		// row_data[3] = row_data[3] + '${par.weighting_flag:-13}'
-		// row_data[4] = row_data[4] + '${par.balance_prevalences_flag:-13}'
-		// row_data[5] = row_data[5] + '${par.purge_flag:-13}'
-		// row_data[6] = row_data[6] + '${par.weight_ranking_flag: -13}'
+			a := par.classifier_options
+			b := par.binary_metrics
+			row_data[0] = row_data[0] + '${i:-13}'
+			row_data[1] = row_data[1] + '${a.number_of_attributes[0]:-13}'
+			binning := '${a.binning.lower}, ${a.binning.upper}, ${a.binning.interval}'
+			row_data[2] = row_data[2] + '${binning:-13}'
+			row_data[3] = row_data[3] + '${a.weighting_flag:-13}'
+			row_data[4] = row_data[4] + '${a.balance_prevalences_flag:-13}'
+			row_data[5] = row_data[5] + '${a.purge_flag:-13}'
+			row_data[6] = row_data[6] + '${a.weight_ranking_flag:-13}'
+			row_data[7] = row_data[7] + '${b.t_p:-6} ${b.t_n:-6}'
+			row_data[8] = row_data[8] + '${b.f_n:-6} ${b.f_p:-6}'
+		}
 	}
-}
 	for i, row in row_data {
 		println('${row_labels[i]:25}   ${row}')
 	}
-	// println(row_data)
 }
 
 // show_crossvalidation
@@ -238,10 +228,6 @@ fn show_crossvalidation(result CrossVerifyResult) {
 		 }
 	 })
 	if result.multiple_classify_options_file_path != '' {
-		// println('(Classifier parameters in file "${result.multiple_classify_options_file_path}")')
-		// saved_params := read_multiple_opts(result.multiple_classify_options_file_path) or {
-		// 	panic('read_multiple_opts() failed')
-		// }
 		show_multiple_classifiers_options(result.MultipleOptions, result.MultipleClassifiersArray)
 	} else {
 		show_parameters(result.Parameters)
@@ -398,62 +384,27 @@ fn show_explore_header(results ExploreResult, settings DisplaySettings) {
 	}
 	println(chalk.fg(chalk.style('\nExplore ${explore_type_string} using classifiers from "${results.path}"',
 		'underline'), 'magenta'))
-	if results.binning.lower == 0 {
-		println('No continuous attributes, thus no binning')
-	} else {
-		println('Binning range for continuous attributes: from ${results.binning.lower} to ${results.binning.upper} with interval ${results.binning.interval}')
-	}
-	if results.uniform_bins {
-		println('(same number of bins for all continous attributes)')
-	}
-	if results.balance_prevalences_flag {
-		println('Instances have been added to more closely balance class prevalences.')
-	}
-	println('Missing values: ' + if results.exclude_flag { 'excluded' } else { 'included' })
-	println('Ranking of attributes ' + if results.weight_ranking_flag {'weighted'} else {'unweighted'} + ' by class prevalences')
-	println(if results.weighting_flag { 'Weighting' } else { 'Not weighting' } +
-		' nearest neighbor counts by class prevalences')
+	show_parameters(results.Parameters)
 	println('Over attribute range from ${results.start} to ${results.end} by interval ${results.att_interval}')
-	purge_string := if results.purge_flag { 'on' } else { 'off' }
-	println('Purging of duplicate instances: ${purge_string}')
 	if !settings.expanded_flag {
 		println(chalk.fg(chalk.style('Attributes     Bins' +
-			if results.purge_flag { '     Purged instances     (%)' } else { '' } +
+			if results.purge_flag { '       Purged instances     (%)' } else { '' } +
 			'  Matches  Nonmatches  Accuracy: Raw  Balanced', 'underline'), 'blue'))
 	} else {
 		if binary {
 			println('A correct classification to "${results.pos_neg_classes[0]}" is a True Positive (TP);\nA correct classification to "${results.pos_neg_classes[1]}" is a True Negative (TN).')
 			println(chalk.fg(chalk.style('Attributes    Bins' +
-				if results.purge_flag { '      Purged instances     (%)' } else { '' } +
+				if results.purge_flag { '        Purged instances     (%)' } else { '' } +
 				"     TP    FN    TN    FP  Sens'y Spec'y    PPV    NPV  F1 Score  Accuracy: Raw  Balanced",
 				'underline'), 'blue'))
 		} else {
-			println(chalk.fg(chalk.style('Attributes     Bins' +
-				if results.purge_flag { '     Purged instances     (%)' } else { '' },
+			println(chalk.fg(chalk.style('Attributes    Bins' +
+				if results.purge_flag { '        Purged instances     (%)' } else { '' },
 				'underline'), 'blue'))
 			println(chalk.fg(chalk.style('    Class                   Instances    True Positives    Precision    Recall    F1 Score',
 				'underline'), 'blue'))
 		}
 	}
-}
-
-struct ExploreAnalytics {
-mut:
-	label         string
-	percent_value f64
-	integer_value int
-	index_in_array_of_results int
-	settings      MaxSettings
-	binary_counts []int
-}
-
-type Val = int | f64
-struct Analytics {
-mut:
-	valeur Val
-	idx int
-	settings MaxSettings
-	binary_counts []int 
 }
 
 fn explore_analytics2(expr ExploreResult) map[string]Analytics {
@@ -494,21 +445,22 @@ fn analytics_settings(cvr CrossVerifyResult) MaxSettings {
 
 // show_explore_trailer
 fn show_explore_trailer(results ExploreResult, opts Options) {
-	// println(explore_analytics(results))
 	println('Command line arguments: ${opts.args}')
 	println('Maximum accuracies obtained:')
 	for label, a in explore_analytics2(results) {
 		print('${label:28}: ')
 		print(match a.valeur {
-			f64 { '${a.valeur:6.2f}%'}
-			int { '${a.valeur:7}'}
-			})
+			f64 { '${a.valeur:6.2f}%' }
+			int { '${a.valeur:7}' }
+		})
+		print(' ${a.binary_counts}')
 		print(' using ${a.settings.attributes_used} attributes')
-		print(', with binning ${show_bins_for_trailer(a.settings.binning)}')
+		if show_bins_for_trailer(a.settings.binning) != '' {
+			print(', with binning ${show_bins_for_trailer(a.settings.binning)}')
+		}
 		if a.settings.purged_percent > 0.0 {
 			print(', ${a.settings.purged_percent:5.2f}% instances purged.')
 		}
-		print(' ${a.binary_counts}')
 		println('')
 	}
 	println('')

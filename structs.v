@@ -70,7 +70,7 @@ pub mut:
 	struct_type                string = '.RankingResult'
 	path                       string
 	exclude_flag               bool
-	weight_ranking_flag bool
+	weight_ranking_flag        bool
 	binning                    Binning
 	array_of_ranked_attributes []RankedAttribute
 }
@@ -111,6 +111,7 @@ pub mut:
 
 struct Parameters {
 pub mut:
+	// AttributeRange
 	binning              Binning
 	number_of_attributes []int = [0]
 	uniform_bins         bool
@@ -118,7 +119,7 @@ pub mut:
 	// multiple_flag bool
 	purge_flag               bool
 	weighting_flag           bool
-	weight_ranking_flag bool
+	weight_ranking_flag      bool
 	folds                    int
 	repetitions              int
 	random_pick              bool
@@ -152,10 +153,10 @@ pub mut:
 	classifierfile_path                 string
 	instancesfile_path                  string
 	multiple_classify_options_file_path string
-	settingsfile_path string
+	settingsfile_path                   string
 	help_flag                           bool
 	multiple_flag                       bool
-	append_settings_flag bool 
+	append_settings_flag                bool
 	command                             string
 	args                                []string
 }
@@ -167,15 +168,15 @@ pub mut:
 
 pub struct ClassifierSettings {
 pub mut:
-	classifier_options  Parameters
-	binary_metrics BinaryMetrics
+	classifier_options Parameters
+	binary_metrics     BinaryMetrics
 }
 
 pub struct MultipleOptions {
 pub mut:
 	break_on_all_flag   bool
 	combined_radii_flag bool
-	classifier_indices []int
+	classifier_indices  []int
 }
 
 struct RadiusResults {
@@ -376,7 +377,6 @@ mut:
 }
 
 struct BinaryMetrics {
-	// BinaryCounts
 mut:
 	t_p             int
 	f_n             int
@@ -392,24 +392,25 @@ mut:
 
 struct BinaryCounts {
 mut:
-	t_p             int
-	f_n             int
-	t_n             int
-	f_p             int
+	t_p int
+	f_n int
+	t_n int
+	f_p int
+}
+
+type Val = f64 | int
+
+struct Analytics {
+mut:
+	valeur        Val
+	idx           int
+	settings      MaxSettings
+	binary_counts []int
 }
 
 struct MaxSettings {
 mut:
-	// accuracy_type 	string
-	// max_value       f64
 	attributes_used int
 	binning         []int
 	purged_percent  f64
 }
-
-// struct ExploreAnalytics {
-// mut:
-// 	raw_accuracy_maximum_settings MaxSettings
-// 	balanced_accuracy_maximum_settings MaxSettings
-// 	binary_balanced_accuracy_maximum_settings MaxSettings
-// }

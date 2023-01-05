@@ -15,22 +15,22 @@ import json
 // 	a confusion matrix for cross-validation or verification operations;
 // graph_flag: generates plots for display in the default web browser.
 // ```
-pub fn display_file(path string, settings DisplaySettings) {
+pub fn display_file(path string, opts Options) {
 	// determine what kind of file, then call the appropriate functions in show and plot
 	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
 	match true {
 		s.contains('"struct_type":".ExploreResult"') {
-			mut opts := Options{
-				DisplaySettings: settings
-			}
+			// mut opts := Options{
+			// 	DisplaySettings: settings
+			// }
 			mut saved_er := json.decode(ExploreResult, s) or { panic('Failed to parse json') }
-			show_explore_header(saved_er, settings)
+			show_explore_header(saved_er, opts.DisplaySettings)
 			for mut result in saved_er.array_of_results {
-				result.DisplaySettings = settings
+				result.DisplaySettings = opts.DisplaySettings
 				show_explore_line(result)
 			}
 			show_explore_trailer(saved_er, opts)
-			if settings.graph_flag {
+			if opts.graph_flag {
 				// println(saved_er)
 				plot_explore(saved_er, opts)
 				plot_roc(saved_er, opts)
@@ -43,7 +43,7 @@ pub fn display_file(path string, settings DisplaySettings) {
 		s.contains('"struct_type":".RankingResult"') {
 			saved_rr := json.decode(RankingResult, s) or { panic('Failed to parse json') }
 			show_rank_attributes(saved_rr)
-			if settings.graph_flag {
+			if opts.graph_flag {
 				plot_rank(saved_rr)
 			}
 		}
@@ -56,11 +56,11 @@ pub fn display_file(path string, settings DisplaySettings) {
 			show_validate(saved_valr)
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') && s.contains('"command":"verify"') {
-			mut opts := Options{
-				DisplaySettings: settings
-			}
+			// mut opts := Options{
+			// 	DisplaySettings: settings
+			// }
 			mut saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
-			saved_vr.DisplaySettings = settings
+			// saved_vr.DisplaySettings = settings
 			show_verify(saved_vr, opts)
 		}
 		s.contains('"struct_type":".CrossVerifyResult"') {

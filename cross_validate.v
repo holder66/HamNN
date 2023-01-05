@@ -47,12 +47,11 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		cross_opts.MultipleClassifiersArray = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
 			panic('read_multiple_opts failed')
 		}
-		println(cross_opts)
 		cross_opts.break_on_all_flag = opts.break_on_all_flag
 		cross_opts.combined_radii_flag = opts.combined_radii_flag
 		// cross_opts.classifier_indices = opts.classifier_indices
 		if opts.classifier_indices == [] {
-		cross_opts.classifier_indices = []int{len: cross_opts.multiple_classifiers.len, init: it}
+			cross_opts.classifier_indices = []int{len: cross_opts.multiple_classifiers.len, init: it}
 		} else {
 			cross_opts.classifier_indices = opts.classifier_indices
 		}
@@ -81,6 +80,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		Parameters: cross_opts.Parameters
 		DisplaySettings: cross_opts.DisplaySettings
 		MultipleOptions: cross_opts.MultipleOptions
+		MultipleClassifiersArray: cross_opts.MultipleClassifiersArray
 	}
 
 	// if there are no useful continuous attributes, set binning to 0
@@ -313,8 +313,8 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		// println('mult_opts.classifier_indices2: ${mult_opts.classifier_indices}')
 		for i in mult_opts.classifier_indices {
 			mut params := mult_opts.multiple_classifiers[i].classifier_options
-		// }
-		// for params in saved_params.classifier_options {
+			// }
+			// for params in saved_params.classifier_options {
 			// println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
@@ -386,6 +386,7 @@ fn multiple_classify_in_cross(fold int, m_cl []Classifier, m_test_instances [][]
 		result.nearest_neighbors_by_class << m_classify_result.nearest_neighbors_by_class
 	}
 	result.MultipleOptions = opts.MultipleOptions
+	result.MultipleClassifiersArray = opts.MultipleClassifiersArray
 	// println('result in multiple_classify_in_cross: ${result}')
 	return result
 }

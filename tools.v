@@ -14,7 +14,7 @@ fn save_json_file[T](u T, path string) {
 	f.close()
 }
 
-// append_json_file 
+// append_json_file
 fn append_json_file[T](u T, path string) {
 	mut f := os.open_append(path) or { panic(err.msg()) }
 	f.write_string(json.encode(u) + '\n') or { panic(err.msg()) }

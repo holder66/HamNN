@@ -62,7 +62,7 @@ pub fn rank_attributes(ds Dataset, opts Options) RankingResult {
 	// println("we are here")
 	// println(opts.weight_ranking_flag)
 	if opts.verbose_flag && opts.command == 'rank' {
-		println('perfect_rank_value: $perfect_rank_value')
+		println('perfect_rank_value: ${perfect_rank_value}')
 	}
 	mut ranked_atts := []RankedAttribute{}
 	mut binning := Binning{}
@@ -254,8 +254,8 @@ fn get_rank_value_for_strings(values []string, class_values []string, class_coun
 	return rank_val
 }
 
-// sum_along_row_weighted returns the sum of the absolute values of 
-// the differences between counts multiplied by the class count for 
+// sum_along_row_weighted returns the sum of the absolute values of
+// the differences between counts multiplied by the class count for
 // every combination pair of classes
 fn sum_along_row_weighted(row []int, class_counts_array []int) i64 {
 	mut row_sum := 0
@@ -274,7 +274,7 @@ fn sum_along_row_weighted(row []int, class_counts_array []int) i64 {
 	return row_sum
 }
 
-// sum_along_row_unweighted returns the sum of the absolute values of 
+// sum_along_row_unweighted returns the sum of the absolute values of
 // the differences between counts
 fn sum_along_row_unweighted(row []int) i64 {
 	mut row_sum := 0
