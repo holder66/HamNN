@@ -43,7 +43,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 			confusion_matrix_map[key2][key1] = 0
 		}
 	}
-	if opts.multiple_classify_options_file_path != '' {
+	if opts.multiple_flag {
 		cross_opts.MultipleClassifiersArray = read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
 			panic('read_multiple_opts failed')
 		}
@@ -56,6 +56,7 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 			cross_opts.classifier_indices = opts.classifier_indices
 		}
 	}
+	// println(cross_opts.classifier_indices)
 	// instantiate a struct for the result
 	mut inferences_map := map[string]int{}
 	for key, _ in ds.class_counts {
@@ -115,11 +116,6 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 		cross_result.prepurge_instances_counts_array << repetition_result.prepurge_instances_counts_array
 	}
 	cross_result = summarize_results(repeats, mut cross_result)
-	// if opts.outputfile_path != '' {
-	// 	save_json_file(cross_result, opts.outputfile_path)
-	// }
-	// show_results(cross_result, cross_opts)
-
 	cross_result.Metrics = get_metrics(cross_result)
 	// println('cross_result.pos_neg_classes: $cross_result.pos_neg_classes')
 	if cross_result.pos_neg_classes.len == 2 {
@@ -276,9 +272,6 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 
 		fold_result.classifier_instances_counts << part_cl.instances.len
 		fold_result.prepurge_instances_counts_array << part_cl.history[0].prepurge_instances_count
-		// println('we are here')
-		// println(fold_result.classifier_instances_counts)
-		// for each attribute in the trained partition classifier
 		for attr in part_cl.attribute_ordering {
 			// get the index of the corresponding attribute in the fold
 			j := fold.attribute_names.index(attr)
@@ -294,57 +287,29 @@ fn do_one_fold(pick_list []int, current_fold int, folds int, ds Dataset, cross_o
 		for key, _ in ds.Class.class_counts {
 			confusion_matrix_row[key] = 0
 		}
-		// println('part_cl.binning in do_one_fold: $part_cl.binning')
 		fold_result = classify_in_cross(part_cl, fold_instances, mut fold_result, cross_opts)
 	} else { // ie, asking for multiple classifiers...
 		mut classifier_array := []Classifier{}
 		mut instances_to_be_classified := [][][]u8{}
 		mut mult_opts := cross_opts
-		// println('here we are')
-		// println(mult_opts)
-		// mut saved_params := mult_opts.MultipleOptions
-		// mut saved_params := read_multiple_opts(cross_opts.multiple_classify_options_file_path) or {
-		// 	panic('read_multiple_opts failed')
-		// }
-		// println('mult_opts.classifier_indices1: ${mult_opts.classifier_indices}')
-		if mult_opts.classifier_indices == [] {
-			mult_opts.classifier_indices = []int{len: mult_opts.multiple_classifiers.len, init: it}
-		}
-		// println('mult_opts.classifier_indices2: ${mult_opts.classifier_indices}')
 		for i in mult_opts.classifier_indices {
 			mut params := mult_opts.multiple_classifiers[i].classifier_options
-			// }
-			// for params in saved_params.classifier_options {
-			// println('params: $params')
-			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
 			fold_result.Parameters = params
-			// println('mult_opts: $mult_opts')
 			part_cl := make_classifier(mut part_ds, mult_opts)
-			// println('we are here')
 			classifier_array << part_cl
 			byte_values_array = [][]u8{}
 			for attr in part_cl.attribute_ordering {
 				j := fold.attribute_names.index(attr)
 				byte_values_array << process_fold_data(part_cl.trained_attributes[attr],
 					fold.data[j])
-				// println('attr: $attr j: $j ${process_fold_data(part_cl.trained_attributes[attr], fold.data[j])}')
-				// println('byte_values_array: $byte_values_array')
 			}
 			m_fold_instances := transpose(byte_values_array)
-			// println('m_fold_instances: $m_fold_instances')
 			instances_to_be_classified << m_fold_instances
-			// println('hope to be here!')
-			// instances_to_be_classified << generate_test_instances_array(classifier_array.last(), )
 		}
-		// println('instances_to_be_classified before transpose: $instances_to_be_classified')
-		// instances_to_be_classified = transpose(instances_to_be_classified)
-		// println('instances_to_be_classified after transpose: $instances_to_be_classified')
 		fold_result = multiple_classify_in_cross(current_fold, classifier_array, transpose(instances_to_be_classified), mut
 			fold_result, mult_opts)
 	}
-	// println('fold_result.binning in do_one_fold: $fold_result.binning')
-	// println('fold_result at end of do_one_fold: $fold_result')
 	return fold_result
 }
 
