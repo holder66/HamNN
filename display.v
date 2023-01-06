@@ -39,6 +39,7 @@ pub fn display_file(path string, opts Options) {
 		// save the settings for the explore results with the
 		// highest balanced accuracy, true positives, and true
 		// negatives
+				println(opts)
 				append_explore_settings_to_file(saved_er, opts)
 			}
 		}

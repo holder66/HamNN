@@ -119,13 +119,15 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 // append_explore_settings_to_file
 fn append_explore_settings_to_file(results ExploreResult, opts Options) {
 	m := explore_analytics2(results)
-	for i, a in m {
+	mut i := 0
+	for _, a in m {
 		if i in opts.classifier_indices {
 			append_json_file(ClassifierSettings{
 				classifier_options: results.array_of_results[a.idx].Parameters
 				binary_metrics: results.array_of_results[a.idx].BinaryMetrics
 			}, opts.outputfile_path)
 		}
+		i += 1
 	}
 }
 
