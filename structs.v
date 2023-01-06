@@ -153,7 +153,7 @@ pub mut:
 	classifierfile_path                 string
 	instancesfile_path                  string
 	multiple_classify_options_file_path string
-	settingsfile_path                   string
+	// settingsfile_path                   string
 	help_flag                           bool
 	multiple_flag                       bool
 	append_settings_flag                bool
@@ -383,6 +383,7 @@ mut:
 	t_n             int
 	f_p             int
 	raw_acc         f64
+	bal_acc f64
 	sens            f64
 	spec            f64
 	ppv             f64

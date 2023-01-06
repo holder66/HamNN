@@ -191,10 +191,10 @@ fn show_verify(result CrossVerifyResult, opts Options) {
 fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifiersArray) {
 	mut row_labels := ['Classifier:', 'Number of attributes:', 'Binning:', 'Weighting:',
 		'Balance prevalences:', 'Purging:', 'Ranking using weighting:', 'True counts:',
-		'False counts:']
+		'False counts:', 'Balanced accuracy:']
 	println('break_on_all_flag: ${m_o.break_on_all_flag}     combined_radii_flag: ${m_o.combined_radii_flag}')
 	println('Multiple Classifier Parameters:')
-	mut row_data := []string{len: 9, init: ''}
+	mut row_data := []string{len: row_labels.len, init: ''}
 	for i, par in m_c_a.multiple_classifiers {
 		if i in m_o.classifier_indices {
 			a := par.classifier_options
@@ -209,6 +209,7 @@ fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifi
 			row_data[6] = row_data[6] + '${a.weight_ranking_flag:-13}'
 			row_data[7] = row_data[7] + '${b.t_p:-6} ${b.t_n:-6}'
 			row_data[8] = row_data[8] + '${b.f_n:-6} ${b.f_p:-6}'
+			row_data[9] = row_data[9] + '${(b.sens + b.spec)/2 * 100:-3.2f}%'
 		}
 	}
 	for i, row in row_data {

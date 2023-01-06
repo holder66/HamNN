@@ -100,6 +100,7 @@ fn get_binary_stats(result CrossVerifyResult) BinaryMetrics {
 	bm.ppv = bm.t_p / f64(bm.t_p + bm.f_p)
 	bm.npv = bm.t_n / f64(bm.t_n + bm.f_n)
 	bm.f1_score_binary = bm.t_p / f64(bm.t_p + (0.5 * f64(bm.f_p + bm.f_n)))
+	bm.bal_acc = (bm.sens + bm.spec) / 2 * 100
 	return bm
 }
 

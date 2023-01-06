@@ -35,6 +35,12 @@ pub fn display_file(path string, opts Options) {
 				plot_explore(saved_er, opts)
 				plot_roc(saved_er, opts)
 			}
+			if opts.append_settings_flag {
+		// save the settings for the explore results with the
+		// highest balanced accuracy, true positives, and true
+		// negatives
+				append_explore_settings_to_file(saved_er, opts)
+			}
 		}
 		s.contains('"struct_type":".Classifier"') {
 			saved_cl := json.decode(Classifier, s) or { panic('Failed to parse json') }
