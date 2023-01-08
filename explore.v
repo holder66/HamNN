@@ -125,7 +125,7 @@ fn append_explore_settings_to_file(results ExploreResult, opts Options) {
 			append_json_file(ClassifierSettings{
 				classifier_options: results.array_of_results[a.idx].Parameters
 				binary_metrics: results.array_of_results[a.idx].BinaryMetrics
-			}, opts.outputfile_path)
+			}, opts.settingsfile_path)
 		}
 		i += 1
 	}

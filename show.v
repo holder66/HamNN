@@ -138,8 +138,10 @@ pub fn show_classifier(cl Classifier) {
 
 // show_parameters
 fn show_parameters(p Parameters) {
-	println('Number of attributes: ' +
-		if p.number_of_attributes[0] == 0 { 'all' } else { '${p.number_of_attributes[0]}' })
+	if p.number_of_attributes.len == 1 {
+		println('Number of attributes: ' +
+			if p.number_of_attributes[0] == 0 { 'all' } else { '${p.number_of_attributes[0]}' })
+	}
 	println('Binning range for continuous attributes: ' +
 		if p.binning.lower == 0 { 'not applicable (no continuous attributes used)' } else { 'from ${p.binning.lower} to ${p.binning.upper} with interval ${p.binning.interval}' })
 	println('Missing values: ' + if p.exclude_flag { 'excluded' } else { 'included' })
@@ -209,7 +211,7 @@ fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifi
 			row_data[6] = row_data[6] + '${a.weight_ranking_flag:-13}'
 			row_data[7] = row_data[7] + '${b.t_p:-6} ${b.t_n:-6}'
 			row_data[8] = row_data[8] + '${b.f_n:-6} ${b.f_p:-6}'
-			row_data[9] = row_data[9] + '${(b.sens + b.spec)/2 * 100:-3.2f}%'
+			row_data[9] = row_data[9] + '${(b.sens + b.spec)/2 * 100:-4.2f}%       '
 		}
 	}
 	for i, row in row_data {

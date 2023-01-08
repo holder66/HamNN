@@ -18,7 +18,16 @@ import json
 pub fn display_file(path string, opts Options) {
 	// determine what kind of file, then call the appropriate functions in show and plot
 	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
+	// println(s)
 	match true {
+		s.contains('"classifier_options":') {
+			multiple_classifiers_array := read_multiple_opts(path) or {
+			panic('read_multiple_opts failed')}
+			multiple_options := MultipleOptions{
+				classifier_indices: []int{len: multiple_classifiers_array.multiple_classifiers.len, init: it}
+			}
+			show_multiple_classifiers_options(multiple_options,multiple_classifiers_array)
+		}
 		s.contains('"struct_type":".ExploreResult"') {
 			// mut opts := Options{
 			// 	DisplaySettings: settings
