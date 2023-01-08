@@ -127,7 +127,18 @@ pub fn cross_validate(ds Dataset, opts Options) CrossVerifyResult {
 	if opts.outputfile_path != '' {
 		save_json_file(cross_result, opts.outputfile_path)
 	}
+	if opts.append_settings_flag {
+		append_cross_settings_to_file(cross_result, opts)
+	}
 	return cross_result
+}
+
+// append_cross_settings_to_file
+fn append_cross_settings_to_file(result CrossVerifyResult, opts Options) {
+	append_json_file(ClassifierSettings{
+		classifier_options: result.Parameters
+		binary_metrics: result.BinaryMetrics
+	}, opts.settingsfile_path)
 }
 
 // do_repetition

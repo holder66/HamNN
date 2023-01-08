@@ -211,7 +211,7 @@ fn show_multiple_classifiers_options(m_o MultipleOptions, m_c_a MultipleClassifi
 			row_data[6] = row_data[6] + '${a.weight_ranking_flag:-13}'
 			row_data[7] = row_data[7] + '${b.t_p:-6} ${b.t_n:-6}'
 			row_data[8] = row_data[8] + '${b.f_n:-6} ${b.f_p:-6}'
-			row_data[9] = row_data[9] + '${(b.sens + b.spec)/2 * 100:-4.2f}%       '
+			row_data[9] = row_data[9] + '${(b.sens + b.spec) / 2 * 100:-4.2f}%       '
 		}
 	}
 	for i, row in row_data {

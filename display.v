@@ -22,11 +22,12 @@ pub fn display_file(path string, opts Options) {
 	match true {
 		s.contains('"classifier_options":') {
 			multiple_classifiers_array := read_multiple_opts(path) or {
-			panic('read_multiple_opts failed')}
+				panic('read_multiple_opts failed')
+			}
 			multiple_options := MultipleOptions{
 				classifier_indices: []int{len: multiple_classifiers_array.multiple_classifiers.len, init: it}
 			}
-			show_multiple_classifiers_options(multiple_options,multiple_classifiers_array)
+			show_multiple_classifiers_options(multiple_options, multiple_classifiers_array)
 		}
 		s.contains('"struct_type":".ExploreResult"') {
 			// mut opts := Options{
@@ -45,9 +46,9 @@ pub fn display_file(path string, opts Options) {
 				plot_roc(saved_er, opts)
 			}
 			if opts.append_settings_flag {
-		// save the settings for the explore results with the
-		// highest balanced accuracy, true positives, and true
-		// negatives
+				// save the settings for the explore results with the
+				// highest balanced accuracy, true positives, and true
+				// negatives
 				append_explore_settings_to_file(saved_er, opts)
 			}
 		}

@@ -383,7 +383,7 @@ mut:
 	t_n             int
 	f_p             int
 	raw_acc         f64
-	bal_acc f64
+	bal_acc         f64
 	sens            f64
 	spec            f64
 	ppv             f64
