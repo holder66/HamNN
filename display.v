@@ -20,15 +20,6 @@ pub fn display_file(path string, opts Options) {
 	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
 	// println(s)
 	match true {
-		s.contains('"classifier_options":') {
-			multiple_classifiers_array := read_multiple_opts(path) or {
-				panic('read_multiple_opts failed')
-			}
-			multiple_options := MultipleOptions{
-				classifier_indices: []int{len: multiple_classifiers_array.multiple_classifiers.len, init: it}
-			}
-			show_multiple_classifiers_options(multiple_options, multiple_classifiers_array)
-		}
 		s.contains('"struct_type":".ExploreResult"') {
 			// mut opts := Options{
 			// 	DisplaySettings: settings
@@ -82,6 +73,18 @@ pub fn display_file(path string, opts Options) {
 		s.contains('"struct_type":".CrossVerifyResult"') {
 			saved_vr := json.decode(CrossVerifyResult, s) or { panic('Failed to parse json') }
 			show_crossvalidation(saved_vr)
+			if opts.append_settings_flag {
+				append_cross_settings_to_file(saved_vr, opts)
+			}
+		}
+		s.contains('"classifier_options":') {
+			multiple_classifiers_array := read_multiple_opts(path) or {
+				panic('read_multiple_opts failed')
+			}
+			multiple_options := MultipleOptions{
+				classifier_indices: []int{len: multiple_classifiers_array.multiple_classifiers.len, init: it}
+			}
+			show_multiple_classifiers_options(multiple_options, multiple_classifiers_array)
 		}
 		else {
 			println('File type not recognized!')
