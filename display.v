@@ -18,7 +18,6 @@ import json
 pub fn display_file(path string, opts Options) {
 	// determine what kind of file, then call the appropriate functions in show and plot
 	s := os.read_file(path.trim_space()) or { panic('failed to open ${path}') }
-	// println(s)
 	match true {
 		s.contains('"struct_type":".ExploreResult"') {
 			// mut opts := Options{

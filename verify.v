@@ -34,6 +34,10 @@ pub fn verify(opts Options) CrossVerifyResult {
 	// instantiate a struct for the result
 	// println('opts.Parameters in verify: $opts.Parameters')
 	mut verify_result := CrossVerifyResult{
+		Parameters: opts.Parameters
+		DisplaySettings: opts.DisplaySettings
+		MultipleOptions: opts.MultipleOptions
+		MultipleClassifiersArray: opts.MultipleClassifiersArray
 		datafile_path: opts.datafile_path
 		testfile_path: opts.testfile_path
 		multiple_classify_options_file_path: opts.multiple_classify_options_file_path
@@ -42,14 +46,9 @@ pub fn verify(opts Options) CrossVerifyResult {
 		classes: test_ds.classes
 		pos_neg_classes: get_pos_neg_classes(test_ds.class_counts)
 		confusion_matrix_map: confusion_matrix_map
-		binning: opts.binning
-		Parameters: opts.Parameters
-		DisplaySettings: opts.DisplaySettings
-		MultipleOptions: opts.MultipleOptions
-		MultipleClassifiersArray: opts.MultipleClassifiersArray
 	}
-
-	// println('verify_result in verify: $verify_result')
+	verify_result.binning = get_binning(opts.bins)
+	// println('verify_result in verify: ${verify_result}')
 	if !opts.multiple_flag {
 		mut cl := Classifier{}
 		if opts.classifierfile_path == '' {
@@ -62,6 +61,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 		// massage each instance in the test dataset according to the
 		// attribute parameters in the classifier
 		test_instances := generate_test_instances_array(cl, test_ds)
+		// println(opts)
 		// for the instances in the test data, perform classifications
 		verify_result = classify_to_verify(cl, test_instances, mut verify_result, opts)
 	} else { // ie, asking for multiple classifiers
@@ -72,12 +72,14 @@ pub fn verify(opts Options) CrossVerifyResult {
 		mult_opts.MultipleClassifiersArray = read_multiple_opts(mult_opts.multiple_classify_options_file_path) or {
 			panic('read_multiple_opts failed')
 		}
+		// println(mult_opts)
 		verify_result.MultipleClassifiersArray = mult_opts.MultipleClassifiersArray
 		// mult_opts.break_on_all_flag = opts.break_on_all_flag
 		// mult_opts.combined_radii_flag = opts.combined_radii_flag
 		if mult_opts.classifier_indices == [] {
 			mult_opts.classifier_indices = []int{len: mult_opts.multiple_classifiers.len, init: it}
 		}
+		verify_result.classifier_indices = mult_opts.classifier_indices
 		mut ds := load_file(opts.datafile_path)
 		// mut saved_params := read_multiple_opts(opts.multiple_classify_options_file_path) or {
 		// 	MultipleClassifiersArray{}
@@ -97,6 +99,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 				test_ds)
 		}
 		// println('classifier_array: $classifier_array')
+		// println(mult_opts)
 		// println('instances_to_be_classified: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified: $instances_to_be_classified')
@@ -116,9 +119,9 @@ pub fn verify(opts Options) CrossVerifyResult {
 	if opts.command == 'verify' && (verify_result.show_flag || verify_result.expanded_flag) {
 		show_verify(verify_result, opts)
 	}
-	if opts.verbose_flag && opts.command == 'verify' {
-		println('verify_result in verify(): ${verify_result}')
-	}
+	// if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
+	// 	println('verify_result in verify(): ${verify_result}')
+	// }
 	if opts.outputfile_path != '' {
 		save_json_file(verify_result, opts.outputfile_path)
 	}
@@ -173,11 +176,11 @@ fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut resu
 	}
 	result.classifier_instances_counts << m_cl[0].history[0].instances_count
 	result.prepurge_instances_counts_array << m_cl[0].history[0].prepurge_instances_count
-	if opts.verbose_flag && opts.command == 'verify' {
+	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): ${result}')
 	}
 	result = summarize_results(1, mut result)
-	if opts.verbose_flag && opts.command == 'verify' {
+	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
 		println('summarize_result: ${result}')
 	}
 	// println('result at end of multiple_classify_to_verify: $result')
@@ -215,11 +218,11 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 	}
 	result.classifier_instances_counts << cl.history[0].instances_count
 	result.prepurge_instances_counts_array << cl.history[0].prepurge_instances_count
-	if opts.verbose_flag && opts.command == 'verify' {
+	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
 		println('result in classify_to_verify(): ${result}')
 	}
 	result = summarize_results(1, mut result)
-	if opts.verbose_flag && opts.command == 'verify' {
+	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
 		println('summarize_result: ${result}')
 	}
 	return result

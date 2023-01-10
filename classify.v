@@ -66,6 +66,9 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	if opts.verbose_flag && opts.command == 'classify' {
 		println('ClassifyResult in classify.v: ${result}')
 	}
+	// if opts.verbose_flag {
+	// 	show_detailed_result(index, result.inferred_class, mcr)
+	// }
 	return result
 }
 

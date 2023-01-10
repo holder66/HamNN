@@ -42,55 +42,35 @@ fn test_multiple_options() ? {
 			weighting_flag: true
 		}
 	}
-	// mut opts1 := Parameters{
-	// 	binning: Binning{
-	// 		lower: 1
-	// 		upper: 2
-	// 		interval: 1
-	// 	}
-	// 	number_of_attributes: [1]
-	// 	weighting_flag: true
-	// }
-	// mut opts2 := Parameters{
-	// 	binning: Binning{
-	// 		lower: 1
-	// 		upper: 2
-	// 		interval: 1
-	// 	}
-	// 	number_of_attributes: [6]
-	// 	weighting_flag: true
-	// }
-	mut multiple_options := MultipleClassifiersArray{
-		multiple_classifiers: [settings1, settings2]
+	append_json_file(settings1, 'tempfolder4/bcw.opts')
+	append_json_file(settings2, 'tempfolder4/bcw.opts')
+	mut opts := Options{
+		expanded_flag: true
 	}
-	save_json_file(multiple_options, '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')
-	// println(read_multiple_opts('/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts')?)
+	display_file('tempfolder4/bcw.opts', opts)
 }
 
 // test_multiple_verify
 fn test_multiple_verify() ? {
 	mut opts := Options{
-		verbose_flag: false
+		verbose_flag: true
 		show_flag: true
 		expanded_flag: true
-		concurrency_flag: true
+		concurrency_flag: false
+		multiple_flag: true
+		break_on_all_flag: true
+		command: 'verify'
 	}
-
 	mut result := CrossVerifyResult{}
-	// mut ds := Dataset{}
-	// mut cl1 := Classifier{}
-	// mut cl2 := Classifier{}
-	// mut saved_cl := Classifier{}
-	// mut vr1 := CrossVerifyResult{}
-	// mut vr2 := CrossVerifyResult{}
-	// mut mc_result := ClassifyResult{}
-
 	// test verify with multiple_classify_options_file_path
 	opts.datafile_path = 'datasets/leukemia38train.tab'
 	opts.testfile_path = 'datasets/leukemia34test.tab'
-	opts.multiple_classify_options_file_path = '/Users/henryolders/vlang/vhamnn/mult_classify_options/leukemia38train.opts'
+	opts.multiple_classify_options_file_path = 'tempfolder4/bcw.opts'
 	result = verify(opts)
-	println(result)
+	opts.classifier_indices = [0]
+	result = verify(opts)
+	opts.classifier_indices = [1]
+	result = verify(opts)
 }
 
 // fn test_get_map_key_for_max_value(m map[string]int) string {

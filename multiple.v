@@ -192,10 +192,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			sphere_index++
 		} // end of loop through sphere indices
 	} // end of else if (ie not using combined radii)
-	// if !found {
-	// 	println(mcr)
-	// 	panic('failed to infer a class')
-	// }
+	if !found {
+		println(mcr)
+		panic('failed to infer a class')
+	}
 	// if inferred_class_array.all(it == '') {
 	// 	panic('failed to infer a class')
 	// }
@@ -204,7 +204,7 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 	if inferred_classes_by_classifier.len > 1
 		&& uniques(inferred_classes_by_classifier.filter(it != '')).len > 1 {
 		final_cr.inferred_class = resolve_conflict(mcr)
-		show_detailed_result(index, final_cr.inferred_class, mcr)
+		// show_detailed_result(index, final_cr.inferred_class, mcr)
 
 		// println('instance: ${index} ${inferred_classes_by_classifier} nearest neighbors: ${mcr.results_by_classifier.map(it.results_by_radius.map(it.nearest_neighbors_by_class))}} inferred_class: ${final_cr.inferred_class}'
 
