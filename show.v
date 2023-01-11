@@ -529,3 +529,25 @@ fn show_multiple_classes_stats(result CrossVerifyResult) {
 	}
 	print_array(show_result)
 }
+
+// show_detailed_result
+fn show_detailed_result(index int, class string, mcr MultipleClassifierResults) {
+	println('classifier  sphere index  radius  nearest neighbors  ratio  inferred class')
+	for i, icr in mcr.results_by_classifier {
+		a := icr.results_by_radius.last()
+		println('${mcr.classifier_indices[i]:10}  ${a.sphere_index:12}  ${a.radius:6}  ${a.nearest_neighbors_by_class:-17} ${get_ratio(a.nearest_neighbors_by_class):6.2f}  ${a.inferred_class} ')
+	}
+	println('${index:-7} ${class} ')
+}
+
+// get_ratio
+fn get_ratio(a []int) f64 {
+	// println('a in get_ratio: ${a}')
+	if a.all(it == 0) {
+		return 1
+	}
+	if 0 in a {
+		return f64(array_max(a.filter(it != 0)))
+	}
+	return f64(array_max(a)) / array_min(a)
+}

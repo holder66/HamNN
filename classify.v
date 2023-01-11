@@ -63,12 +63,17 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 		result.sphere_index = sphere_index
 		break
 	}
-	if opts.verbose_flag && opts.command == 'classify' {
-		println('ClassifyResult in classify.v: ${result}')
-	}
-	// if opts.verbose_flag {
-	// 	show_detailed_result(index, result.inferred_class, mcr)
+	// if opts.verbose_flag && opts.command == 'classify' {
+	// 	println('ClassifyResult in classify.v: ${result}')
 	// }
+	if opts.verbose_flag {
+		println('classifier  sphere index  radius  nearest neighbors  ratio  inferred class')
+	// for i, icr in mcr.results_by_classifier {
+	// 	a := icr.results_by_radius.last()
+		println('${result.index:10}  ${result.sphere_index:12}  ${result.hamming_distance:6}  ${result.nearest_neighbors_by_class:-17} ${get_ratio(result.nearest_neighbors_by_class):6.2f}  ${result.inferred_class} ')
+	// }
+		// println('${index:-7} ${class} ')
+	}
 	return result
 }
 

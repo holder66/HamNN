@@ -100,7 +100,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 		}
 		// println('classifier_array: $classifier_array')
 		// println(mult_opts)
-		// println('instances_to_be_classified: $instances_to_be_classified')
+		println('instances_to_be_classified: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
 		// println('instances_to_be_classified: $instances_to_be_classified')
 		verify_result = multiple_classify_to_verify(classifier_array, instances_to_be_classified, mut
@@ -176,13 +176,13 @@ fn multiple_classify_to_verify(m_cl []Classifier, m_instances [][][]u8, mut resu
 	}
 	result.classifier_instances_counts << m_cl[0].history[0].instances_count
 	result.prepurge_instances_counts_array << m_cl[0].history[0].prepurge_instances_count
-	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
-		println('result in classify_to_verify(): ${result}')
-	}
+	// if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
+	// 	println('result in classify_to_verify(): ${result}')
+	// }
 	result = summarize_results(1, mut result)
-	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
-		println('summarize_result: ${result}')
-	}
+	// if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
+	// 	println('summarize_result: ${result}')
+	// }
 	// println('result at end of multiple_classify_to_verify: $result')
 	return result
 }
@@ -218,12 +218,12 @@ fn classify_to_verify(cl Classifier, test_instances [][]u8, mut result CrossVeri
 	}
 	result.classifier_instances_counts << cl.history[0].instances_count
 	result.prepurge_instances_counts_array << cl.history[0].prepurge_instances_count
-	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
-		println('result in classify_to_verify(): ${result}')
-	}
+	// if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
+	// 	println('result in classify_to_verify(): ${result}')
+	// }
 	result = summarize_results(1, mut result)
-	if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
-		println('summarize_result: ${result}')
-	}
+	// if opts.verbose_flag && !opts.multiple_flag && opts.command == 'verify' {
+	// 	println('summarize_result: ${result}')
+	// }
 	return result
 }
