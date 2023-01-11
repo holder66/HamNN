@@ -89,7 +89,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 			mut params := mult_opts.multiple_classifiers[i].classifier_options
 
 			// for params in saved_params.multiple_classifiers {
-			// println('params: $params')
+			println('params: $params')
 			// println('number of attributes: $params.number_of_attributes')
 			mult_opts.Parameters = params
 			verify_result.Parameters = params
@@ -98,7 +98,7 @@ pub fn verify(opts Options) CrossVerifyResult {
 			instances_to_be_classified << generate_test_instances_array(classifier_array.last(),
 				test_ds)
 		}
-		// println('classifier_array: $classifier_array')
+		println('classifier_array: $classifier_array')
 		// println(mult_opts)
 		println('instances_to_be_classified: $instances_to_be_classified')
 		instances_to_be_classified = transpose(instances_to_be_classified)
@@ -124,6 +124,10 @@ pub fn verify(opts Options) CrossVerifyResult {
 	// }
 	if opts.outputfile_path != '' {
 		save_json_file(verify_result, opts.outputfile_path)
+	}
+	// println(opts)
+	if opts.append_settings_flag {
+		append_cross_settings_to_file(verify_result, opts)
 	}
 	return verify_result
 }

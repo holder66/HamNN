@@ -192,10 +192,10 @@ fn multiple_classifier_classify(index int, classifiers []Classifier, instances_t
 			sphere_index++
 		} // end of loop through sphere indices
 	} // end of else if (ie not using combined radii)
-	if !found {
-		println(mcr)
-		panic('failed to infer a class')
-	}
+	// if !found {
+	// 	println(mcr)
+	// 	panic('failed to infer a class')
+	// }
 	// if inferred_class_array.all(it == '') {
 	// 	panic('failed to infer a class')
 	// }

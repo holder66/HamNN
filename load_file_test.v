@@ -45,6 +45,11 @@ fn test_load_file() {
 	assert ds.useful_discrete_attributes[6] == ['4', '5', '3', '?', '2', '4', '2', '4', '2', '4',
 		'4', '3', '3']
 
+	ds = load_file('datasets/leukemia34test.tab')
+	// println(ds.Class)
+	assert ds.class_values == ['ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML']
+
+
 	ds = load_file('datasets/iris.tab')
 	assert ds.class_counts == {
 		'Iris-setosa':     50

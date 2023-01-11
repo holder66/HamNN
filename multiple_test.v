@@ -19,72 +19,111 @@ fn testsuite_end() ? {
 }
 
 // test_multiple_options
-fn test_multiple_options() ? {
-	mut settings1 := ClassifierSettings{
-		classifier_options: Parameters{
-			binning: Binning{
-				lower: 1
-				upper: 2
-				interval: 1
-			}
-			number_of_attributes: [1]
-			weighting_flag: true
-		}
-	}
-	mut settings2 := ClassifierSettings{
-		classifier_options: Parameters{
-			binning: Binning{
-				lower: 1
-				upper: 2
-				interval: 1
-			}
-			number_of_attributes: [6]
-			weighting_flag: true
-		}
-	}
-	append_json_file(settings1, 'tempfolder4/bcw.opts')
-	append_json_file(settings2, 'tempfolder4/bcw.opts')
-	mut opts := Options{
-		expanded_flag: true
-	}
-	display_file('tempfolder4/bcw.opts', opts)
-}
-
-// test_multiple_verify
-fn test_multiple_verify() ? {
-	mut opts := Options{
-		verbose_flag: true
-		show_flag: true
-		expanded_flag: true
-		concurrency_flag: false
-		multiple_flag: true
-		break_on_all_flag: true
-		command: 'verify'
-	}
-	mut result := CrossVerifyResult{}
-	// test verify with multiple_classify_options_file_path
-	opts.datafile_path = 'datasets/leukemia38train.tab'
-	opts.testfile_path = 'datasets/leukemia34test.tab'
-	opts.multiple_classify_options_file_path = 'tempfolder4/bcw.opts'
-	result = verify(opts)
-	opts.classifier_indices = [0]
-	result = verify(opts)
-	opts.classifier_indices = [1]
-	result = verify(opts)
-}
-
-// fn test_get_map_key_for_max_value(m map[string]int) string {
-// 	max := array_max(m.values())
-// 	for key, val in m {
-// 		if val == max {
-// 			return key
+// fn test_multiple_options() ? {
+// 	mut settings1 := ClassifierSettings{
+// 		classifier_options: Parameters{
+// 			binning: Binning{
+// 				lower: 1
+// 				upper: 2
+// 				interval: 1
+// 			}
+// 			number_of_attributes: [1]
+// 			weighting_flag: true
 // 		}
 // 	}
-// 	return ''
+// 	mut settings2 := ClassifierSettings{
+// 		classifier_options: Parameters{
+// 			binning: Binning{
+// 				lower: 1
+// 				upper: 2
+// 				interval: 1
+// 			}
+// 			number_of_attributes: [6]
+// 			weighting_flag: true
+// 		}
+// 	}
+// 	append_json_file(settings1, 'tempfolder4/bcw.opts')
+// 	append_json_file(settings2, 'tempfolder4/bcw.opts')
+// 	mut opts := Options{
+// 		expanded_flag: true
+// 	}
+// 	display_file('tempfolder4/bcw.opts', opts)
+// }
+
+// test_multiple_verify
+// fn test_multiple_verify() ? {
+// 	mut opts := Options{
+// 		verbose_flag: false
+// 		show_flag: true
+// 		expanded_flag: true
+// 		concurrency_flag: false
+// 		break_on_all_flag: true
+// 		command: 'verify'
+// 	}
+// 	mut result := CrossVerifyResult{}
+
+// 	opts.datafile_path = 'datasets/leukemia38train.tab'
+// 	opts.testfile_path = 'datasets/leukemia34test.tab'
+// 	opts.settingsfile_path = 'tempfolder4/leuk.opts'
+// 	opts.append_settings_flag = true
+// 	opts.number_of_attributes = [1]
+// 	opts.bins = [5,5]
+// 	opts.purge_flag = true
+// 	opts.weight_ranking_flag = true
+// 	// check that the non-multiple verify works OK, and that the 
+// 	// settings file is getting appended
+// 	result = verify(opts)
+// 	assert result.confusion_matrix_map == {'ALL': {'ALL': 17.0, 'AML': 3.0}, 'AML': {'ALL': 0.0, 'AML': 14.0}}
+// 	opts.bins = [2,2]
+// 	result = verify(opts)
+// 	assert result.confusion_matrix_map ==  {'ALL': {'ALL': 20.0, 'AML': 0.0}, 'AML': {'ALL': 14.0, 'AML': 0.0}}
+
+// 	// test verify with multiple_classify_options_file_path
+// 	opts.multiple_flag = true
+// 	opts.multiple_classify_options_file_path = opts.settingsfile_path
+// 	result = verify(opts)
+// 	assert result.confusion_matrix_map == {'ALL': {'ALL': 17.0, 'AML': 3.0}, 'AML': {'ALL': 6.0, 'AML': 8.0}}
+// 	opts.classifier_indices = [0]
+// 	result = verify(opts)
+// 	assert result.confusion_matrix_map == {'ALL': {'ALL': 17.0, 'AML': 3.0}, 'AML': {'ALL': 0.0, 'AML': 14.0}}
+// 	opts.classifier_indices = [1]
+// 	result = verify(opts)
+// 	assert result.confusion_matrix_map ==  {'ALL': {'ALL': 20.0, 'AML': 0.0}, 'AML': {'ALL': 14.0, 'AML': 0.0}}
 // }
 
 // test_multiple_crossvalidate
 fn test_multiple_crossvalidate() ? {
+	mut opts := Options{
+		break_on_all_flag: true
+		combined_radii_flag: false
+		weighting_flag: false
+		show_flag: false
+		command: 'explore'
+	}
+	mut result := CrossVerifyResult{}
+
+	opts.datafile_path = 'datasets/2_class_developer.tab'
+	opts.settingsfile_path = 'tempfolder4/2_class.opts'
+	opts.append_settings_flag = true
+	opts.weight_ranking_flag = true
+	er := explore(load_file(opts.datafile_path), opts)
+	opts.command = 'cross'
+	ds := load_file(opts.datafile_path)
+	opts.verbose_flag = false
+	opts.expanded_flag = false
+	opts.number_of_attributes = [3]
+	opts.bins = [1,3]
+	result = cross_validate(ds, opts)
+	opts.multiple_flag = true
+	opts.multiple_classify_options_file_path = opts.settingsfile_path
+	opts.classifier_indices = [2]
+	assert cross_validate(ds, opts).confusion_matrix_map ==  {'m': {'m': 8.0, 'f': 1.0}, 'f': {'m': 1.0, 'f': 3.0}}
+	opts.classifier_indices = [3]
+	assert cross_validate(ds, opts).confusion_matrix_map ==  result.confusion_matrix_map
+	opts.classifier_indices = [2, 3]
+	assert cross_validate(ds, opts).confusion_matrix_map ==  {'m': {'m': 9.0, 'f': 0.0}, 'f': {'m': 1.0, 'f': 3.0}}
+
+	// println(result)
 }
 
 // // test verify with a non-saved classifier
