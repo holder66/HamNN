@@ -248,7 +248,7 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	// ds = load_file(opts.datafile_path)
 	// cl = make_classifier(mut ds, opts)
-	result = verify(opts)?
+	result = verify(opts)
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
@@ -263,12 +263,12 @@ fn test_show_verify() ? {
 	opts.weighting_flag = false
 	// ds = load_file(opts.datafile_path)
 	// cl = make_classifier(mut ds, opts)
-	result = verify(opts)?
+	result = verify(opts)
 	// println('result one in show_test: $result')
 	opts.weighting_flag = true
 	opts.expanded_flag = true
 	// cl = make_classifier(mut ds, opts)
-	result = verify(opts)?
+	result = verify(opts)
 	// println('result two in show_test: $result')
 	opts.purge_flag = true
 	// cl = make_classifier(mut ds, opts)
