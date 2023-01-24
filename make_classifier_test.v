@@ -34,19 +34,24 @@ fn test_make_classifier() ? {
 		'X': 2
 	}
 	assert cl.lcm_class_counts == 24
-	assert cl.attribute_ordering ==  ['height', 'negative', 'weight', 'number', 'age', 'lastname']
+	assert cl.attribute_ordering == ['height', 'negative', 'weight', 'number', 'age', 'lastname']
 
-	opts.bins = [5,5]
+	opts.bins = [5, 5]
 	opts.number_of_attributes = [1]
 	ds = load_file('datasets/leukemia34test.tab')
 	cl = make_classifier(mut ds, opts)
 	assert cl.Class == Class{
-    class_name: 'gene'
-    classes: ['ALL', 'AML']
-    class_values: ['ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML']
-    class_counts: {'ALL': 20, 'AML': 14}
-    lcm_class_counts: 140
-}
+		class_name: 'gene'
+		classes: ['ALL', 'AML']
+		class_values: ['ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL',
+			'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'ALL', 'AML', 'AML', 'AML',
+			'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML', 'AML']
+		class_counts: {
+			'ALL': 20
+			'AML': 14
+		}
+		lcm_class_counts: 140
+	}
 }
 
 // test_make_translation_table

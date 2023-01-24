@@ -120,8 +120,8 @@ pub fn explore(ds Dataset, opts Options) ExploreResult {
 fn append_explore_settings_to_file(results ExploreResult, opts Options) {
 	mut indices := opts.classifier_indices.clone()
 	if indices == [] {
-			indices = []int{len: 4, init: it}
-		}
+		indices = []int{len: 4, init: it}
+	}
 	m := explore_analytics2(results)
 	mut i := 0
 	for _, a in m {

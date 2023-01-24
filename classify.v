@@ -68,10 +68,10 @@ pub fn classify_instance(index int, cl Classifier, instance_to_be_classified []u
 	// }
 	if opts.verbose_flag {
 		println('classifier  sphere index  radius  nearest neighbors  ratio  inferred class')
-	// for i, icr in mcr.results_by_classifier {
-	// 	a := icr.results_by_radius.last()
+		// for i, icr in mcr.results_by_classifier {
+		// 	a := icr.results_by_radius.last()
 		println('${result.index:10}  ${result.sphere_index:12}  ${result.hamming_distance:6}  ${result.nearest_neighbors_by_class:-17} ${get_ratio(result.nearest_neighbors_by_class):6.2f}  ${result.inferred_class} ')
-	// }
+		// }
 		// println('${index:-7} ${class} ')
 	}
 	return result

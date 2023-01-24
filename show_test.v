@@ -46,7 +46,8 @@ fn test_show_append() ? {
 	// create the classifier file and save it
 	opts.command = 'make'
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = make_classifier(mut load_file('datasets/test.tab'), opts)
+	mut ds := load_file('datasets/test.tab')
+	cl = make_classifier(mut ds, opts)
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/test_validate.tab'
@@ -65,7 +66,8 @@ fn test_show_append() ? {
 	// repeat with soybean
 	opts.command = 'make'
 	opts.outputfile_path = 'tempfolder/classifierfile'
-	cl = make_classifier(mut load_file('datasets/soybean-large-train.tab'), opts)
+	ds = load_file('datasets/soybean-large-train.tab')
+	cl = make_classifier(mut ds, opts)
 	// do a validation and save the result
 	opts.outputfile_path = 'tempfolder/instancesfile'
 	opts.testfile_path = 'datasets/soybean-large-validate.tab'
@@ -90,9 +92,11 @@ fn test_show_classifier() {
 		command: 'make'
 		bins: [3, 10]
 	}
-	mut cl := make_classifier(mut load_file('datasets/iris.tab'), opts)
+	mut ds := load_file('datasets/iris.tab')
+	mut cl := make_classifier(mut ds, opts)
 	opts.number_of_attributes = [8]
-	cl = make_classifier(mut load_file('datasets/anneal.tab'), opts)
+	ds = load_file('datasets/anneal.tab')
+	cl = make_classifier(mut ds, opts)
 }
 
 // test_show_crossvalidation

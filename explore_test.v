@@ -25,36 +25,36 @@ fn test_explore_cross() ? {
 	opts.uniform_bins = false
 	opts.bins = [10, 12]
 	result = explore(ds, opts)
-	assert result.array_of_results.last().correct_count == 141
-	assert result.array_of_results.last().incorrects_count == 9
-	assert result.array_of_results.last().wrong_count == 9
+	assert result.array_of_results.last().correct_count == 140
+	assert result.array_of_results.last().incorrects_count == 10
+	assert result.array_of_results.last().wrong_count == 10
 	assert result.array_of_results.last().total_count == 150
 	metrics = get_metrics(result.array_of_results.last())
 	assert metrics.balanced_accuracy >= 0.94
 	println('Done with iris.tab')
 
-	// opts.folds = 10
-	// opts.number_of_attributes = [27, 29]
-	// opts.bins = [20, 22]
-	// opts.weighting_flag = true
-	// opts.datafile_path = 'datasets/anneal.tab'
-	// opts.uniform_bins = true
-	// ds = load_file(opts.datafile_path)
-	// result = explore(ds, opts)
-	// metrics = get_metrics(result.array_of_results[1])
-	// assert metrics.balanced_accuracy >= 0.96
+	opts.folds = 10
+	opts.number_of_attributes = [27, 29]
+	opts.bins = [20, 22]
+	opts.weighting_flag = true
+	opts.datafile_path = 'datasets/anneal.tab'
+	opts.uniform_bins = true
+	ds = load_file(opts.datafile_path)
+	result = explore(ds, opts)
+	metrics = get_metrics(result.array_of_results[1])
+	assert metrics.balanced_accuracy >= 0.96
 
-	// opts.uniform_bins = false
-	// result = explore(ds, opts)
-	// metrics = get_metrics(result.array_of_results[1])
-	// assert metrics.balanced_accuracy >= 0.955
+	opts.uniform_bins = false
+	result = explore(ds, opts)
+	metrics = get_metrics(result.array_of_results[1])
+	assert metrics.balanced_accuracy >= 0.955
 
-	// opts.folds = 5
-	// opts.repetitions = 50
-	// result = explore(ds, opts)
-	// metrics = get_metrics(result.array_of_results[1])
-	// assert metrics.balanced_accuracy >= 0.945
-	// println('Done with anneal.tab')
+	opts.folds = 5
+	opts.repetitions = 50
+	result = explore(ds, opts)
+	metrics = get_metrics(result.array_of_results[1])
+	assert metrics.balanced_accuracy >= 0.945
+	println('Done with anneal.tab')
 }
 
 fn test_explore_verify() ? {

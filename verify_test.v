@@ -45,11 +45,20 @@ fn test_verify() ? {
 	opts.datafile_path = 'datasets/leukemia38train.tab'
 	opts.testfile_path = 'datasets/leukemia34test.tab'
 	opts.number_of_attributes = [1]
-	opts.bins = [5,5]
+	opts.bins = [5, 5]
 	opts.purge_flag = true
 	opts.weight_ranking_flag = true
 	result = verify(opts)
-	assert result.confusion_matrix_map == {'ALL': {'ALL': 17.0, 'AML': 3.0}, 'AML': {'ALL': 0.0, 'AML': 14.0}}
+	assert result.confusion_matrix_map == {
+		'ALL': {
+			'ALL': 17.0
+			'AML': 3.0
+		}
+		'AML': {
+			'ALL': 0.0
+			'AML': 14.0
+		}
+	}
 
 	// test verify with a binary classifier without continuous values
 
@@ -67,7 +76,6 @@ fn test_verify() ? {
 
 	println('Done with bcw350train')
 
-	
 	// now with a saved classifier
 	opts.outputfile_path = 'tempfolder4/classifierfile'
 	opts.purge_flag = false
