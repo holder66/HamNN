@@ -2,6 +2,8 @@
 ![GitHub](https://img.shields.io/github/license/holder66/HamNN)
 # HamNN
 
+# This repo, as well as the associated cli app VHamNN, have been superseded by the repo [VHamML](https://github.com/holder66/vhamml).
+
 A machine learning (ML) library for classification using a nearest neighbor algorithm based on Hamming distances. [hamnn documentation](https://holder66.github.io)
 
 There is an associated Command Line Interface app, [VHamNN](https://github.com/holder66/vhamnn), which facilitates using the hamnn library.
